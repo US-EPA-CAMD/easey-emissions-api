@@ -1,0 +1,30 @@
+version: '3'
+services:
+  database:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      #- ../devops/db:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+  emissions-api:
+    depends_on:
+      - database
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./
+    volumes:
+      - /app/node_modules
+      - ./:/app
+    environment:
+      - EASEY_DB_HOST=database
+      - EASEY_DB_PORT=5432
+      - EASEY_DB_USER=postgres
+      - EASEY_DB_PWD=password
+      - EASEY_DB_NAME=postgres
+    ports:
+      - '8080:8080'
+volumes:
+  pgdata:
