@@ -6,12 +6,12 @@ import {
 } from '@nestjs/swagger';
 
 import { Get, Controller } from '@nestjs/common';
-import { EmissionsService } from './emissions.service';
+import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 
-@ApiTags('Emissions')
-@Controller('emissions/apportioned/hourly')
-export class EmissionsController {
-  constructor(private emissionsService: EmissionsService) {}
+@ApiTags('Hourly Apportioned Emissions')
+@Controller('apportioned/hourly')
+export class HourlyApportionedEmissionsController {
+  constructor(private hourlyApportionedemissionsService: HourlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -24,6 +24,6 @@ export class EmissionsController {
     description: 'Resource Not Found',
   })
   getHourlyEmissions(): string {
-    return this.emissionsService.getHourlyEmissions();
+    return this.hourlyApportionedemissionsService.getHourlyEmissions();
   }
 }

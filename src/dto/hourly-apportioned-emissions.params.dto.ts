@@ -1,12 +1,12 @@
 import { IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDTO } from './pagination.dto';
-import { Control } from '../enums/control.enum';
+import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
 
-export class EmissionsParamsDTO extends PaginationDTO {
+export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @ApiPropertyOptional()
   beginDate: Date;
@@ -37,7 +37,7 @@ export class EmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
-  controlTechnologies: Array<Control>;
+  controlTechnologies: Array<ControlTechnology>;
 
   @IsOptional()
   @ApiPropertyOptional()

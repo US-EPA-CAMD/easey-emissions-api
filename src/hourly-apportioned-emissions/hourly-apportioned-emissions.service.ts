@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class EmissionsService {
+export class HourlyApportionedEmissionsService {
   constructor(private configService: ConfigService) {}
 
   getHourlyEmissions(): string {

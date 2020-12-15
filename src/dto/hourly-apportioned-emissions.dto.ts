@@ -1,7 +1,5 @@
 
-import { ListDTO } from './list.dto';
-
-export class EmissionsDTO {
+export class HourlyApportionedEmissionsDTO {
   state: string;
   facilityName: string;
   orisCode: number;
@@ -25,10 +23,10 @@ export class EmissionsDTO {
   corRateMeasureFlg: string;
   heatInput: number;
   primaryFuelInfo: string;
-  secondaryFuelInfo: ListDTO;
+  secondaryFuelInfo: string;
   unitTypeInfo: string;
-  so2ControlInfo: ListDTO;
-  partControlInfo: ListDTO;
-  noxControlInfo: ListDTO;
-  hgControlInfo: ListDTO;
+  so2ControlInfo: string;
+  partControlInfo: string;
+  noxControlInfo: string;
+  hgControlInfo: string;
 }

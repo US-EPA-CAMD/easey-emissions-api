@@ -1,4 +1,4 @@
-export enum Control {
+export enum ControlTechnology {
     ADDITIVES_TO_ENHANCE = 'Additives to Enhance PAC and Existing Equipment Performance',
     AMMONIA_INJECTION = 'Ammonia Injection',
     BAGHOUSE = 'Baghouse',
