@@ -1,0 +1,20 @@
+export enum UnitType {
+    BUBBLING_FLUIDIZED = 'Bubbling fluidized bed boiler',
+    CELL_BURNER = 'Cell burner boiler',
+    CEMENT_KLIN = 'Cement Kiln',
+    CIRCULATING_FLUIDIZED = 'Circulated fluidized bed boiler',
+    COMBINED_CYCLE = 'Combined cycle',
+    COMBUSTION_TURBINE = 'Combustion turbine',
+    CYCLONE_BOILER = 'Cyclone boiler',
+    DRY_BOTTOM_TURBO = 'Dry bottome turbo-fired boiler',
+    DRY_BOTTOM_VERTICALLY = 'Dry bottom vertically-fired boiler',
+    DRY_BOTTOM_WALL = 'Dry bottom wall-fired boiler',
+    INTEGRATED_GASIFICATION = 'Integrated gasification cobined cycle',
+    OTHER_BOILER = 'Other boiler',
+    OTHER_TURBINE = 'Other turbine',
+    PROCESS_HEATER = 'Process Heater',
+    STOKER = 'Stoker',
+    TANGENTIALLY_FIRED  = 'Tangentially-fired',
+    WET_BOTTOM_TURBO = 'Wet bottom turbo-fired boiler',
+    WET_BOTTOM_WALL = 'Wet bottom wall-fired boiler'
+}
