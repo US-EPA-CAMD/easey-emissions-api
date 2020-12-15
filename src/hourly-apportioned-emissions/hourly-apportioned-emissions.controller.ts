@@ -11,7 +11,7 @@ import { HourlyApportionedEmissionsService } from './hourly-apportioned-emission
 @ApiTags('Hourly Apportioned Emissions')
 @Controller('apportioned/hourly')
 export class HourlyApportionedEmissionsController {
-  constructor(private hourlyApportionedemissionsService: HourlyApportionedEmissionsService) {}
+  constructor(private hourlyApportionedEmissionsService: HourlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -24,6 +24,6 @@ export class HourlyApportionedEmissionsController {
     description: 'Resource Not Found',
   })
   getHourlyEmissions(): string {
-    return this.hourlyApportionedemissionsService.getHourlyEmissions();
+    return this.hourlyApportionedEmissionsService.getHourlyEmissions();
   }
 }
