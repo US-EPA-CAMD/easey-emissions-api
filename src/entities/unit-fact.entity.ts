@@ -25,7 +25,7 @@ export class UnitFact extends BaseEntity {
   orisplCode: number;
 
   @Column()
-  unitId: string;
+  unitid: string;
 
   @Column()
   state: string;

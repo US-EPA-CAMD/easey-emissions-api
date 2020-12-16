@@ -10,7 +10,7 @@ export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyA
       state: entity.unitFact.state,
       facilityName: entity.unitFact.facilityName,
       orisCode: entity.unitFact.orisplCode,
-      unitId: entity.unitFact.unitId,
+      unitId: entity.unitFact.unitid,
       opDate: entity.opDate,
       opHour: entity.opHour,
       opTime: entity.opTime,
