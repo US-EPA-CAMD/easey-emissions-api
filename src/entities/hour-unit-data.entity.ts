@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { UnitFact } from './unit-fact.entity';
 
 @Entity({ name: 'camddmw.hour_unit_data' })
-export class hourUnitData extends BaseEntity {
+export class HourUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
@@ -92,4 +93,7 @@ export class hourUnitData extends BaseEntity {
     name: 'nox_rate_measure_flg',
   })
   noxRateMeasureFlg: string;
+
+  @ManyToOne(() => UnitFact, uf => uf.hourUnitData)
+  unitFact: UnitFact;
 }
