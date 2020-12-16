@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { BaseMap } from './base.map';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
@@ -9,7 +10,7 @@ export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyA
     return {
       state: entity.unitFact.state,
       facilityName: entity.unitFact.facilityName,
-      orisCode: entity.unitFact.orisplCode,
+      orisCode: entity.unitFact.orisCode,
       unitId: entity.unitFact.unitid,
       opDate: entity.opDate,
       opHour: entity.opHour,

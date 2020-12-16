@@ -1,12 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
+
+import { HourUnitDataRepository } from './hour-unit-data.repository';
+import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+import { HourlyApportionedEmissionsDTO } from 'src/dto/hourly-apportioned-emissions.dto';
+import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
+import { ResponseHeaders } from 'src/utils/response.headers';
+
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    @InjectRepository(HourUnitDataRepository)
+    private repository: HourUnitDataRepository,
+    private map: HourlyApportionedEmissionsMap,
+  ) {}
 
-  getHourlyEmissions(): string {
-    console.log(`${this.configService.get('app.uri')}/emissions/apportioned/hourly`);
-    return 'Hello getHourlyEmissions!';
+  async getHourlyEmissions(
+    hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
+    req: Request,
+  ): Promise<HourlyApportionedEmissionsDTO[]> {
+    let results = this.repository.getHourlyEmissions(
+      hourlyApportionedEmissionsParamsDTO,
+    );
+    const { page, perPage } = hourlyApportionedEmissionsParamsDTO;
+    const pageNum: number = +page;
+    const perPageNum: number = +perPage;
+
+    const begin: number = (pageNum - 1) * perPageNum;
+    const end: number = begin + perPageNum;
+
+    const paginatedResults = (await results).slice(begin, end);
+    const totalCount = (await results).length;
+
+    ResponseHeaders.setPagination(req, totalCount);
+    return this.map.many(paginatedResults);
   }
 }

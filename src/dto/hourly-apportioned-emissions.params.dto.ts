@@ -1,5 +1,6 @@
 import { IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
@@ -21,10 +22,6 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
-  facilityName: string;
-
-  @IsOptional()
-  @ApiPropertyOptional()
   orisCode: number;
 
   @IsOptional()
@@ -33,11 +30,11 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
-  unitFuelType: Array<UnitFuelType>;
+  unitFuelType: UnitFuelType;
 
   @IsOptional()
   @ApiPropertyOptional()
-  controlTechnologies: Array<ControlTechnology>;
+  controlTechnologies: ControlTechnology;
 
   @IsOptional()
   @ApiPropertyOptional()

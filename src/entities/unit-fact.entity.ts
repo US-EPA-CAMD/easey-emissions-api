@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { HourUnitData } from './hour-unit-data.entity';
 
@@ -22,7 +22,7 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'orispl_code',
   })
-  orisplCode: number;
+  orisCode: number;
 
   @Column()
   unitid: string;
@@ -65,7 +65,9 @@ export class UnitFact extends BaseEntity {
   })
   hgControlInfo: string;
 
-  @OneToMany(() => HourUnitData, hrUnit => hrUnit.unitFact)
-  @JoinTable()
+  @OneToMany(
+    () => HourUnitData,
+    hrUnit => hrUnit.unitFact,
+  )
   hourUnitData: HourUnitData[];
 }

@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
+
 import { UnitFact } from './unit-fact.entity';
 
 @Entity({ name: 'camddmw.hour_unit_data' })
@@ -17,6 +25,11 @@ export class HourUnitData extends BaseEntity {
     name: 'op_hour',
   })
   opHour: number;
+
+  @Column({
+    name: 'op_year',
+  })
+  opYear: number;
 
   @Column({
     name: 'op_time',
@@ -94,6 +107,17 @@ export class HourUnitData extends BaseEntity {
   })
   noxRateMeasureFlg: string;
 
-  @ManyToOne(() => UnitFact, uf => uf.hourUnitData)
+  @ManyToOne(
+    () => UnitFact,
+    uf => uf.hourUnitData,
+  )
+  @JoinColumn([
+    {
+      referencedColumnName: 'unit_id',
+    },
+    {
+      referencedColumnName: 'op_year',
+    },
+  ])
   unitFact: UnitFact;
 }
