@@ -113,10 +113,12 @@ export class HourUnitData extends BaseEntity {
   )
   @JoinColumn([
     {
-      referencedColumnName: 'unit_id',
+      name: 'unit_id',
+      referencedColumnName: 'id',
     },
     {
-      referencedColumnName: 'op_year',
+      name: 'op_year',
+      referencedColumnName: 'opYear',
     },
   ])
   unitFact: UnitFact;

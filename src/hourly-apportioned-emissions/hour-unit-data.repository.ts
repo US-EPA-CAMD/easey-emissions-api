@@ -51,7 +51,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'uf.noxControlInfo',
         'uf.hgControlInfo',
       ])
-      .innerJoin('hourUnitData.unitFact', 'uf');
+      .innerJoin('hud.unitFact', 'uf');
 
     if (beginDate) {
       results.andWhere('hud.opDate > :beginDate', { beginDate: beginDate });
