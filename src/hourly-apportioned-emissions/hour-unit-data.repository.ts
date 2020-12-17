@@ -54,10 +54,10 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       .innerJoin('hud.unitFact', 'uf');
 
     if (beginDate) {
-      results.andWhere('hud.opDate > :beginDate', { beginDate: beginDate });
+      results.andWhere('hud.opDate >= :beginDate', { beginDate: beginDate });
     }
     if (endDate) {
-      results.andWhere('hud.opDate < :endDate', { endDate: endDate });
+      results.andWhere('hud.opDate <= :endDate', { endDate: endDate });
     }
     if (state) {
       results.andWhere('uf.state = :state', { state: state });
