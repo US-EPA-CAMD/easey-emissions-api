@@ -15,8 +15,8 @@ const mockHourUnitDataRepository = () => ({
 });
 
 const mockMap = () => ({
-    many: jest.fn(),
-})
+  many: jest.fn(),
+});
 
 describe('HourlyApportionedEmissionsService', () => {
   let hourlyApportionedEmissionsService;
@@ -27,39 +27,56 @@ describe('HourlyApportionedEmissionsService', () => {
     const module = await Test.createTestingModule({
       providers: [
         HourlyApportionedEmissionsService,
-        { provide: HourUnitDataRepository, useFactory: mockHourUnitDataRepository },
+        {
+          provide: HourUnitDataRepository,
+          useFactory: mockHourUnitDataRepository,
+        },
         { provide: HourlyApportionedEmissionsMap, useFactory: mockMap },
       ],
     }).compile();
 
-    hourlyApportionedEmissionsService = await module.get<HourlyApportionedEmissionsService>(HourlyApportionedEmissionsService);
-    hourUnitDataRepository = await module.get<HourUnitDataRepository>(HourUnitDataRepository);
-    map = await module.get<HourlyApportionedEmissionsMap>(HourlyApportionedEmissionsMap);
+    hourlyApportionedEmissionsService = await module.get<
+      HourlyApportionedEmissionsService
+    >(HourlyApportionedEmissionsService);
+    hourUnitDataRepository = await module.get<HourUnitDataRepository>(
+      HourUnitDataRepository,
+    );
+    map = await module.get<HourlyApportionedEmissionsMap>(
+      HourlyApportionedEmissionsMap,
+    );
   });
 
   describe('getHourlyEmissions', () => {
     it('calls HourUnitDataRepository.getHourlyEmissions() and gets all emissions from the repository', async () => {
-        hourUnitDataRepository.getHourlyEmissions.mockResolvedValue('list of emissions');
-        ResponseHeaders.setPagination = jest.fn().mockReturnValue('paginated results');
-        map.many.mockReturnValue('mapped DTOs');
+      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue(
+        'list of emissions',
+      );
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+      map.many.mockReturnValue('mapped DTOs');
 
-        const filters: HourlyApportionedEmissionsParamsDTO = {
-            page: 1,
-            perPage: 10,
-            orderBy: undefined,
-            beginDate: new Date(),
-            endDate: new Date(),
-            state: State.TX,
-            orisCode: 3,
-            unitType: UnitType.BUBBLING_FLUIDIZED,
-            unitFuelType: UnitFuelType.COAL,
-            controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,
-            opHoursOnly: false,
-          };
+      const filters: HourlyApportionedEmissionsParamsDTO = {
+        page: 1,
+        perPage: 10,
+        orderBy: undefined,
+        beginDate: new Date(),
+        endDate: new Date(),
+        state: State.TX,
+        orisCode: 3,
+        unitType: UnitType.BUBBLING_FLUIDIZED,
+        unitFuelType: undefined,
+        controlTechnologies: undefined,
+        opHoursOnly: false,
+      };
 
-      const result = await hourlyApportionedEmissionsService.getHourlyEmissions(filters);
+      const result = await hourlyApportionedEmissionsService.getHourlyEmissions(
+        filters,
+      );
 
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(filters);
+      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
+        filters,
+      );
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(map.many).toHaveBeenCalled();
 

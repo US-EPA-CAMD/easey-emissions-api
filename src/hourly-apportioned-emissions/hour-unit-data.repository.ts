@@ -71,24 +71,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       results.andWhere('uf.unitTypeInfo = :unitType', { unitType: unitType });
     }
 
-    if (unitFuelType) {
-      results.andWhere(
-        '(uf.primaryFuelInfo = :unitFuelType OR uf.secondaryFuelInfo = :unitFuelType)',
-        {
-          unitFuelType: unitFuelType,
-        },
-      );
-    }
-
-    if (controlTechnologies) {
-      results.andWhere(
-        '(uf.so2ControlInfo = :controlTechnologies OR uf.noxControlInfo = :controlTechnologies OR uf.partControlInfo = :controlTechnologies OR uf.hgControlInfo = :controlTechnologies)',
-        {
-          controlTechnologies: controlTechnologies,
-        },
-      );
-    }
-
     if (String(opHoursOnly) === String(true)) {
       results.andWhere('hud.opTime > 0');
     }
