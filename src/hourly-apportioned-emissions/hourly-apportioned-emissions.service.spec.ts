@@ -6,8 +6,6 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
 import { ResponseHeaders } from '../utils/response.headers';
 
 const mockHourUnitDataRepository = () => ({
@@ -35,13 +33,13 @@ describe('HourlyApportionedEmissionsService', () => {
       ],
     }).compile();
 
-    hourlyApportionedEmissionsService = await module.get<
+    hourlyApportionedEmissionsService = module.get<
       HourlyApportionedEmissionsService
     >(HourlyApportionedEmissionsService);
-    hourUnitDataRepository = await module.get<HourUnitDataRepository>(
+    hourUnitDataRepository = module.get<HourUnitDataRepository>(
       HourUnitDataRepository,
     );
-    map = await module.get<HourlyApportionedEmissionsMap>(
+    map = module.get<HourlyApportionedEmissionsMap>(
       HourlyApportionedEmissionsMap,
     );
   });

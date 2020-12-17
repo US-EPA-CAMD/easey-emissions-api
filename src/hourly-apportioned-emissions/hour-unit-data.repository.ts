@@ -14,8 +14,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       state,
       orisCode,
       unitType,
-      unitFuelType,
-      controlTechnologies,
       opHoursOnly,
     } = hourlyApportionedEmissionsParamsDTO;
 

@@ -28,17 +28,19 @@ describe('HourUnitDataRepository', () => {
       ],
     }).compile();
 
-    hourUnitDataRepository = await module.get<HourUnitDataRepository>(
+    hourUnitDataRepository = module.get<HourUnitDataRepository>(
       HourUnitDataRepository,
     );
-    queryBuilder = await module.get<SelectQueryBuilder<HourUnitData>>(
+    queryBuilder = module.get<SelectQueryBuilder<HourUnitData>>(
       SelectQueryBuilder,
     );
   });
 
   describe('getHourlyEmissions', () => {
     it('calls createQueryBuilder and gets all HourUnitData from the repository', async () => {
-      hourUnitDataRepository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
+      hourUnitDataRepository.createQueryBuilder = jest
+        .fn()
+        .mockReturnValue(queryBuilder);
       queryBuilder.select.mockReturnValue(queryBuilder);
       queryBuilder.innerJoin.mockReturnValue(queryBuilder);
       queryBuilder.andWhere.mockReturnValue('mockFilter');

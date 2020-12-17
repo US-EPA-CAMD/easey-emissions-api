@@ -7,7 +7,6 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { ResponseHeaders } from '../utils/response.headers';
-import { UnitFuelType } from 'src/enums/unit-fuel-type.enum';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 
 @Injectable()
@@ -90,7 +89,7 @@ export class HourlyApportionedEmissionsService {
       (await results).forEach(e => {
         let containsControls = false;
         let containsUnit = false;
-        
+
         if (e.unitFact.primaryFuelInfo) {
           if (e.unitFact.primaryFuelInfo === unitFuelType) {
             containsUnit = true;

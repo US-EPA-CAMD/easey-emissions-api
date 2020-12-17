@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import * as moment from 'moment';
 
 import { BaseMap } from './base.map';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
-import * as moment from 'moment';
 
 @Injectable()
-export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyApportionedEmissionsDTO> {
-  public async one(entity: HourUnitData): Promise<HourlyApportionedEmissionsDTO> {
+export class HourlyApportionedEmissionsMap extends BaseMap<
+  HourUnitData,
+  HourlyApportionedEmissionsDTO
+> {
+  public async one(
+    entity: HourUnitData,
+  ): Promise<HourlyApportionedEmissionsDTO> {
     return {
       state: entity.unitFact.state,
       facilityName: entity.unitFact.facilityName,
@@ -37,7 +42,7 @@ export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyA
       so2ControlInfo: entity.unitFact.so2ControlInfo,
       partControlInfo: entity.unitFact.partControlInfo,
       noxControlInfo: entity.unitFact.noxControlInfo,
-      hgControlInfo: entity.unitFact.hgControlInfo
-    }
+      hgControlInfo: entity.unitFact.hgControlInfo,
+    };
   }
 }
