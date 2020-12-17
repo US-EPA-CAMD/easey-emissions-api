@@ -82,7 +82,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
     if (controlTechnologies) {
       results.andWhere(
-        'uf.so2ControlInfo = :controlTechnologies OR :uf.noxControlInfo = :controlTechnologies OR :uf.partControlInfo = :controlTechnologiesOR :uf.hgControlInfo = :controlTechnologies',
+        'uf.so2ControlInfo = :controlTechnologies OR uf.noxControlInfo = :controlTechnologies OR uf.partControlInfo = :controlTechnologies OR uf.hgControlInfo = :controlTechnologies',
         {
           controlTechnologies: controlTechnologies,
         },
@@ -90,7 +90,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     }
 
     if (String(opHoursOnly) === String(true)) {
-      results.andWhere('uf.opTime > 0');
+      results.andWhere('hud.opTime > 0');
     }
 
     const query = await results.getMany();
