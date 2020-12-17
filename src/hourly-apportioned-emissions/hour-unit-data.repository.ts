@@ -73,7 +73,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
     if (unitFuelType) {
       results.andWhere(
-        'uf.primaryFuelInfo = :unitFuelType OR uf.secondaryFuelInfo = :unitFuelType',
+        '(uf.primaryFuelInfo = :unitFuelType OR uf.secondaryFuelInfo = :unitFuelType)',
         {
           unitFuelType: unitFuelType,
         },
@@ -82,7 +82,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
     if (controlTechnologies) {
       results.andWhere(
-        'uf.so2ControlInfo = :controlTechnologies OR uf.noxControlInfo = :controlTechnologies OR uf.partControlInfo = :controlTechnologies OR uf.hgControlInfo = :controlTechnologies',
+        '(uf.so2ControlInfo = :controlTechnologies OR uf.noxControlInfo = :controlTechnologies OR uf.partControlInfo = :controlTechnologies OR uf.hgControlInfo = :controlTechnologies)',
         {
           controlTechnologies: controlTechnologies,
         },
