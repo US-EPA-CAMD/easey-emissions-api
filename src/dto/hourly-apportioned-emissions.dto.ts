@@ -4,7 +4,7 @@ export class HourlyApportionedEmissionsDTO {
   facilityName: string;
   orisCode: number;
   unitId: string;
-  opDate: Date;
+  opDate: string;
   opHour: number;
   opTime: number;
   gLoad: number;
