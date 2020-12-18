@@ -2,7 +2,7 @@ applications:
   - name: emissions-api
     path: .
     command: npm run start
-    memory: 512M
+    memory: 1024M
     env:
       EASEY_API_HOST: ((host))
       OPTIMIZE_MEMORY: true
