@@ -34,19 +34,15 @@ export class HourlyApportionedEmissionsService {
 
     if (unitFuelType && !controlTechnologies) {
       (await results).forEach(e => {
-        let containsUnit = false;
-        if (e.unitFact.primaryFuelInfo) {
-          if (e.unitFact.primaryFuelInfo === unitFuelType) {
-            containsUnit = true;
-          }
-        }
-        if (e.unitFact.secondaryFuelInfo) {
-          const unitFuelList = e.unitFact.secondaryFuelInfo.split('<br>');
-          if (unitFuelList.includes(unitFuelType)) {
-            containsUnit = true;
-          }
-        }
-        if (containsUnit) {
+        if (
+          e.unitFact.primaryFuelInfo &&
+          e.unitFact.primaryFuelInfo === unitFuelType
+        ) {
+          filteredResults.push(e);
+        } else if (
+          e.unitFact.secondaryFuelInfo &&
+          e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType)
+        ) {
           filteredResults.push(e);
         }
       });
@@ -54,32 +50,25 @@ export class HourlyApportionedEmissionsService {
 
     if (!unitFuelType && controlTechnologies) {
       (await results).forEach(e => {
-        let contains = false;
-        if (e.unitFact.noxControlInfo) {
-          const unitControlList = e.unitFact.noxControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            contains = true;
-          }
-        }
-        if (e.unitFact.so2ControlInfo && !contains) {
-          const unitControlList = e.unitFact.so2ControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            contains = true;
-          }
-        }
-        if (e.unitFact.partControlInfo && !contains) {
-          const unitControlList = e.unitFact.partControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            contains = true;
-          }
-        }
-        if (e.unitFact.hgControlInfo && !contains) {
-          const unitControlList = e.unitFact.hgControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            contains = true;
-          }
-        }
-        if (contains) {
+        if (
+          e.unitFact.noxControlInfo &&
+          e.unitFact.noxControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          e.unitFact.so2ControlInfo &&
+          e.unitFact.so2ControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          e.unitFact.partControlInfo &&
+          e.unitFact.partControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          e.unitFact.hgControlInfo &&
+          e.unitFact.hgControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
           filteredResults.push(e);
         }
       });
@@ -87,45 +76,43 @@ export class HourlyApportionedEmissionsService {
 
     if (unitFuelType && controlTechnologies) {
       (await results).forEach(e => {
-        let containsControls = false;
-        let containsUnit = false;
+        let hasFuel = false;
 
-        if (e.unitFact.primaryFuelInfo) {
-          if (e.unitFact.primaryFuelInfo === unitFuelType) {
-            containsUnit = true;
-          }
+        if (
+          e.unitFact.primaryFuelInfo &&
+          e.unitFact.primaryFuelInfo === unitFuelType
+        ) {
+          hasFuel = true;
+        } else if (
+          e.unitFact.secondaryFuelInfo &&
+          e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType)
+        ) {
+          hasFuel = true;
         }
-        if (e.unitFact.secondaryFuelInfo) {
-          const unitFuelList = e.unitFact.secondaryFuelInfo.split('<br>');
-          if (unitFuelList.includes(unitFuelType)) {
-            containsUnit = true;
-          }
-        }
-        if (e.unitFact.noxControlInfo && !containsControls) {
-          const unitControlList = e.unitFact.noxControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            containsControls = true;
-          }
-        }
-        if (e.unitFact.so2ControlInfo && !containsControls) {
-          const unitControlList = e.unitFact.so2ControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            containsControls = true;
-          }
-        }
-        if (e.unitFact.partControlInfo && !containsControls) {
-          const unitControlList = e.unitFact.partControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            containsControls = true;
-          }
-        }
-        if (e.unitFact.hgControlInfo && !containsControls) {
-          const unitControlList = e.unitFact.hgControlInfo.split('<br>');
-          if (unitControlList.includes(controlTechnologies)) {
-            containsControls = true;
-          }
-        }
-        if (containsUnit && containsControls) {
+
+        if (
+          hasFuel &&
+          e.unitFact.noxControlInfo &&
+          e.unitFact.noxControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          hasFuel &&
+          e.unitFact.so2ControlInfo &&
+          e.unitFact.so2ControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          hasFuel &&
+          e.unitFact.partControlInfo &&
+          e.unitFact.partControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
+          filteredResults.push(e);
+        } else if (
+          hasFuel &&
+          e.unitFact.hgControlInfo &&
+          e.unitFact.hgControlInfo.split('<br>').includes(controlTechnologies)
+        ) {
           filteredResults.push(e);
         }
       });
