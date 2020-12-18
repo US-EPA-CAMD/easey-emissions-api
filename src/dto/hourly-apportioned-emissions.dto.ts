@@ -4,7 +4,7 @@ export class HourlyApportionedEmissionsDTO {
   facilityName: string;
   orisCode: number;
   unitId: string;
-  opDate: Date;
+  opDate: string;
   opHour: number;
   opTime: number;
   gLoad: number;
@@ -12,7 +12,7 @@ export class HourlyApportionedEmissionsDTO {
   so2Mass: number;
   so2MassMeasureFlg: string;
   so2Rate: number;
-  sorRateMeasureFlg: string;
+  so2RateMeasureFlg: string;
   noxMass: number;
   noxMassMeasureFlg: string;
   noxRate: number;
@@ -20,7 +20,7 @@ export class HourlyApportionedEmissionsDTO {
   co2Mass: number;
   co2MassMeasureFlg: string;
   co2Rate: number;
-  corRateMeasureFlg: string;
+  co2RateMeasureFlg: string;
   heatInput: number;
   primaryFuelInfo: string;
   secondaryFuelInfo: string;

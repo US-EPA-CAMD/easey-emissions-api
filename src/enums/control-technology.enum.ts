@@ -11,6 +11,8 @@ export enum ControlTechnology {
     DUAL_ALKALI = 'Dual Alkali',
     ELECTROSTATIC_PRECIPITATOR = 'Electrostatic Precipitator',
     FLUIDIZED_BED_LIMESTONE = 'Fluidized Bed Limestone Injection',
+    HALOGENATED_PAC_SORBENT = 'Halogenated PAC Sorbent Injection',
+    HYBRID_ESP = 'Hybrid ESP',
     LOW_NOX_DRY_BOTTOM = 'Low NOx Burner Technology (Dry Bottom only)',
     LOW_NOX_CC_OFA = 'Low NOx Burner Technology w/ Closed-coupled OFA',
     LOW_NOX_CC_SEPARATED_OFA = 'Low NOx Burner Technology w/ Closed-coupled/Separated OFA',
