@@ -35,13 +35,10 @@ export class HourlyApportionedEmissionsService {
     if (unitFuelType && !controlTechnologies) {
       (await results).forEach(e => {
         if (
-          e.unitFact.primaryFuelInfo &&
-          e.unitFact.primaryFuelInfo === unitFuelType
-        ) {
-          filteredResults.push(e);
-        } else if (
-          e.unitFact.secondaryFuelInfo &&
-          e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType)
+          (e.unitFact.primaryFuelInfo &&
+            e.unitFact.primaryFuelInfo === unitFuelType) ||
+          (e.unitFact.secondaryFuelInfo &&
+            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
         ) {
           filteredResults.push(e);
         }
@@ -51,23 +48,22 @@ export class HourlyApportionedEmissionsService {
     if (!unitFuelType && controlTechnologies) {
       (await results).forEach(e => {
         if (
-          e.unitFact.noxControlInfo &&
-          e.unitFact.noxControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          e.unitFact.so2ControlInfo &&
-          e.unitFact.so2ControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          e.unitFact.partControlInfo &&
-          e.unitFact.partControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          e.unitFact.hgControlInfo &&
-          e.unitFact.hgControlInfo.split('<br>').includes(controlTechnologies)
+          (e.unitFact.noxControlInfo &&
+            e.unitFact.noxControlInfo
+              .split('<br>')
+              .includes(controlTechnologies)) ||
+          (e.unitFact.so2ControlInfo &&
+            e.unitFact.so2ControlInfo
+              .split('<br>')
+              .includes(controlTechnologies)) ||
+          (e.unitFact.partControlInfo &&
+            e.unitFact.partControlInfo
+              .split('<br>')
+              .includes(controlTechnologies)) ||
+          (e.unitFact.hgControlInfo &&
+            e.unitFact.hgControlInfo
+              .split('<br>')
+              .includes(controlTechnologies))
         ) {
           filteredResults.push(e);
         }
@@ -79,39 +75,32 @@ export class HourlyApportionedEmissionsService {
         let hasFuel = false;
 
         if (
-          e.unitFact.primaryFuelInfo &&
-          e.unitFact.primaryFuelInfo === unitFuelType
-        ) {
-          hasFuel = true;
-        } else if (
-          e.unitFact.secondaryFuelInfo &&
-          e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType)
+          (e.unitFact.primaryFuelInfo &&
+            e.unitFact.primaryFuelInfo === unitFuelType) ||
+          (e.unitFact.secondaryFuelInfo &&
+            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
         ) {
           hasFuel = true;
         }
 
         if (
           hasFuel &&
-          e.unitFact.noxControlInfo &&
-          e.unitFact.noxControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          hasFuel &&
-          e.unitFact.so2ControlInfo &&
-          e.unitFact.so2ControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          hasFuel &&
-          e.unitFact.partControlInfo &&
-          e.unitFact.partControlInfo.split('<br>').includes(controlTechnologies)
-        ) {
-          filteredResults.push(e);
-        } else if (
-          hasFuel &&
-          e.unitFact.hgControlInfo &&
-          e.unitFact.hgControlInfo.split('<br>').includes(controlTechnologies)
+          ((e.unitFact.noxControlInfo &&
+            e.unitFact.noxControlInfo
+              .split('<br>')
+              .includes(controlTechnologies)) ||
+            (e.unitFact.so2ControlInfo &&
+              e.unitFact.so2ControlInfo
+                .split('<br>')
+                .includes(controlTechnologies)) ||
+            (e.unitFact.partControlInfo &&
+              e.unitFact.partControlInfo
+                .split('<br>')
+                .includes(controlTechnologies)) ||
+            (e.unitFact.hgControlInfo &&
+              e.unitFact.hgControlInfo
+                .split('<br>')
+                .includes(controlTechnologies)))
         ) {
           filteredResults.push(e);
         }
