@@ -5,9 +5,10 @@ import { HourlyApportionedEmissionsController } from './hourly-apportioned-emiss
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from 'src/maps/hourly-apportioned-emissions.map';
+import { StateCode } from '../entities/state-code.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HourUnitDataRepository])],
+  imports: [TypeOrmModule.forFeature([HourUnitDataRepository]), TypeOrmModule.forFeature([StateCode])],
   controllers: [HourlyApportionedEmissionsController],
   providers: [HourlyApportionedEmissionsMap, HourlyApportionedEmissionsService],
 })
