@@ -1,19 +1,14 @@
-import {
-    BaseEntity,
-    Column,
-    Entity,
-    PrimaryColumn,
-  } from 'typeorm';
-  
-  @Entity({ name: 'camdmd.state_code' })
-  export class StateCode extends BaseEntity {
-    @PrimaryColumn({
-      name: 'state_cd',
-    })
-    stateCd: string;
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-    @Column({
-      name: 'state_name',
-    })
-    stateName: string;
-  }
+@Entity({ name: 'camdmd.state_code' })
+export class StateCode extends BaseEntity {
+  @PrimaryColumn({
+    name: 'state_cd',
+  })
+  stateCd: string;
+
+  @Column({
+    name: 'state_name',
+  })
+  stateName: string;
+}

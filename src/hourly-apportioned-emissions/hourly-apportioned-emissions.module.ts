@@ -7,9 +7,7 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from 'src/maps/hourly-apportioned-emissions.map';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HourUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([HourUnitDataRepository])],
   controllers: [HourlyApportionedEmissionsController],
   providers: [HourlyApportionedEmissionsMap, HourlyApportionedEmissionsService],
 })

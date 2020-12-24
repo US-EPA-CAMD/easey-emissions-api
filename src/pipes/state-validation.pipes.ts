@@ -12,7 +12,9 @@ export class StateValidation implements ValidatorConstraintInterface {
   async validate(state: string, args: ValidationArguments): Promise<boolean> {
     const manager = getManager();
 
-    const found = await manager.findOne(StateCode, { stateCd: (state.toUpperCase()) });
+    const found = await manager.findOne(StateCode, {
+      stateCd: state.toUpperCase(),
+    });
     if (found != undefined) {
       return true;
     } else {
