@@ -18,7 +18,6 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   endDate: Date;
 
   @IsOptional()
-  @IsString()
   @Validate(StateValidation)
   @ApiPropertyOptional()
   state: State;
