@@ -16,6 +16,6 @@ export class OrisCodeValidation implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return 'ORIS code not valid. Refer to the list of available ORIS for valid values [placeholder for link to Facilities endpoint]';
+    return 'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]';
   }
 }
