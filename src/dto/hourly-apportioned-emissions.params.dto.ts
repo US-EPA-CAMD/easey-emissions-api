@@ -1,4 +1,4 @@
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString, Validate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { PaginationDTO } from './pagination.dto';
@@ -6,6 +6,7 @@ import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
+import { StateValidation } from '../pipes/state-validation.pipes';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
@@ -17,6 +18,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   endDate: Date;
 
   @IsOptional()
+  @Validate(StateValidation)
   @ApiPropertyOptional()
   state: State;
 
