@@ -27,7 +27,6 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
-  @Transform(val => Number.parseFloat(val))
   @Validate(OrisCodeValidation)
   orisCode: number;
 

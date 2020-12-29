@@ -6,13 +6,8 @@ import {
 
 @ValidatorConstraint({ name: 'orisCodeValidation' })
 export class OrisCodeValidation implements ValidatorConstraintInterface {
-  validate(orisCode: number, args: ValidationArguments): boolean {
-    return (
-      String(orisCode).length <= 6 &&
-      typeof orisCode === 'number' &&
-      orisCode % 1 === 0 &&
-      orisCode >= 0
-    );
+  validate(orisCode: string, args: ValidationArguments): boolean {
+    return orisCode.length <= 6 && orisCode.match(/^[0-9]+$/) != null;
   }
 
   defaultMessage(args: ValidationArguments) {
