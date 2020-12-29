@@ -11,7 +11,7 @@ From within the `easey-emissions-api` project directory, you can run:
 ### `npm run start:dev`
 
 Runs the api in the development mode.<br />
-* Open [http://localhost:8000/api/swagger](http://localhost:8000/api/swagger) to view swagger documentation.
+* Open [http://localhost:8080/api/emissions-mgmt/swagger/](http://localhost:8080/api/emissions-mgmt/swagger/) to view swagger documentation.
 
 The page will reload if you make edits via the use of nodemon.<br />
 You will also see any lint errors in the console.
