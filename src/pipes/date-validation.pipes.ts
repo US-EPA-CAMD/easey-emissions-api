@@ -10,11 +10,13 @@ export class DateValidation implements ValidatorConstraintInterface {
   validate(date: Date, args: ValidationArguments): boolean {
     const dateObject = new Date(date);
     const minDate = new Date('1995-01-01');
+    const currentYear = new Date().getUTCFullYear();
 
     return (
       isISO8601(date, { strict: true }) &&
       String(date).match(/^\d{4}-\d{2}-\d{2}$/) != null &&
-      dateObject >= minDate
+      dateObject >= minDate &&
+      dateObject.getUTCFullYear() <= currentYear
     );
   }
 
