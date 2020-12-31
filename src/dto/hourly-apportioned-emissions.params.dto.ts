@@ -1,6 +1,5 @@
 import { IsOptional, Validate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer/decorators';
 
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
@@ -29,7 +28,6 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
-  @Transform(val => Number.parseFloat(val))
   @Validate(OrisCodeValidation)
   orisCode: number;
 
