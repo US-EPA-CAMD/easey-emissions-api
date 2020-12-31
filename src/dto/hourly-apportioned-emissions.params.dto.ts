@@ -8,19 +8,22 @@ import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
 import { OrisCodeValidation } from '../pipes/oris-code-validation.pipes';
 import { StateValidation } from '../pipes/state-validation.pipes';
+import { DateValidation } from '../pipes/date-validation.pipes';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @ApiPropertyOptional()
+  @Validate(DateValidation)
   beginDate: Date;
 
   @IsOptional()
   @ApiPropertyOptional()
+  @Validate(DateValidation)
   endDate: Date;
 
   @IsOptional()
-  @Validate(StateValidation)
   @ApiPropertyOptional()
+  @Validate(StateValidation)
   state: State;
 
   @IsOptional()
