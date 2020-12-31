@@ -30,7 +30,7 @@ export class HourlyApportionedEmissionsService {
       controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
 
-    if (beginDate && endDate && endDate < beginDate) {
+    if (beginDate && endDate && (endDate < beginDate)) {
       throw new BadRequestException('Please enter an end date that is equal to or greater than the begin date');
     }
 
