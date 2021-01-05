@@ -10,7 +10,40 @@ The emissions API endpoints return the hourly values for the measured parameters
 ## Getting Started
 ​
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-​
+
+### Prerequisites
+
+You will need to set up the following in order to access the database:
+- Environment variables
+- Cloud.gov SSH tunnel
+
+**Environment Variables**
+
+Please reach out to an EPA tech lead (see Mike Heese or Jason Whitehead) to get the values for these variables:
+
+- EASEY_DB_HOST
+- EASEY_DB_NAME
+- EASEY_DB_PORT
+- EASEY_DB_PWD
+- EASEY_DB_USER
+
+These are to be used for developmental purposes only. 
+
+**Cloud.gov SSH tunnel**
+
+1. Log into cloud.gov
+2. Go to https://login.fr.cloud.gov/passcode for temporary authentication code
+3. In your terminal input the following:
+```bash
+cf login -a api.fr.cloud.gov --sso
+```
+4. Type in the authenthication code
+5. Target the development org (you will need to be granted permission for access to this):
+```bash
+cf target -o <ORGNAME> -s dev
+```
+6. Open SSH tunnel
+
 ### Installing
 1. Open your terminal and navigate to the directory you wish to store this repository.
 
