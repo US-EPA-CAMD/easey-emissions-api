@@ -2,7 +2,7 @@
 [![GitHub](https://img.shields.io/github/license/US-EPA-CAMD/easey-emissions-api)](https://github.com/US-EPA-CAMD/easey-emissions-api/blob/develop/LICENSE)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=US-EPA-CAMD_easey-emissions-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=US-EPA-CAMD_easey-emissions-api)
 [![Develop Branch Pipeline](https://github.com/US-EPA-CAMD/easey-emissions-api/workflows/Develop%20Branch%20Workflow/badge.svg)](https://github.com/US-EPA-CAMD/easey-emissions-api/actions)<br>
-Emissions data API for EASEY.
+Emissions data API for the EPA CAMD Business Systems EASEY Application
 ​
 
 The emissions API endpoints return the hourly values for the measured parameters, calculated hourly emissions values, control technologies, unit type, and unit fuel types for the associated unit described in a facility’s monitoring plan.
@@ -80,6 +80,7 @@ npm run start:dev
 ```
 
 Open [http://localhost:8080/api/emissions-mgmt/swagger/](http://localhost:8080/api/emissions-mgmt/swagger/) to view swagger documentation.
+> NOTE: The port can be changed by setting the EASEY_EMISSIONS_MGMT_API_PORT environment variable
 
 The page will reload if you make edits via the use of nodemon.<br />
 You will also see any lint errors in the console.
