@@ -12,7 +12,6 @@ The emissions API endpoints return the hourly values for the measured parameters
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 ​
 ### Installing
-​
 1. Open your terminal and navigate to the directory you wish to store this repository.
 
 2. Clone this repository
@@ -37,7 +36,6 @@ These instructions will get you a copy of the project up and running on your loc
     npm install
     ```
 ### Run the appication 
-<br>
 
 From within the `easey-emissions-api` project directory, you can run:
 
