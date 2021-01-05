@@ -32,17 +32,19 @@ These are to be used for developmental purposes only.
 **Cloud.gov SSH tunnel**
 
 1. Log into cloud.gov
-2. Go to https://login.fr.cloud.gov/passcode for temporary authentication code
+2. Go to https://login.fr.cloud.gov/passcode 
+3. Enter in the temporary token code from your authentication app (Google Authenticator) to recieve a temporary authentication code
 3. In your terminal input the following:
 ```bash
 cf login -a api.fr.cloud.gov --sso
 ```
-4. Type in the authenthication code
+4. Type in the authenthication code recieved earlier
 5. Target the development org (you will need to be granted permission for access to this):
 ```bash
 cf target -o <ORGNAME> -s dev
 ```
 6. Open SSH tunnel
+7. Keep the SSH tunnel open while running the application
 
 ### Installing
 1. Open your terminal and navigate to the directory you wish to store this repository.
@@ -124,7 +126,9 @@ opHoursOnly | optional | boolean | query
 
 ## Built With
 ​
-[NestJS](https://nestjs.com/) - server-side Node.js framework 
+[NestJS](https://nestjs.com/) - server-side Node.js framework
+
+cloud.gov - Platform as a Service (PaaS)
 ​ 
 ​
 ## License
