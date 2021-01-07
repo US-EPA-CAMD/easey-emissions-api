@@ -7,6 +7,7 @@ import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissi
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { ResponseHeaders } from '../utils/response.headers';
+import { BadRequestException } from '@nestjs/common';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -79,6 +80,26 @@ describe('HourlyApportionedEmissionsService', () => {
       expect(map.many).toHaveBeenCalled();
 
       expect(result).toEqual('mapped DTOs');
+    });
+
+    it('throws an error as endDate is less than beginDate', async () => {
+      const filters: HourlyApportionedEmissionsParamsDTO = {
+        page: 1,
+        perPage: 10,
+        orderBy: undefined,
+        beginDate: new Date('2020-12-31T00:00:00'),
+        endDate: new Date('2020-12-30T00:00:00'),
+        state: State.TX,
+        orisCode: 3,
+        unitType: UnitType.BUBBLING_FLUIDIZED,
+        unitFuelType: undefined,
+        controlTechnologies: undefined,
+        opHoursOnly: false,
+      };
+
+      expect(
+        hourlyApportionedEmissionsService.getHourlyEmissions(filters),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

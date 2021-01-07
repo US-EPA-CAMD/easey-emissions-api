@@ -58,7 +58,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       results.andWhere('hud.opDate <= :endDate', { endDate: endDate });
     }
     if (state) {
-      results.andWhere('uf.state = :state', { state: state });
+      results.andWhere('uf.state = :state', { state: state.toUpperCase() });
     }
 
     if (orisCode) {
