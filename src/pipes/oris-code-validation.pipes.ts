@@ -17,7 +17,7 @@ export function IsOrisCode(validationOptions?: ValidationOptions) {
             // NOTE: we will eventually want to validate by checking if the orisCode exists in DB
             value.length <= 6 &&
             value.match(/^[0-9]+$/) != null &&
-            (value as Number) != 0
+            (value as number) != 0
           );
         },
       },
