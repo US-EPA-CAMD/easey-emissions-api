@@ -13,38 +13,38 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need to set up the following in order to access the database:
-- Environment variables
-- Cloud.gov SSH tunnel
+- Set environment variables
+- Establish cloud.gov SSH tunnel
 
 **Environment Variables**
 
+You will need to set up the following environment variables in order to access the database. These are to be used for developmental purposes only.
+
+- EASEY_DB_HOST: localhost
+- EASEY_DB_PORT: `LOCAL_PORT` used in the SSH tunnel
+
 Please reach out to an EPA tech lead (see Mike Heese or Jason Whitehead) to get the values for these variables:
 
-- EASEY_DB_HOST
 - EASEY_DB_NAME
-- EASEY_DB_PORT
 - EASEY_DB_PWD
 - EASEY_DB_USER
-
-These are to be used for developmental purposes only. 
+ 
 
 **Cloud.gov SSH tunnel**
 
-1. Log into cloud.gov
-2. Go to https://login.fr.cloud.gov/passcode 
-3. Enter in the temporary token code from your authentication app (Google Authenticator) to recieve a temporary authentication code
-3. In your terminal input the following:
+1. [Log in and set up the command line.](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line) 
+
+2. Target the development org (you will need to be granted permission for access to this):
 ```bash
-cf login -a api.fr.cloud.gov --sso
+cf target -o epa-easey -s dev
 ```
-4. Type in the authenthication code recieved earlier
-5. Target the development org (you will need to be granted permission for access to this):
+3. Open SSH tunnel
 ```bash
-cf target -o <ORGNAME> -s dev
+cf ssh emissions-api -L <LOCAL_PORT>:<DB_HOST>:5432
 ```
-6. Open SSH tunnel
-7. Keep the SSH tunnel open while running the application
+4. Keep the SSH tunnel open while running the application
+
+> NOTE: For more information on cloud.gov, please refer to their [documentation](https://cloud.gov/docs/).
 
 ### Installing
 1. Open your terminal and navigate to the directory you wish to store this repository.
@@ -104,26 +104,7 @@ $ npm run test:cov
 ```
 ## API Endpoints
 
-**Hourly Apportioned Emissions** 
-### ​GET /api/emissions-mgmt/apportioned/hourly
-
-Gets all hourly apportioned emissions data including associated unit characteristics. 
-
-Parameters:
-
-Name | Required | Type | Path/Query
--- | -- | -- | --
-page | optional | number | query
-perPage | optional | number | query
-orderBy | optional | string | query
-beginDate | optional | date | query
-endDate | optional | date | query
-state | optional | string | query
-orisCode | optional | number | query
-unitType | optional | string | query
-unitFuelType | optional | string | query
-controlTechnologies | optional | string | query
-opHoursOnly | optional | boolean | query
+Please refer to the [Emissions Management API Swagger Documentation](https://easey-dev.app.cloud.gov/api/emissions-mgmt/swagger/) for descriptions of the endpoints.
 
 ## Built With
 ​
