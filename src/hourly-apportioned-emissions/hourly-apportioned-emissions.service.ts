@@ -30,18 +30,20 @@ export class HourlyApportionedEmissionsService {
       controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
 
-    if (beginDate && endDate && (endDate < beginDate)) {
-      throw new BadRequestException('Please enter an end date that is equal to or greater than the begin date');
+    if (beginDate && endDate && endDate < beginDate) {
+      throw new BadRequestException(
+        'Please enter an end date that is equal to or greater than the begin date',
+      );
     }
 
-    let results = this.repository.getHourlyEmissions(
+    let results = await this.repository.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
     );
-    
+
     let filteredResults: Array<HourUnitData> = [];
 
     if (unitFuelType && !controlTechnologies) {
-      (await results).forEach(e => {
+      results.forEach(e => {
         if (
           (e.unitFact.primaryFuelInfo &&
             e.unitFact.primaryFuelInfo === unitFuelType) ||
@@ -51,10 +53,11 @@ export class HourlyApportionedEmissionsService {
           filteredResults.push(e);
         }
       });
+      results = filteredResults;
     }
 
     if (!unitFuelType && controlTechnologies) {
-      (await results).forEach(e => {
+      results.forEach(e => {
         if (
           (e.unitFact.noxControlInfo &&
             e.unitFact.noxControlInfo
@@ -76,10 +79,11 @@ export class HourlyApportionedEmissionsService {
           filteredResults.push(e);
         }
       });
+      results = filteredResults;
     }
 
     if (unitFuelType && controlTechnologies) {
-      (await results).forEach(e => {
+      results.forEach(e => {
         let hasFuel = false;
 
         if (
@@ -113,6 +117,7 @@ export class HourlyApportionedEmissionsService {
           filteredResults.push(e);
         }
       });
+      results = filteredResults;
     }
 
     if (page && perPage) {
@@ -122,20 +127,12 @@ export class HourlyApportionedEmissionsService {
       const begin: number = (pageNum - 1) * perPageNum;
       const end: number = begin + perPageNum;
 
-      let paginatedResults;
-      let totalCount;
-
-      if (unitFuelType || controlTechnologies) {
-        paginatedResults = filteredResults.slice(begin, end);
-        totalCount = filteredResults.length;
-      } else {
-        paginatedResults = (await results).slice(begin, end);
-        totalCount = (await results).length;
-      }
+      const paginatedResults = results.slice(begin, end);
+      const totalCount = results.length;
 
       ResponseHeaders.setPagination(req, totalCount);
       return this.map.many(paginatedResults);
     }
-    return this.map.many(await results);
+    return this.map.many(results);
   }
 }
