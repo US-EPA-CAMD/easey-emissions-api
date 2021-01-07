@@ -107,24 +107,27 @@ export class HourlyApportionedEmissionsService {
       });
     }
 
-    const pageNum: number = +page;
-    const perPageNum: number = +perPage;
+    if (page && perPage) {
+      const pageNum: number = +page;
+      const perPageNum: number = +perPage;
 
-    const begin: number = (pageNum - 1) * perPageNum;
-    const end: number = begin + perPageNum;
+      const begin: number = (pageNum - 1) * perPageNum;
+      const end: number = begin + perPageNum;
 
-    let paginatedResults;
-    let totalCount;
+      let paginatedResults;
+      let totalCount;
 
-    if (unitFuelType || controlTechnologies) {
-      paginatedResults = filteredResults.slice(begin, end);
-      totalCount = filteredResults.length;
-    } else {
-      paginatedResults = (await results).slice(begin, end);
-      totalCount = (await results).length;
+      if (unitFuelType || controlTechnologies) {
+        paginatedResults = filteredResults.slice(begin, end);
+        totalCount = filteredResults.length;
+      } else {
+        paginatedResults = (await results).slice(begin, end);
+        totalCount = (await results).length;
+      }
+
+      ResponseHeaders.setPagination(req, totalCount);
+      return this.map.many(paginatedResults);
     }
-
-    ResponseHeaders.setPagination(req, totalCount);
-    return this.map.many(paginatedResults);
+    return this.map.many(await results);
   }
 }
