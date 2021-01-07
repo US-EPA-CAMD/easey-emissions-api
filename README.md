@@ -18,7 +18,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 **Environment Variables**
 
-You will need to set up the following environment variables in order to access the database. These are to be used for developmental purposes only.
+You will need to set up the following environment variables in order to access the database. These are to be used for development purposes only.
 
 - EASEY_DB_HOST: localhost
 - EASEY_DB_PORT: `LOCAL_PORT` used in the SSH tunnel
