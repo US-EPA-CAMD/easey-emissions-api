@@ -23,7 +23,7 @@ You will need to set up the following environment variables in order to access t
 - EASEY_DB_HOST: localhost
 - EASEY_DB_PORT: `LOCAL_PORT` used in the SSH tunnel
 
-Please reach out to an EPA tech lead (see Mike Heese or Jason Whitehead) to get the values for these variables:
+Please reach out to an EPA tech lead (see Mike Heese or Jason Whitehead) to get the values for these variables
 
 - EASEY_DB_NAME
 - EASEY_DB_PWD
@@ -32,9 +32,9 @@ Please reach out to an EPA tech lead (see Mike Heese or Jason Whitehead) to get 
 
 **Cloud.gov SSH tunnel**
 
-1. [Log in and set up the command line.](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line) 
+1. [Log in and set up the command line](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line) 
 
-2. Target the development org (you will need to be granted permission for access to this):
+2. Target the development org (you will need to be granted permission to access this):
 ```bash
 cf target -o epa-easey -s dev
 ```
@@ -110,7 +110,7 @@ Please refer to the [Emissions Management API Swagger Documentation](https://eas
 ​
 [NestJS](https://nestjs.com/) - server-side Node.js framework
 
-cloud.gov - Platform as a Service (PaaS)
+[Cloud.gov](https://cloud.gov/) - Platform as a Service (PaaS)
 ​ 
 ​
 ## License
