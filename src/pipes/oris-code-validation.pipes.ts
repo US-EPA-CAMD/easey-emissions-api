@@ -1,16 +1,26 @@
 import {
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
+  registerDecorator,
+  ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
 
-@ValidatorConstraint({ name: 'orisCodeValidation' })
-export class OrisCodeValidation implements ValidatorConstraintInterface {
-  validate(orisCode: string, args: ValidationArguments): boolean {
-    return orisCode.length <= 6 && orisCode.match(/^[1-9][0-9]*$/) != null;
-  }
-
-  defaultMessage(args: ValidationArguments) {
-    return 'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]';
-  }
+export function IsOrisCode(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'isOrisCode',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          return (
+            // NOTE: we will eventually want to validate by checking if the orisCode exists in DB
+            value.length <= 6 &&
+            value.match(/^[0-9]+$/) != null &&
+            (value as Number) != 0
+          );
+        },
+      },
+    });
+  };
 }
