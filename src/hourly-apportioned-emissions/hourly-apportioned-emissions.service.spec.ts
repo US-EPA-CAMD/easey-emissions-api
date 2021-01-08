@@ -50,12 +50,42 @@ describe('HourlyApportionedEmissionsService', () => {
       hourUnitDataRepository.getHourlyEmissions.mockResolvedValue(
         'list of emissions',
       );
+      map.many.mockReturnValue('mapped DTOs');
+
+      const filters: HourlyApportionedEmissionsParamsDTO = {
+        page: undefined,
+        perPage: undefined,
+        orderBy: undefined,
+        beginDate: new Date(),
+        endDate: new Date(),
+        state: State.TX,
+        orisCode: 3,
+        unitType: UnitType.BUBBLING_FLUIDIZED,
+        unitFuelType: undefined,
+        controlTechnologies: undefined,
+        opHoursOnly: false,
+      };
+
+      let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
+        filters,
+      );
+      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
+        filters,
+      );
+      expect(map.many).toHaveBeenCalled();
+      expect(result).toEqual('mapped DTOs');
+    });
+
+    it('calls HourUnitDataRepository.getHourlyEmissions() with pagination parameters and gets all emissions from the repository', async () => {
+      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue(
+        'list of emissions',
+      );
       ResponseHeaders.setPagination = jest
         .fn()
         .mockReturnValue('paginated results');
       map.many.mockReturnValue('mapped DTOs');
 
-      const filters: HourlyApportionedEmissionsParamsDTO = {
+      const paginatedFilters: HourlyApportionedEmissionsParamsDTO = {
         page: 1,
         perPage: 10,
         orderBy: undefined,
@@ -69,17 +99,17 @@ describe('HourlyApportionedEmissionsService', () => {
         opHoursOnly: false,
       };
 
-      const result = await hourlyApportionedEmissionsService.getHourlyEmissions(
-        filters,
+      const paginatedResult = await hourlyApportionedEmissionsService.getHourlyEmissions(
+        paginatedFilters,
       );
 
       expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        filters,
+        paginatedFilters,
       );
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(map.many).toHaveBeenCalled();
 
-      expect(result).toEqual('mapped DTOs');
+      expect(paginatedResult).toEqual('mapped DTOs');
     });
 
     it('throws an error as endDate is less than beginDate', async () => {
