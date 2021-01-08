@@ -6,9 +6,9 @@ import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
-import { IsOrisCode } from '../pipes/oris-code-validation.pipes';
-import { StateValidation } from '../pipes/state-validation.pipes';
-import { DateValidation } from '../pipes/date-validation.pipes';
+import { IsOrisCode } from '../pipes/is-oris-code.pipe';
+import { StateValidation } from '../pipes/state-validation.pipe';
+import { DateValidation } from '../pipes/date-validation.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
