@@ -115,7 +115,7 @@ Please refer to the [Emissions Management API Swagger Documentation](https://eas
 ​
 ## License & Contributing
 ​
-This project is licensed under the MIT License. We encourage you to read this project’s [license](LICENSE), [contributing guidelines](CONTRIBUTING.MD), and [code of conduct](CODE_OF_CONDUCT.MD).
+This project is licensed under the MIT License. We encourage you to read this project’s [License](LICENSE), [Contributing Guidelines](CONTRIBUTING.md), and [Code of Conduct](CODE_OF_CONDUCT.md).
 
 
 
