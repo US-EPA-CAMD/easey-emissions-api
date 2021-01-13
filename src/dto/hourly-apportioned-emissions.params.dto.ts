@@ -9,6 +9,7 @@ import { State } from '../enums/state.enum';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
 import { DateValidation } from '../pipes/date-validation.pipe';
+import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from 'src/pipes/is-unit-fuel-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
@@ -49,6 +50,10 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
+  @IsControlTechnology({
+    message:
+      'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
+  })
   controlTechnologies: ControlTechnology;
 
   @IsOptional()
