@@ -16,6 +16,7 @@ import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from 'src/pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
+import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @ApiProperty()
@@ -71,6 +72,10 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
+  @IsControlTechnology({
+    message:
+      'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
+  })
   controlTechnologies: ControlTechnology;
 
   @IsOptional()
