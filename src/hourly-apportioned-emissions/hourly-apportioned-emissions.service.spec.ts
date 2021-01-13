@@ -7,7 +7,6 @@ import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissi
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { ResponseHeaders } from '../utils/response.headers';
-import { BadRequestException } from '@nestjs/common';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
