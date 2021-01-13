@@ -9,6 +9,7 @@ import { State } from '../enums/state.enum';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
 import { DateValidation } from '../pipes/date-validation.pipe';
+import { IsUnitFuelType } from 'src/pipes/is-unit-fuel-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
@@ -40,6 +41,10 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
+  @IsUnitFuelType({
+    message:
+      'Unit fuel type is not valid. Refer to the list of available unit fuel types for valid values [placeholder for link to endpoint]',
+  })
   unitFuelType: UnitFuelType;
 
   @IsOptional()
