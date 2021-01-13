@@ -9,6 +9,7 @@ import { State } from '../enums/state.enum';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
 import { DateValidation } from '../pipes/date-validation.pipe';
+import { IsUnitType } from 'src/pipes/is-unit-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
@@ -36,6 +37,9 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @ApiPropertyOptional()
+  @IsUnitType({
+    message: 'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]'
+  })
   unitType: UnitType;
 
   @IsOptional()
