@@ -24,17 +24,9 @@ export class HourlyApportionedEmissionsService {
     const {
       page,
       perPage,
-      beginDate,
-      endDate,
       unitFuelType,
       controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
-
-    if (beginDate && endDate && endDate < beginDate) {
-      throw new BadRequestException(
-        'Please enter an end date that is equal to or greater than the begin date',
-      );
-    }
 
     let results = await this.repository.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,

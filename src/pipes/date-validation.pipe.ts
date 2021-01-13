@@ -13,6 +13,7 @@ export class DateValidation implements ValidatorConstraintInterface {
     const currentYear = new Date().getUTCFullYear();
 
     return (
+      date != undefined &&
       isISO8601(date, { strict: true }) &&
       String(date).match(/^\d{4}-\d{2}-\d{2}$/) != null &&
       dateObject >= minDate &&
@@ -21,7 +22,9 @@ export class DateValidation implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    if (args.value.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
+    if (!args.value) {
+      return 'Please enter a $property';
+    } else if (args.value.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
       return 'Please enter the $property in the YYYY-MM-DD format';
     } else if (!isISO8601(args.value, { strict: true })) {
       return 'Please enter a valid $property in the YYYY-MM-DD format';
