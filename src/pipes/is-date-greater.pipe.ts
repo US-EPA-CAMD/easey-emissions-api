@@ -19,7 +19,10 @@ export function IsDateGreaterThanEqualTo(
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as Date)[relatedPropertyName];
-          return (value as Date) >= relatedValue;
+          if (value && relatedValue) {
+            return (value as Date) >= relatedValue;
+          }
+          return true;
         },
       },
     });

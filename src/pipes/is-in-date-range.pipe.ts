@@ -13,13 +13,16 @@ export function IsInDateRange(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          const dateObject = new Date(value);
-          const minDate = new Date('1995-01-01');
-          const currentYear = new Date().getUTCFullYear();
-
-          return (
-            dateObject >= minDate && dateObject.getUTCFullYear() <= currentYear
-          );
+          if(value) {
+            const dateObject = new Date(value);
+            const minDate = new Date('1995-01-01');
+            const currentYear = new Date().getUTCFullYear();
+  
+            return (
+              dateObject >= minDate && dateObject.getUTCFullYear() <= currentYear
+            );
+          }
+          return true;
         },
       },
     });

@@ -45,9 +45,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsIsoFormat({
     message: 'Please enter the $property in the YYYY-MM-DD format',
   })
-  @IsDefined({
-    message: 'Please enter an $property'
-  })
+  @IsDefined()
   endDate: Date;
 
   @IsOptional()

@@ -14,7 +14,10 @@ export function IsValidDate(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return isISO8601(value, { strict: true });
+          if (value) {
+            return isISO8601(value, { strict: true });
+          }
+          return true;
         },
       },
     });

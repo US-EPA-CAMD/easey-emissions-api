@@ -13,7 +13,10 @@ export function IsIsoFormat(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return String(value).match(/^\d{4}-\d{2}-\d{2}$/) != null;
+          if (value) {
+            return String(value).match(/^\d{4}-\d{2}-\d{2}$/) != null;
+          }
+          return true;
         },
       },
     });
