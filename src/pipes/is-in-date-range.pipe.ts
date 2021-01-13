@@ -4,8 +4,12 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
+/**
+ * This decorator takes in a min date as a parameter
+ * The date range is the min date -> today's current date
+ */
 export function IsInDateRange(
-  property: string,
+  property: string, // min date
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
