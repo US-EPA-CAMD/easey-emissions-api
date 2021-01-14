@@ -113,9 +113,10 @@ Please refer to the [Emissions Management API Swagger Documentation](https://eas
 [Cloud.gov](https://cloud.gov/) - Platform as a Service (PaaS)
 ​ 
 ​
-## License
+## License & Contributing
 ​
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License. We encourage you to read this project’s [License](LICENSE), [Contributing Guidelines](CONTRIBUTING.md), and [Code of Conduct](CODE_OF_CONDUCT.md).
+
 
 
 
