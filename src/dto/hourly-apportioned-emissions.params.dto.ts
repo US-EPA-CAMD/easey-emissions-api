@@ -39,7 +39,8 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @ApiPropertyOptional()
   @IsUnitType({
-    message: 'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]'
+    message:
+      'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]',
   })
   unitType: UnitType;
 
