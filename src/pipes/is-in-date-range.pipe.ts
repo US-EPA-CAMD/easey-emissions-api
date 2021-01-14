@@ -24,11 +24,11 @@ export function IsInDateRange(
           if (value) {
             const dateObject = new Date(value);
             const minDate = args.constraints[0][0];
-            const currentDate = args.constraints[0][1];
+            const maxDate = args.constraints[0][1];
 
             return (
               dateObject >= minDate &&
-              dateObject <= currentDate
+              dateObject <= maxDate
             );
           }
           return true;
