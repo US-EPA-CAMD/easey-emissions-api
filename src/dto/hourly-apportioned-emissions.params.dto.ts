@@ -3,7 +3,6 @@ import {
   IsOptional,
   Validate,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
@@ -19,7 +18,6 @@ import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
-  @ApiProperty()
   @IsInDateRange([new Date('1995-01-01'), (new Date())], {
     message: 'Please enter a $property year between 1995 and this year',
   })
@@ -32,7 +30,6 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsDefined()
   beginDate: Date;
 
-  @ApiProperty()
   @IsDateGreaterThanEqualTo('beginDate', {
     message:
       'Please enter an $property that is greater than or equal to the $constraint1',
@@ -50,35 +47,29 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   endDate: Date;
 
   @IsOptional()
-  @ApiPropertyOptional()
   @Validate(StateValidation)
-  state: State;
+  state?: State;
 
   @IsOptional()
-  @ApiPropertyOptional()
   @IsOrisCode({
     message:
       'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
   })
-  orisCode: number;
+  orisCode?: number;
 
   @IsOptional()
-  @ApiPropertyOptional()
-  unitType: UnitType;
+  unitType?: UnitType;
 
   @IsOptional()
-  @ApiPropertyOptional()
-  unitFuelType: UnitFuelType;
+  unitFuelType?: UnitFuelType;
 
   @IsOptional()
-  @ApiPropertyOptional()
   @IsControlTechnology({
     message:
       'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
   })
-  controlTechnologies: ControlTechnology;
+  controlTechnologies?: ControlTechnology;
 
   @IsOptional()
-  @ApiPropertyOptional()
-  opHoursOnly: boolean;
+  opHoursOnly?: boolean;
 }
