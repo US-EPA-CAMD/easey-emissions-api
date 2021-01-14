@@ -20,7 +20,7 @@ import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @ApiProperty()
-  @IsInDateRange('1995-01-01', {
+  @IsInDateRange([new Date('1995-01-01'), (new Date())], {
     message: 'Please enter a $property year between 1995 and this year',
   })
   @IsValidDate({
@@ -35,9 +35,9 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @ApiProperty()
   @IsDateGreaterThanEqualTo('beginDate', {
     message:
-      'Please enter an end date that is equal to or greater than the begin date',
+      'Please enter an $property that is greater than or equal to the $constraint1',
   })
-  @IsInDateRange('1995-01-01', {
+  @IsInDateRange([new Date('1995-01-01'), (new Date())], {
     message: 'Please enter an $property year between 1995 and this year',
   })
   @IsValidDate({

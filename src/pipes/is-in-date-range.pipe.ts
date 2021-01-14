@@ -5,11 +5,11 @@ import {
 } from 'class-validator';
 
 /**
- * This decorator takes in a min date as a parameter
- * The date range is the min date -> today's current date
+ * This decorator takes in a min date and max date as a parameter
+ * The date range is the min date -> max date inclusive
  */
 export function IsInDateRange(
-  property: string, // min date
+  property: Date[],
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
@@ -23,12 +23,12 @@ export function IsInDateRange(
         validate(value: any, args: ValidationArguments) {
           if (value) {
             const dateObject = new Date(value);
-            const minDate = new Date(args.constraints[0]);
-            const currentYear = new Date().getUTCFullYear();
+            const minDate = args.constraints[0][0];
+            const currentDate = args.constraints[0][1];
 
             return (
               dateObject >= minDate &&
-              dateObject.getUTCFullYear() <= currentYear
+              dateObject <= currentDate
             );
           }
           return true;

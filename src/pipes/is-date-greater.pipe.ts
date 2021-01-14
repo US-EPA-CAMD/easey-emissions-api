@@ -4,6 +4,9 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
+/**
+ * This decorator takes in a date property - in the same object - as a parameter
+ */
 export function IsDateGreaterThanEqualTo(
   property: string,
   validationOptions?: ValidationOptions,
