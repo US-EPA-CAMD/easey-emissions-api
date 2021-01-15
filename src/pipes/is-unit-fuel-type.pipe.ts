@@ -4,6 +4,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { getManager } from 'typeorm';
+
 import { FuelTypeCode } from '../entities/fuel-type-code.entity';
 
 export function IsUnitFuelType(validationOptions?: ValidationOptions) {
