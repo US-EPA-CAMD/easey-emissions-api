@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 import { getManager } from 'typeorm';
 
-import { UnitTypeCode } from 'src/entities/unit-type-code.entity';
+import { UnitTypeCode } from '../entities/unit-type-code.entity';
 
 export function IsUnitType(validationOptions?: ValidationOptions) {
   return function(object: Object, propertyName: string) {
