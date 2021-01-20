@@ -1,15 +1,18 @@
+import { Request } from 'express';
+
 import {
   ApiTags,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 
 import { Get, Controller, Query, ValidationPipe, Req } from '@nestjs/common';
-import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
+
+import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
-import { HourlyApportionedEmissionsDTO } from 'src/dto/hourly-apportioned-emissions.dto';
+
+import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 
 @ApiTags('Hourly Apportioned Emissions')
 @Controller('apportioned/hourly')

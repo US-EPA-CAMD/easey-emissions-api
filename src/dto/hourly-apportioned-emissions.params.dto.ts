@@ -11,13 +11,13 @@ import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
-import { IsUnitType } from 'src/pipes/is-unit-type.pipe';
+import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
-import { IsValidDate } from 'src/pipes/is-valid-date.pipe';
+import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
-import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
-import { IsUnitFuelType } from 'src/pipes/is-unit-fuel-type.pipe';
+import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
+import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), (new Date())], {

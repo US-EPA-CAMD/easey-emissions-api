@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="C:\Projects\US-EPA-CAMD\easey-emissions-api\src\hourly-apportioned-emissions\hour-unit-data.repository.spec.ts">
+    <testCase name="HourUnitDataRepository getHourlyEmissions calls createQueryBuilder and gets all HourUnitData from the repository" duration="11"/>
+  </file>
+  <file path="C:\Projects\US-EPA-CAMD\easey-emissions-api\src\hourly-apportioned-emissions\hourly-apportioned-emissions.service.spec.ts">
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() and gets all emissions from the repository" duration="11"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with pagination parameters and gets all emissions from the repository" duration="2"/>
+  </file>
+  <file path="C:\Projects\US-EPA-CAMD\easey-emissions-api\src\hourly-apportioned-emissions\hourly-apportioned-emissions.controller.spec.ts">
+    <testCase name="-- Hourly Apportioned Emissions Controller -- * getHourlyEmissions should return test 1" duration="2"/>
+  </file>
+</testExecutions>
