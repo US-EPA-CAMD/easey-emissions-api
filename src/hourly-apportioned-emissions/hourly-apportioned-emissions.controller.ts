@@ -15,7 +15,7 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 
 @ApiTags('Hourly Apportioned Emissions')
-@Controller('apportioned/hourly')
+@Controller()
 export class HourlyApportionedEmissionsController {
   constructor(
     private hourlyApportionedEmissionsService: HourlyApportionedEmissionsService,
