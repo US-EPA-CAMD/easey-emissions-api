@@ -57,7 +57,7 @@ describe('HourUnitDataRepository', () => {
         unitType: UnitType.BUBBLING_FLUIDIZED,
         unitFuelType: UnitFuelType.COAL,
         controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,
-        opHoursOnly: false,
+        opHoursOnly: true,
       };
       const result = await hourUnitDataRepository.getHourlyEmissions(filters);
 
