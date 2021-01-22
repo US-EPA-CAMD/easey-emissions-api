@@ -2,8 +2,9 @@ import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+
+import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';

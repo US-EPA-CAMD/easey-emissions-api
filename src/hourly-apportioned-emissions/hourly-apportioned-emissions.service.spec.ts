@@ -2,15 +2,20 @@ import { Test } from '@nestjs/testing';
 
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
-import { State } from '../enums/state.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { ResponseHeaders } from '../utils/response.headers';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
+import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { UnitFact } from '../entities/unit-fact.entity';
+import { State } from '../enums/state.enum';
+import { UnitType } from '../enums/unit-type.enum';
+import { ControlTechnology } from '../enums/control-technology.enum';
+import { UnitFuelType } from '../enums/unit-fuel-type.enum';
+
+import { ResponseHeaders } from '../utils/response.headers';
+
+
+
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -60,15 +65,9 @@ describe('HourlyApportionedEmissionsService', () => {
       ],
     }).compile();
 
-    hourlyApportionedEmissionsService = module.get<
-      HourlyApportionedEmissionsService
-    >(HourlyApportionedEmissionsService);
-    hourUnitDataRepository = module.get<HourUnitDataRepository>(
-      HourUnitDataRepository,
-    );
-    map = module.get<HourlyApportionedEmissionsMap>(
-      HourlyApportionedEmissionsMap,
-    );
+    hourlyApportionedEmissionsService = module.get(HourlyApportionedEmissionsService);
+    hourUnitDataRepository = module.get(HourUnitDataRepository);
+    map = module.get(HourlyApportionedEmissionsMap);
   });
 
   describe('getHourlyEmissions', () => {

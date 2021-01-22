@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="C:\Users\juniesenthilkumar\Desktop\emissions\easey-emissions-api\src\hourly-apportioned-emissions\hour-unit-data.repository.spec.ts">
-    <testCase name="HourUnitDataRepository getHourlyEmissions calls createQueryBuilder and gets all HourUnitData from the repository" duration="20"/>
+    <testCase name="HourUnitDataRepository getHourlyEmissions calls createQueryBuilder and gets all HourUnitData from the repository" duration="34"/>
   </file>
   <file path="C:\Users\juniesenthilkumar\Desktop\emissions\easey-emissions-api\src\hourly-apportioned-emissions\hourly-apportioned-emissions.service.spec.ts">
-    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() and gets all emissions from the repository" duration="14"/>
-    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with pagination parameters and gets all emissions from the repository" duration="3"/>
-    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType and controlTechnologies" duration="4"/>
-    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType but not for controlTechnologies" duration="2"/>
-    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for controlTechnologies but not for unitFuelType" duration="3"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() and gets all emissions from the repository" duration="38"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with pagination parameters and gets all emissions from the repository" duration="5"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType and controlTechnologies" duration="7"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType but not for controlTechnologies" duration="5"/>
+    <testCase name="HourlyApportionedEmissionsService getHourlyEmissions calls HourUnitDataRepository.getHourlyEmissions() with filters for controlTechnologies but not for unitFuelType" duration="5"/>
+  </file>
+  <file path="C:\Users\juniesenthilkumar\Desktop\emissions\easey-emissions-api\src\dto\hourly-apportioned-emissions.params.dto.spec.ts">
+    <testCase name="-- Hourly Apportioned Emissions Params DTO -- * getHourlyEmissions tests the validations for the params DTO" duration="16"/>
   </file>
   <file path="C:\Users\juniesenthilkumar\Desktop\emissions\easey-emissions-api\src\hourly-apportioned-emissions\hourly-apportioned-emissions.controller.spec.ts">
-    <testCase name="-- Hourly Apportioned Emissions Controller -- * getHourlyEmissions should return test 1" duration="3"/>
     <testCase name="-- Hourly Apportioned Emissions Controller -- * getHourlyEmissions should return test 1" duration="4"/>
   </file>
 </testExecutions>
