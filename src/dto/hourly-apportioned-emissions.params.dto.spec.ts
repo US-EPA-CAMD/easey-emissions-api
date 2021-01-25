@@ -13,7 +13,7 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
 
 describe('-- Hourly Apportioned Emissions Params DTO --', () => {
-  describe('* getHourlyEmissions', () => {
+  describe('getHourlyEmissions with query parameters', () => {
     class MyClass {
       constructor(
         beginDate: string,
