@@ -54,7 +54,7 @@ describe('HourUnitDataRepository', () => {
         beginDate: new Date(),
         endDate: new Date(),
         state: State.TX,
-        orisCode: 3,
+        orisCode: [3],
         unitType: UnitType.BUBBLING_FLUIDIZED,
         unitFuelType: UnitFuelType.COAL,
         controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,

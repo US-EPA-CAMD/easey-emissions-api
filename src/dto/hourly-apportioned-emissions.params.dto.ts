@@ -3,13 +3,14 @@ import {
   IsOptional,
   Validate,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
-import { IsOrisCode } from '../pipes/is-oris-code.pipe';
+// import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { StateValidation } from '../pipes/state-validation.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
@@ -53,11 +54,13 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   state?: State;
 
   @IsOptional()
-  @IsOrisCode({
-    message:
-      'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
-  })
-  orisCode?: number;
+  // @IsOrisCode({
+  //   each: true,
+  //   message:
+  //     'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
+  // })
+  @Transform((value: string) => value.split(',').map(item => Number(item)))
+  orisCode?: number[];
 
   @IsOptional()
   @IsUnitType({
