@@ -47,6 +47,10 @@ describe('HourUnitDataRepository', () => {
       queryBuilder.andWhere.mockReturnValue('mockFilter');
       queryBuilder.getMany.mockReturnValue('mockEmissions');
 
+      // branch coverage
+      const emptyFilters: HourlyApportionedEmissionsParamsDTO = new HourlyApportionedEmissionsParamsDTO();
+      let result = await hourUnitDataRepository.getHourlyEmissions(emptyFilters);
+
       const filters: HourlyApportionedEmissionsParamsDTO = {
         page: 1,
         perPage: 10,
@@ -54,13 +58,13 @@ describe('HourUnitDataRepository', () => {
         beginDate: new Date(),
         endDate: new Date(),
         state: State.TX,
-        orisCode: 3,
+        orisCode: [3],
         unitType: UnitType.BUBBLING_FLUIDIZED,
         unitFuelType: UnitFuelType.COAL,
         controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,
         opHoursOnly: true,
       };
-      const result = await hourUnitDataRepository.getHourlyEmissions(filters);
+      result = await hourUnitDataRepository.getHourlyEmissions(filters);
 
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
