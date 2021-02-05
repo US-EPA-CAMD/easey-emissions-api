@@ -14,9 +14,6 @@ import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 
 import { ResponseHeaders } from '../utils/response.headers';
 
-
-
-
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
 });
@@ -31,7 +28,7 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   orderBy: undefined,
   beginDate: new Date(),
   endDate: new Date(),
-  state: State.TX,
+  state: [State.TX],
   orisCode: 3,
   unitType: UnitType.BUBBLING_FLUIDIZED,
   unitFuelType: undefined,
@@ -65,7 +62,9 @@ describe('HourlyApportionedEmissionsService', () => {
       ],
     }).compile();
 
-    hourlyApportionedEmissionsService = module.get(HourlyApportionedEmissionsService);
+    hourlyApportionedEmissionsService = module.get(
+      HourlyApportionedEmissionsService,
+    );
     hourUnitDataRepository = module.get(HourUnitDataRepository);
     map = module.get(HourlyApportionedEmissionsMap);
   });

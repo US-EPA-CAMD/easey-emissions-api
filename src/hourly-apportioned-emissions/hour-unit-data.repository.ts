@@ -54,13 +54,18 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     if (beginDate) {
       results.andWhere('hud.opDate >= :beginDate', { beginDate: beginDate });
     }
+
     if (endDate) {
       results.andWhere('hud.opDate <= :endDate', { endDate: endDate });
     }
-    if (state) {
-      results.andWhere('uf.state = :state', { state: state.toUpperCase() });
-    }
 
+    if (state) {
+      results.andWhere('uf.state IN (:...states)', {
+        states: state.map(states => {
+          return states.toUpperCase();
+        }),
+      });
+    }
     if (orisCode) {
       results.andWhere('uf.orisCode = :orisCode', { orisCode: orisCode });
     }

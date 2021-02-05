@@ -12,7 +12,15 @@ async function bootstrap() {
   const appTitle = configService.get<string>('app.title');
   const appPath = configService.get<string>('app.path');
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      validationError: {
+        target: false,
+        value: true,
+      },
+    }),
+  );
   app.setGlobalPrefix(appPath);
   app.enableCors();
 
@@ -26,7 +34,9 @@ async function bootstrap() {
   SwaggerModule.setup(`${appPath}/swagger`, app, document);
 
   await app.listen(configService.get<number>('app.port'));
-  console.log(`Application is running on: ${await app.getUrl()}/${appPath}/swagger`);
+  console.log(
+    `Application is running on: ${await app.getUrl()}/${appPath}/swagger`,
+  );
 }
 
 bootstrap();

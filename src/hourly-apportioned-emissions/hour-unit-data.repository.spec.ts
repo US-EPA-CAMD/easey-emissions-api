@@ -53,7 +53,7 @@ describe('HourUnitDataRepository', () => {
         orderBy: undefined,
         beginDate: new Date(),
         endDate: new Date(),
-        state: State.TX,
+        state: [State.TX],
         orisCode: 3,
         unitType: UnitType.BUBBLING_FLUIDIZED,
         unitFuelType: UnitFuelType.COAL,

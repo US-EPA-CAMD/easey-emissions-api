@@ -5,9 +5,10 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 
-import { Get, Controller, Query, ValidationPipe, Req } from '@nestjs/common';
+import { Get, Controller, Query, Req } from '@nestjs/common';
 
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
@@ -31,13 +32,15 @@ export class HourlyApportionedEmissionsController {
   @ApiNotFoundResponse({
     description: 'Resource Not Found',
   })
+  @ApiQuery({ name: 'state', required: false, explode: false })
+  @ApiQuery({ name: 'orisCode', required: false, explode: false })
   getHourlyEmissions(
-    @Query(ValidationPipe)
-    hourlyApportioedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
+    @Query()
+    hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     @Req() req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
     return this.hourlyApportionedEmissionsService.getHourlyEmissions(
-      hourlyApportioedEmissionsParamsDTO,
+      hourlyApportionedEmissionsParamsDTO,
       req,
     );
   }
