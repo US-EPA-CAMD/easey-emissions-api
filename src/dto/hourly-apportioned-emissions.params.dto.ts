@@ -55,11 +55,13 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   state?: State[];
 
   @IsOptional()
-  @IsOrisCode({
-    message:
-      'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
-  })
-  orisCode?: number;
+  // @IsOrisCode({
+  //   each: true,
+  //   message:
+  //     'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
+  // })
+  @Transform((value: string) => value.split(',').map(item => Number(item)))
+  orisCode?: number[];
 
   @IsOptional()
   @IsUnitType({

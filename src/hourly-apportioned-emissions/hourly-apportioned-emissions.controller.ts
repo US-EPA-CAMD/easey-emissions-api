@@ -1,5 +1,4 @@
 import { Request } from 'express';
-
 import {
   ApiTags,
   ApiOkResponse,
@@ -7,12 +6,10 @@ import {
   ApiNotFoundResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-
 import { Get, Controller, Query, Req } from '@nestjs/common';
 
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
-
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 
 @ApiTags('Hourly Apportioned Emissions')

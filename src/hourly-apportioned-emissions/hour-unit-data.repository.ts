@@ -67,7 +67,9 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       });
     }
     if (orisCode) {
-      results.andWhere('uf.orisCode = :orisCode', { orisCode: orisCode });
+      results.andWhere('uf.orisCode IN (:...orisCodes)', {
+        orisCodes: orisCode,
+      });
     }
 
     if (unitType) {
@@ -78,7 +80,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       results.andWhere('hud.opTime > 0');
     }
 
-    const query = await results.getMany();
-    return query;
+    return await results.getMany();
   }
 }
