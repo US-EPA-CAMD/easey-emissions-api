@@ -6,7 +6,7 @@ import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
-import { IsOrisCode } from '../pipes/is-oris-code.pipe';
+//import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
