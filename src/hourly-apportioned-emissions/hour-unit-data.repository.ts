@@ -60,9 +60,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     }
 
     if (state) {
-      results.andWhere('uf.state = :state', { state: state.toUpperCase() });
+      results.andWhere('uf.state IN (:...states)', {
+        states: state.map(states => {
+          return states.toUpperCase();
+        }),
+      });
     }
-
     if (orisCode) {
       results.andWhere('uf.orisCode IN (:...orisCodes)', {
         orisCodes: orisCode,

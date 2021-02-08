@@ -10,7 +10,7 @@ import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
-import { StateValidation } from '../pipes/state-validation.pipe';
+import { IsStateCode } from '../pipes/is-state-code.pipe';
 
 describe('-- Hourly Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
@@ -57,7 +57,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
       @IsUnitFuelType()
       unitFuel: string;
 
-      @Validate(StateValidation)
+      @IsStateCode()
       state: string;
     }
 

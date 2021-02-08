@@ -29,6 +29,7 @@ export class HourlyApportionedEmissionsController {
   @ApiNotFoundResponse({
     description: 'Resource Not Found',
   })
+  @ApiQuery({ name: 'state', required: false, explode: false })
   @ApiQuery({ name: 'orisCode', required: false, explode: false })
   getHourlyEmissions(
     @Query()

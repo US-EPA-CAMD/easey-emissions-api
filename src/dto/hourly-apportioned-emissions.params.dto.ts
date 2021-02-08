@@ -1,17 +1,12 @@
-import {
-  IsDefined,
-  IsOptional,
-  Validate,
-} from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsDefined, IsOptional } from 'class-validator';
 
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
-// import { IsOrisCode } from '../pipes/is-oris-code.pipe';
-import { StateValidation } from '../pipes/state-validation.pipe';
+//import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
@@ -19,6 +14,7 @@ import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
+// import { IsStateCode } from '../pipes/is-state-code.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), (new Date())], {
@@ -50,8 +46,13 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   endDate: Date;
 
   @IsOptional()
-  @Validate(StateValidation)
-  state?: State;
+  // @IsStateCode({
+  //   each: true,
+  //   message:
+  //     'The state or territory is not valid. Please enter a valid state or territory using the two letter postal abbreviation (use TX, not Texas).',
+  // })
+  @Transform((value: string) => value.split(','))
+  state?: State[];
 
   @IsOptional()
   // @IsOrisCode({
