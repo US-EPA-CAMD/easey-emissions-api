@@ -49,7 +49,9 @@ describe('HourUnitDataRepository', () => {
 
       // branch coverage
       const emptyFilters: HourlyApportionedEmissionsParamsDTO = new HourlyApportionedEmissionsParamsDTO();
-      let result = await hourUnitDataRepository.getHourlyEmissions(emptyFilters);
+      let result = await hourUnitDataRepository.getHourlyEmissions(
+        emptyFilters,
+      );
 
       const filters: HourlyApportionedEmissionsParamsDTO = {
         page: 1,
@@ -59,7 +61,7 @@ describe('HourUnitDataRepository', () => {
         endDate: new Date(),
         state: [State.TX],
         orisCode: [3],
-        unitType: UnitType.BUBBLING_FLUIDIZED,
+        unitType: [UnitType.BUBBLING_FLUIDIZED],
         unitFuelType: UnitFuelType.COAL,
         controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,
         opHoursOnly: true,

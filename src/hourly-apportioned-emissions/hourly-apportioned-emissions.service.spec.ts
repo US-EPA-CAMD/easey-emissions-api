@@ -30,7 +30,7 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   endDate: new Date(),
   state: [State.TX],
   orisCode: [3],
-  unitType: UnitType.BUBBLING_FLUIDIZED,
+  unitType: [UnitType.BUBBLING_FLUIDIZED],
   unitFuelType: undefined,
   controlTechnologies: undefined,
   opHoursOnly: false,

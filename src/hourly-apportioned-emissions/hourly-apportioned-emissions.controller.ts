@@ -31,6 +31,7 @@ export class HourlyApportionedEmissionsController {
   })
   @ApiQuery({ name: 'state', required: false, explode: false })
   @ApiQuery({ name: 'orisCode', required: false, explode: false })
+  @ApiQuery({ name: 'unitType', required: false, explode: false })
   getHourlyEmissions(
     @Query()
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,

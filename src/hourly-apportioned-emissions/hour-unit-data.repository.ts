@@ -73,7 +73,11 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     }
 
     if (unitType) {
-      results.andWhere('uf.unitTypeInfo = :unitType', { unitType: unitType });
+      results.andWhere('UPPER(uf.unitTypeInfo) IN (:...unitType)', {
+        unitType: unitType.map(unit => {
+          return unit.toUpperCase();
+        }),
+      });
     }
 
     if (String(opHoursOnly) === String(true)) {
