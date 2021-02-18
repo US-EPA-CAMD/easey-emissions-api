@@ -6,8 +6,8 @@ import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
-//import { IsOrisCode } from '../pipes/is-oris-code.pipe';
-import { IsUnitType } from '../pipes/is-unit-type.pipe';
+// import { IsOrisCode } from '../pipes/is-oris-code.pipe';
+// import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
@@ -64,11 +64,12 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   orisCode?: number[];
 
   @IsOptional()
-  @IsUnitType({
-    message:
-      'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]',
-  })
-  unitType?: UnitType;
+  // @IsUnitType({
+  //   message:
+  //     'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]',
+  // })
+  @Transform((value: string) => value.split(',').map(item => item.trim()))
+  unitType?: UnitType[];
 
   @IsOptional()
   @IsUnitFuelType({
