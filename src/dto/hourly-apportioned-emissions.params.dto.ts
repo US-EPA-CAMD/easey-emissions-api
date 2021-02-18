@@ -51,7 +51,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   //   message:
   //     'The state or territory is not valid. Please enter a valid state or territory using the two letter postal abbreviation (use TX, not Texas).',
   // })
-  @Transform((value: string) => value.split(','))
+  @Transform((value: string) => value.split(',').map(item => item.trim()))
   state?: State[];
 
   @IsOptional()
