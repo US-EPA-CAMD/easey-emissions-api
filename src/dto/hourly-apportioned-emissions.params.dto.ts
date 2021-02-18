@@ -79,11 +79,12 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   unitFuelType?: UnitFuelType;
 
   @IsOptional()
-  @IsControlTechnology({
-    message:
-      'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
-  })
-  controlTechnologies?: ControlTechnology;
+  // @IsControlTechnology({
+  //   message:
+  //     'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
+  // })
+  @Transform((value: string) => value.split(',').map(item => item.trim()))
+  controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
   opHoursOnly?: boolean;
