@@ -48,7 +48,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   //   message:
   //     'The state or territory is not valid. Please enter a valid state or territory using the two letter postal abbreviation (use TX, not Texas).',
   // })
-  @Transform((value: string) => value.split(',').map(item => item.trim()))
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
   state?: State[];
 
   @IsOptional()
@@ -57,7 +57,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   //   message:
   //     'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
   // })
-  @Transform((value: string) => value.split(',').map(item => Number(item)))
+  @Transform((value: string) => value.split('|').map(item => Number(item)))
   orisCode?: number[];
 
   @IsOptional()
@@ -65,7 +65,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   //   message:
   //     'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]',
   // })
-  @Transform((value: string) => value.split(',').map(item => item.trim()))
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitType?: UnitType[];
 
   @IsOptional()
