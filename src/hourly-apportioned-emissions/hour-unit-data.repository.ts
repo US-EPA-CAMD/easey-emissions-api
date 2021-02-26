@@ -136,7 +136,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       }
 
       string += ')';
-     // console.log(string);
       results.andWhere(string);
     }
 
