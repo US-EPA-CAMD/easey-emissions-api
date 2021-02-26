@@ -24,7 +24,6 @@ export class HourlyApportionedEmissionsService {
     const {
       page,
       perPage,
-      controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
 
     let results = await this.repository.getHourlyEmissions(
@@ -32,32 +31,6 @@ export class HourlyApportionedEmissionsService {
     );
 
     let filteredResults: Array<HourUnitData> = [];
-
-    if (controlTechnologies) {
-      results.forEach(e => {
-        if (
-          (e.unitFact.noxControlInfo &&
-            e.unitFact.noxControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.so2ControlInfo &&
-            e.unitFact.so2ControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.partControlInfo &&
-            e.unitFact.partControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.hgControlInfo &&
-            e.unitFact.hgControlInfo
-              .split('<br>')
-              .includes(controlTechnologies))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
 
     if (page && perPage) {
       const pageNum: number = +page;

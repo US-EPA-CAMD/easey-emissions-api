@@ -49,6 +49,12 @@ export class HourlyApportionedEmissionsController {
   })
   @ApiQuery({
     style: 'pipeDelimited',
+    name: 'controlTechnologies',
+    required: false,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
     name: 'unitFuelType',
     required: false,
     explode: false,

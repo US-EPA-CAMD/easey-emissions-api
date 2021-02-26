@@ -10,7 +10,6 @@ import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
-import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), (new Date())], {
@@ -76,11 +75,12 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   unitFuelType?: UnitFuelType[];
 
   @IsOptional()
-  @IsControlTechnology({
-    message:
-      'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
-  })
-  controlTechnologies?: ControlTechnology;
+  // @IsControlTechnology({
+  //   message:
+  //     'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
+  // })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
   opHoursOnly?: boolean;

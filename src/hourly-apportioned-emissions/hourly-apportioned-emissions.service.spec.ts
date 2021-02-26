@@ -9,7 +9,6 @@ import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { UnitFact } from '../entities/unit-fact.entity';
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 
 import { ResponseHeaders } from '../utils/response.headers';
@@ -38,10 +37,6 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
 
 let entity: HourUnitData = new HourUnitData();
 entity.unitFact = new UnitFact();
-entity.unitFact.noxControlInfo = ControlTechnology.ADDITIVES_TO_ENHANCE;
-entity.unitFact.so2ControlInfo = ControlTechnology.AMMONIA_INJECTION;
-entity.unitFact.partControlInfo = ControlTechnology.BAGHOUSE;
-entity.unitFact.hgControlInfo = ControlTechnology.CATALYST;
 
 describe('HourlyApportionedEmissionsService', () => {
   let hourlyApportionedEmissionsService;
@@ -114,7 +109,6 @@ describe('HourlyApportionedEmissionsService', () => {
       hourUnitDataRepository.getHourlyEmissions.mockResolvedValue([entity]);
       map.many.mockReturnValue('mapped DTOs');
 
-      filters.controlTechnologies = ControlTechnology.ADDITIVES_TO_ENHANCE;
 
       let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
         filters,
