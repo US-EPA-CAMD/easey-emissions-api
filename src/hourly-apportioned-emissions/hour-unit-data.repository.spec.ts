@@ -62,7 +62,7 @@ describe('HourUnitDataRepository', () => {
         state: [State.TX],
         orisCode: [3],
         unitType: [UnitType.BUBBLING_FLUIDIZED],
-        unitFuelType: UnitFuelType.COAL,
+        unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
         controlTechnologies: ControlTechnology.ADDITIVES_TO_ENHANCE,
         opHoursOnly: true,
       };

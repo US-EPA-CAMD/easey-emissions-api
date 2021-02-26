@@ -24,7 +24,6 @@ export class HourlyApportionedEmissionsService {
     const {
       page,
       perPage,
-      unitFuelType,
       controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
 
@@ -34,21 +33,7 @@ export class HourlyApportionedEmissionsService {
 
     let filteredResults: Array<HourUnitData> = [];
 
-    if (unitFuelType && !controlTechnologies) {
-      results.forEach(e => {
-        if (
-          (e.unitFact.primaryFuelInfo &&
-            e.unitFact.primaryFuelInfo === unitFuelType) ||
-          (e.unitFact.secondaryFuelInfo &&
-            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
-
-    if (!unitFuelType && controlTechnologies) {
+    if (controlTechnologies) {
       results.forEach(e => {
         if (
           (e.unitFact.noxControlInfo &&
@@ -67,44 +52,6 @@ export class HourlyApportionedEmissionsService {
             e.unitFact.hgControlInfo
               .split('<br>')
               .includes(controlTechnologies))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
-
-    if (unitFuelType && controlTechnologies) {
-      results.forEach(e => {
-        let hasFuel = false;
-
-        if (
-          (e.unitFact.primaryFuelInfo &&
-            e.unitFact.primaryFuelInfo === unitFuelType) ||
-          (e.unitFact.secondaryFuelInfo &&
-            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
-        ) {
-          hasFuel = true;
-        }
-
-        if (
-          hasFuel &&
-          ((e.unitFact.noxControlInfo &&
-            e.unitFact.noxControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-            (e.unitFact.so2ControlInfo &&
-              e.unitFact.so2ControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)) ||
-            (e.unitFact.partControlInfo &&
-              e.unitFact.partControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)) ||
-            (e.unitFact.hgControlInfo &&
-              e.unitFact.hgControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)))
         ) {
           filteredResults.push(e);
         }

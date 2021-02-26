@@ -31,15 +31,13 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   state: [State.TX],
   orisCode: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED],
-  unitFuelType: undefined,
+  unitFuelType: [UnitFuelType.COAL],
   controlTechnologies: undefined,
   opHoursOnly: false,
 };
 
 let entity: HourUnitData = new HourUnitData();
 entity.unitFact = new UnitFact();
-entity.unitFact.primaryFuelInfo = UnitFuelType.COAL;
-entity.unitFact.secondaryFuelInfo = UnitFuelType.COAL_REFUSE;
 entity.unitFact.noxControlInfo = ControlTechnology.ADDITIVES_TO_ENHANCE;
 entity.unitFact.so2ControlInfo = ControlTechnology.AMMONIA_INJECTION;
 entity.unitFact.partControlInfo = ControlTechnology.BAGHOUSE;
@@ -112,44 +110,10 @@ describe('HourlyApportionedEmissionsService', () => {
       expect(paginatedResult).toEqual('mapped DTOs');
     });
 
-    it('calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType and controlTechnologies', async () => {
+    it('calls HourUnitDataRepository.getHourlyEmissions() with filters for controlTechnologies', async () => {
       hourUnitDataRepository.getHourlyEmissions.mockResolvedValue([entity]);
       map.many.mockReturnValue('mapped DTOs');
 
-      filters.unitFuelType = UnitFuelType.COAL;
-      filters.controlTechnologies = ControlTechnology.ADDITIVES_TO_ENHANCE;
-
-      let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
-        filters,
-      );
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        filters,
-      );
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual('mapped DTOs');
-    });
-
-    it('calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType but not for controlTechnologies', async () => {
-      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue([entity]);
-      map.many.mockReturnValue('mapped DTOs');
-
-      filters.controlTechnologies = undefined;
-
-      let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
-        filters,
-      );
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        filters,
-      );
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual('mapped DTOs');
-    });
-
-    it('calls HourUnitDataRepository.getHourlyEmissions() with filters for controlTechnologies but not for unitFuelType', async () => {
-      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue([entity]);
-      map.many.mockReturnValue('mapped DTOs');
-
-      filters.unitFuelType = undefined;
       filters.controlTechnologies = ControlTechnology.ADDITIVES_TO_ENHANCE;
 
       let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
