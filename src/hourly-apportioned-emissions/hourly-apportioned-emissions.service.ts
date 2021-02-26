@@ -25,7 +25,6 @@ export class HourlyApportionedEmissionsService {
       page,
       perPage,
       unitFuelType,
-      controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
 
     let results = await this.repository.getHourlyEmissions(
@@ -34,77 +33,13 @@ export class HourlyApportionedEmissionsService {
 
     let filteredResults: Array<HourUnitData> = [];
 
-    if (unitFuelType && !controlTechnologies) {
+    if (unitFuelType) {
       results.forEach(e => {
         if (
           (e.unitFact.primaryFuelInfo &&
             e.unitFact.primaryFuelInfo === unitFuelType) ||
           (e.unitFact.secondaryFuelInfo &&
             e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
-
-    if (!unitFuelType && controlTechnologies) {
-      results.forEach(e => {
-        if (
-          (e.unitFact.noxControlInfo &&
-            e.unitFact.noxControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.so2ControlInfo &&
-            e.unitFact.so2ControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.partControlInfo &&
-            e.unitFact.partControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-          (e.unitFact.hgControlInfo &&
-            e.unitFact.hgControlInfo
-              .split('<br>')
-              .includes(controlTechnologies))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
-
-    if (unitFuelType && controlTechnologies) {
-      results.forEach(e => {
-        let hasFuel = false;
-
-        if (
-          (e.unitFact.primaryFuelInfo &&
-            e.unitFact.primaryFuelInfo === unitFuelType) ||
-          (e.unitFact.secondaryFuelInfo &&
-            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
-        ) {
-          hasFuel = true;
-        }
-
-        if (
-          hasFuel &&
-          ((e.unitFact.noxControlInfo &&
-            e.unitFact.noxControlInfo
-              .split('<br>')
-              .includes(controlTechnologies)) ||
-            (e.unitFact.so2ControlInfo &&
-              e.unitFact.so2ControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)) ||
-            (e.unitFact.partControlInfo &&
-              e.unitFact.partControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)) ||
-            (e.unitFact.hgControlInfo &&
-              e.unitFact.hgControlInfo
-                .split('<br>')
-                .includes(controlTechnologies)))
         ) {
           filteredResults.push(e);
         }
