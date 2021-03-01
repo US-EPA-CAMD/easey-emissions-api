@@ -14,6 +14,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       state,
       orisCode,
       unitType,
+      unitFuelType,
       opHoursOnly,
       controlTechnologies,
     } = hourlyApportionedEmissionsParamsDTO;
@@ -109,6 +110,32 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
       string += ')';
 
+      results.andWhere(string);
+    }
+
+    if (unitFuelType) {
+      let string = '(';
+
+      for (let i = 0; i < unitFuelType.length; i++) {
+
+        const regex = `'((^${unitFuelType[i].toUpperCase()
+        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
+        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
+        }[,])|(^${unitFuelType[i].toUpperCase()
+        }[,])|(^${unitFuelType[i].toUpperCase()
+        } [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
+
+        if (i === 0 ) {
+          string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+        }
+        else {
+          string += `OR (UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+        }
+
+        string += `OR (UPPER(uf.secondary_fuel_info) ~* ${regex}) `;
+      }
+
+      string += ')';
       results.andWhere(string);
     }
 

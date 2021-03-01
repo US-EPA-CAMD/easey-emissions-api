@@ -10,7 +10,6 @@ import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
-import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), (new Date())], {
@@ -68,11 +67,12 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   unitType?: UnitType[];
 
   @IsOptional()
-  @IsUnitFuelType({
-    message:
-      'Unit fuel type is not valid. Refer to the list of available unit fuel types for valid values [placeholder for link to endpoint]',
-  })
-  unitFuelType?: UnitFuelType;
+  // @IsUnitFuelType({
+  //   message:
+  //     'Unit fuel type is not valid. Refer to the list of available unit fuel types for valid values [placeholder for link to endpoint]',
+  // })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  unitFuelType?: UnitFuelType[];
 
   @IsOptional()
   // @IsControlTechnology({

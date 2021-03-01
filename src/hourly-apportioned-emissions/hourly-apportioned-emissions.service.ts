@@ -7,7 +7,6 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { ResponseHeaders } from '../utils/response.headers';
-import { HourUnitData } from '../entities/hour-unit-data.entity';
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
@@ -21,31 +20,11 @@ export class HourlyApportionedEmissionsService {
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
-    const {
-      page,
-      perPage,
-      unitFuelType,
-    } = hourlyApportionedEmissionsParamsDTO;
+    const { page, perPage } = hourlyApportionedEmissionsParamsDTO;
 
     let results = await this.repository.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
     );
-
-    let filteredResults: Array<HourUnitData> = [];
-
-    if (unitFuelType) {
-      results.forEach(e => {
-        if (
-          (e.unitFact.primaryFuelInfo &&
-            e.unitFact.primaryFuelInfo === unitFuelType) ||
-          (e.unitFact.secondaryFuelInfo &&
-            e.unitFact.secondaryFuelInfo.split('<br>').includes(unitFuelType))
-        ) {
-          filteredResults.push(e);
-        }
-      });
-      results = filteredResults;
-    }
 
     if (page && perPage) {
       const pageNum: number = +page;

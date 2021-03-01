@@ -5,11 +5,10 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 
-import { HourUnitData } from '../entities/hour-unit-data.entity';
-import { UnitFact } from '../entities/unit-fact.entity';
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
+import { ControlTechnology } from '../enums/control-technology.enum';
 
 import { ResponseHeaders } from '../utils/response.headers';
 
@@ -30,15 +29,10 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   state: [State.TX],
   orisCode: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED],
-  unitFuelType: undefined,
-  controlTechnologies: undefined,
+  unitFuelType: [UnitFuelType.COAL],
+  controlTechnologies: [ControlTechnology.ADDITIVES_TO_ENHANCE],
   opHoursOnly: false,
 };
-
-let entity: HourUnitData = new HourUnitData();
-entity.unitFact = new UnitFact();
-entity.unitFact.primaryFuelInfo = UnitFuelType.COAL;
-entity.unitFact.secondaryFuelInfo = UnitFuelType.COAL_REFUSE;
 
 describe('HourlyApportionedEmissionsService', () => {
   let hourlyApportionedEmissionsService;
@@ -105,22 +99,6 @@ describe('HourlyApportionedEmissionsService', () => {
       expect(map.many).toHaveBeenCalled();
 
       expect(paginatedResult).toEqual('mapped DTOs');
-    });
-
-    it('calls HourUnitDataRepository.getHourlyEmissions() with filters for unitFuelType', async () => {
-      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue([entity]);
-      map.many.mockReturnValue('mapped DTOs');
-
-      filters.unitFuelType = UnitFuelType.COAL;
-
-      let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
-        filters,
-      );
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        filters,
-      );
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual('mapped DTOs');
     });
   });
 });

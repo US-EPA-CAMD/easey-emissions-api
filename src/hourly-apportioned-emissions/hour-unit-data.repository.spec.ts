@@ -62,8 +62,11 @@ describe('HourUnitDataRepository', () => {
         state: [State.TX],
         orisCode: [3],
         unitType: [UnitType.BUBBLING_FLUIDIZED],
-        unitFuelType: UnitFuelType.COAL,
-        controlTechnologies: [ControlTechnology.ADDITIVES_TO_ENHANCE, ControlTechnology.OTHER],
+        unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
+        controlTechnologies: [
+          ControlTechnology.ADDITIVES_TO_ENHANCE,
+          ControlTechnology.OTHER,
+        ],
         opHoursOnly: true,
       };
       result = await hourUnitDataRepository.getHourlyEmissions(filters);
