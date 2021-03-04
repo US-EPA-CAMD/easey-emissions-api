@@ -9,8 +9,4 @@ export class PaginationDTO {
   @IsOptional()
   @ApiPropertyOptional()
   perPage: number;
-
-  @IsOptional()
-  @ApiPropertyOptional()
-  orderBy: string;
 }

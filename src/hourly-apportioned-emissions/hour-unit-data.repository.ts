@@ -1,12 +1,15 @@
 import { Repository, EntityRepository } from 'typeorm';
+import { Request } from 'express';
 
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+import { ResponseHeaders } from '../utils/response.headers';
 
 @EntityRepository(HourUnitData)
 export class HourUnitDataRepository extends Repository<HourUnitData> {
   async getHourlyEmissions(
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
+    req: Request,
   ): Promise<HourUnitData[]> {
     const {
       beginDate,
@@ -17,10 +20,13 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       unitFuelType,
       opHoursOnly,
       controlTechnologies,
+      page,
+      perPage,
     } = hourlyApportionedEmissionsParamsDTO;
 
-    const results = this.createQueryBuilder('hud')
+    const query = this.createQueryBuilder('hud')
       .select([
+        'hud.unitId',
         'hud.opDate',
         'hud.opHour',
         'hud.opTime',
@@ -54,28 +60,28 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       .innerJoin('hud.unitFact', 'uf');
 
     if (beginDate) {
-      results.andWhere('hud.opDate >= :beginDate', { beginDate: beginDate });
+      query.andWhere('hud.opDate >= :beginDate', { beginDate: beginDate });
     }
 
     if (endDate) {
-      results.andWhere('hud.opDate <= :endDate', { endDate: endDate });
+      query.andWhere('hud.opDate <= :endDate', { endDate: endDate });
     }
 
     if (state) {
-      results.andWhere('uf.state IN (:...states)', {
+      query.andWhere('uf.state IN (:...states)', {
         states: state.map(states => {
           return states.toUpperCase();
         }),
       });
     }
     if (orisCode) {
-      results.andWhere('uf.orisCode IN (:...orisCodes)', {
+      query.andWhere('uf.orisCode IN (:...orisCodes)', {
         orisCodes: orisCode,
       });
     }
 
     if (unitType) {
-      results.andWhere('UPPER(uf.unitTypeInfo) IN (:...unitType)', {
+      query.andWhere('UPPER(uf.unitTypeInfo) IN (:...unitType)', {
         unitType: unitType.map(unit => {
           return unit.toUpperCase();
         }),
@@ -86,18 +92,23 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < controlTechnologies.length; i++) {
+        const regex = `'((^${controlTechnologies[
+          i
+        ].toUpperCase()}$)|([,][ ]*${controlTechnologies[
+          i
+        ].toUpperCase()}$)|([,][ ]*${controlTechnologies[
+          i
+        ].toUpperCase()}[,])|(^${controlTechnologies[
+          i
+        ].toUpperCase()}[,])|(^${controlTechnologies[
+          i
+        ].toUpperCase()} [(])|([,][ ]*${controlTechnologies[
+          i
+        ].toUpperCase()} [(]))'`;
 
-        const regex = `'((^${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        } [(])|([,][ ]*${controlTechnologies[i].toUpperCase()} [(]))'`;
-
-        if (i === 0 ) {
+        if (i === 0) {
           string += `(UPPER(uf.so2_control_info) ~* ${regex}) `;
-        }
-        else {
+        } else {
           string += `OR (UPPER(uf.so2_control_info) ~* ${regex}) `;
         }
 
@@ -110,25 +121,28 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
       string += ')';
 
-      results.andWhere(string);
+      query.andWhere(string);
     }
 
     if (unitFuelType) {
       let string = '(';
 
       for (let i = 0; i < unitFuelType.length; i++) {
+        const regex = `'((^${unitFuelType[
+          i
+        ].toUpperCase()}$)|([,][ ]*${unitFuelType[
+          i
+        ].toUpperCase()}$)|([,][ ]*${unitFuelType[
+          i
+        ].toUpperCase()}[,])|(^${unitFuelType[
+          i
+        ].toUpperCase()}[,])|(^${unitFuelType[
+          i
+        ].toUpperCase()} [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
 
-        const regex = `'((^${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        } [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
-
-        if (i === 0 ) {
+        if (i === 0) {
           string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
-        }
-        else {
+        } else {
           string += `OR (UPPER(uf.primary_fuel_info) ~* ${regex}) `;
         }
 
@@ -136,13 +150,26 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       }
 
       string += ')';
-      results.andWhere(string);
+      query.andWhere(string);
     }
 
     if (String(opHoursOnly) === String(true)) {
-      results.andWhere('hud.opTime > 0');
+      query.andWhere('hud.opTime > 0');
     }
 
-    return await results.getMany();
+    query
+      .orderBy('uf.orisCode')
+      .addOrderBy('hud.unitId')
+      .addOrderBy('hud.opDate')
+      .addOrderBy('hud.opHour');
+
+    if (page && perPage) {
+      query.skip((page - 1) * perPage).take(perPage);
+
+      const totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, totalCount);
+    }
+
+    return await query.getMany();
   }
 }
