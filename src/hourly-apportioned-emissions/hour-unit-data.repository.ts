@@ -158,6 +158,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       ResponseHeaders.setPagination(req, totalCount);
     }
 
-    return await query.getMany();
+    return query.getMany();
   }
 }
