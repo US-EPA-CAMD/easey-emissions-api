@@ -65,6 +65,16 @@ export class UnitFact extends BaseEntity {
   })
   hgControlInfo: string;
 
+  @Column({
+    name: 'prg_code_info',
+  })
+  prgCodeInfo: string;
+
+  @Column({
+    name: 'assoc_stacks',
+  })
+  assocStacks: string;
+
   @OneToMany(
     () => HourUnitData,
     hrUnit => hrUnit.unitFact,

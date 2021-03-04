@@ -42,6 +42,8 @@ export class HourlyApportionedEmissionsMap extends BaseMap<
       partControlInfo: entity.unitFact.partControlInfo,
       noxControlInfo: entity.unitFact.noxControlInfo,
       hgControlInfo: entity.unitFact.hgControlInfo,
+      prgCodeInfo: entity.unitFact.prgCodeInfo,
+      assocStacks: entity.unitFact.assocStacks,
     };
   }
 }
