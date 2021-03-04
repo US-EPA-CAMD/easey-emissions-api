@@ -92,19 +92,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < controlTechnologies.length; i++) {
-        const regex = `'((^${controlTechnologies[
-          i
-        ].toUpperCase()}$)|([,][ ]*${controlTechnologies[
-          i
-        ].toUpperCase()}$)|([,][ ]*${controlTechnologies[
-          i
-        ].toUpperCase()}[,])|(^${controlTechnologies[
-          i
-        ].toUpperCase()}[,])|(^${controlTechnologies[
-          i
-        ].toUpperCase()} [(])|([,][ ]*${controlTechnologies[
-          i
-        ].toUpperCase()} [(]))'`;
+        const regex = `'((^${controlTechnologies[i].toUpperCase()
+        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
+        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
+        }[,])|(^${controlTechnologies[i].toUpperCase()
+        }[,])|(^${controlTechnologies[i].toUpperCase()
+        } [(])|([,][ ]*${controlTechnologies[i].toUpperCase()} [(]))'`;
 
         if (i === 0) {
           string += `(UPPER(uf.so2_control_info) ~* ${regex}) `;
@@ -128,17 +121,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < unitFuelType.length; i++) {
-        const regex = `'((^${unitFuelType[
-          i
-        ].toUpperCase()}$)|([,][ ]*${unitFuelType[
-          i
-        ].toUpperCase()}$)|([,][ ]*${unitFuelType[
-          i
-        ].toUpperCase()}[,])|(^${unitFuelType[
-          i
-        ].toUpperCase()}[,])|(^${unitFuelType[
-          i
-        ].toUpperCase()} [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
+        const regex = `'((^${unitFuelType[i].toUpperCase()
+        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
+        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
+        }[,])|(^${unitFuelType[i].toUpperCase()
+        }[,])|(^${unitFuelType[i].toUpperCase()
+        } [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
 
         if (i === 0) {
           string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
