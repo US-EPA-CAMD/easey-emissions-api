@@ -20,6 +20,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       unitFuelType,
       opHoursOnly,
       controlTechnologies,
+      program,
       page,
       perPage,
     } = hourlyApportionedEmissionsParamsDTO;
@@ -142,6 +143,11 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       string += ')';
       query.andWhere(string);
     }
+
+    if (program) {
+
+    }
+
 
     if (String(opHoursOnly) === String(true)) {
       query.andWhere('hud.opTime > 0');
