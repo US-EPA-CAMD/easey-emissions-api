@@ -1,4 +1,3 @@
-
 export class HourlyApportionedEmissionsDTO {
   state: string;
   facilityName: string;
@@ -29,4 +28,6 @@ export class HourlyApportionedEmissionsDTO {
   partControlInfo: string;
   noxControlInfo: string;
   hgControlInfo: string;
+  prgCodeInfo: string;
+  assocStacks: string;
 }

@@ -56,6 +56,8 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'uf.partControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
+        'uf.prgCodeInfo',
+        'uf.assocStacks'
       ])
       .innerJoin('hud.unitFact', 'uf');
 
