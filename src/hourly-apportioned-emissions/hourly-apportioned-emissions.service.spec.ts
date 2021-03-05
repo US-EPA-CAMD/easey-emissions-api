@@ -5,13 +5,6 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 
-import { State } from '../enums/state.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
-
-import { ResponseHeaders } from '../utils/response.headers';
-
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
 });
@@ -19,20 +12,6 @@ const mockHourUnitDataRepository = () => ({
 const mockMap = () => ({
   many: jest.fn(),
 });
-
-let filters: HourlyApportionedEmissionsParamsDTO = {
-  page: undefined,
-  perPage: undefined,
-  orderBy: undefined,
-  beginDate: new Date(),
-  endDate: new Date(),
-  state: [State.TX],
-  orisCode: [3],
-  unitType: [UnitType.BUBBLING_FLUIDIZED],
-  unitFuelType: [UnitFuelType.COAL],
-  controlTechnologies: [ControlTechnology.ADDITIVES_TO_ENHANCE],
-  opHoursOnly: false,
-};
 
 describe('HourlyApportionedEmissionsService', () => {
   let hourlyApportionedEmissionsService;
@@ -65,40 +44,14 @@ describe('HourlyApportionedEmissionsService', () => {
       );
       map.many.mockReturnValue('mapped DTOs');
 
+      let filters = new HourlyApportionedEmissionsParamsDTO();
+
       let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
         filters,
       );
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        filters,
-      );
+
       expect(map.many).toHaveBeenCalled();
       expect(result).toEqual('mapped DTOs');
-    });
-
-    it('calls HourUnitDataRepository.getHourlyEmissions() with pagination parameters and gets all emissions from the repository', async () => {
-      hourUnitDataRepository.getHourlyEmissions.mockResolvedValue(
-        'list of emissions',
-      );
-      ResponseHeaders.setPagination = jest
-        .fn()
-        .mockReturnValue('paginated results');
-      map.many.mockReturnValue('mapped DTOs');
-
-      let paginatedFilters = filters;
-      paginatedFilters.page = 1;
-      paginatedFilters.perPage = 10;
-
-      const paginatedResult = await hourlyApportionedEmissionsService.getHourlyEmissions(
-        paginatedFilters,
-      );
-
-      expect(hourUnitDataRepository.getHourlyEmissions).toHaveBeenCalledWith(
-        paginatedFilters,
-      );
-      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
-      expect(map.many).toHaveBeenCalled();
-
-      expect(paginatedResult).toEqual('mapped DTOs');
     });
   });
 });
