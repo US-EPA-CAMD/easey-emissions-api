@@ -59,6 +59,12 @@ export class HourlyApportionedEmissionsController {
     required: false,
     explode: false,
   })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'program',
+    required: false,
+    explode: false,
+  })
   getHourlyEmissions(
     @Query()
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,

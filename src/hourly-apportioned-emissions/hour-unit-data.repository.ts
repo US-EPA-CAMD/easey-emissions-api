@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { ResponseHeaders } from '../utils/response.headers';
+import { Regex } from '../utils/regex';
 
 @EntityRepository(HourUnitData)
 export class HourUnitDataRepository extends Repository<HourUnitData> {
@@ -95,12 +96,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < controlTechnologies.length; i++) {
-        const regex = `'((^${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        } [(])|([,][ ]*${controlTechnologies[i].toUpperCase()} [(]))'`;
+        const regex = Regex.commaDelimited(controlTechnologies[i].toUpperCase());
 
         if (i === 0) {
           string += `(UPPER(uf.so2_control_info) ~* ${regex}) `;
@@ -124,12 +120,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < unitFuelType.length; i++) {
-        const regex = `'((^${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        } [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
+        const regex = Regex.commaDelimited(unitFuelType[i].toUpperCase());
 
         if (i === 0) {
           string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
@@ -145,7 +136,20 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     }
 
     if (program) {
+      let string = '(';
 
+      for (let i = 0; i < program.length; i++) {
+        const regex = Regex.commaDelimited(program[i].toUpperCase());
+
+        if (i === 0) {
+          string += `(UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+        } else {
+          string += `OR (UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+        }
+      }
+
+      string += ')';
+      query.andWhere(string);
     }
 
 

@@ -85,7 +85,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsOptional()
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  program: Program[];
+  program?: Program[];
 
   @IsOptional()
   opHoursOnly?: boolean;
