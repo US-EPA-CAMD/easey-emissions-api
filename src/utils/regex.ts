@@ -1,8 +1,8 @@
 export class Regex {
   /**
-   * Search for a specific string in a comma delimited list
+   * Returns a regex pattern that searches for a specific string in a comma delimited list
    */
-  public static commaDelimited(element: string): string {
-    return `'((^${element}$)|([,][ ]*${element}$)|([,][ ]*${element}[,])|(^${element}[,])|(^${element} [(])|([,][ ]*${element} [(]))'`;
+  public static commaDelimited(str: string): string {
+    return `'((^${str}$)|([,][ ]*${str}$)|([,][ ]*${str}[,])|(^${str}[,])|(^${str} [(])|([,][ ]*${str} [(]))'`;
   }
 }

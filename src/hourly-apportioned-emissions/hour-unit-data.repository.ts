@@ -59,7 +59,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'uf.noxControlInfo',
         'uf.hgControlInfo',
         'uf.prgCodeInfo',
-        'uf.assocStacks'
+        'uf.assocStacks',
       ])
       .innerJoin('hud.unitFact', 'uf');
 
@@ -96,19 +96,21 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < controlTechnologies.length; i++) {
-        const regex = Regex.commaDelimited(controlTechnologies[i].toUpperCase());
+        const regex = Regex.commaDelimited(
+          controlTechnologies[i].toUpperCase(),
+        );
 
         if (i === 0) {
-          string += `(UPPER(uf.so2_control_info) ~* ${regex}) `;
+          string += `(UPPER(uf.so2ControlInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.so2_control_info) ~* ${regex}) `;
+          string += `OR (UPPER(uf.so2ControlInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.nox_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.noxControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.part_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.partControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.hg_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.hgControlInfo) ~* ${regex}) `;
       }
 
       string += ')';
@@ -123,12 +125,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         const regex = Regex.commaDelimited(unitFuelType[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+          string += `(UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+          string += `OR (UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.secondary_fuel_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.secondaryFuelInfo) ~* ${regex}) `;
       }
 
       string += ')';
@@ -151,7 +153,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       string += ')';
       query.andWhere(string);
     }
-
 
     if (String(opHoursOnly) === String(true)) {
       query.andWhere('hud.opTime > 0');

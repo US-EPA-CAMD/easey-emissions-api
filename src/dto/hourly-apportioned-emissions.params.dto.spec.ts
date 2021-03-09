@@ -11,6 +11,7 @@ import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
+import { IsProgram } from '../pipes/is-program.pipe';
 
 describe('-- Hourly Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
@@ -23,6 +24,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
         unitType: string,
         unitFuel: string,
         state: string,
+        program: string,
       ) {
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -31,6 +33,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
         this.unitType = unitType;
         this.unitFuel = unitFuel;
         this.state = state;
+        this.program = program;
       }
       @IsInDateRange([new Date('1995-01-01'), new Date()])
       @IsValidDate()
@@ -59,6 +62,9 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
 
       @IsStateCode()
       state: string;
+
+      @IsProgram()
+      program: string;
     }
 
     /**
@@ -96,6 +102,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
+          'program'
         ),
       );
       expect(results.length).toBe(0);
@@ -111,6 +118,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
+          'program'
         ),
       );
       expect(results.length).toBe(1);
@@ -127,9 +135,10 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
+          'program'
         ),
       );
-      expect(results.length).toBe(7);
+      expect(results.length).toBe(8);
     });
     mock.close;
   });
