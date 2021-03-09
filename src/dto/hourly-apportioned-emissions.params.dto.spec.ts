@@ -63,7 +63,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
       @IsStateCode()
       state: string;
 
-      @IsProgram()
+      @IsProgram(['MATS'])
       program: string;
     }
 
