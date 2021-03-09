@@ -7,8 +7,12 @@ export class ApiConfigService {
 
     if (host === 'localhost') {
       const port = process.env.EASEY_EMISSIONS_MGMT_API_PORT || 8080;
-      return `localhost:${port}/`;
+      return `localhost:${port}`;
     }
     return process.env.EASEY_API_HOST;
+  }
+
+  public static getMdm(): string {
+    return `https://${this.getHost()}/api/master-data-mgmt/`;
   }
 }

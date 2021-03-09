@@ -86,10 +86,10 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
-  @IsProgram({
+  @IsProgram( ['MATS'], {
     each: true,
     message:
-    `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getHost()}/api/master-data-mgmt/programs`,
+    `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs?exclude=MATS`,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   program?: Program[];
