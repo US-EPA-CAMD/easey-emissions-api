@@ -10,9 +10,12 @@ import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
-
+import { Program } from '../enums/program.enum';
+import { IsProgram } from '../pipes/is-program.pipe';
+import { ApiConfigService } from '../utils/api-config.service';
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
-  @IsInDateRange([new Date('1995-01-01'), (new Date())], {
+
+  @IsInDateRange([new Date('1995-01-01'), new Date()], {
     message: 'Please enter a $property year between 1995 and this year',
   })
   @IsValidDate({
@@ -28,7 +31,7 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
     message:
       'Please enter an $property that is greater than or equal to the $constraint1',
   })
-  @IsInDateRange([new Date('1995-01-01'), (new Date())], {
+  @IsInDateRange([new Date('1995-01-01'), new Date()], {
     message: 'Please enter an $property year between 1995 and this year',
   })
   @IsValidDate({
@@ -83,5 +86,16 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
+  @IsProgram( ['MATS'], {
+    each: true,
+    message:
+    `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs?exclude=MATS`,
+  })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  program?: Program[];
+
+  @IsOptional()
   opHoursOnly?: boolean;
 }
+
+

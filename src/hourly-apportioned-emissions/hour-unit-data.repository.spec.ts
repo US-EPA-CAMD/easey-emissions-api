@@ -3,12 +3,12 @@ import { SelectQueryBuilder } from 'typeorm';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
-
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { State } from '../enums/state.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { ControlTechnology } from '../enums/control-technology.enum';
+import { Program } from '../enums/program.enum';
 import { ResponseHeaders } from '../utils/response.headers';
 
 const mockQueryBuilder = () => ({
@@ -36,6 +36,7 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
     ControlTechnology.ADDITIVES_TO_ENHANCE,
     ControlTechnology.OTHER,
   ],
+  program: [Program.ARP, Program.RGGI],
   opHoursOnly: true,
 };
 

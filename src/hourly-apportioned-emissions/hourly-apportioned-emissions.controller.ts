@@ -29,36 +29,12 @@ export class HourlyApportionedEmissionsController {
   @ApiNotFoundResponse({
     description: 'Resource Not Found',
   })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'state',
-    required: false,
-    explode: false,
-  })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'orisCode',
-    required: false,
-    explode: false,
-  })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'unitType',
-    required: false,
-    explode: false,
-  })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'controlTechnologies',
-    required: false,
-    explode: false,
-  })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'unitFuelType',
-    required: false,
-    explode: false,
-  })
+  @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
+  @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })
+  @ApiQuery({ style: 'pipeDelimited', name: 'unitType', required: false, explode: false })
+  @ApiQuery({ style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false })
+  @ApiQuery({ style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false })
+  @ApiQuery({ style: 'pipeDelimited', name: 'program', required: false, explode: false })
   getHourlyEmissions(
     @Query()
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
