@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { ResponseHeaders } from '../utils/response.headers';
+import { Regex } from '../utils/regex';
 
 @EntityRepository(HourUnitData)
 export class HourUnitDataRepository extends Repository<HourUnitData> {
@@ -20,6 +21,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       unitFuelType,
       opHoursOnly,
       controlTechnologies,
+      program,
       page,
       perPage,
     } = hourlyApportionedEmissionsParamsDTO;
@@ -57,7 +59,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'uf.noxControlInfo',
         'uf.hgControlInfo',
         'uf.prgCodeInfo',
-        'uf.assocStacks'
+        'uf.assocStacks',
       ])
       .innerJoin('hud.unitFact', 'uf');
 
@@ -94,24 +96,21 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < controlTechnologies.length; i++) {
-        const regex = `'((^${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }$)|([,][ ]*${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        }[,])|(^${controlTechnologies[i].toUpperCase()
-        } [(])|([,][ ]*${controlTechnologies[i].toUpperCase()} [(]))'`;
+        const regex = Regex.commaDelimited(
+          controlTechnologies[i].toUpperCase(),
+        );
 
         if (i === 0) {
-          string += `(UPPER(uf.so2_control_info) ~* ${regex}) `;
+          string += `(UPPER(uf.so2ControlInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.so2_control_info) ~* ${regex}) `;
+          string += `OR (UPPER(uf.so2ControlInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.nox_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.noxControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.part_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.partControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.hg_control_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.hgControlInfo) ~* ${regex}) `;
       }
 
       string += ')';
@@ -123,20 +122,32 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       let string = '(';
 
       for (let i = 0; i < unitFuelType.length; i++) {
-        const regex = `'((^${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }$)|([,][ ]*${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        }[,])|(^${unitFuelType[i].toUpperCase()
-        } [(])|([,][ ]*${unitFuelType[i].toUpperCase()} [(]))'`;
+        const regex = Regex.commaDelimited(unitFuelType[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+          string += `(UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.primary_fuel_info) ~* ${regex}) `;
+          string += `OR (UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.secondary_fuel_info) ~* ${regex}) `;
+        string += `OR (UPPER(uf.secondaryFuelInfo) ~* ${regex}) `;
+      }
+
+      string += ')';
+      query.andWhere(string);
+    }
+
+    if (program) {
+      let string = '(';
+
+      for (let i = 0; i < program.length; i++) {
+        const regex = Regex.commaDelimited(program[i].toUpperCase());
+
+        if (i === 0) {
+          string += `(UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+        } else {
+          string += `OR (UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+        }
       }
 
       string += ')';
