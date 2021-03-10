@@ -14,7 +14,7 @@ import { Program } from '../enums/program.enum';
 import { IsProgram } from '../pipes/is-program.pipe';
 import { ApiConfigService } from '../utils/api-config.service';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
-import { IsUnitFuelType } from 'src/pipes/is-unit-fuel-type.pipe';
+import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
