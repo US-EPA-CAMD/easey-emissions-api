@@ -1,1 +1,3 @@
+environment: staging
 host: easey-stg.app.cloud.gov
+memory: 2048M

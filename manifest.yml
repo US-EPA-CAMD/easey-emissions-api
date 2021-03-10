@@ -1,12 +1,15 @@
 applications:
-  - name: emissions-api
+  - name: ((name))
     path: .
     command: npm run start
-    memory: 2048M
+    memory: ((memory))
     env:
-      EASEY_API_HOST: ((host))
       OPTIMIZE_MEMORY: true
+      EASEY_EMISSIONS_API_TITLE: ((title))
+      EASEY_EMISSIONS_API_HOST: ((host))
+      EASEY_EMISSIONS_API_PATH: ((path))
+      EASEY_EMISSIONS_API_ENV: ((environment))
     routes:
-      - route: ((host))/api/emissions-mgmt
+      - route: ((host))/((path))
     services:
       - camd-pg-db

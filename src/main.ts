@@ -11,32 +11,35 @@ async function bootstrap() {
 
   const appTitle = configService.get<string>('app.title');
   const appPath = configService.get<string>('app.path');
+  const appEnv = configService.get<string>('app.env');
+  const appVersion = configService.get<string>('app.version');
+  const appPublished = configService.get<string>('app.published');
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      validationError: {
-        target: false,
-        value: true,
-      },
-    }),
-  );
+  let appDesc = null;
+  let swaggerCustomOptions = null;
+
+  if (appEnv != 'production') {
+    appDesc = `EPA ${appEnv} Environment: The content on this page is not production data and used for <strong>development</strong> and/or <strong>testing</strong> purposes only.`
+    swaggerCustomOptions = {
+      customCss: '.description .renderedMarkdown p { color: #FC0; padding: 10px; background: linear-gradient(to bottom,#520001 0%,#6c0810 100%); }'
+    };
+  }
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
-  app.enableCors();
+  app.enableCors();  
 
-  const options = new DocumentBuilder()
-    .setTitle(`${appTitle} API`)
-    .setDescription(`${appTitle} OpenAPI specification`)
-    .setVersion('1.0')
+  const swaggerDocOptions = new DocumentBuilder()
+    .setTitle(`${appTitle} OpenAPI Specification`)
+    .setDescription(appDesc)
+    .setVersion(`${appVersion} published: ${appPublished}`)
     .build();
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(`${appPath}/swagger`, app, document);
+  const document = SwaggerModule.createDocument(app, swaggerDocOptions);
+  SwaggerModule.setup(`${appPath}/swagger`, app, document, swaggerCustomOptions);
 
   await app.listen(configService.get<number>('app.port'));
-  console.log(
-    `Application is running on: ${await app.getUrl()}/${appPath}/swagger`,
-  );
+  console.log(`Application is running on: ${await app.getUrl()}/${appPath}/swagger`);
 }
 
 bootstrap();
