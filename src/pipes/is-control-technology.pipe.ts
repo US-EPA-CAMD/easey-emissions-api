@@ -3,7 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { getManager } from 'typeorm';
+import { getManager, Raw } from 'typeorm';
 
 import { ControlCode } from '../entities/control-code.entity';
 
@@ -19,7 +19,7 @@ export function IsControlTechnology(validationOptions?: ValidationOptions) {
           const manager = getManager();
 
           const found = await manager.findOne(ControlCode, {
-            controlDescription: value,
+            controlDescription: Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
           });
           return found != undefined;
         },
