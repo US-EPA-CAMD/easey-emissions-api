@@ -135,7 +135,7 @@ describe('-- Hourly Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
-          'program'
+          'MATS'
         ),
       );
       expect(results.length).toBe(8);

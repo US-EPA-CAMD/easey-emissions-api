@@ -13,6 +13,7 @@ import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { Program } from '../enums/program.enum';
 import { IsProgram } from '../pipes/is-program.pipe';
 import { ApiConfigService } from '../utils/api-config.service';
+import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from 'src/pipes/is-unit-fuel-type.pipe';
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
@@ -80,10 +81,11 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   unitFuelType?: UnitFuelType[];
 
   @IsOptional()
-  // @IsControlTechnology({
-  //   message:
-  //     'Control technologies are not valid. Refer to the list of available control technologies for valid values [placeholder for link to endpoint]',
-  // })
+  @IsControlTechnology({
+    each: true,
+    message:
+      `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService.getMdm()}control-technologies`,
+  })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
 

@@ -168,11 +168,8 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       query.skip((page - 1) * perPage).take(perPage);
 
       const totalCount = await query.getCount();
-      console.log(`totalCount=${totalCount}`);
       ResponseHeaders.setPagination(req, totalCount);
     }
-
-    console.log(query.getSql());
 
     return query.getMany();
   }
