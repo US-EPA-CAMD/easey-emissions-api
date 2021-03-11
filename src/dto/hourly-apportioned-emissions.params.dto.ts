@@ -14,6 +14,7 @@ import { Program } from '../enums/program.enum';
 import { IsProgram } from '../pipes/is-program.pipe';
 import { ApiConfigService } from '../utils/api-config.service';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
+import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
@@ -71,10 +72,11 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   unitType?: UnitType[];
 
   @IsOptional()
-  // @IsUnitFuelType({
-  //   message:
-  //     'Unit fuel type is not valid. Refer to the list of available unit fuel types for valid values [placeholder for link to endpoint]',
-  // })
+  @IsUnitFuelType({
+    each: true,
+    message:
+      `One or more unit fuel types are not valid. Refer to the list of available unit fuel types for valid values ${ApiConfigService.getMdm()}fuel-types`,
+  })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitFuelType?: UnitFuelType[];
 
