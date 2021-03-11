@@ -19,21 +19,19 @@ jobs:
         with:
           repository: US-EPA-CAMD/devops
           path: devops
-      - name: Build
-        run: devops/scripts/build.sh
-        env:
-          NESTJS_APP: true        
-      - name: Run Unit Tests
-        run: devops/scripts/unit-tests.sh
+      - name: Configure Env Vars
+        run: devops/scripts/environment-variables.sh
         env:
           NESTJS_APP: true
+      - name: Build
+        run: devops/scripts/build.sh
+      - name: Run Unit Tests
+        run: devops/scripts/unit-tests.sh
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
-      - name: Configure Env Vars
-        run: devops/scripts/environment-variables.sh
       - name: Package App
         run: devops/scripts/package.sh
         env:

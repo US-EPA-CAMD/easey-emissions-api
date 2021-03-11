@@ -1,6 +1,0 @@
-name: emissions-api
-title: Emissions Management
-path: api/emissions-mgmt
-environment: development
-host: easey-dev.app.cloud.gov
-memory: 2048M
