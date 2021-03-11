@@ -19,9 +19,7 @@ export function IsUnitFuelType(validationOptions?: ValidationOptions) {
           const manager = getManager();
 
           const found = await manager.findOne(FuelTypeCode, {
-            fuelTypeDescription: Raw(
-              alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`,
-            ),
+            fuelTypeDescription:  Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
           });
           return found != undefined;
         },
