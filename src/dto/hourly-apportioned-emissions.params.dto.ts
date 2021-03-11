@@ -15,8 +15,9 @@ import { IsProgram } from '../pipes/is-program.pipe';
 import { ApiConfigService } from '../utils/api-config.service';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
-export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
+import { IsUnitType } from '../pipes/is-unit-type.pipe';
 
+export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
     message: 'Please enter a $property year between 1995 and this year',
   })
@@ -64,18 +65,17 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   orisCode?: number[];
 
   @IsOptional()
-  // @IsUnitType({
-  //   message:
-  //     'Unit type is not valid. Refer to the list of available unit types for valid values [placeholder for link to endpoint]',
-  // })
+  @IsUnitType({
+    each: true,
+    message: `One or more unit types are not valid. Refer to the list of available unit types for valid values ${ApiConfigService.getMdm()}unit-types`,
+  })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitType?: UnitType[];
 
   @IsOptional()
   @IsUnitFuelType({
     each: true,
-    message:
-      `One or more unit fuel types are not valid. Refer to the list of available unit fuel types for valid values ${ApiConfigService.getMdm()}fuel-types`,
+    message: `One or more unit fuel types are not valid. Refer to the list of available unit fuel types for valid values ${ApiConfigService.getMdm()}fuel-types`,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitFuelType?: UnitFuelType[];
@@ -83,17 +83,15 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsControlTechnology({
     each: true,
-    message:
-      `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService.getMdm()}control-technologies`,
+    message: `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService.getMdm()}control-technologies`,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
-  @IsProgram( ['MATS'], {
+  @IsProgram(['MATS'], {
     each: true,
-    message:
-    `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs?exclude=MATS`,
+    message: `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs?exclude=MATS`,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   program?: Program[];
@@ -101,5 +99,3 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   opHoursOnly?: boolean;
 }
-
-
