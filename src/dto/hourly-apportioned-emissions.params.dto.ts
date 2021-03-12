@@ -17,6 +17,7 @@ import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
+import { IsStateCode } from '../pipes/is-state-code.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
@@ -48,11 +49,11 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   endDate: Date;
 
   @IsOptional()
-  // @IsStateCode({
-  //   each: true,
-  //   message:
-  //     'The state or territory is not valid. Please enter a valid state or territory using the two letter postal abbreviation (use TX, not Texas).',
-  // })
+  @IsStateCode({
+    each: true,
+    message:
+      'One or more states are not valid. Use the two letter postal abbreviation (use TX, not Texas).',
+  })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   state?: State[];
 
