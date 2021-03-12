@@ -18,15 +18,11 @@ export function IsStateCode(validationOptions?: ValidationOptions) {
       validator: {
         async validate(value: any, args: ValidationArguments) {
           const manager = getManager();
+
           const found = await manager.findOne(StateCode, {
             stateCd: value.toUpperCase(),
           });
-
-          if (found != undefined) {
-            return true;
-          } else {
-            return false;
-          }
+          return found != undefined;
         },
       },
     });
