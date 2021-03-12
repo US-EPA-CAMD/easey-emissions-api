@@ -15,6 +15,7 @@ import { IsProgram } from '../pipes/is-program.pipe';
 import { ApiConfigService } from '../utils/api-config.service';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
+import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
@@ -56,12 +57,11 @@ export class HourlyApportionedEmissionsParamsDTO extends PaginationDTO {
   state?: State[];
 
   @IsOptional()
-  // @IsOrisCode({
-  //   each: true,
-  //   message:
-  //     'ORIS code not valid. Refer to the list of available ORIS codes for valid values [placeholder for link to Facilities endpoint]',
-  // })
-  @Transform((value: string) => value.split('|').map(item => Number(item)))
+  @IsOrisCode({
+    each: true,
+    message: `One or more ORIS codes are not valid. Refer to the list of available ORIS codes for valid values ${ApiConfigService.getFacApi()}facilities`,
+  })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
   orisCode?: number[];
 
   @IsOptional()
