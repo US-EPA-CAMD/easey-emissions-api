@@ -15,4 +15,8 @@ export class ApiConfigService {
   public static getMdm(): string {
     return `https://${this.getHost()}/api/master-data-mgmt/`;
   }
+
+  public static getFacApi(): string {
+    return `https://${this.getHost()}/api/facility-mgmt/`;
+  }
 }
