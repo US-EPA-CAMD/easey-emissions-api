@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsDefined, IsNumber, IsNumberString, IsOptional } from 'class-validator';
+import { IsDefined, IsOptional } from 'class-validator';
 
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';

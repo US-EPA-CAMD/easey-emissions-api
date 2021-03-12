@@ -1,4 +1,4 @@
-import { IsDefined, Validate, validate } from 'class-validator';
+import { IsDefined, validate } from 'class-validator';
 import * as typeorm from 'typeorm';
 import { createSandbox, SinonSandbox, createStubInstance } from 'sinon';
 
