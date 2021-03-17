@@ -1,5 +1,4 @@
 import { Regex } from './regex';
-import { ResponseHeaders } from './response.headers';
 
 export class QueryBuilderHelper {
   public static createEmissionsQuery(query: any, dto: any, param: string[]) {
