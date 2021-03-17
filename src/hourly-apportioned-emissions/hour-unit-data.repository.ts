@@ -73,8 +73,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       .addOrderBy('em.opHour');
 
     if (page && perPage) {
-      query.skip((page - 1) * perPage).take(perPage);
-
       const totalCount = await query.getCount();
       ResponseHeaders.setPagination(req, totalCount);
     }

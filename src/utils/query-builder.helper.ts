@@ -1,4 +1,5 @@
 import { Regex } from './regex';
+import { ResponseHeaders } from './response.headers';
 
 export class QueryBuilderHelper {
   public static createEmissionsQuery(query: any, dto: any, param: string[]) {
@@ -101,6 +102,17 @@ export class QueryBuilderHelper {
       query.andWhere('em.opTime > 0');
     }
 
+    if (dto.page && dto.perPage) {
+      query = this.paginationHelper(query, dto.page, dto.perPage);
+    }
+
+    return query;
+  }
+
+  // TODO: createAllowanceQuery 
+
+  private static paginationHelper(query: any, page: number, perPage: number) {
+    query.skip((page - 1) * perPage).take(perPage);
     return query;
   }
 }
