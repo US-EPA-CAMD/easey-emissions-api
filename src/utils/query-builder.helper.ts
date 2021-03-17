@@ -1,17 +1,17 @@
 import { Regex } from './regex';
 
 export class QueryBuilderHelper {
-  public static createEmissionsQuery(query: any, dto: any, param: string[]) {
+  public static createEmissionsQuery(query: any, dto: any, param: string[], emissionsAlias: string, unitAlias: string) {
     if (param.includes('beginDate') && dto.beginDate) {
-      query.andWhere('em.opDate >= :beginDate', { beginDate: dto.beginDate });
+      query.andWhere(`${emissionsAlias}.opDate >= :beginDate`, { beginDate: dto.beginDate });
     }
 
     if (param.includes('endDate') && dto.endDate) {
-      query.andWhere('em.opDate <= :endDate', { endDate: dto.endDate });
+      query.andWhere(`${emissionsAlias}.opDate <= :endDate`, { endDate: dto.endDate });
     }
 
     if (param.includes('state') && dto.state) {
-      query.andWhere('uf.state IN (:...states)', {
+      query.andWhere(`${unitAlias}.state IN (:...states)`, {
         states: dto.state.map(states => {
           return states.toUpperCase();
         }),
@@ -19,13 +19,13 @@ export class QueryBuilderHelper {
     }
 
     if (param.includes('orisCode') && dto.orisCode) {
-      query.andWhere('uf.orisCode IN (:...orisCodes)', {
+      query.andWhere(`${unitAlias}.orisCode IN (:...orisCodes)`, {
         orisCodes: dto.orisCode,
       });
     }
 
     if (param.includes('unitType') && dto.unitType) {
-      query.andWhere('UPPER(uf.unitTypeInfo) IN (:...unitType)', {
+      query.andWhere(`UPPER(${unitAlias}.unitTypeInfo) IN (:...unitType)`, {
         unitType: dto.unitType.map(unit => {
           return unit.toUpperCase();
         }),
@@ -41,16 +41,16 @@ export class QueryBuilderHelper {
         );
 
         if (i === 0) {
-          string += `(UPPER(uf.so2ControlInfo) ~* ${regex}) `;
+          string += `(UPPER(${unitAlias}.so2ControlInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.so2ControlInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${unitAlias}.so2ControlInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.noxControlInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${unitAlias}.noxControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.partControlInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${unitAlias}.partControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(uf.hgControlInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${unitAlias}.hgControlInfo) ~* ${regex}) `;
       }
 
       string += ')';
@@ -65,12 +65,12 @@ export class QueryBuilderHelper {
         const regex = Regex.commaDelimited(dto.unitFuelType[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
+          string += `(UPPER(${unitAlias}.primaryFuelInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.primaryFuelInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${unitAlias}.primaryFuelInfo) ~* ${regex}) `;
         }
 
-        string += `OR (UPPER(uf.secondaryFuelInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${unitAlias}.secondaryFuelInfo) ~* ${regex}) `;
       }
 
       string += ')';
@@ -84,9 +84,9 @@ export class QueryBuilderHelper {
         const regex = Regex.commaDelimited(dto.program[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+          string += `(UPPER(${unitAlias}.prgCodeInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(uf.prgCodeInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${unitAlias}.prgCodeInfo) ~* ${regex}) `;
         }
       }
 
@@ -98,7 +98,7 @@ export class QueryBuilderHelper {
       param.includes('opHoursOnly') &&
       String(dto.opHoursOnly) === String(true)
     ) {
-      query.andWhere('em.opTime > 0');
+      query.andWhere(`${emissionsAlias}.opTime > 0`);
     }
 
     if (dto.page && dto.perPage) {

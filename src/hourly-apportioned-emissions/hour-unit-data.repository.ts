@@ -17,27 +17,27 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       perPage,
     } = hourlyApportionedEmissionsParamsDTO;
 
-    let query = this.createQueryBuilder('em')
+    let query = this.createQueryBuilder('hud')
       .select([
-        'em.unitId',
-        'em.opDate',
-        'em.opHour',
-        'em.opTime',
-        'em.gload',
-        'em.sload',
-        'em.heatInput',
-        'em.so2Mass',
-        'em.so2MassMeasureFlg',
-        'em.so2Rate',
-        'em.so2RateMeasureFlg',
-        'em.co2Mass',
-        'em.co2MassMeasureFlg',
-        'em.co2Rate',
-        'em.co2RateMeasureFlg',
-        'em.noxMass',
-        'em.noxMassMeasureFlg',
-        'em.noxRate',
-        'em.noxRateMeasureFlg',
+        'hud.unitId',
+        'hud.opDate',
+        'hud.opHour',
+        'hud.opTime',
+        'hud.gload',
+        'hud.sload',
+        'hud.heatInput',
+        'hud.so2Mass',
+        'hud.so2MassMeasureFlg',
+        'hud.so2Rate',
+        'hud.so2RateMeasureFlg',
+        'hud.co2Mass',
+        'hud.co2MassMeasureFlg',
+        'hud.co2Rate',
+        'hud.co2RateMeasureFlg',
+        'hud.noxMass',
+        'hud.noxMassMeasureFlg',
+        'hud.noxRate',
+        'hud.noxRateMeasureFlg',
         'uf.state',
         'uf.facilityName',
         'uf.orisCode',
@@ -52,7 +52,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'uf.prgCodeInfo',
         'uf.assocStacks',
       ])
-      .innerJoin('em.unitFact', 'uf');
+      .innerJoin('hud.unitFact', 'uf');
 
     query = QueryBuilderHelper.createEmissionsQuery(query, hourlyApportionedEmissionsParamsDTO, [
       'beginDate',
@@ -64,13 +64,13 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       'unitFuelType',
       'program',
       'opHoursOnly',
-    ]);
+    ], 'hud', 'uf');
 
     query
       .orderBy('uf.orisCode')
-      .addOrderBy('em.unitId')
-      .addOrderBy('em.opDate')
-      .addOrderBy('em.opHour');
+      .addOrderBy('hud.unitId')
+      .addOrderBy('hud.opDate')
+      .addOrderBy('hud.opHour');
 
     if (page && perPage) {
       const totalCount = await query.getCount();
