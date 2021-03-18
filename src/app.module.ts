@@ -8,7 +8,7 @@ import dbConfig from './config/db.config';
 import appConfig from './config/app.config';
 import { TypeOrmConfigService } from './config/typeorm.config';
 
-import { HourlyApportionedEmissionsModule } from './hourly-apportioned-emissions/hourly-apportioned-emissions.module';
+import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { HourlyApportionedEmissionsModule } from './hourly-apportioned-emissions
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
-    HourlyApportionedEmissionsModule,
+    ApportionedEmissionsModule,
   ],
 })
 export class AppModule {}

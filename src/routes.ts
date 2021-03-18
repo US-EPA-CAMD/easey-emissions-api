@@ -1,17 +1,11 @@
-import { Routes } from "nest-router";
+import { Routes } from 'nest-router';
 
-import { HourlyApportionedEmissionsModule } from './hourly-apportioned-emissions/hourly-apportioned-emissions.module';
+import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 
 const routes: Routes = [
   {
-    path: '/apportioned/hourly',
-    module: HourlyApportionedEmissionsModule,
-    // children: [
-    //   {
-    //     path: ':id/units',
-    //     module: UnitsModule,
-    //   },
-    // ],
+    path: '/apportioned',
+    module: ApportionedEmissionsModule,
   },
 ];
 

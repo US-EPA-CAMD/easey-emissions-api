@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
-import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
+import { ApportionedEmissionsService } from './apportioned-emissions.service';
+import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
@@ -16,25 +16,25 @@ const mockRequest = (url: string) => {
   };
 };
 
-describe('-- Hourly Apportioned Emissions Controller --', () => {
-  let hourlyApportionedEmissionsController: HourlyApportionedEmissionsController;
-  let hourlyApportionedEmissionsService: HourlyApportionedEmissionsService;
+describe('-- Apportioned Emissions Controller --', () => {
+  let apportionedEmissionsController: ApportionedEmissionsController;
+  let apportionedEmissionsService: ApportionedEmissionsService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      controllers: [HourlyApportionedEmissionsController],
+      controllers: [ApportionedEmissionsController],
       providers: [
         HourlyApportionedEmissionsMap,
-        HourlyApportionedEmissionsService,
+        ApportionedEmissionsService,
         HourUnitDataRepository,
       ],
     }).compile();
 
-    hourlyApportionedEmissionsController = module.get(
-      HourlyApportionedEmissionsController,
+    apportionedEmissionsController = module.get(
+      ApportionedEmissionsController,
     );
-    hourlyApportionedEmissionsService = module.get(
-      HourlyApportionedEmissionsService,
+    apportionedEmissionsService = module.get(
+      ApportionedEmissionsService,
     );
   });
 
@@ -50,10 +50,10 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
       const expectedResult: HourlyApportionedEmissionsDTO[] = [];
       const paramsDto = new HourlyApportionedEmissionsParamsDTO();
       jest
-        .spyOn(hourlyApportionedEmissionsService, 'getHourlyEmissions')
+        .spyOn(apportionedEmissionsService, 'getHourlyEmissions')
         .mockResolvedValue(expectedResult);
       expect(
-        await hourlyApportionedEmissionsController.getHourlyEmissions(
+        await apportionedEmissionsController.getHourlyEmissions(
           paramsDto,
           req,
         ),

@@ -10,16 +10,16 @@ import { Get, Controller, Query, Req } from '@nestjs/common';
 
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
-import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
+import { ApportionedEmissionsService } from './apportioned-emissions.service';
 
-@ApiTags('Hourly Apportioned Emissions')
+@ApiTags('Apportioned Emissions')
 @Controller()
-export class HourlyApportionedEmissionsController {
+export class ApportionedEmissionsController {
   constructor(
-    private hourlyApportionedEmissionsService: HourlyApportionedEmissionsService,
+    private readonly apportionedEmissionsService: ApportionedEmissionsService,
   ) {}
 
-  @Get()
+  @Get('/hourly')
   @ApiOkResponse({
     description: 'Retrieved All Hourly Apportioned Emissions Data',
   })
@@ -40,7 +40,7 @@ export class HourlyApportionedEmissionsController {
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     @Req() req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
-    return this.hourlyApportionedEmissionsService.getHourlyEmissions(
+    return this.apportionedEmissionsService.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
       req,
     );
