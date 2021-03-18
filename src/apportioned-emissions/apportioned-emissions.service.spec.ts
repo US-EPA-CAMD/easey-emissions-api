@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 
-import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
+import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
@@ -13,15 +13,15 @@ const mockMap = () => ({
   many: jest.fn(),
 });
 
-describe('HourlyApportionedEmissionsService', () => {
-  let hourlyApportionedEmissionsService;
+describe('-- Apportioned Emissions Service --', () => {
+  let apportionedEmissionsService;
   let hourUnitDataRepository;
   let map;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        HourlyApportionedEmissionsService,
+        ApportionedEmissionsService,
         {
           provide: HourUnitDataRepository,
           useFactory: mockHourUnitDataRepository,
@@ -30,8 +30,8 @@ describe('HourlyApportionedEmissionsService', () => {
       ],
     }).compile();
 
-    hourlyApportionedEmissionsService = module.get(
-      HourlyApportionedEmissionsService,
+    apportionedEmissionsService = module.get(
+      ApportionedEmissionsService,
     );
     hourUnitDataRepository = module.get(HourUnitDataRepository);
     map = module.get(HourlyApportionedEmissionsMap);
@@ -46,7 +46,7 @@ describe('HourlyApportionedEmissionsService', () => {
 
       let filters = new HourlyApportionedEmissionsParamsDTO();
 
-      let result = await hourlyApportionedEmissionsService.getHourlyEmissions(
+      let result = await apportionedEmissionsService.getHourlyEmissions(
         filters,
       );
 

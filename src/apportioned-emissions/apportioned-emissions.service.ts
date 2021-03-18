@@ -8,11 +8,11 @@ import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissio
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 
 @Injectable()
-export class HourlyApportionedEmissionsService {
+export class ApportionedEmissionsService {
   constructor(
     @InjectRepository(HourUnitDataRepository)
-    private repository: HourUnitDataRepository,
-    private map: HourlyApportionedEmissionsMap,
+    private hourlyRepository: HourUnitDataRepository,
+    private hourlyMap: HourlyApportionedEmissionsMap,
   ) {}
 
   async getHourlyEmissions(
@@ -20,11 +20,11 @@ export class HourlyApportionedEmissionsService {
     req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
 
-    let query = await this.repository.getHourlyEmissions(
+    let query = await this.hourlyRepository.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
       req,
     );
 
-    return this.map.many(query);
+    return this.hourlyMap.many(query);
   }
 }
