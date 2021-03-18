@@ -12,10 +12,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<HourUnitData[]> {
-    const {
-      page,
-      perPage,
-    } = hourlyApportionedEmissionsParamsDTO;
+    const { page, perPage } = hourlyApportionedEmissionsParamsDTO;
 
     let query = this.createQueryBuilder('hud')
       .select([
@@ -54,17 +51,23 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       ])
       .innerJoin('hud.unitFact', 'uf');
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, hourlyApportionedEmissionsParamsDTO, [
-      'beginDate',
-      'endDate',
-      'state',
-      'orisCode',
-      'unitType',
-      'controlTechnologies',
-      'unitFuelType',
-      'program',
-      'opHoursOnly',
-    ], 'hud', 'uf');
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      hourlyApportionedEmissionsParamsDTO,
+      [
+        'beginDate',
+        'endDate',
+        'state',
+        'orisCode',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'program',
+        'opHoursOnly',
+      ],
+      'hud',
+      'uf',
+    );
 
     query
       .orderBy('uf.orisCode')

@@ -16,7 +16,7 @@ import { ApportionedEmissionsService } from './apportioned-emissions.service';
 @Controller()
 export class ApportionedEmissionsController {
   constructor(
-    private apportionedEmissionsService: ApportionedEmissionsService,
+    private readonly apportionedEmissionsService: ApportionedEmissionsService,
   ) {}
 
   @Get('/hourly')

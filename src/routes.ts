@@ -1,4 +1,4 @@
-import { Routes } from "nest-router";
+import { Routes } from 'nest-router';
 
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 

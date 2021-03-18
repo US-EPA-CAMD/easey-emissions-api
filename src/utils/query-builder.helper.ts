@@ -1,13 +1,23 @@
 import { Regex } from './regex';
 
 export class QueryBuilderHelper {
-  public static createEmissionsQuery(query: any, dto: any, param: string[], emissionsAlias: string, unitAlias: string) {
+  public static createEmissionsQuery(
+    query: any,
+    dto: any,
+    param: string[],
+    emissionsAlias: string,
+    unitAlias: string,
+  ) {
     if (param.includes('beginDate') && dto.beginDate) {
-      query.andWhere(`${emissionsAlias}.opDate >= :beginDate`, { beginDate: dto.beginDate });
+      query.andWhere(`${emissionsAlias}.opDate >= :beginDate`, {
+        beginDate: dto.beginDate,
+      });
     }
 
     if (param.includes('endDate') && dto.endDate) {
-      query.andWhere(`${emissionsAlias}.opDate <= :endDate`, { endDate: dto.endDate });
+      query.andWhere(`${emissionsAlias}.opDate <= :endDate`, {
+        endDate: dto.endDate,
+      });
     }
 
     if (param.includes('state') && dto.state) {
@@ -107,8 +117,6 @@ export class QueryBuilderHelper {
 
     return query;
   }
-
-  // TODO: createAllowanceQuery 
 
   private static paginationHelper(query: any, page: number, perPage: number) {
     query.skip((page - 1) * perPage).take(perPage);
