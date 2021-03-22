@@ -13,7 +13,7 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { IsProgram } from '../pipes/is-program.pipe';
 
-describe('-- Hourly Apportioned Emissions Params DTO --', () => {
+describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
     class MyClass {
       constructor(

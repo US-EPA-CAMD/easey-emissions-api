@@ -6,6 +6,7 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
+import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -26,4 +27,13 @@ export class ApportionedEmissionsService {
 
     return this.hourlyMap.many(query);
   }
+
+  getDailyEmissions(
+    ApportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
+    req: Request,
+  ): string {
+    return 'Hello World!';
+  }
+
+  
 }
