@@ -84,7 +84,8 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsControlTechnology({
     each: true,
-    message: `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService.getMdm()}control-technologies`,
+    message: `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService
+      .getMdm()}control-technologies`,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
