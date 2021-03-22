@@ -6,6 +6,7 @@ import { ApportionedEmissionsController } from './apportioned-emissions.controll
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -30,12 +31,8 @@ describe('-- Apportioned Emissions Controller --', () => {
       ],
     }).compile();
 
-    apportionedEmissionsController = module.get(
-      ApportionedEmissionsController,
-    );
-    apportionedEmissionsService = module.get(
-      ApportionedEmissionsService,
-    );
+    apportionedEmissionsController = module.get(ApportionedEmissionsController);
+    apportionedEmissionsService = module.get(ApportionedEmissionsService);
   });
 
   afterEach(() => {
@@ -53,11 +50,20 @@ describe('-- Apportioned Emissions Controller --', () => {
         .spyOn(apportionedEmissionsService, 'getHourlyEmissions')
         .mockResolvedValue(expectedResult);
       expect(
-        await apportionedEmissionsController.getHourlyEmissions(
-          paramsDto,
-          req,
-        ),
+        await apportionedEmissionsController.getHourlyEmissions(paramsDto, req),
       ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getDailyEmissions', () => {
+    const req: any = mockRequest('');
+    req.res.setHeader.mockReturnValue();
+
+    it('should return hello world', async () => {
+      const paramsDto = new ApportionedEmissionsParamsDTO();
+      expect(
+        apportionedEmissionsController.getDailyEmissions(paramsDto, req),
+      ).toBe('Hello World!');
     });
   });
 });
