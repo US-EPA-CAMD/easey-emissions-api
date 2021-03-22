@@ -29,11 +29,9 @@ export class ApportionedEmissionsService {
   }
 
   getDailyEmissions(
-    ApportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
+    apportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
     req: Request,
   ): string {
     return 'Hello World!';
   }
-
-  
 }

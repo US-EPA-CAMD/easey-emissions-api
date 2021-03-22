@@ -23,4 +23,3 @@ export class ApportionedEmissionsDTO {
     hgControlInfo: string;
     prgCodeInfo: string;
   }
-  
