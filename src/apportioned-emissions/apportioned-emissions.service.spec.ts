@@ -30,9 +30,7 @@ describe('-- Apportioned Emissions Service --', () => {
       ],
     }).compile();
 
-    apportionedEmissionsService = module.get(
-      ApportionedEmissionsService,
-    );
+    apportionedEmissionsService = module.get(ApportionedEmissionsService);
     hourUnitDataRepository = module.get(HourUnitDataRepository);
     map = module.get(HourlyApportionedEmissionsMap);
   });
