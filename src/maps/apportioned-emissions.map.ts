@@ -5,7 +5,7 @@ import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
 
 @Injectable()
 export class ApportionedEmissionsMap extends BaseMap<any, any> {
-  public async one(entity: any): Promise<any> {
+  public async one(entity: any): Promise<ApportionedEmissionsDTO> {
     return {
       state: entity.unitFact.state,
       facilityName: entity.unitFact.facilityName,

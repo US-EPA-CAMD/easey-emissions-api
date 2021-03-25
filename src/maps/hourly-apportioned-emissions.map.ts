@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
-import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { ApportionedEmissionsMap } from './apportioned-emissions.map';
 import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
+import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
+import { HourUnitData } from '../entities/hour-unit-data.entity';
 
 @Injectable()
 export class HourlyApportionedEmissionsMap extends ApportionedEmissionsMap {
