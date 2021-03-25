@@ -16,8 +16,9 @@ export class ApportionedEmissionsService {
   constructor(
     @InjectRepository(HourUnitDataRepository)
     private readonly hourlyRepository: HourUnitDataRepository,
-    private readonly hourlyMap: HourlyApportionedEmissionsMap,
+    @InjectRepository(DayUnitDataRepository)
     private readonly dailyRepository: DayUnitDataRepository,
+    private readonly hourlyMap: HourlyApportionedEmissionsMap,
     private readonly dailyMap: DailyApportionedEmissionsMap,
   ) {}
 
