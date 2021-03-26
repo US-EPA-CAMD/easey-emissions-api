@@ -21,7 +21,7 @@ export function IsUnitFuelType(validationOptions?: ValidationOptions) {
           const found = await manager.findOne(FuelTypeCode, {
             fuelTypeDescription:  Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
           });
-          return found != undefined;
+          return found != null;
         },
       },
     });

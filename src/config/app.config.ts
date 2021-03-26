@@ -1,12 +1,12 @@
 import { registerAs } from '@nestjs/config';
 
-const path = process.env.EASEY_EMISSIONS_API_PATH || 'api/emissions-mgmt'
+const path = process.env.EASEY_EMISSIONS_API_PATH || 'api/emissions-mgmt';
 const host = process.env.EASEY_EMISSIONS_API_HOST || 'localhost';
 const port = process.env.EASEY_EMISSIONS_API_PORT || 8080;
 
-let uri = `https://${host}/${path}`
+let uri = `https://${host}/${path}`;
 
-if (host == 'localhost') {
+if (host === 'localhost') {
   uri = `http://localhost:${port}/${path}`;
 }
 

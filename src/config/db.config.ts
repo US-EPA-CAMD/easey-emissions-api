@@ -9,7 +9,7 @@ let pgDb = process.env.EASEY_DB_NAME || 'postgres';
 if (process.env.VCAP_SERVICES) {
   const vcapSvc = JSON.parse(process.env.VCAP_SERVICES);
   const vcapSvcCreds = vcapSvc['aws-rds'][0].credentials;
-  
+
   pgHost = vcapSvcCreds.host;
   pgPort = +vcapSvcCreds.port;
   pgUser = vcapSvcCreds.username;
