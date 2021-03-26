@@ -22,7 +22,7 @@ export function IsStateCode(validationOptions?: ValidationOptions) {
           const found = await manager.findOne(StateCode, {
             stateCd: value.toUpperCase(),
           });
-          return found != undefined;
+          return found != null;
         },
       },
     });

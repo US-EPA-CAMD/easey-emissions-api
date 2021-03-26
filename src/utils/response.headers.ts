@@ -17,19 +17,19 @@ export class ResponseHeaders {
 
       switch (page) {
         case 1: {
-          concatLinks = next + ',' + last;
+          concatLinks = `${next},${last}`;
           break;
         }
         case totalPages: {
-          concatLinks = first + ',' + prev;
+          concatLinks = `${first},${prev}`;
           break;
         }
         default: {
-          concatLinks = first + ',' + prev + ',' + next + ',' + last;
+          concatLinks = `${first},${prev},${next},${last}`;
           break;
         }
       }
-      
+
       req.res.setHeader('Link', concatLinks);
       req.res.setHeader('X-Total-Count', totalCount);
     }

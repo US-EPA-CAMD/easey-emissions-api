@@ -31,7 +31,7 @@ export function IsProgram(
           const found = await manager.findOne(ProgramCode, {
             programCode: value.toUpperCase(),
           });
-          return found != undefined;
+          return found != null;
         },
       },
     });

@@ -18,16 +18,17 @@ async function bootstrap() {
   let appDesc = null;
   let swaggerCustomOptions = null;
 
-  if (appEnv != 'production') {
-    appDesc = `EPA ${appEnv} Environment: The content on this page is not production data and used for <strong>development</strong> and/or <strong>testing</strong> purposes only.`
+  if (appEnv !== 'production') {
+    appDesc = `EPA ${appEnv} Environment: The content on this page is not production data and used for <strong>development</strong> and/or <strong>testing</strong> purposes only.`;
     swaggerCustomOptions = {
-      customCss: '.description .renderedMarkdown p { color: #FC0; padding: 10px; background: linear-gradient(to bottom,#520001 0%,#6c0810 100%); }'
+      customCss:
+        '.description .renderedMarkdown p { color: #FC0; padding: 10px; background: linear-gradient(to bottom,#520001 0%,#6c0810 100%); }',
     };
   }
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
-  app.enableCors();  
+  app.enableCors();
 
   const swaggerDocOptions = new DocumentBuilder()
     .setTitle(`${appTitle} OpenAPI Specification`)
@@ -36,10 +37,17 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerDocOptions);
-  SwaggerModule.setup(`${appPath}/swagger`, app, document, swaggerCustomOptions);
+  SwaggerModule.setup(
+    `${appPath}/swagger`,
+    app,
+    document,
+    swaggerCustomOptions,
+  );
 
   await app.listen(configService.get<number>('app.port'));
-  console.log(`Application is running on: ${await app.getUrl()}/${appPath}/swagger`);
+  console.log(
+    `Application is running on: ${await app.getUrl()}/${appPath}/swagger`,
+  );
 }
 
 bootstrap();
