@@ -1,6 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsDefined, IsOptional } from 'class-validator';
 
+import { ErrorMessages } from '../utils/error-messages';
 import { PaginationDTO } from './pagination.dto';
 import { ControlTechnology } from '../enums/control-technology.enum';
 import { UnitFuelType } from '../enums/unit-fuel-type.enum';
@@ -12,7 +13,6 @@ import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { Program } from '../enums/program.enum';
 import { IsProgram } from '../pipes/is-program.pipe';
-import { ApiConfigService } from '../utils/api-config.service';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
@@ -21,29 +21,28 @@ import { IsStateCode } from '../pipes/is-state-code.pipe';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
-    message: 'Please enter a $property year between 1995 and this year',
+    message: ErrorMessages.FV7,
   })
   @IsValidDate({
-    message: 'Please enter a valid $property in the YYYY-MM-DD format',
+    message: ErrorMessages.FV11,
   })
   @IsIsoFormat({
-    message: 'Please enter the $property in the YYYY-MM-DD format',
+    message: ErrorMessages.FV5,
   })
   @IsDefined()
   beginDate: Date;
 
   @IsDateGreaterThanEqualTo('beginDate', {
-    message:
-      'Please enter an $property that is greater than or equal to the $constraint1',
+    message: ErrorMessages.FV6,
   })
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
-    message: 'Please enter an $property year between 1995 and this year',
+    message: ErrorMessages.FV7,
   })
   @IsValidDate({
-    message: 'Please enter a valid $property in the YYYY-MM-DD format',
+    message: ErrorMessages.FV11,
   })
   @IsIsoFormat({
-    message: 'Please enter the $property in the YYYY-MM-DD format',
+    message: ErrorMessages.FV5,
   })
   @IsDefined()
   endDate: Date;
@@ -51,8 +50,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsStateCode({
     each: true,
-    message:
-      'One or more states are not valid. Use the two letter postal abbreviation (use TX, not Texas).',
+    message: ErrorMessages.FV4,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   state?: State[];
@@ -60,7 +58,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsOrisCode({
     each: true,
-    message: `One or more ORIS codes are not valid. Refer to the list of available ORIS codes for valid values ${ApiConfigService.getFacApi()}facilities`,
+    message: ErrorMessages.FV9,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   orisCode?: number[];
@@ -68,7 +66,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsUnitType({
     each: true,
-    message: `One or more unit types are not valid. Refer to the list of available unit types for valid values ${ApiConfigService.getMdm()}unit-types`,
+    message: ErrorMessages.FV1,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitType?: UnitType[];
@@ -76,7 +74,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsUnitFuelType({
     each: true,
-    message: `One or more unit fuel types are not valid. Refer to the list of available unit fuel types for valid values ${ApiConfigService.getMdm()}fuel-types`,
+    message: ErrorMessages.FV2,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitFuelType?: UnitFuelType[];
@@ -84,8 +82,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsControlTechnology({
     each: true,
-    message: `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService
-      .getMdm()}control-technologies`,
+    message: ErrorMessages.FV3,
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
@@ -93,7 +90,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsProgram(['MATS'], {
     each: true,
-    message: `One or more programs is not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs?exclude=MATS`,
+    message: ErrorMessages.FV12 + '?exclude=MATS',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   program?: Program[];
