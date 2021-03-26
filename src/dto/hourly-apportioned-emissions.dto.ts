@@ -1,5 +1,5 @@
 import { ApportionedEmissionsDTO } from './apportioned-emissions.dto';
-export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO{
+export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
   opHour: number;
   opTime: number;
   so2MassMeasureFlg: string;

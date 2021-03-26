@@ -8,10 +8,11 @@ import {
 } from '@nestjs/swagger';
 import { Get, Controller, Query, Req } from '@nestjs/common';
 
-import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
-import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
+import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
+import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
+import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 
 @ApiTags('Apportioned Emissions')
 @Controller()
@@ -67,7 +68,7 @@ export class ApportionedEmissionsController {
     @Query()
     apportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
     @Req() req: Request,
-  ): string {
+  ): Promise<DailyApportionedEmissionsDTO[]> {
     return this.apportionedEmissionsService.getDailyEmissions(
       apportionedEmissionsParamsDTO,
       req,
