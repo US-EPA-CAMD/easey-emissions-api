@@ -14,6 +14,7 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { SwaggerDecorators } from '../utils/swagger-decorator.const';
 
 @ApiTags('Apportioned Emissions')
 @Controller()
@@ -27,10 +28,10 @@ export class ApportionedEmissionsController {
     description: 'Retrieved All Hourly Apportioned Emissions Data',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid Request',
+    description: SwaggerDecorators.badRequestResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Resource Not Found',
+    description: SwaggerDecorators.notFoundResponse,
   })
   @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
   @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })
@@ -54,10 +55,10 @@ export class ApportionedEmissionsController {
     description: 'Retrieved All Daily Apportioned Emissions Data',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid Request',
+    description: SwaggerDecorators.badRequestResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Resource Not Found',
+    description: SwaggerDecorators.notFoundResponse,
   })
   @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
   @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })
@@ -81,10 +82,10 @@ export class ApportionedEmissionsController {
     description: 'Retrieved All Monthly Apportioned Emissions Data',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid Request',
+    description: SwaggerDecorators.badRequestResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Resource Not Found',
+    description: SwaggerDecorators.notFoundResponse,
   })
   @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
   @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })

@@ -26,8 +26,6 @@ const mockQueryBuilder = () => ({
 let filters: ApportionedEmissionsParamsDTO = {
   page: undefined,
   perPage: undefined,
-  beginDate: new Date(),
-  endDate: new Date(),
   state: [State.TX],
   orisCode: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED],
