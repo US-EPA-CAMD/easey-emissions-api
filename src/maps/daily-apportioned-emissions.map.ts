@@ -14,6 +14,7 @@ export class DailyApportionedEmissionsMap extends ApportionedEmissionsMap {
 
     return {
       ...apportionedEmissionsDto,
+      opDate: entity.opDate.toISOString().split('T')[0],
       sumOpTime: entity.sumOpTime,
       countOpTime: entity.countOpTime,
     };

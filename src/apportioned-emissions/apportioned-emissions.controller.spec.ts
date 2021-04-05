@@ -6,10 +6,11 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
-import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
+import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -23,6 +24,7 @@ const mockRequest = (url: string) => {
 describe('-- Apportioned Emissions Controller --', () => {
   let apportionedEmissionsController: ApportionedEmissionsController;
   let apportionedEmissionsService: ApportionedEmissionsService;
+  let req: any;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -38,6 +40,8 @@ describe('-- Apportioned Emissions Controller --', () => {
 
     apportionedEmissionsController = module.get(ApportionedEmissionsController);
     apportionedEmissionsService = module.get(ApportionedEmissionsService);
+    req = mockRequest('');
+    req.res.setHeader.mockReturnValue();
   });
 
   afterEach(() => {
@@ -45,9 +49,6 @@ describe('-- Apportioned Emissions Controller --', () => {
   });
 
   describe('* getHourlyEmissions', () => {
-    const req: any = mockRequest('');
-    req.res.setHeader.mockReturnValue();
-
     it('should return test 1', async () => {
       const expectedResult: HourlyApportionedEmissionsDTO[] = [];
       const paramsDto = new HourlyApportionedEmissionsParamsDTO();
@@ -61,18 +62,24 @@ describe('-- Apportioned Emissions Controller --', () => {
   });
 
   describe('* getDailyEmissions', () => {
-    const req: any = mockRequest('');
-    req.res.setHeader.mockReturnValue();
-
     it('should call the service and return a list of daily emissions', async () => {
       const expectedResult: DailyApportionedEmissionsDTO[] = [];
-      const paramsDto = new ApportionedEmissionsParamsDTO();
+      const paramsDto = new DailyApportionedEmissionsParamsDTO();
       jest
         .spyOn(apportionedEmissionsService, 'getDailyEmissions')
         .mockResolvedValue(expectedResult);
       expect(
         await apportionedEmissionsController.getDailyEmissions(paramsDto, req),
       ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getMonthlyEmissions', () => {
+    it('should return hello world', async () => {
+      const paramsDto = new MonthlyApportionedEmissionsParamsDTO();
+      expect(
+        apportionedEmissionsController.getMonthlyEmissions(paramsDto, req),
+      ).toBe('Hello World!');
     });
   });
 });

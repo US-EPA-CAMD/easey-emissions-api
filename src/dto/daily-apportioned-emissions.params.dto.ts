@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsDefined } from 'class-validator';
 
 import { ErrorMessages } from '../utils/error-messages';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
@@ -7,7 +7,7 @@ import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 
-export class HourlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
+export class DailyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @IsInDateRange([new Date('1995-01-01'), new Date()], {
     message: ErrorMessages.FV7,
   })
@@ -34,7 +34,4 @@ export class HourlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
   })
   @IsDefined()
   endDate: Date;
-
-  @IsOptional()
-  opHoursOnly?: boolean;
 }

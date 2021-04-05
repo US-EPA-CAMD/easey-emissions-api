@@ -11,7 +11,6 @@ export class ApportionedEmissionsMap extends BaseMap<any, any> {
       facilityName: entity.unitFact.facilityName,
       orisCode: entity.unitFact.orisCode,
       unitId: entity.unitFact.unitid,
-      opDate: entity.opDate.toISOString().split('T')[0],
       gLoad: entity.gload,
       sLoad: entity.sload,
       so2Mass: entity.so2Mass,

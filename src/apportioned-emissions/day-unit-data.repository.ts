@@ -4,15 +4,15 @@ import { Request } from 'express';
 import { ResponseHeaders } from '../utils/response.headers';
 import { QueryBuilderHelper } from '../utils/query-builder.helper';
 import { DayUnitData } from '../entities/day-unit-data.entity';
-import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
+import { DailyApportionedEmissionsParamsDTO } from 'src/dto/daily-apportioned-emissions.params.dto';
 
 @EntityRepository(DayUnitData)
 export class DayUnitDataRepository extends Repository<DayUnitData> {
   async getDailyEmissions(
-    apportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
+    dailyApportionedEmissionsParamsDTO: DailyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<DayUnitData[]> {
-    const { page, perPage } = apportionedEmissionsParamsDTO;
+    const { page, perPage } = dailyApportionedEmissionsParamsDTO;
 
     let query = this.createQueryBuilder('dud')
       .select([
@@ -47,7 +47,7 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
 
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
-      apportionedEmissionsParamsDTO,
+      dailyApportionedEmissionsParamsDTO,
       [
         'beginDate',
         'endDate',

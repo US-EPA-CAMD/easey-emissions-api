@@ -6,7 +6,10 @@ import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissi
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
-import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
+import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
+import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
+import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
+import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -56,7 +59,8 @@ describe('-- Apportioned Emissions Service --', () => {
       hourUnitDataRepository.getHourlyEmissions.mockResolvedValue(
         'list of emissions',
       );
-      hourlyMap.many.mockReturnValue('mapped DTOs');
+      const hourDto = new HourlyApportionedEmissionsDTO();
+      hourlyMap.many.mockReturnValue(hourDto);
 
       let filters = new HourlyApportionedEmissionsParamsDTO();
 
@@ -65,7 +69,7 @@ describe('-- Apportioned Emissions Service --', () => {
       );
 
       expect(hourlyMap.many).toHaveBeenCalled();
-      expect(result).toEqual('mapped DTOs');
+      expect(result).toEqual(hourDto);
     });
   });
 
@@ -74,16 +78,26 @@ describe('-- Apportioned Emissions Service --', () => {
       dayUnitDataRepository.getDailyEmissions.mockResolvedValue(
         'list of emissions',
       );
-      dailyMap.many.mockReturnValue('mapped DTOs');
+      const dayDto = new DailyApportionedEmissionsDTO();
+      dailyMap.many.mockReturnValue(dayDto);
 
-      let filters = new ApportionedEmissionsParamsDTO();
+      let filters = new DailyApportionedEmissionsParamsDTO();
 
-      let result = await apportionedEmissionsService.getDailyEmissions(
-        filters,
-      );
+      let result = await apportionedEmissionsService.getDailyEmissions(filters);
 
       expect(dailyMap.many).toHaveBeenCalled();
-      expect(result).toEqual('mapped DTOs');
+      expect(result).toEqual(dayDto);
+    });
+  });
+
+  describe('getDailyEmissions', () => {
+    it('should return hello world', async () => {
+      // monthly dto coverage, will remove in feature/1018
+      const monthDto = new MonthlyApportionedEmissionsDTO();
+      let filters = new DailyApportionedEmissionsParamsDTO();
+      expect(apportionedEmissionsService.getMonthlyEmissions(filters)).toBe(
+        'Hello World!',
+      );
     });
   });
 });
