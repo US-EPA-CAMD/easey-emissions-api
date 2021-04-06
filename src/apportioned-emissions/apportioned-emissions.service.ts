@@ -11,6 +11,9 @@ import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -19,8 +22,11 @@ export class ApportionedEmissionsService {
     private readonly hourlyRepository: HourUnitDataRepository,
     @InjectRepository(DayUnitDataRepository)
     private readonly dailyRepository: DayUnitDataRepository,
+    @InjectRepository(MonthUnitDataRepository)
+    private readonly monthlyRepository: MonthUnitDataRepository,
     private readonly hourlyMap: HourlyApportionedEmissionsMap,
     private readonly dailyMap: DailyApportionedEmissionsMap,
+    private readonly monthlyMap: MonthlyApportionedEmissionsMap,
   ) {}
 
   async getHourlyEmissions(
@@ -47,10 +53,15 @@ export class ApportionedEmissionsService {
     return this.dailyMap.many(query);
   }
 
-  getMonthlyEmissions(
+  async getMonthlyEmissions(
     monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
     req: Request,
-  ): string {
-    return 'Hello World!';
+  ): Promise<MonthlyApportionedEmissionsDTO[]> {
+    const query = await this.monthlyRepository.getMonthlyEmissions(
+      monthlyApportionedEmissionsParamsDTO,
+      req,
+    );
+
+    return this.monthlyMap.many(query);
   }
 }

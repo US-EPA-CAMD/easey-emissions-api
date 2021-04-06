@@ -4,8 +4,8 @@ import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dt
 
 export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @IsDefined()
-  year: number;
+  opYear: number;
 
   @IsDefined()
-  month: number;
+  opMonth: number;
 }

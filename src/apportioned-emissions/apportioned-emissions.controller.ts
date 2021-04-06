@@ -8,6 +8,7 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import {
   BadRequestResponse,
   NotFoundResponse,
@@ -68,7 +69,7 @@ export class ApportionedEmissionsController {
     @Query()
     monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
     @Req() req: Request,
-  ): string {
+  ): Promise<MonthlyApportionedEmissionsDTO[]> {
     return this.apportionedEmissionsService.getMonthlyEmissions(
       monthlyApportionedEmissionsParamsDTO,
       req,
