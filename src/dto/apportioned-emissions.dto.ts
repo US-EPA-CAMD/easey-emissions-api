@@ -4,7 +4,6 @@ export class ApportionedEmissionsDTO {
   orisCode: number;
   unitId: string;
   assocStacks: string;
-  opDate: string;
   gLoad: number;
   sLoad: number;
   so2Mass: number;

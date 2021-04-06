@@ -16,6 +16,7 @@ export class HourlyApportionedEmissionsMap extends ApportionedEmissionsMap {
 
     return {
       ...apportionedEmissionsDto,
+      opDate: entity.opDate.toISOString().split('T')[0],
       opHour: entity.opHour,
       opTime: entity.opTime,
       so2MassMeasureFlg: entity.so2MassMeasureFlg,

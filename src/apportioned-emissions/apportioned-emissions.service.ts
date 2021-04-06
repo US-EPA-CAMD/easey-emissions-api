@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 
-import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
@@ -10,6 +9,8 @@ import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissi
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
+import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -35,14 +36,21 @@ export class ApportionedEmissionsService {
   }
 
   async getDailyEmissions(
-    apportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
+    dailyApportionedEmissionsParamsDTO: DailyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<DailyApportionedEmissionsDTO[]> {
     const query = await this.dailyRepository.getDailyEmissions(
-      apportionedEmissionsParamsDTO,
+      dailyApportionedEmissionsParamsDTO,
       req,
     );
 
     return this.dailyMap.many(query);
+  }
+
+  getMonthlyEmissions(
+    monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
+    req: Request,
+  ): string {
+    return 'Hello World!';
   }
 }

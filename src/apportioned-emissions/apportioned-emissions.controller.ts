@@ -1,18 +1,18 @@
 import { Request } from 'express';
-import {
-  ApiTags,
-  ApiOkResponse,
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { Get, Controller, Query, Req } from '@nestjs/common';
 
-import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
+import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import {
+  BadRequestResponse,
+  NotFoundResponse,
+  ApiQueryMultiSelect,
+} from '../utils/swagger-decorator.const';
 
 @ApiTags('Apportioned Emissions')
 @Controller()
@@ -25,18 +25,9 @@ export class ApportionedEmissionsController {
   @ApiOkResponse({
     description: 'Retrieved All Hourly Apportioned Emissions Data',
   })
-  @ApiBadRequestResponse({
-    description: 'Invalid Request',
-  })
-  @ApiNotFoundResponse({
-    description: 'Resource Not Found',
-  })
-  @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'unitType', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'program', required: false, explode: false })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
   getHourlyEmissions(
     @Query()
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
@@ -52,25 +43,34 @@ export class ApportionedEmissionsController {
   @ApiOkResponse({
     description: 'Retrieved All Daily Apportioned Emissions Data',
   })
-  @ApiBadRequestResponse({
-    description: 'Invalid Request',
-  })
-  @ApiNotFoundResponse({
-    description: 'Resource Not Found',
-  })
-  @ApiQuery({ style: 'pipeDelimited', name: 'state', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'orisCode', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'unitType', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false })
-  @ApiQuery({ style: 'pipeDelimited', name: 'program', required: false, explode: false })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
   getDailyEmissions(
     @Query()
-    apportionedEmissionsParamsDTO: ApportionedEmissionsParamsDTO,
+    dailyApportionedEmissionsParamsDTO: DailyApportionedEmissionsParamsDTO,
     @Req() req: Request,
   ): Promise<DailyApportionedEmissionsDTO[]> {
     return this.apportionedEmissionsService.getDailyEmissions(
-      apportionedEmissionsParamsDTO,
+      dailyApportionedEmissionsParamsDTO,
+      req,
+    );
+  }
+
+  @Get('/monthly')
+  @ApiOkResponse({
+    description: 'Retrieved All Monthly Apportioned Emissions Data',
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  getMonthlyEmissions(
+    @Query()
+    monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
+    @Req() req: Request,
+  ): string {
+    return this.apportionedEmissionsService.getMonthlyEmissions(
+      monthlyApportionedEmissionsParamsDTO,
       req,
     );
   }
