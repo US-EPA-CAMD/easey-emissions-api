@@ -42,4 +42,6 @@ jobs:
           CF_USERNAME: ${{ secrets.CF_DEV_DEPLOYMENT_SVC }}
           CF_PASSWORD: ${{ secrets.CF_DEV_DEPLOYMENT_SVC_PWD }}
       - name: Deploy
-        run: devops/scripts/deploy.sh
+        if: github.event_name == 'push'
+        run: devops/scripts/deploy.sh   
+        

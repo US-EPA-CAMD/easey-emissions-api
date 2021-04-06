@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Get, Controller, Query, Req } from '@nestjs/common';
 
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
@@ -64,6 +64,8 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
+  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: false, explode: false,})
+  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: false, explode: false,})
   @ApiQueryMultiSelect()
   getMonthlyEmissions(
     @Query()
