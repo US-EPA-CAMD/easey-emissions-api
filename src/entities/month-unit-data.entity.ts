@@ -27,25 +27,12 @@ export class MonthUnitData extends BaseEntity {
   opMonth: number;
 
   @Column({
-    name: 'sum_op_time',
-  })
-  sumOpTime: number;
-
-  @Column({
     name: 'count_op_time',
   })
   countOpTime: number;
 
   @Column()
-  gload: number;
-
-  @Column()
   sload: number;
-
-  @Column({
-    name: 'heat_input',
-  })
-  heatInput: number;
 
   @Column({
     name: 'so2_mass',
@@ -58,14 +45,9 @@ export class MonthUnitData extends BaseEntity {
   so2Rate: number;
 
   @Column({
-    name: 'co2_mass',
+    name: 'heat_input',
   })
-  co2Mass: number;
-
-  @Column({
-    name: 'co2_rate',
-  })
-  co2Rate: number;
+  heatInput: number;
 
   @Column({
     name: 'nox_mass',
@@ -76,6 +58,24 @@ export class MonthUnitData extends BaseEntity {
     name: 'nox_rate',
   })
   noxRate: number;
+
+  @Column({
+    name: 'co2_mass',
+  })
+  co2Mass: number;
+
+  @Column({
+    name: 'co2_rate',
+  })
+  co2Rate: number;
+
+  @Column()
+  gload: number;
+
+  @Column({
+    name: 'sum_op_time',
+  })
+  sumOpTime: number;
 
   @ManyToOne(
     () => UnitFact,
