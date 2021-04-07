@@ -11,6 +11,9 @@ import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
+import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
 
 const mockRequest = (url: string) => {
   return {
@@ -32,9 +35,11 @@ describe('-- Apportioned Emissions Controller --', () => {
       providers: [
         HourlyApportionedEmissionsMap,
         DailyApportionedEmissionsMap,
+        MonthlyApportionedEmissionsMap,
         ApportionedEmissionsService,
         HourUnitDataRepository,
         DayUnitDataRepository,
+        MonthUnitDataRepository,
       ],
     }).compile();
 
@@ -75,11 +80,15 @@ describe('-- Apportioned Emissions Controller --', () => {
   });
 
   describe('* getMonthlyEmissions', () => {
-    it('should return hello world', async () => {
+    it('should call the service and return a list of monthly emissions', async () => {
+      const expectedResult: MonthlyApportionedEmissionsDTO[] = [];
       const paramsDto = new MonthlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(apportionedEmissionsService, 'getMonthlyEmissions')
+        .mockResolvedValue(expectedResult);
       expect(
-        apportionedEmissionsController.getMonthlyEmissions(paramsDto, req),
-      ).toBe('Hello World!');
+        await apportionedEmissionsController.getMonthlyEmissions(paramsDto, req),
+      ).toBe(expectedResult);
     });
   });
 });

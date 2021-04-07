@@ -21,14 +21,14 @@ export class QueryBuilderHelper {
     }
 
     if (param.includes('opYear') && dto.opYear) {
-      query.andWhere(`${emissionsAlias}.opYear <= :opYear`, {
-        opYear: dto.opYear,
+      query.andWhere(`${emissionsAlias}.opYear IN (:...opYears)`, {
+        opYears: dto.opYear,
       });
     }
 
     if (param.includes('opMonth') && dto.opMonth) {
-      query.andWhere(`${emissionsAlias}.opMonth <= :opMonth`, {
-        opMonth: dto.opMonth,
+      query.andWhere(`${emissionsAlias}.opMonth IN (:...opMonths)`, {
+        opMonths: dto.opMonth,
       });
     }
 

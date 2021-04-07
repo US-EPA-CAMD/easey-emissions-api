@@ -64,8 +64,8 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: false, explode: false,})
-  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: false, explode: false,})
+  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
+  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: true, explode: false,})
   @ApiQueryMultiSelect()
   getMonthlyEmissions(
     @Query()
