@@ -3,9 +3,8 @@ name: Develop Branch Workflow
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
-
+    paths-ignore:
+    - '.github/**'
 jobs:
   Build-Test-Deploy:
     runs-on: ubuntu-latest
@@ -42,6 +41,5 @@ jobs:
           CF_USERNAME: ${{ secrets.CF_DEV_DEPLOYMENT_SVC }}
           CF_PASSWORD: ${{ secrets.CF_DEV_DEPLOYMENT_SVC_PWD }}
       - name: Deploy
-        if: github.event_name == 'push'
         run: devops/scripts/deploy.sh   
         
