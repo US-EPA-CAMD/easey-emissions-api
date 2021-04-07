@@ -1,10 +1,10 @@
 name: Feature Branch Workflow
 
 on:
-  push:
-    branches: [ feature/* ]
+  pull_request:
+    branches: [ develop ]
     paths-ignore:
-    - '.github/**'
+      - '.github/**'
     
 jobs:
   Build-Test:

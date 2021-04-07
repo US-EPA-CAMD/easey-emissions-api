@@ -20,6 +20,18 @@ export class QueryBuilderHelper {
       });
     }
 
+    if (param.includes('opYear') && dto.opYear) {
+      query.andWhere(`${emissionsAlias}.opYear IN (:...opYears)`, {
+        opYears: dto.opYear,
+      });
+    }
+
+    if (param.includes('opMonth') && dto.opMonth) {
+      query.andWhere(`${emissionsAlias}.opMonth IN (:...opMonths)`, {
+        opMonths: dto.opMonth,
+      });
+    }
+
     if (param.includes('state') && dto.state) {
       query.andWhere(`${unitAlias}.state IN (:...states)`, {
         states: dto.state.map(states => {

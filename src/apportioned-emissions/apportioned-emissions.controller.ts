@@ -8,6 +8,7 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import {
   BadRequestResponse,
   NotFoundResponse,
@@ -63,14 +64,14 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: false, explode: false,})
-  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: false, explode: false,})
+  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
+  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: true, explode: false,})
   @ApiQueryMultiSelect()
   getMonthlyEmissions(
     @Query()
     monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
     @Req() req: Request,
-  ): string {
+  ): Promise<MonthlyApportionedEmissionsDTO[]> {
     return this.apportionedEmissionsService.getMonthlyEmissions(
       monthlyApportionedEmissionsParamsDTO,
       req,

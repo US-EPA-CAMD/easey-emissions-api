@@ -10,6 +10,9 @@ import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
+import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -17,6 +20,10 @@ const mockHourUnitDataRepository = () => ({
 
 const mockDayUnitDataRepository = () => ({
   getDailyEmissions: jest.fn(),
+});
+
+const mockMonthUnitDataRepository = () => ({
+  getMonthlyEmissions: jest.fn(),
 });
 
 const mockMap = () => ({
@@ -27,8 +34,10 @@ describe('-- Apportioned Emissions Service --', () => {
   let apportionedEmissionsService;
   let hourUnitDataRepository;
   let dayUnitDataRepository;
+  let monthUnitDataRepository;
   let hourlyMap;
   let dailyMap;
+  let monthlyMap;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -42,8 +51,13 @@ describe('-- Apportioned Emissions Service --', () => {
           provide: DayUnitDataRepository,
           useFactory: mockDayUnitDataRepository,
         },
+        {
+          provide: MonthUnitDataRepository,
+          useFactory: mockMonthUnitDataRepository,
+        },
         { provide: HourlyApportionedEmissionsMap, useFactory: mockMap },
         { provide: DailyApportionedEmissionsMap, useFactory: mockMap },
+        { provide: MonthlyApportionedEmissionsMap, useFactory: mockMap },
       ],
     }).compile();
 
@@ -52,6 +66,8 @@ describe('-- Apportioned Emissions Service --', () => {
     hourlyMap = module.get(HourlyApportionedEmissionsMap);
     dayUnitDataRepository = module.get(DayUnitDataRepository);
     dailyMap = module.get(DailyApportionedEmissionsMap);
+    monthUnitDataRepository = module.get(MonthUnitDataRepository);
+    monthlyMap = module.get(MonthlyApportionedEmissionsMap);
   });
 
   describe('getHourlyEmissions', () => {
@@ -90,14 +106,20 @@ describe('-- Apportioned Emissions Service --', () => {
     });
   });
 
-  describe('getDailyEmissions', () => {
-    it('should return hello world', async () => {
-      // monthly dto coverage, will remove in feature/1018
-      const monthDto = new MonthlyApportionedEmissionsDTO();
-      let filters = new DailyApportionedEmissionsParamsDTO();
-      expect(apportionedEmissionsService.getMonthlyEmissions(filters)).toBe(
-        'Hello World!',
+  describe('getMonthlyEmissions', () => {
+    it('calls MonthUnitDataRepository.getMonthlyEmissions() and gets all emissions from the repository', async () => {
+      monthUnitDataRepository.getMonthlyEmissions.mockResolvedValue(
+        'list of emissions',
       );
+      const monthDto = new MonthlyApportionedEmissionsDTO();
+      monthlyMap.many.mockReturnValue(monthDto);
+
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+
+      let result = await apportionedEmissionsService.getMonthlyEmissions(filters);
+
+      expect(monthlyMap.many).toHaveBeenCalled();
+      expect(result).toEqual(monthDto);
     });
   });
 });
