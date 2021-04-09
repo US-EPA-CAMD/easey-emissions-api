@@ -147,8 +147,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         new MyClass(
           null,
           'error',
-          '202020',
-          '111',
+          null,
+          null,
           '0',
           'control',
           'unitType',

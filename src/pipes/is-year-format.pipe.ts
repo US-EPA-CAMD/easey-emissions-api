@@ -14,9 +14,12 @@ export function IsYearFormat(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return (
-            isNumberString(value, { no_symbols: true }) && value.length === 4
-          );
+          if (value) {
+            return (
+              isNumberString(value, { no_symbols: true }) && value.length === 4
+            );
+          }
+          return true;
         },
       },
     });
