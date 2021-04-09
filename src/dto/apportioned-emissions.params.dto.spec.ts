@@ -157,7 +157,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
           'MATS',
         ),
       );
-      expect(results.length).toBe(10);
+      expect(results.length).toBe(8);
     });
     mock.close;
   });
