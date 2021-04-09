@@ -41,14 +41,14 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.state = state;
         this.program = program;
       }
-      @IsInDateRange([new Date('1995-01-01'), new Date()])
+      @IsInDateRange([new Date('1995-01-01'), new Date()], false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       beginDate: string;
 
       @IsDateGreaterThanEqualTo('beginDate')
-      @IsInDateRange([new Date('1995-01-01'), new Date()])
+      @IsInDateRange([new Date('1995-01-01'), new Date()], false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()

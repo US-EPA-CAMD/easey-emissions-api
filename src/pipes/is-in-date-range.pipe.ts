@@ -10,7 +10,7 @@ import {
  */
 export function IsInDateRange(
   property: Date[],
-  yearOnly?: boolean,
+  yearOnly: boolean,
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
