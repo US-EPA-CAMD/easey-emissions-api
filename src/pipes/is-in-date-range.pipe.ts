@@ -10,6 +10,7 @@ import {
  */
 export function IsInDateRange(
   property: Date[],
+  yearOnly?: boolean,
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
@@ -22,7 +23,9 @@ export function IsInDateRange(
       validator: {
         validate(value: any, args: ValidationArguments) {
           if (value) {
-            const dateObject = new Date(value);
+            const dateObject = yearOnly
+              ? new Date(value as number, 0)
+              : new Date(value);
             const minDate = args.constraints[0][0];
             const maxDate = args.constraints[0][1];
 

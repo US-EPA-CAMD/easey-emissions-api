@@ -15,7 +15,9 @@ export function IsOrisCode(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args: ValidationArguments) {
           return (
-            isNumberString(value) && value.length <= 6 && (value as number) != 0
+            isNumberString(value, { no_symbols: true }) &&
+            value.length <= 6 &&
+            (value as number) != 0
           );
         },
       },

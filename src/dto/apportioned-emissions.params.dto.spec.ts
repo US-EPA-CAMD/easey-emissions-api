@@ -12,6 +12,8 @@ import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { IsProgram } from '../pipes/is-program.pipe';
+import { IsYearFormat } from '../pipes/is-year-format.pipe';
+import { IsValidMonthNumber } from '../pipes/is-valid-month-number.pipe';
 
 describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
@@ -19,6 +21,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       constructor(
         beginDate: string,
         endDate: string,
+        year: string,
+        month: string,
         orisCode: string,
         control: string,
         unitType: string,
@@ -28,6 +32,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       ) {
         this.beginDate = beginDate;
         this.endDate = endDate;
+        this.year = year;
+        this.month = month;
         this.orisCode = orisCode;
         this.control = control;
         this.unitType = unitType;
@@ -47,6 +53,13 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       @IsIsoFormat()
       @IsDefined()
       endDate: string;
+
+      @IsInDateRange([new Date(1995, 0), new Date()], true)
+      @IsYearFormat()
+      year: string;
+
+      @IsValidMonthNumber()
+      month: string;
 
       @IsOrisCode()
       orisCode: string;
@@ -97,6 +110,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         new MyClass(
           '2019-01-01',
           '2019-01-01',
+          '2020',
+          '1',
           '612',
           'control',
           'unitType',
@@ -113,6 +128,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         new MyClass(
           '1990-01-01',
           '2020-01-01',
+          '2020',
+          '1',
           '612',
           'control',
           'unitType',
@@ -130,6 +147,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         new MyClass(
           null,
           'error',
+          '202020',
+          '111',
           '0',
           'control',
           'unitType',
@@ -138,7 +157,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
           'MATS',
         ),
       );
-      expect(results.length).toBe(8);
+      expect(results.length).toBe(10);
     });
     mock.close;
   });
