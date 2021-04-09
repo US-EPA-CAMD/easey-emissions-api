@@ -1,0 +1,29 @@
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments,
+  isNumberString,
+} from 'class-validator';
+
+export function IsValidMonthNumber(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'IsValidMonthNumber',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          if (value) {
+            return (
+              isNumberString(value, { no_symbols: true }) &&
+              (value as number) > 0 &&
+              (value as number) <= 12
+            );
+          }
+          return true;
+        },
+      },
+    });
+  };
+}
