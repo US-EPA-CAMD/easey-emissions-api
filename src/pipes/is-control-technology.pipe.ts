@@ -21,7 +21,7 @@ export function IsControlTechnology(validationOptions?: ValidationOptions) {
           const found = await manager.findOne(ControlCode, {
             controlDescription: Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
           });
-          return found != undefined;
+          return found != null;
         },
       },
     });

@@ -75,7 +75,6 @@ describe('HourUnitDataRepository', () => {
 
   describe('getHourlyEmissions', () => {
     it('calls createQueryBuilder and gets all HourUnitData from the repository', async () => {
-      
       // branch coverage
       const emptyFilters: HourlyApportionedEmissionsParamsDTO = new HourlyApportionedEmissionsParamsDTO();
       let result = await hourUnitDataRepository.getHourlyEmissions(

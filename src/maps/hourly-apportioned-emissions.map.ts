@@ -1,49 +1,30 @@
 import { Injectable } from '@nestjs/common';
 
-import { BaseMap } from './base.map';
+import { ApportionedEmissionsMap } from './apportioned-emissions.map';
+import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 
 @Injectable()
-export class HourlyApportionedEmissionsMap extends BaseMap<
-  HourUnitData,
-  HourlyApportionedEmissionsDTO
-> {
+export class HourlyApportionedEmissionsMap extends ApportionedEmissionsMap {
   public async one(
     entity: HourUnitData,
   ): Promise<HourlyApportionedEmissionsDTO> {
+    const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
+      entity,
+    );
+
     return {
-      state: entity.unitFact.state,
-      facilityName: entity.unitFact.facilityName,
-      orisCode: entity.unitFact.orisCode,
-      unitId: entity.unitFact.unitid,
+      ...apportionedEmissionsDto,
       opDate: entity.opDate.toISOString().split('T')[0],
       opHour: entity.opHour,
       opTime: entity.opTime,
-      gLoad: entity.gload,
-      sLoad: entity.sload,
-      so2Mass: entity.so2Mass,
       so2MassMeasureFlg: entity.so2MassMeasureFlg,
-      so2Rate: entity.so2Rate,
       so2RateMeasureFlg: entity.so2RateMeasureFlg,
-      noxMass: entity.noxMass,
       noxMassMeasureFlg: entity.noxMassMeasureFlg,
-      noxRate: entity.noxRate,
       noxRateMeasureFlg: entity.noxRateMeasureFlg,
-      co2Mass: entity.co2Mass,
       co2MassMeasureFlg: entity.co2MassMeasureFlg,
-      co2Rate: entity.co2Rate,
       co2RateMeasureFlg: entity.co2RateMeasureFlg,
-      heatInput: entity.heatInput,
-      primaryFuelInfo: entity.unitFact.primaryFuelInfo,
-      secondaryFuelInfo: entity.unitFact.secondaryFuelInfo,
-      unitTypeInfo: entity.unitFact.unitTypeInfo,
-      so2ControlInfo: entity.unitFact.so2ControlInfo,
-      partControlInfo: entity.unitFact.partControlInfo,
-      noxControlInfo: entity.unitFact.noxControlInfo,
-      hgControlInfo: entity.unitFact.hgControlInfo,
-      prgCodeInfo: entity.unitFact.prgCodeInfo,
-      assocStacks: entity.unitFact.assocStacks,
     };
   }
 }

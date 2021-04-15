@@ -5,10 +5,25 @@ import { ApportionedEmissionsController } from './apportioned-emissions.controll
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsMap } from '../maps/hourly-apportioned-emissions.map';
+import { DayUnitDataRepository } from './day-unit-data.repository';
+import { DailyApportionedEmissionsMap } from '../maps/daily-apportioned-emissions.map';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HourUnitDataRepository])],
+  imports: [
+    TypeOrmModule.forFeature([
+      HourUnitDataRepository,
+      DayUnitDataRepository,
+      MonthUnitDataRepository,
+    ]),
+  ],
   controllers: [ApportionedEmissionsController],
-  providers: [HourlyApportionedEmissionsMap, ApportionedEmissionsService],
+  providers: [
+    ApportionedEmissionsService,
+    HourlyApportionedEmissionsMap,
+    DailyApportionedEmissionsMap,
+    MonthlyApportionedEmissionsMap,
+  ],
 })
 export class ApportionedEmissionsModule {}

@@ -21,7 +21,7 @@ export function IsUnitType(validationOptions?: ValidationOptions) {
           const found = await manager.findOne(UnitTypeCode, {
             unitTypeDescription: Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
           });
-          return found != undefined;
+          return found != null;
         },
       },
     });
