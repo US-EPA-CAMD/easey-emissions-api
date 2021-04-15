@@ -3,8 +3,8 @@ name: Release Branch Workflow
 on:
   push:
     branches: [ release/v* ]
-  pull_request:
-    branches: [ release/v* ]
+    paths-ignore:
+      - '.github/**'    
 
 jobs:
   Build-Test-Package:
@@ -22,7 +22,7 @@ jobs:
       - name: Configure Env Vars
         run: devops/scripts/environment-variables.sh
         env:
-          NESTJS_APP: true
+          ENV_VAR_PREFIX: EASEY
       - name: Build
         run: devops/scripts/build.sh
       - name: Run Unit Tests
@@ -32,8 +32,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
-      - name: Package App
-        run: devops/scripts/package.sh
+      - name: Package & Upload Deployment Artifact
+        run: devops/scripts/package-artifact.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_STORAGE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}

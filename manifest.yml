@@ -1,8 +1,8 @@
 applications:
   - name: ((name))
-    path: .
-    command: npm run start
     memory: ((memory))
+    buildpacks:
+      - nodejs_buildpack
     env:
       OPTIMIZE_MEMORY: true
       EASEY_EMISSIONS_API_TITLE: ((title))

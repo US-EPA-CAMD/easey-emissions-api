@@ -3,9 +3,9 @@ name: Develop Branch Workflow
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
-
+    paths-ignore:
+    - '.github/**'
+    
 jobs:
   Build-Test-Deploy:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
       - name: Configure Env Vars
         run: devops/scripts/environment-variables.sh
         env:
-          NESTJS_APP: true
+          ENV_VAR_PREFIX: EASEY
       - name: Build
         run: devops/scripts/build.sh
       - name: Run Unit Tests
@@ -34,8 +34,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
       - name: Install cf cli
         run: devops/scripts/install-cf-cli.sh
-      - name: Check Tag
-        run: devops/scripts/check-tag.sh
       - name: Login to cloud.gov
         run: devops/scripts/cf-login.sh
         env:
