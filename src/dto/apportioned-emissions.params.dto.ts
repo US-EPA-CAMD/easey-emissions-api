@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { ErrorMessages } from '../utils/error-messages';
 import { PaginationDTO } from './pagination.dto';
@@ -63,4 +64,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   program?: Program[];
+
+  @ApiProperty({
+    description: 'Attaches a file with data in the format specified by the Accept header',
+    default: false,
+  })
+  attachFile?: boolean;
 }
