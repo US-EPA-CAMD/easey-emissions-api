@@ -44,7 +44,7 @@ export class ErrorMessages {
     plural: boolean,
     validRange: string,
   ) {
-    let grammar = plural
+    const grammar = plural
       ? `Update one or more ${parameter}s to`
       : `Update the ${parameter} to`;
 
