@@ -1,19 +1,78 @@
 import { ApiConfigService } from './api-config.service';
 
-export const ErrorMessages = {
-  FV1: `One or more unit types are not valid. Refer to the list of available unit types for valid values ${ApiConfigService.getMdm()}unit-types`,
-  FV2: `One or more unit fuel types are not valid. Refer to the list of available unit fuel types for valid values ${ApiConfigService.getMdm()}fuel-types`,
-  FV3: `One or more control technologies are not valid. Refer to the list of available control technologies for valid values ${ApiConfigService.getMdm()}control-technologies`,
-  FV4: `One or more states are not valid. Use the two letter postal abbreviation (use TX, not Texas)`,
-  FV5: `Enter the $property in the YYYY-MM-DD format`,
-  FV6: `Enter an $property that is greater than or equal to the $constraint1`,
-  FV7: `Update the $property to a year between 1995 and this year`,
-  FV9: `One or more ORIS codes are not valid. Refer to the list of available ORIS codes for valid values ${ApiConfigService.getFacApi()}facilities`,
-  FV10: `$property should not be null or undefined`,
-  FV11: `Enter a valid $property in the YYYY-MM-DD format`,
-  FV12: `One or more programs are not valid. Refer to the list of available programs for valid values ${ApiConfigService.getMdm()}programs`,
-  FV13: `Enter a valid $property in the YYYY format`,
-  FV14: `The account number is not valid. Refer to the list of available account numbers for valid values [placeholder for link to endpoint]`,
-  FV15: `The account type is not valid. Refer to the list of available type numbers for valid values [placeholder for link to endpoint]`,
-  FV16: `Enter the $property in the MM/DD/YYYY format`,
-};
+export class ErrorMessages {
+  public static UnitCharacteristics(
+    plural: boolean,
+    parameter: string,
+  ): string {
+    let grammar = plural
+      ? `One or more ${parameter}s are`
+      : `The ${parameter} is`;
+    let referList =
+      parameter === 'state'
+        ? 'Use the two letter postal abbreviation (use TX, not Texas)'
+        : `Refer to the list of available ${parameter}s for valid values`;
+
+    if (parameter === 'controlTechnologies') {
+      grammar = plural ? grammar.replace(`${parameter}s`, parameter) : grammar;
+      referList = referList.replace(`${parameter}s`, parameter);
+    }
+
+    if (parameter === 'state') {
+      return `${grammar} not valid. ${referList}`;
+    }
+
+    return `${grammar} not valid. ${referList} ${ErrorMessages.ApiConfigLink(
+      parameter,
+    )}`;
+  }
+
+  public static MultipleFormat(parameter: string, format: string) {
+    return `One or more ${parameter}s are not in the ${format} format. Ensure all ${parameter}s are in the ${format} format`;
+  }
+
+  public static SingleFormat(parameter: string, format: string) {
+    return `Ensure that ${parameter} is in the ${format} format.`;
+  }
+
+  public static BeginEndDate(constraint: string) {
+    return `Enter an $property that is greater than or equal to the ${constraint}`;
+  }
+
+  public static DateRange(
+    parameter: string,
+    plural: boolean,
+    validRange: string,
+  ) {
+    let grammar = plural
+      ? `Update one or more ${parameter}s to`
+      : `Update the ${parameter} to`;
+
+    return `${grammar} ${validRange}`;
+  }
+
+  public static DateValidity() {
+    return `The provided $property $value is not a valid date.`;
+  }
+
+  public static RequiredProperty() {
+    return `$property should not be null or undefined`;
+  }
+
+  static ApiConfigLink(parameter: string) {
+    const mdm = `${ApiConfigService.getMdm()}`;
+
+    switch (parameter) {
+      case 'orisCode':
+        return `${ApiConfigService.getFacApi()}facilities`;
+      case 'unitType':
+        return `${mdm}unit-types`;
+      case 'unitFuelType':
+        return `${mdm}fuel-types`;
+      case 'controlTechnologies':
+        return `${mdm}control-technologies`;
+      default:
+        return `${mdm}${parameter}s`;
+    }
+  }
+}

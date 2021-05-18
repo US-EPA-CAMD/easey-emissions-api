@@ -10,32 +10,42 @@ import { ErrorMessages } from './error-messages';
 export function BeginDate() {
   return applyDecorators(
     IsInDateRange([new Date('1995-01-01'), new Date()], false, {
-      message: ErrorMessages.FV7,
+      message: ErrorMessages.DateRange(
+        'beginDate',
+        false,
+        'a year between 1995 and this year',
+      ),
     }),
     IsValidDate({
-      message: ErrorMessages.FV11,
+      message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.FV5,
+      message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD'),
     }),
-    IsDefined(),
+    IsDefined({
+      message: ErrorMessages.RequiredProperty(),
+    }),
   );
 }
 
 export function EndDate() {
   return applyDecorators(
     IsDateGreaterThanEqualTo('beginDate', {
-      message: ErrorMessages.FV6,
+      message: ErrorMessages.BeginEndDate('beginDate'),
     }),
     IsInDateRange([new Date('1995-01-01'), new Date()], false, {
-      message: ErrorMessages.FV7,
+      message: ErrorMessages.DateRange(
+        'endDate',
+        false,
+        'a year between 1995 and this year',
+      ),
     }),
     IsValidDate({
-      message: ErrorMessages.FV11,
+      message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.FV5,
+      message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD'),
     }),
-    IsDefined(),
+    IsDefined({ message: ErrorMessages.RequiredProperty() }),
   );
 }
