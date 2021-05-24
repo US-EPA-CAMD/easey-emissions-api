@@ -51,6 +51,25 @@ export class ErrorMessages {
     return `${grammar} ${validRange}`;
   }
 
+  public static ReportingQuarter() {
+    const curDate = new Date();
+    const curYear = new Date().getFullYear();
+    let quarter;
+    if (curDate < new Date('March 31, ' + curYear)) {
+      quarter = '12/31/' + (curYear - 1);
+    } else if (curDate < new Date('June 30, ' + curYear)) {
+      quarter = '03/31/' + curYear;
+    } else if (curDate < new Date('September 30, ' + curYear)) {
+      quarter = '06/30/' + curYear;
+    } else if (curDate < new Date('December 31, ' + curYear)) {
+      quarter = '09/30/' + curYear;
+    } else {
+      quarter = '12/31/' + curYear;
+    }
+
+    return quarter;
+  }
+
   public static DateValidity() {
     return `The provided $property $value is not a valid date.`;
   }

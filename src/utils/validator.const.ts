@@ -9,11 +9,11 @@ import { ErrorMessages } from './error-messages';
 
 export function BeginDate() {
   return applyDecorators(
-    IsInDateRange([new Date('1995-01-01'), new Date()], false, {
+    IsInDateRange([new Date('1995-01-01'), new Date()], false, true, {
       message: ErrorMessages.DateRange(
         'beginDate',
         false,
-        'a year between 1995 and this year',
+        `a date between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({
@@ -33,11 +33,11 @@ export function EndDate() {
     IsDateGreaterThanEqualTo('beginDate', {
       message: ErrorMessages.BeginEndDate('beginDate'),
     }),
-    IsInDateRange([new Date('1995-01-01'), new Date()], false, {
+    IsInDateRange([new Date('1995-01-01'), new Date()], false, true, {
       message: ErrorMessages.DateRange(
         'endDate',
         false,
-        'a year between 1995 and this year',
+        `a date between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({
