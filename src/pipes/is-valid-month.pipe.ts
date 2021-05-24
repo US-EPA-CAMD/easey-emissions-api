@@ -24,15 +24,15 @@ export function IsValidMonth(
           const yearIndicator =
             relatedValue.includes(curYear.toString()) &&
             relatedValue.length === 1;
-          if (curDate < new Date('June 30, ' + curYear) && yearIndicator) {
+          if (curDate < new Date(`June 30, ${curYear}`) && yearIndicator) {
             return (value as number) <= 3;
           } else if (
-            curDate < new Date('September 30, ' + curYear) &&
+            curDate < new Date(`September 30, ${curYear}`) &&
             yearIndicator
           ) {
             return (value as number) <= 6;
           } else if (
-            curDate < new Date('December 31, ' + curYear) &&
+            curDate < new Date(`December 31, ${curYear}`) &&
             yearIndicator
           ) {
             return (value as number) <= 9;
