@@ -11,6 +11,7 @@ import {
 export function IsInDateRange(
   property: Date[],
   yearOnly: boolean,
+  reportingQuarter: boolean,
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
@@ -28,7 +29,41 @@ export function IsInDateRange(
               : new Date(value);
             const minDate = args.constraints[0][0];
             const maxDate = args.constraints[0][1];
-
+            const curDate = new Date();
+            const curYear = new Date().getFullYear();
+            if (reportingQuarter) {
+              if (curDate < new Date(`March 31, ${curYear}`)) {
+                return (
+                  dateObject >= minDate &&
+                  dateObject <= maxDate &&
+                  dateObject <= new Date(`December 31, ${curYear - 1}`)
+                );
+              } else if (curDate < new Date(`June 30, ${curYear}`)) {
+                return (
+                  dateObject >= minDate &&
+                  dateObject <= maxDate &&
+                  dateObject <= new Date(`March 31, ${curYear}`)
+                );
+              } else if (curDate < new Date(`September 30, ${curYear}`)) {
+                return (
+                  dateObject >= minDate &&
+                  dateObject <= maxDate &&
+                  dateObject <= new Date(`June 30, ${curYear}`)
+                );
+              } else if (curDate < new Date(`December 31, ${curYear}`)) {
+                return (
+                  dateObject >= minDate &&
+                  dateObject <= maxDate &&
+                  dateObject <= new Date(`September 30, ${curYear}`)
+                );
+              } else {
+                return (
+                  dateObject >= minDate &&
+                  dateObject <= maxDate &&
+                  dateObject <= new Date(`December 31, ${curYear}`)
+                );
+              }
+            }
             return dateObject >= minDate && dateObject <= maxDate;
           }
           return true;
