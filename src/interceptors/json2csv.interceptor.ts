@@ -1,4 +1,9 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Parser } from 'json2csv';
@@ -15,27 +20,25 @@ export class Json2CsvInterceptor implements NestInterceptor {
       format = 'csv';
     }
 
-    return next
-      .handle()
-      .pipe(
-        map(data => {
-          if (req.query.attachFile === 'true') {
-            req.res.attachment(`${uuid()}.${format}`);
-          }
+    return next.handle().pipe(
+      map(data => {
+        if (req.query.attachFile === 'true') {
+          req.res.attachment(`${uuid()}.${format}`);
+        }
 
-          if (req.headers.accept === 'text/csv') {
-            req.res.header('Content-Type', 'text/csv');
+        if (req.headers.accept === 'text/csv') {
+          req.res.header('Content-Type', 'text/csv');
 
-            const headers = req.res.getHeaders();
-            const fields = JSON.parse(headers['x-field-mappings']);
-            const json2csv = new Parser({ fields });
-            const csv = json2csv.parse(data);
+          const headers = req.res.getHeaders();
+          const fields = JSON.parse(headers['x-field-mappings']);
+          const json2csv = new Parser({ fields });
+          const csv = json2csv.parse(data);
 
-            return csv;
-          }
+          return csv;
+        }
 
-          return data;
-        }),
-      );
+        return data;
+      }),
+    );
   }
 }

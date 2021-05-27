@@ -40,11 +40,11 @@ export const emissionsFields = {
     value: 'opTime'
   },
   sumOpTime: {
-    label: 'SUM OP TIME',
+    label: 'Sum of the Operating Time',
     value: 'sumOpTime'
   },
   countOpTime: {
-    label: 'COUNT OP TIME',
+    label: 'Operating Time Count',
     value: 'countOpTime'
   },
   gload: {

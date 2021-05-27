@@ -1,5 +1,11 @@
 import { Request } from 'express';
-import { ApiTags, ApiOkResponse, ApiQuery, getSchemaPath, ApiExtraModels } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOkResponse,
+  ApiQuery,
+  getSchemaPath,
+  ApiExtraModels,
+} from '@nestjs/swagger';
 import { Get, Controller, Query, Req, UseInterceptors } from '@nestjs/common';
 
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
@@ -32,15 +38,15 @@ export class ApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsDTO)
-        }
+          $ref: getSchemaPath(HourlyApportionedEmissionsDTO),
+        },
       },
       'text/csv': {
         schema: {
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
-    }
+    },
   })
   @BadRequestResponse()
   @NotFoundResponse()
@@ -63,15 +69,15 @@ export class ApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsDTO)
-        }
+          $ref: getSchemaPath(DailyApportionedEmissionsDTO),
+        },
       },
       'text/csv': {
         schema: {
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
-    }
+    },
   })
   @BadRequestResponse()
   @NotFoundResponse()
@@ -94,15 +100,15 @@ export class ApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(MonthlyApportionedEmissionsDTO)
-        }
+          $ref: getSchemaPath(MonthlyApportionedEmissionsDTO),
+        },
       },
       'text/csv': {
         schema: {
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
-    }
+    },
   })
   @BadRequestResponse()
   @NotFoundResponse()

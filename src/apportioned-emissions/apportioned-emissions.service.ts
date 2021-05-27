@@ -14,9 +14,7 @@ import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
-
 import { fieldMappings } from '../constants/field-mappings';
-import { stringify } from 'querystring';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -41,7 +39,10 @@ export class ApportionedEmissionsService {
       req,
     );
 
-    req.res.setHeader('X-Field-Mappings', JSON.stringify(fieldMappings.emissions.hourly));
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.hourly),
+    );
 
     return this.hourlyMap.many(query);
   }
@@ -55,7 +56,10 @@ export class ApportionedEmissionsService {
       req,
     );
 
-    req.res.setHeader('X-Field-Mappings', JSON.stringify(fieldMappings.emissions.daily));
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.daily),
+    );
 
     return this.dailyMap.many(query);
   }
@@ -69,7 +73,10 @@ export class ApportionedEmissionsService {
       req,
     );
 
-    req.res.setHeader('X-Field-Mappings', JSON.stringify(fieldMappings.emissions.monthly));
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.monthly),
+    );
 
     return this.monthlyMap.many(query);
   }
