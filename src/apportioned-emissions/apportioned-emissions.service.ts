@@ -1,6 +1,6 @@
+import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request } from 'express';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
@@ -14,6 +14,7 @@ import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
+import { fieldMappings } from '../constants/field-mappings';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -38,6 +39,11 @@ export class ApportionedEmissionsService {
       req,
     );
 
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.hourly),
+    );
+
     return this.hourlyMap.many(query);
   }
 
@@ -50,6 +56,11 @@ export class ApportionedEmissionsService {
       req,
     );
 
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.daily),
+    );
+
     return this.dailyMap.many(query);
   }
 
@@ -60,6 +71,11 @@ export class ApportionedEmissionsService {
     const query = await this.monthlyRepository.getMonthlyEmissions(
       monthlyApportionedEmissionsParamsDTO,
       req,
+    );
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.monthly),
     );
 
     return this.monthlyMap.many(query);
