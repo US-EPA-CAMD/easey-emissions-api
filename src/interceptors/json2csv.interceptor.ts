@@ -32,9 +32,7 @@ export class Json2CsvInterceptor implements NestInterceptor {
           const headers = req.res.getHeaders();
           const fields = JSON.parse(headers['x-field-mappings']);
           const json2csv = new Parser({ fields });
-          const csv = json2csv.parse(data);
-
-          return csv;
+          return json2csv.parse(data);
         }
 
         return data;

@@ -30,6 +30,14 @@ const mockMap = () => ({
   many: jest.fn(),
 });
 
+const mockRequest = () => {
+  return {
+    res: {
+      setHeader: jest.fn(),
+    },
+  };
+};
+
 describe('-- Apportioned Emissions Service --', () => {
   let apportionedEmissionsService;
   let hourUnitDataRepository;
@@ -38,6 +46,8 @@ describe('-- Apportioned Emissions Service --', () => {
   let hourlyMap;
   let dailyMap;
   let monthlyMap;
+  let req: any;
+
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -68,6 +78,8 @@ describe('-- Apportioned Emissions Service --', () => {
     dailyMap = module.get(DailyApportionedEmissionsMap);
     monthUnitDataRepository = module.get(MonthUnitDataRepository);
     monthlyMap = module.get(MonthlyApportionedEmissionsMap);
+    req = mockRequest();
+    req.res.setHeader.mockReturnValue();
   });
 
   describe('getHourlyEmissions', () => {
@@ -81,7 +93,7 @@ describe('-- Apportioned Emissions Service --', () => {
       let filters = new HourlyApportionedEmissionsParamsDTO();
 
       let result = await apportionedEmissionsService.getHourlyEmissions(
-        filters,
+        filters,req
       );
 
       expect(hourlyMap.many).toHaveBeenCalled();
@@ -99,7 +111,7 @@ describe('-- Apportioned Emissions Service --', () => {
 
       let filters = new DailyApportionedEmissionsParamsDTO();
 
-      let result = await apportionedEmissionsService.getDailyEmissions(filters);
+      let result = await apportionedEmissionsService.getDailyEmissions(filters,req);
 
       expect(dailyMap.many).toHaveBeenCalled();
       expect(result).toEqual(dayDto);
@@ -116,7 +128,7 @@ describe('-- Apportioned Emissions Service --', () => {
 
       let filters = new MonthlyApportionedEmissionsParamsDTO();
 
-      let result = await apportionedEmissionsService.getMonthlyEmissions(filters);
+      let result = await apportionedEmissionsService.getMonthlyEmissions(filters,req);
 
       expect(monthlyMap.many).toHaveBeenCalled();
       expect(result).toEqual(monthDto);
