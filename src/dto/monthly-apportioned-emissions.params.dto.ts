@@ -7,6 +7,8 @@ import { IsValidMonthNumber } from '../pipes/is-valid-month-number.pipe';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsValidMonth } from '../pipes/is-valid-month.pipe';
+import { ApiProperty } from '@nestjs/swagger';
+import { propertyMetadata } from '../constants/property-metadata';
 
 export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @IsInDateRange([new Date(1995, 0), new Date()], true, true, {
@@ -23,6 +25,7 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @ApiProperty({ description: propertyMetadata.opYear.description })
   opYear: number[];
 
   @IsValidMonthNumber({
@@ -39,5 +42,6 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @ApiProperty({ description: propertyMetadata.opMonth.description })
   opMonth: number[];
 }
