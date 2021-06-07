@@ -32,6 +32,12 @@ export class QueryBuilderHelper {
       });
     }
 
+    if (param.includes('opQuarter') && dto.opQuarter) {
+      query.andWhere(`${emissionsAlias}.opQuarter IN (:...opQuarters)`, {
+        opQuarters: dto.opQuarter,
+      });
+    }
+
     if (param.includes('state') && dto.state) {
       query.andWhere(`${unitAlias}.state IN (:...states)`, {
         states: dto.state.map(states => {

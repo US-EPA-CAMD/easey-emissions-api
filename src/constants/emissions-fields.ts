@@ -27,6 +27,10 @@ export const emissionsFields = {
     label: 'Year',
     value: 'opYear',
   },
+  opQuarter: {
+    label: 'Quarter',
+    value: 'opQuarter',
+  },
   opMonth: {
     label: 'Month',
     value: 'opMonth',

@@ -3,6 +3,7 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { HourUnitData } from './hour-unit-data.entity';
 import { DayUnitData } from './day-unit-data.entity';
 import { MonthUnitData } from './month-unit-data.entity';
+import { QuarterUnitData } from './quarter-unit-data.entity';
 
 @Entity({ name: 'camddmw.unit_fact' })
 export class UnitFact extends BaseEntity {
@@ -94,4 +95,10 @@ export class UnitFact extends BaseEntity {
     monthUnit => monthUnit.unitFact,
   )
   monthUnitData: MonthUnitData[];
+
+  @OneToMany(
+    () => QuarterUnitData,
+    quarterUnit => quarterUnit.unitFact,
+  )
+  quarterUnitData: QuarterUnitData[];
 }
