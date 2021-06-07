@@ -3,7 +3,7 @@ import { IsOptional } from 'class-validator';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { BeginDate, EndDate } from '../utils/validator.const';
 import { ApiProperty } from '@nestjs/swagger';
-import { propertyMetadata } from '../constants/property-metadata';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class HourlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @BeginDate()

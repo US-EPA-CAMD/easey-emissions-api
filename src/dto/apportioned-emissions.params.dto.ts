@@ -15,7 +15,7 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
-import { propertyMetadata } from '../constants/property-metadata';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()

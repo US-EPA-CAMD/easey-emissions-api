@@ -8,7 +8,7 @@ import { IsYearFormat } from '../pipes/is-year-format.pipe';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsValidMonth } from '../pipes/is-valid-month.pipe';
 import { ApiProperty } from '@nestjs/swagger';
-import { propertyMetadata } from '../constants/property-metadata';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @IsInDateRange([new Date(1995, 0), new Date()], true, true, {
