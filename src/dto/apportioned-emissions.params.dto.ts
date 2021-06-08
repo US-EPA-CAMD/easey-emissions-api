@@ -24,7 +24,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'state'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.state.description })
+  @ApiProperty({
+    enum: State,
+    ...propertyMetadata.state
+  })
   state?: State[];
 
   @IsOptional()
@@ -33,7 +36,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'orisCode'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.orisCode.description })
+  @ApiProperty(propertyMetadata.facilityId)
   orisCode?: number[];
 
   @IsOptional()
@@ -42,7 +45,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.unitType.description })
+  @ApiProperty({
+    enum: UnitType,
+    ...propertyMetadata.unitType
+  })
   unitType?: UnitType[];
 
   @IsOptional()
@@ -51,7 +57,6 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'unitFuelType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.unitFuelType.description })
   unitFuelType?: UnitFuelType[];
 
   @IsOptional()
@@ -60,7 +65,6 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'controlTechnologies'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.controlTechnologies.description })
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
@@ -70,7 +74,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
       ErrorMessages.UnitCharacteristics(true, 'program') + '?exclude=MATS',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({ description: propertyMetadata.program.description })
+  @ApiProperty({
+    enum: Program,
+    ...propertyMetadata.programCodeInfo
+  })
   program?: Program[];
 
   @ApiProperty({

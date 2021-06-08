@@ -25,7 +25,7 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
-  @ApiProperty({ description: propertyMetadata.opYear.description })
+  @ApiProperty(propertyMetadata.year)
   opYear: number[];
 
   @IsValidMonthNumber({
@@ -42,6 +42,6 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
-  @ApiProperty({ description: propertyMetadata.opMonth.description })
+  @ApiProperty(propertyMetadata.month)
   opMonth: number[];
 }
