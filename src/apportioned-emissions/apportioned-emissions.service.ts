@@ -1,6 +1,6 @@
+import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request } from 'express';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
@@ -14,6 +14,11 @@ import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
+import { fieldMappings } from '../constants/field-mappings';
+import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apportioned-emissions.params.dto';
+import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
+import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-emissions.map';
+import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -24,9 +29,12 @@ export class ApportionedEmissionsService {
     private readonly dailyRepository: DayUnitDataRepository,
     @InjectRepository(MonthUnitDataRepository)
     private readonly monthlyRepository: MonthUnitDataRepository,
+    @InjectRepository(QuarterUnitDataRepository)
+    private readonly quarterlyRepository: QuarterUnitDataRepository,
     private readonly hourlyMap: HourlyApportionedEmissionsMap,
     private readonly dailyMap: DailyApportionedEmissionsMap,
     private readonly monthlyMap: MonthlyApportionedEmissionsMap,
+    private readonly quarterlyMap: QuarterlyApportionedEmissionsMap,
   ) {}
 
   async getHourlyEmissions(
@@ -36,6 +44,11 @@ export class ApportionedEmissionsService {
     const query = await this.hourlyRepository.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
       req,
+    );
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.hourly),
     );
 
     return this.hourlyMap.many(query);
@@ -50,6 +63,11 @@ export class ApportionedEmissionsService {
       req,
     );
 
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.daily),
+    );
+
     return this.dailyMap.many(query);
   }
 
@@ -62,6 +80,28 @@ export class ApportionedEmissionsService {
       req,
     );
 
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.monthly),
+    );
+
     return this.monthlyMap.many(query);
+  }
+
+  async getQuarterlyEmissions(
+    quarterlyApportionedEmissionsParamsDTO: QuarterlyApportionedEmissionsParamsDTO,
+    req: Request,
+  ): Promise<QuarterlyApportionedEmissionsDTO[]> {
+    const query = await this.quarterlyRepository.getQuarterlyEmissions(
+      quarterlyApportionedEmissionsParamsDTO,
+      req,
+    );
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.quarterly),
+    );
+
+    return this.quarterlyMap.many(query);
   }
 }

@@ -28,7 +28,11 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    exposedHeaders: '*',
+    methods: '*'
+  });
 
   const swaggerDocOptions = new DocumentBuilder()
     .setTitle(`${appTitle} OpenAPI Specification`)

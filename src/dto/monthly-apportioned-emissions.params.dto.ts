@@ -5,28 +5,39 @@ import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dt
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { IsValidMonthNumber } from '../pipes/is-valid-month-number.pipe';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
+import { ErrorMessages } from '../utils/error-messages';
+import { IsValidMonth } from '../pipes/is-valid-month.pipe';
 
 export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
-  @IsInDateRange([new Date(1995, 0), new Date()], true, {
+  @IsInDateRange([new Date(1995, 0), new Date()], true, true, {
     each: true,
-    message:
-      'All years must be between 1995 and this year (message to be updated)',
+    message: ErrorMessages.DateRange(
+      'opYear',
+      true,
+      'a year between 1995 and this year',
+    ),
   })
   @IsYearFormat({
     each: true,
-    message:
-      'One or more years are not valid. Ensure all years are in the YYYY format',
+    message: ErrorMessages.MultipleFormat('opYear', 'YYYY'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @IsDefined()
+  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   opYear: number[];
 
   @IsValidMonthNumber({
     each: true,
-    message:
-      'One or more months are not valid. Ensure all months are between 1 and 12. ',
+    message: ErrorMessages.MultipleFormat('opMonth', 'M or MM'),
+  })
+  @IsValidMonth('opYear', {
+    each: true,
+    message: ErrorMessages.DateRange(
+      'opMonth',
+      true,
+      `a month between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
+    ),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @IsDefined()
+  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   opMonth: number[];
 }

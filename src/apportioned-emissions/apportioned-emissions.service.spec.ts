@@ -13,6 +13,10 @@ import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emi
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
+import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-emissions.map';
+import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
+import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apportioned-emissions.params.dto';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -26,18 +30,33 @@ const mockMonthUnitDataRepository = () => ({
   getMonthlyEmissions: jest.fn(),
 });
 
+const mockQuarterUnitDataRepository = () => ({
+  getQuarterlyEmissions: jest.fn(),
+});
+
 const mockMap = () => ({
   many: jest.fn(),
 });
+
+const mockRequest = () => {
+  return {
+    res: {
+      setHeader: jest.fn(),
+    },
+  };
+};
 
 describe('-- Apportioned Emissions Service --', () => {
   let apportionedEmissionsService;
   let hourUnitDataRepository;
   let dayUnitDataRepository;
   let monthUnitDataRepository;
+  let quarterUnitDataRepository;
   let hourlyMap;
   let dailyMap;
   let monthlyMap;
+  let quarterlyMap;
+  let req: any;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -55,9 +74,14 @@ describe('-- Apportioned Emissions Service --', () => {
           provide: MonthUnitDataRepository,
           useFactory: mockMonthUnitDataRepository,
         },
+        {
+          provide: QuarterUnitDataRepository,
+          useFactory: mockQuarterUnitDataRepository,
+        },
         { provide: HourlyApportionedEmissionsMap, useFactory: mockMap },
         { provide: DailyApportionedEmissionsMap, useFactory: mockMap },
         { provide: MonthlyApportionedEmissionsMap, useFactory: mockMap },
+        { provide: QuarterlyApportionedEmissionsMap, useFactory: mockMap },
       ],
     }).compile();
 
@@ -68,6 +92,10 @@ describe('-- Apportioned Emissions Service --', () => {
     dailyMap = module.get(DailyApportionedEmissionsMap);
     monthUnitDataRepository = module.get(MonthUnitDataRepository);
     monthlyMap = module.get(MonthlyApportionedEmissionsMap);
+    quarterUnitDataRepository = module.get(QuarterUnitDataRepository);
+    quarterlyMap = module.get(QuarterlyApportionedEmissionsMap);
+    req = mockRequest();
+    req.res.setHeader.mockReturnValue();
   });
 
   describe('getHourlyEmissions', () => {
@@ -82,6 +110,7 @@ describe('-- Apportioned Emissions Service --', () => {
 
       let result = await apportionedEmissionsService.getHourlyEmissions(
         filters,
+        req,
       );
 
       expect(hourlyMap.many).toHaveBeenCalled();
@@ -99,7 +128,10 @@ describe('-- Apportioned Emissions Service --', () => {
 
       let filters = new DailyApportionedEmissionsParamsDTO();
 
-      let result = await apportionedEmissionsService.getDailyEmissions(filters);
+      let result = await apportionedEmissionsService.getDailyEmissions(
+        filters,
+        req,
+      );
 
       expect(dailyMap.many).toHaveBeenCalled();
       expect(result).toEqual(dayDto);
@@ -116,10 +148,33 @@ describe('-- Apportioned Emissions Service --', () => {
 
       let filters = new MonthlyApportionedEmissionsParamsDTO();
 
-      let result = await apportionedEmissionsService.getMonthlyEmissions(filters);
+      let result = await apportionedEmissionsService.getMonthlyEmissions(
+        filters,
+        req,
+      );
 
       expect(monthlyMap.many).toHaveBeenCalled();
       expect(result).toEqual(monthDto);
+    });
+  });
+
+  describe('getQuarterlyEmissions', () => {
+    it('calls QuarterUnitDataRepository.getQuarterlyEmissions() and gets all emissions from the repository', async () => {
+      quarterUnitDataRepository.getQuarterlyEmissions.mockResolvedValue(
+        'list of emissions',
+      );
+      const quarterDto = new QuarterlyApportionedEmissionsDTO();
+      quarterlyMap.many.mockReturnValue(quarterDto);
+
+      let filters = new QuarterlyApportionedEmissionsParamsDTO();
+
+      let result = await apportionedEmissionsService.getQuarterlyEmissions(
+        filters,
+        req,
+      );
+
+      expect(quarterlyMap.many).toHaveBeenCalled();
+      expect(result).toEqual(quarterDto);
     });
   });
 });

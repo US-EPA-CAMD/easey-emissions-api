@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { ErrorMessages } from '../utils/error-messages';
 import { PaginationDTO } from './pagination.dto';
@@ -19,7 +20,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsStateCode({
     each: true,
-    message: ErrorMessages.FV4,
+    message: ErrorMessages.UnitCharacteristics(true, 'state'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   state?: State[];
@@ -27,7 +28,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsOrisCode({
     each: true,
-    message: ErrorMessages.FV9,
+    message: ErrorMessages.UnitCharacteristics(true, 'orisCode'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   orisCode?: number[];
@@ -35,7 +36,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsUnitType({
     each: true,
-    message: ErrorMessages.FV1,
+    message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitType?: UnitType[];
@@ -43,7 +44,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsUnitFuelType({
     each: true,
-    message: ErrorMessages.FV2,
+    message: ErrorMessages.UnitCharacteristics(true, 'unitFuelType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitFuelType?: UnitFuelType[];
@@ -51,7 +52,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsControlTechnology({
     each: true,
-    message: ErrorMessages.FV3,
+    message: ErrorMessages.UnitCharacteristics(true, 'controlTechnologies'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
@@ -59,8 +60,15 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
   @IsProgram(['MATS'], {
     each: true,
-    message: ErrorMessages.FV12 + '?exclude=MATS',
+    message:
+      ErrorMessages.UnitCharacteristics(true, 'program') + '?exclude=MATS',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   program?: Program[];
+
+  @ApiProperty({
+    description: 'Attaches a file with data in the format specified by the Accept header',
+    default: false,
+  })
+  attachFile?: boolean;
 }

@@ -14,6 +14,10 @@ import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-emissions.map';
+import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
+import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apportioned-emissions.params.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -36,10 +40,12 @@ describe('-- Apportioned Emissions Controller --', () => {
         HourlyApportionedEmissionsMap,
         DailyApportionedEmissionsMap,
         MonthlyApportionedEmissionsMap,
+        QuarterlyApportionedEmissionsMap,
         ApportionedEmissionsService,
         HourUnitDataRepository,
         DayUnitDataRepository,
         MonthUnitDataRepository,
+        QuarterUnitDataRepository,
       ],
     }).compile();
 
@@ -87,7 +93,26 @@ describe('-- Apportioned Emissions Controller --', () => {
         .spyOn(apportionedEmissionsService, 'getMonthlyEmissions')
         .mockResolvedValue(expectedResult);
       expect(
-        await apportionedEmissionsController.getMonthlyEmissions(paramsDto, req),
+        await apportionedEmissionsController.getMonthlyEmissions(
+          paramsDto,
+          req,
+        ),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getQuarterlyEmissions', () => {
+    it('should call the service and return a list of quarterly emissions', async () => {
+      const expectedResult: QuarterlyApportionedEmissionsDTO[] = [];
+      const paramsDto = new QuarterlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(apportionedEmissionsService, 'getQuarterlyEmissions')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await apportionedEmissionsController.getQuarterlyEmissions(
+          paramsDto,
+          req,
+        ),
       ).toBe(expectedResult);
     });
   });
