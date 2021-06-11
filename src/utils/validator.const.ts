@@ -20,7 +20,7 @@ export function BeginDate() {
       message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD'),
+      message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD format'),
     }),
     IsDefined({
       message: ErrorMessages.RequiredProperty(),
@@ -44,7 +44,7 @@ export function EndDate() {
       message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD'),
+      message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
     }),
     IsDefined({ message: ErrorMessages.RequiredProperty() }),
   );

@@ -4,13 +4,14 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-export function IsValidMonth(
+export function IsInValidReportingQuarter(
+  values = [],
   property: string,
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
-      name: 'IsValidMonth',
+      name: 'IsInValidReportingQuarter',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [property],
@@ -22,20 +23,26 @@ export function IsValidMonth(
           const curDate = new Date();
           const curYear = new Date().getFullYear();
           const yearIndicator =
-            relatedValue.includes(curYear.toString()) &&
-            relatedValue.length === 1;
-          if (curDate < new Date(`June 30, ${curYear}`) && yearIndicator) {
-            return (value as number) <= 3;
+            relatedValue?.includes(curYear.toString()) &&
+            relatedValue?.length === 1;
+
+          if (curDate < new Date(`March 31, ${curYear}`) && yearIndicator) {
+            return false;
+          } else if (
+            curDate < new Date(`June 30, ${curYear}`) &&
+            yearIndicator
+          ) {
+            return (value as number) <= values[0];
           } else if (
             curDate < new Date(`September 30, ${curYear}`) &&
             yearIndicator
           ) {
-            return (value as number) <= 6;
+            return (value as number) <= values[1];
           } else if (
             curDate < new Date(`December 31, ${curYear}`) &&
             yearIndicator
           ) {
-            return (value as number) <= 9;
+            return (value as number) <= values[2];
           }
           return true;
         },
