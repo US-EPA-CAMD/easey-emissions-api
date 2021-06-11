@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 
 export function IsInValidReportingQuarter(
-  values = [],
+  values: number[],
   property: string,
   validationOptions?: ValidationOptions,
 ) {
