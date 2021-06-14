@@ -6,6 +6,7 @@ import { IsValidDate } from '../pipes/is-valid-date.pipe';
 import { IsIsoFormat } from '../pipes/is-iso-format.pipe';
 import { IsDateGreaterThanEqualTo } from '../pipes/is-date-greater.pipe';
 import { ErrorMessages } from './error-messages';
+import { IsYearFormat } from '../pipes/is-year-format.pipe';
 
 export function BeginDate() {
   return applyDecorators(
@@ -20,7 +21,7 @@ export function BeginDate() {
       message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD'),
+      message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD format'),
     }),
     IsDefined({
       message: ErrorMessages.RequiredProperty(),
@@ -44,7 +45,25 @@ export function EndDate() {
       message: ErrorMessages.DateValidity(),
     }),
     IsIsoFormat({
-      message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD'),
+      message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
+    }),
+    IsDefined({ message: ErrorMessages.RequiredProperty() }),
+  );
+}
+
+export function OpYear() {
+  return applyDecorators(
+    IsInDateRange([new Date(1995, 0), new Date()], true, true, {
+      each: true,
+      message: ErrorMessages.DateRange(
+        'opYear',
+        true,
+        'a year between 1995 and this year',
+      ),
+    }),
+    IsYearFormat({
+      each: true,
+      message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
     }),
     IsDefined({ message: ErrorMessages.RequiredProperty() }),
   );

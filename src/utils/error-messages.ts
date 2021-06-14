@@ -28,11 +28,11 @@ export class ErrorMessages {
   }
 
   public static MultipleFormat(parameter: string, format: string) {
-    return `One or more ${parameter}s are not in the ${format} format. Ensure all ${parameter}s are in the ${format} format`;
+    return `One or more ${parameter}s are not in the ${format}. Ensure all ${parameter}s are in the ${format}`;
   }
 
   public static SingleFormat(parameter: string, format: string) {
-    return `Ensure that ${parameter} is in the ${format} format.`;
+    return `Ensure that ${parameter} is in the ${format}.`;
   }
 
   public static BeginEndDate(constraint: string) {
