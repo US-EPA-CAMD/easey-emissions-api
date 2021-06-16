@@ -43,16 +43,6 @@ export class AnnualUnitData extends BaseEntity {
   heatInput: number;
 
   @Column({
-    name: 'nox_mass',
-  })
-  noxMass: number;
-
-  @Column({
-    name: 'nox_rate',
-  })
-  noxRate: number;
-
-  @Column({
     name: 'so2_mass',
   })
   so2Mass: number;
@@ -71,6 +61,16 @@ export class AnnualUnitData extends BaseEntity {
     name: 'co2_rate',
   })
   co2Rate: number;
+
+  @Column({
+    name: 'nox_mass',
+  })
+  noxMass: number;
+
+  @Column({
+    name: 'nox_rate',
+  })
+  noxRate: number;
 
   @ManyToOne(
     () => UnitFact,
