@@ -18,6 +18,10 @@ import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apportioned-emissions.params.dto';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
+import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
+import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -41,11 +45,13 @@ describe('-- Apportioned Emissions Controller --', () => {
         DailyApportionedEmissionsMap,
         MonthlyApportionedEmissionsMap,
         QuarterlyApportionedEmissionsMap,
+        AnnualApportionedEmissionsMap,
         ApportionedEmissionsService,
         HourUnitDataRepository,
         DayUnitDataRepository,
         MonthUnitDataRepository,
         QuarterUnitDataRepository,
+        AnnualUnitDataRepository,
       ],
     }).compile();
 
@@ -113,6 +119,19 @@ describe('-- Apportioned Emissions Controller --', () => {
           paramsDto,
           req,
         ),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getAnnualEmissions', () => {
+    it('should call the service and return a list of annual emissions', async () => {
+      const expectedResult: AnnualApportionedEmissionsDTO[] = [];
+      const paramsDto = new AnnualApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(apportionedEmissionsService, 'getAnnualEmissions')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await apportionedEmissionsController.getAnnualEmissions(paramsDto, req),
       ).toBe(expectedResult);
     });
   });
