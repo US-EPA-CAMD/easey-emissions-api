@@ -55,7 +55,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       @IsDefined()
       endDate: string;
 
-      @IsInDateRange([new Date(1995, 0), new Date()], true, true, false)
+      @IsInDateRange([new Date(1995, 0), new Date()], true, true, true)
       @IsYearFormat()
       year: string;
 
