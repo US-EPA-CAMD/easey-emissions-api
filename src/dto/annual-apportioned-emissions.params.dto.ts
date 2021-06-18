@@ -13,7 +13,7 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
     message: ErrorMessages.DateRange(
       'opYear',
       true,
-      '1980, 1985, 1990, or to a year greater than or equal to 1995',
+      '1980, 1985, 1990, or to a year between 1995 and this year',
     ),
   })
   @IsYearFormat({
