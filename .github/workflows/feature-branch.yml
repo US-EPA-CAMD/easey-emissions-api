@@ -19,6 +19,12 @@ jobs:
         with:
           repository: US-EPA-CAMD/devops
           path: devops
+      - name: Setup & Configure Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13
+          registry-url: https://npm.pkg.github.com/
+          scope: '@us-epa-camd'
       - name: Configure Env Vars
         run: devops/scripts/environment-variables.sh
         env:

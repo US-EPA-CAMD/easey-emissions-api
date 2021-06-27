@@ -12,6 +12,7 @@ export function IsInDateRange(
   property: Date[],
   yearOnly: boolean,
   reportingQuarter: boolean,
+  isAnnual: boolean,
   validationOptions?: ValidationOptions,
 ) {
   return function(object: Object, propertyName: string) {
@@ -24,6 +25,12 @@ export function IsInDateRange(
       validator: {
         validate(value: any, args: ValidationArguments) {
           if (value) {
+            if (
+              isAnnual &&
+              (value === '1980' || value === '1985' || value === '1990')
+            ) {
+              return true;
+            }
             const dateObject = yearOnly
               ? new Date(value as number, 0)
               : new Date(value);

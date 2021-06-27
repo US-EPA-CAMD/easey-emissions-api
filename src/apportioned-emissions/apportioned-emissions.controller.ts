@@ -23,6 +23,8 @@ import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned
 import { MonthlyApportionedEmissionsDTO } from '../dto/monthly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
+import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 
 @Controller()
 @ApiTags('Apportioned Emissions')
@@ -156,6 +158,38 @@ export class ApportionedEmissionsController {
   ): Promise<QuarterlyApportionedEmissionsDTO[]> {
     return this.apportionedEmissionsService.getQuarterlyEmissions(
       quarterlyApportionedEmissionsParamsDTO,
+      req,
+    );
+  }
+
+  @Get('/annual')
+  @ApiOkResponse({
+    description: 'Retrieve Annual Apportioned Emissions per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(AnnualApportionedEmissionsDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
+  @ApiQueryMultiSelect()
+  @ApiExtraModels(AnnualApportionedEmissionsDTO)
+  getAnnualEmissions(
+    @Query()
+    annualApportionedEmissionsParamsDTO: AnnualApportionedEmissionsParamsDTO,
+    @Req() req: Request,
+  ): Promise<AnnualApportionedEmissionsDTO[]> {
+    return this.apportionedEmissionsService.getAnnualEmissions(
+      annualApportionedEmissionsParamsDTO,
       req,
     );
   }

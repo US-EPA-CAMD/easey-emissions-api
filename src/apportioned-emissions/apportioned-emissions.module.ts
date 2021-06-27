@@ -11,6 +11,8 @@ import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsMap } from '../maps/monthly-apportioned-emissions.map';
 import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-emissions.map';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
       DayUnitDataRepository,
       MonthUnitDataRepository,
       QuarterUnitDataRepository,
+      AnnualUnitDataRepository,
     ]),
   ],
   controllers: [ApportionedEmissionsController],
@@ -28,6 +31,7 @@ import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
     DailyApportionedEmissionsMap,
     MonthlyApportionedEmissionsMap,
     QuarterlyApportionedEmissionsMap,
+    AnnualApportionedEmissionsMap,
   ],
 })
 export class ApportionedEmissionsModule {}

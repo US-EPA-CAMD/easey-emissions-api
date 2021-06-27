@@ -13,8 +13,8 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { IsProgram } from '../pipes/is-program.pipe';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
-import { IsValidMonthNumber } from '../pipes/is-valid-month-number.pipe';
-import { IsValidMonth } from '../pipes/is-valid-month.pipe';
+import { IsValidNumber } from '../pipes/is-valid-number.pipe';
+import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 
 describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
@@ -42,24 +42,29 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.state = state;
         this.program = program;
       }
-      @IsInDateRange([new Date('1995-01-01'), new Date()], false,true)
+      @IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       beginDate: string;
 
       @IsDateGreaterThanEqualTo('beginDate')
-      @IsInDateRange([new Date('1995-01-01'), new Date()], false,true)
+      @IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       endDate: string;
 
-      @IsInDateRange([new Date(1995, 0), new Date()], true,true)
+      @IsInDateRange([new Date(1995, 0), new Date()], true, true, true)
       @IsYearFormat()
       year: string;
 
-      @IsValidMonthNumber()
+      @IsValidNumber(4)
+      @IsInValidReportingQuarter([1, 2, 3], 'year')
+      quarter: string;
+
+      @IsValidNumber(12)
+      @IsInValidReportingQuarter([3, 6, 9], 'year')
       month: string;
 
       @IsOrisCode()

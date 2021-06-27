@@ -19,6 +19,10 @@ import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apporti
 import { QuarterlyApportionedEmissionsDTO } from '../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsMap } from '../maps/quarterly-apportioned-emissions.map';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
+import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -31,10 +35,13 @@ export class ApportionedEmissionsService {
     private readonly monthlyRepository: MonthUnitDataRepository,
     @InjectRepository(QuarterUnitDataRepository)
     private readonly quarterlyRepository: QuarterUnitDataRepository,
+    @InjectRepository(AnnualUnitDataRepository)
+    private readonly annualRepository: AnnualUnitDataRepository,
     private readonly hourlyMap: HourlyApportionedEmissionsMap,
     private readonly dailyMap: DailyApportionedEmissionsMap,
     private readonly monthlyMap: MonthlyApportionedEmissionsMap,
     private readonly quarterlyMap: QuarterlyApportionedEmissionsMap,
+    private readonly annualMap: AnnualApportionedEmissionsMap,
   ) {}
 
   async getHourlyEmissions(
@@ -103,5 +110,22 @@ export class ApportionedEmissionsService {
     );
 
     return this.quarterlyMap.many(query);
+  }
+
+  async getAnnualEmissions(
+    annualApportionedEmissionsParamsDTO: AnnualApportionedEmissionsParamsDTO,
+    req: Request,
+  ): Promise<AnnualApportionedEmissionsDTO[]> {
+    const query = await this.annualRepository.getAnnualEmissions(
+      annualApportionedEmissionsParamsDTO,
+      req,
+    );
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.annual),
+    );
+
+    return this.annualMap.many(query);
   }
 }
