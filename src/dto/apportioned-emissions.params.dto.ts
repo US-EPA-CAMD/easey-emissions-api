@@ -15,6 +15,7 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @IsOptional()
@@ -23,6 +24,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'state'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @ApiProperty({
+    enum: State,
+    description: propertyMetadata.state.description
+  })
   state?: State[];
 
   @IsOptional()
@@ -31,6 +36,9 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'orisCode'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @ApiProperty({
+    description: propertyMetadata.facilityId.description
+  })
   orisCode?: number[];
 
   @IsOptional()
@@ -39,6 +47,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @ApiProperty({
+    enum: UnitType,
+    description: propertyMetadata.unitType.description
+  })
   unitType?: UnitType[];
 
   @IsOptional()
@@ -64,11 +76,14 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
       ErrorMessages.UnitCharacteristics(true, 'program') + '?exclude=MATS',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @ApiProperty({
+    enum: Program,
+    description: propertyMetadata.programCodeInfo.description
+  })
   program?: Program[];
 
   @ApiProperty({
     description: 'Attaches a file with data in the format specified by the Accept header',
-    default: false,
   })
   attachFile?: boolean;
 }
