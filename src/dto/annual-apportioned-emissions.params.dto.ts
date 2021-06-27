@@ -5,6 +5,8 @@ import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dt
 import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
+import { ApiProperty } from '@nestjs/swagger';
+import { propertyMetadata } from '@us-epa-camd/easey-constants/lib';
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
@@ -21,5 +23,9 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
     message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
   })
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @ApiProperty({
+    isArray: true,
+    description: propertyMetadata.year.description
+  })
   opYear: number[];
 }

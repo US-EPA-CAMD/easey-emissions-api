@@ -26,7 +26,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: State,
-    ...propertyMetadata.state
+    description: propertyMetadata.state.description
   })
   state?: State[];
 
@@ -36,7 +36,9 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     message: ErrorMessages.UnitCharacteristics(true, 'orisCode'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty(propertyMetadata.facilityId)
+  @ApiProperty({
+    description: propertyMetadata.facilityId.description
+  })
   orisCode?: number[];
 
   @IsOptional()
@@ -47,7 +49,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: UnitType,
-    ...propertyMetadata.unitType
+    description: propertyMetadata.unitType.description
   })
   unitType?: UnitType[];
 
@@ -76,13 +78,12 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: Program,
-    ...propertyMetadata.programCodeInfo
+    description: propertyMetadata.programCodeInfo.description
   })
   program?: Program[];
 
   @ApiProperty({
     description: 'Attaches a file with data in the format specified by the Accept header',
-    default: false,
   })
   attachFile?: boolean;
 }
