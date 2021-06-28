@@ -96,6 +96,6 @@ export const fieldMappings = {
     monthly: monthly,
     quarterly: quarterly,
     annual: annual,
-    ozone: [],
+    ozone: annual,
   },
 };

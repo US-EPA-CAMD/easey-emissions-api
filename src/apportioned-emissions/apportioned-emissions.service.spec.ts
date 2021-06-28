@@ -21,6 +21,9 @@ import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
+import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
+import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -42,6 +45,10 @@ const mockAnnualUnitDataRepository = () => ({
   getAnnualEmissions: jest.fn(),
 });
 
+const mockOzoneUnitDataRepository = () => ({
+  getOzoneEmissions: jest.fn(),
+});
+
 const mockMap = () => ({
   many: jest.fn(),
 });
@@ -61,11 +68,13 @@ describe('-- Apportioned Emissions Service --', () => {
   let monthUnitDataRepository;
   let quarterUnitDataRepository;
   let annualUnitDataRepository;
+  let ozoneUnitDataRepository;
   let hourlyMap;
   let dailyMap;
   let monthlyMap;
   let quarterlyMap;
   let annualMap;
+  let ozoneMap;
   let req: any;
 
   beforeEach(async () => {
@@ -92,11 +101,16 @@ describe('-- Apportioned Emissions Service --', () => {
           provide: AnnualUnitDataRepository,
           useFactory: mockAnnualUnitDataRepository,
         },
+        {
+          provide: OzoneUnitDataRepository,
+          useFactory: mockOzoneUnitDataRepository,
+        },
         { provide: HourlyApportionedEmissionsMap, useFactory: mockMap },
         { provide: DailyApportionedEmissionsMap, useFactory: mockMap },
         { provide: MonthlyApportionedEmissionsMap, useFactory: mockMap },
         { provide: QuarterlyApportionedEmissionsMap, useFactory: mockMap },
         { provide: AnnualApportionedEmissionsMap, useFactory: mockMap },
+        { provide: OzoneApportionedEmissionsMap, useFactory: mockMap },
       ],
     }).compile();
 
@@ -111,6 +125,8 @@ describe('-- Apportioned Emissions Service --', () => {
     quarterlyMap = module.get(QuarterlyApportionedEmissionsMap);
     annualUnitDataRepository = module.get(AnnualUnitDataRepository);
     annualMap = module.get(AnnualApportionedEmissionsMap);
+    ozoneUnitDataRepository = module.get(OzoneUnitDataRepository);
+    ozoneMap = module.get(OzoneApportionedEmissionsMap);
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
   });
@@ -212,6 +228,26 @@ describe('-- Apportioned Emissions Service --', () => {
 
       expect(annualMap.many).toHaveBeenCalled();
       expect(result).toEqual(annualDto);
+    });
+  });
+
+  describe('getOzoneEmissions', () => {
+    it('calls OzoneUnitDataRepository.getOzoneEmissions() and gets all emissions from the repository', async () => {
+      ozoneUnitDataRepository.getOzoneEmissions.mockResolvedValue(
+        'list of emissions',
+      );
+      const ozoneDto = new AnnualApportionedEmissionsDTO();
+      ozoneMap.many.mockReturnValue(ozoneDto);
+
+      let filters = new OzoneApportionedEmissionsParamsDTO();
+
+      let result = await apportionedEmissionsService.getOzoneEmissions(
+        filters,
+        req,
+      );
+
+      expect(ozoneMap.many).toHaveBeenCalled();
+      expect(result).toEqual(ozoneDto);
     });
   });
 });
