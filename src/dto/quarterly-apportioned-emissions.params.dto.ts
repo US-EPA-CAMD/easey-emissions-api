@@ -1,17 +1,29 @@
 import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
-import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { OpYear } from '../utils/validator.const';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
+import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
-import { OpYear } from '../utils/validator.const';
 
 export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @OpYear()
+  @IsDefined()
+  @ApiProperty({
+    isArray: true,
+    description: propertyMetadata.year.description
+  })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   opYear: number[];
 
+  @ApiProperty({
+    isArray: true,
+    description: propertyMetadata.quarter.description
+  })
+  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @IsValidNumber(4, {
     each: true,
     message: ErrorMessages.MultipleFormat(
@@ -28,6 +40,5 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     ),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   opQuarter: number[];
 }
