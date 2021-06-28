@@ -5,6 +5,7 @@ import { DayUnitData } from './day-unit-data.entity';
 import { MonthUnitData } from './month-unit-data.entity';
 import { QuarterUnitData } from './quarter-unit-data.entity';
 import { AnnualUnitData } from './annual-unit-data.entity';
+import { OzoneUnitData } from './ozone-unit-data.entity';
 
 @Entity({ name: 'camddmw.unit_fact' })
 export class UnitFact extends BaseEntity {
@@ -108,4 +109,10 @@ export class UnitFact extends BaseEntity {
     annualUnit => annualUnit.unitFact,
   )
   annualUnitData: AnnualUnitData[];
+
+  @OneToMany(
+    () => OzoneUnitData,
+    ozoneUnit => ozoneUnit.unitFact,
+  )
+  ozoneUnitData: OzoneUnitData[];
 }

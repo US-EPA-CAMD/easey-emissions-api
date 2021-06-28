@@ -22,6 +22,10 @@ import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
+import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
+import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
+import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
 
 const mockRequest = (url: string) => {
   return {
@@ -46,12 +50,14 @@ describe('-- Apportioned Emissions Controller --', () => {
         MonthlyApportionedEmissionsMap,
         QuarterlyApportionedEmissionsMap,
         AnnualApportionedEmissionsMap,
+        OzoneApportionedEmissionsMap,
         ApportionedEmissionsService,
         HourUnitDataRepository,
         DayUnitDataRepository,
         MonthUnitDataRepository,
         QuarterUnitDataRepository,
         AnnualUnitDataRepository,
+        OzoneUnitDataRepository,
       ],
     }).compile();
 
@@ -132,6 +138,19 @@ describe('-- Apportioned Emissions Controller --', () => {
         .mockResolvedValue(expectedResult);
       expect(
         await apportionedEmissionsController.getAnnualEmissions(paramsDto, req),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getOzoneEmissions', () => {
+    it('should call the service and return a list of ozone emissions', async () => {
+      const expectedResult: OzoneApportionedEmissionsDTO[] = [];
+      const paramsDto = new OzoneApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(apportionedEmissionsService, 'getOzoneEmissions')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await apportionedEmissionsController.getOzoneEmissions(paramsDto, req),
       ).toBe(expectedResult);
     });
   });

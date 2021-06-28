@@ -9,8 +9,8 @@ import {
 
 import { UnitFact } from './unit-fact.entity';
 
-@Entity({ name: 'camddmw.month_unit_data' })
-export class MonthUnitData extends BaseEntity {
+@Entity({ name: 'camddmw.ozone_unit_data' })
+export class OzoneUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
@@ -20,11 +20,6 @@ export class MonthUnitData extends BaseEntity {
     name: 'op_year',
   })
   opYear: number;
-
-  @PrimaryColumn({
-    name: 'op_month',
-  })
-  opMonth: number;
 
   @Column({
     name: 'heat_input',
@@ -42,16 +37,6 @@ export class MonthUnitData extends BaseEntity {
   noxRate: number;
 
   @Column({
-    name: 'so2_mass',
-  })
-  so2Mass: number;
-
-  @Column({
-    name: 'so2_rate',
-  })
-  so2Rate: number;
-
-  @Column({
     name: 'co2_mass',
   })
   co2Mass: number;
@@ -60,6 +45,16 @@ export class MonthUnitData extends BaseEntity {
     name: 'co2_rate',
   })
   co2Rate: number;
+
+  @Column({
+    name: 'so2_mass',
+  })
+  so2Mass: number;
+
+  @Column({
+    name: 'so2_rate',
+  })
+  so2Rate: number;
 
   @Column()
   sload: number;
@@ -79,7 +74,7 @@ export class MonthUnitData extends BaseEntity {
 
   @ManyToOne(
     () => UnitFact,
-    uf => uf.monthUnitData,
+    uf => uf.ozoneUnitData,
   )
   @JoinColumn([
     {

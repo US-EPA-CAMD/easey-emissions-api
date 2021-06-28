@@ -23,6 +23,10 @@ import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-e
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
+import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
+import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
+import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -37,11 +41,14 @@ export class ApportionedEmissionsService {
     private readonly quarterlyRepository: QuarterUnitDataRepository,
     @InjectRepository(AnnualUnitDataRepository)
     private readonly annualRepository: AnnualUnitDataRepository,
+    @InjectRepository(OzoneUnitDataRepository)
+    private readonly ozoneRepository: OzoneUnitDataRepository,
     private readonly hourlyMap: HourlyApportionedEmissionsMap,
     private readonly dailyMap: DailyApportionedEmissionsMap,
     private readonly monthlyMap: MonthlyApportionedEmissionsMap,
     private readonly quarterlyMap: QuarterlyApportionedEmissionsMap,
     private readonly annualMap: AnnualApportionedEmissionsMap,
+    private readonly ozoneMap: OzoneApportionedEmissionsMap,
   ) {}
 
   async getHourlyEmissions(
@@ -127,5 +134,22 @@ export class ApportionedEmissionsService {
     );
 
     return this.annualMap.many(query);
+  }
+
+  async getOzoneEmissions(
+    ozoneApportionedEmissionsParamsDTO: OzoneApportionedEmissionsParamsDTO,
+    req: Request,
+  ): Promise<OzoneApportionedEmissionsDTO[]> {
+    const query = await this.ozoneRepository.getOzoneEmissions(
+      ozoneApportionedEmissionsParamsDTO,
+      req,
+    );
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.ozone),
+    );
+
+    return this.ozoneMap.many(query);
   }
 }
