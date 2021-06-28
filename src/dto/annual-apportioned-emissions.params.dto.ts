@@ -6,7 +6,7 @@ import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
 import { ApiProperty } from '@nestjs/swagger';
-import { propertyMetadata } from '@us-epa-camd/easey-constants/lib';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))

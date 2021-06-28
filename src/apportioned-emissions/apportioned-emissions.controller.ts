@@ -203,7 +203,7 @@ export class ApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(OzoneApportionedEmissionsMap),
+          $ref: getSchemaPath(OzoneApportionedEmissionsDTO),
         },
       },
       'text/csv': {
