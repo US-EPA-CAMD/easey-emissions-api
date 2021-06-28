@@ -26,7 +26,6 @@ import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apporti
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
-import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
 import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
 
 @Controller()
@@ -117,8 +116,18 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
-  @ApiQuery({style: 'pipeDelimited', name: 'opMonth', required: true, explode: false,})
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opYear',
+    required: true,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opMonth',
+    required: true,
+    explode: false,
+  })
   @ApiQueryMultiSelect()
   @ApiExtraModels(MonthlyApportionedEmissionsDTO)
   getMonthlyEmissions(
@@ -150,8 +159,18 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
-  @ApiQuery({style: 'pipeDelimited', name: 'opQuarter', required: true, explode: false,})
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opYear',
+    required: true,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opQuarter',
+    required: true,
+    explode: false,
+  })
   @ApiQueryMultiSelect()
   @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
   getQuarterlyEmissions(
@@ -183,7 +202,12 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opYear',
+    required: true,
+    explode: false,
+  })
   @ApiQueryMultiSelect()
   @ApiExtraModels(AnnualApportionedEmissionsDTO)
   getAnnualEmissions(
@@ -215,7 +239,12 @@ export class ApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  @ApiQuery({style: 'pipeDelimited', name: 'opYear', required: true, explode: false,})
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'opYear',
+    required: true,
+    explode: false,
+  })
   @ApiQueryMultiSelect()
   @ApiExtraModels(OzoneApportionedEmissionsDTO)
   getOzoneEmissions(
