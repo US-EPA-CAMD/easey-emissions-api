@@ -10,18 +10,18 @@ import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dt
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 
 export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
-  @OpYear()
   @ApiProperty({
     isArray: true,
-    description: propertyMetadata.year.description
+    description: propertyMetadata.year.description,
   })
+  @OpYear()
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   opYear: number[];
 
   @ApiProperty({
     isArray: true,
-    description: propertyMetadata.month.description
+    description: propertyMetadata.month.description,
   })
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @IsValidNumber(12, {

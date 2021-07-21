@@ -5,13 +5,15 @@ import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { ErrorMessages } from '../utils/error-messages';
+import { OpYear } from '../utils/validator.const';
 
 export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @ApiProperty({
     isArray: true,
     description: propertyMetadata.year.description,
   })
+  @OpYear()
+  @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
   opYear: number[];
 }

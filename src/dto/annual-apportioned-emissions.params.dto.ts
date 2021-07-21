@@ -9,7 +9,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @ApiProperty({
+    isArray: true,
+    description: propertyMetadata.year.description,
+  })
+  @IsYearFormat({
+    each: true,
+    message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
+  })
   @IsInDateRange([new Date(1995, 0), new Date()], true, true, true, {
     each: true,
     message: ErrorMessages.DateRange(
@@ -18,14 +25,7 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
       '1980, 1985, 1990, or to a year between 1995 and this year',
     ),
   })
-  @IsYearFormat({
-    each: true,
-    message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
-  })
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
-  @ApiProperty({
-    isArray: true,
-    description: propertyMetadata.year.description
-  })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
   opYear: number[];
 }
