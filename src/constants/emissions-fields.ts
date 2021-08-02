@@ -53,19 +53,19 @@ export const emissionsFields = {
   },
   gload: {
     label: 'Gross Load (MWh)',
-    value: 'gload',
+    value: 'gLoad',
   },
   gloadHrly: {
     label: 'Gross Load (MW)',
-    value: 'gload',
+    value: 'gLoad',
   },
   sload: {
     label: 'Steam Load (1000 lb)',
-    value: 'sload',
+    value: 'sLoad',
   },
   sloadHrly: {
     label: 'Steam Load (1000 lb/hr)',
-    value: 'sload',
+    value: 'sLoad',
   },
   so2Mass: {
     label: 'SO2 Mass (short tons)',
