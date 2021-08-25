@@ -9,7 +9,7 @@ import { UnitFuelType } from '../enums/unit-fuel-type.enum';
 import { UnitType } from '../enums/unit-type.enum';
 import { State } from '../enums/state.enum';
 import { Program } from '../enums/program.enum';
-import { IsProgram } from '../pipes/is-program.pipe';
+import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
@@ -70,10 +70,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
-  @IsProgram(['MATS'], {
+  @IsEmissionsProgram( {
     each: true,
     message:
-      ErrorMessages.UnitCharacteristics(true, 'program') + '?exclude=MATS',
+      ErrorMessages.UnitCharacteristics(true, 'program') + '?emissionsUIFilter=true',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
