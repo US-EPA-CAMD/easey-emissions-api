@@ -11,4 +11,9 @@ export class ProgramCode extends BaseEntity {
     name: 'prg_description',
   })
   programDescription: string;
+
+  @Column({
+    name: 'emissions_ui_filter',
+  })
+  emissionsUIFilter: number;
 }

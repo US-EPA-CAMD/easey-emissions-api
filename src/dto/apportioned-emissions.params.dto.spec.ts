@@ -11,7 +11,7 @@ import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
-import { IsProgram } from '../pipes/is-program.pipe';
+import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 import { IsYearFormat } from '../pipes/is-year-format.pipe';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
@@ -82,7 +82,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       @IsStateCode()
       state: string;
 
-      @IsProgram(['MATS'])
+      @IsEmissionsProgram()
       program: string;
     }
 
