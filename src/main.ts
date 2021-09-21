@@ -14,6 +14,7 @@ async function bootstrap() {
   const appEnv = configService.get<string>('app.env');
   const appVersion = configService.get<string>('app.version');
   const appPublished = configService.get<string>('app.published');
+  const corsOriginString = configService.get<string>('app.corsOrigin');
 
   let appDesc = null;
   let swaggerCustomOptions = null;
@@ -29,7 +30,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
   app.enableCors({
-    origin: '*',
+    origin: corsOriginString.split(","),
     exposedHeaders: '*',
     methods: '*'
   });

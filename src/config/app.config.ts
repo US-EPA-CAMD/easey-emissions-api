@@ -19,4 +19,5 @@ export default registerAs('app', () => ({
   env: process.env.EASEY_EMISSIONS_API_ENV || 'local-dev',
   version: process.env.EASEY_EMISSIONS_API_VERSION || 'v0.0.0',
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
+  corsOrigin: process.env.EASEY_EMISSIONS_CORS_ORIGIN || '*',
 }));

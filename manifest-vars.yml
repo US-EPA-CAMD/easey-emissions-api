@@ -5,3 +5,4 @@ path: api/emissions-mgmt
 environment: development
 host: easey-dev.app.cloud.gov
 memory: 512M
+corsOriginArray: dev-test-url

@@ -9,6 +9,7 @@ applications:
       EASEY_EMISSIONS_API_HOST: ((host))
       EASEY_EMISSIONS_API_PATH: ((path))
       EASEY_EMISSIONS_API_ENV: ((environment))
+      EASEY_EMISSIONS_CORS_ORIGIN: ((corsOriginArray))
     routes:
       - route: ((host))/((path))
     services:
