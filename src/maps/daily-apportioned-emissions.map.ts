@@ -11,12 +11,13 @@ export class DailyApportionedEmissionsMap extends ApportionedEmissionsMap {
     const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
       entity,
     );
-
     return {
       ...apportionedEmissionsDto,
       opDate: entity.opDate.toISOString().split('T')[0],
-      sumOpTime: entity.sumOpTime,
-      countOpTime: entity.countOpTime,
+      sumOpTime: entity.sumOpTime ? Number(entity.sumOpTime) : entity.sumOpTime,
+      countOpTime: entity.countOpTime
+        ? Number(entity.countOpTime)
+        : entity.countOpTime,
     };
   }
 }

@@ -13,13 +13,14 @@ export class MonthlyApportionedEmissionsMap extends ApportionedEmissionsMap {
     const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
       entity,
     );
-
     return {
       ...apportionedEmissionsDto,
-      opYear: entity.opYear,
-      opMonth: entity.opMonth,
-      sumOpTime: entity.sumOpTime,
-      countOpTime: entity.countOpTime,
+      opYear: Number(entity.opYear),
+      opMonth: Number(entity.opMonth),
+      sumOpTime: entity.sumOpTime ? Number(entity.sumOpTime) : entity.sumOpTime,
+      countOpTime: entity.countOpTime
+        ? Number(entity.countOpTime)
+        : entity.countOpTime,
     };
   }
 }

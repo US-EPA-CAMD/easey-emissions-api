@@ -13,12 +13,11 @@ export class HourlyApportionedEmissionsMap extends ApportionedEmissionsMap {
     const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
       entity,
     );
-
     return {
       ...apportionedEmissionsDto,
       opDate: entity.opDate.toISOString().split('T')[0],
-      opHour: entity.opHour,
-      opTime: entity.opTime,
+      opHour: Number(entity.opHour),
+      opTime: entity.opTime ? Number(entity.opTime) : entity.opTime,
       so2MassMeasureFlg: entity.so2MassMeasureFlg,
       so2RateMeasureFlg: entity.so2RateMeasureFlg,
       noxMassMeasureFlg: entity.noxMassMeasureFlg,
