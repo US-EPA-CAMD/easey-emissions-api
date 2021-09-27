@@ -13,6 +13,7 @@ export class ApportionedEmissionsMap extends BaseMap<any, any> {
         ? Number(entity.unitFact.orisCode)
         : entity.unitFact.orisCode,
       unitId: entity.unitFact.unitid,
+      assocStacks: entity.unitFact.assocStacks,
       gLoad: entity.gload ? Number(entity.gload) : entity.gload,
       sLoad: entity.sload ? Number(entity.sload) : entity.sload,
       so2Mass: entity.so2Mass ? Number(entity.so2Mass) : entity.so2Mass,
@@ -30,7 +31,6 @@ export class ApportionedEmissionsMap extends BaseMap<any, any> {
       noxControlInfo: entity.unitFact.noxControlInfo,
       hgControlInfo: entity.unitFact.hgControlInfo,
       prgCodeInfo: entity.unitFact.prgCodeInfo,
-      assocStacks: entity.unitFact.assocStacks,
     };
   }
 }
