@@ -29,7 +29,7 @@ let filters: OzoneApportionedEmissionsParamsDTO = {
   opYear: [2019],
   state: [State.TX],
   orisCode: [3],
-  unitType: [UnitType.BUBBLING_FLUIDIZED],
+  unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [
     ControlTechnology.ADDITIVES_TO_ENHANCE,
