@@ -28,7 +28,7 @@ let filters: ApportionedEmissionsParamsDTO = {
   perPage: undefined,
   state: [State.TX],
   orisCode: [3],
-  unitType: [UnitType.BUBBLING_FLUIDIZED],
+  unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [
     ControlTechnology.ADDITIVES_TO_ENHANCE,
@@ -74,9 +74,7 @@ describe('DayUnitDataRepository', () => {
     it('calls createQueryBuilder and gets all DayUnitData from the repository', async () => {
       // branch coverage
       const emptyFilters: ApportionedEmissionsParamsDTO = new ApportionedEmissionsParamsDTO();
-      let result = await dayUnitDataRepository.getDailyEmissions(
-        emptyFilters,
-      );
+      let result = await dayUnitDataRepository.getDailyEmissions(emptyFilters);
 
       result = await dayUnitDataRepository.getDailyEmissions(filters);
 

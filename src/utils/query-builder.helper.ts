@@ -53,11 +53,20 @@ export class QueryBuilderHelper {
     }
 
     if (param.includes('unitType') && dto.unitType) {
-      query.andWhere(`UPPER(${unitAlias}.unitTypeInfo) IN (:...unitType)`, {
-        unitType: dto.unitType.map(unit => {
-          return unit.toUpperCase();
-        }),
-      });
+      let string = '(';
+
+      for (let i = 0; i < dto.unitType.length; i++) {
+        const regex = Regex.commaDelimited(dto.unitType[i].toUpperCase());
+
+        if (i === 0) {
+          string += `(UPPER(${unitAlias}.unitTypeInfo) ~* ${regex}) `;
+        } else {
+          string += `OR (UPPER(${unitAlias}.unitTypeInfo) ~* ${regex}) `;
+        }
+      }
+
+      string += ')';
+      query.andWhere(string);
     }
 
     if (param.includes('controlTechnologies') && dto.controlTechnologies) {
