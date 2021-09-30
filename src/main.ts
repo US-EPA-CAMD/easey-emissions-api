@@ -14,6 +14,8 @@ async function bootstrap() {
   const appEnv = configService.get<string>('app.env');
   const appVersion = configService.get<string>('app.version');
   const appPublished = configService.get<string>('app.published');
+  const corsOriginString = configService.get<string>('app.corsOrigin');
+  const corsOriginArray = ["fake.url.gov", "cloud.gov"];
 
   let appDesc = null;
   let swaggerCustomOptions = null;
@@ -25,11 +27,13 @@ async function bootstrap() {
         '.description .renderedMarkdown p { color: #FC0; padding: 10px; background: linear-gradient(to bottom,#520001 0%,#6c0810 100%); }',
     };
   }
+  console.log(`corsOriginString: ${corsOriginString}`);
+  console.log(`corsOriginString: ${corsOriginString.split(",")[0]}`);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
   app.enableCors({
-    origin: '*',
+    origin: corsOriginString.split(","),
     exposedHeaders: '*',
     methods: '*'
   });
