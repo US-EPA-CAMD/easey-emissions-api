@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import routes from './routes';
 import dbConfig from './config/db.config';
 import appConfig from './config/app.config';
-import corsConfig from './config/cors.config';
 import { TypeOrmConfigService } from './config/typeorm.config';
 
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
@@ -19,7 +18,6 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
       load: [
         dbConfig,
         appConfig,
-        corsConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
