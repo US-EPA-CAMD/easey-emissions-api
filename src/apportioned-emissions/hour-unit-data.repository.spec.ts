@@ -36,8 +36,8 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
     ControlTechnology.ADDITIVES_TO_ENHANCE,
     ControlTechnology.OTHER,
   ],
-  program: [Program.ARP, Program.RGGI],
-  opHoursOnly: true,
+  programCodeInfo: [Program.ARP, Program.RGGI],
+  operatingHoursOnly: true,
 };
 
 describe('HourUnitDataRepository', () => {

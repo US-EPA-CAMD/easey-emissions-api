@@ -56,7 +56,7 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'dud',
       'uf',

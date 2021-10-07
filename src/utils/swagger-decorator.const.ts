@@ -22,6 +22,6 @@ export function ApiQueryMultiSelect() {
     ApiQuery({style: 'pipeDelimited', name: 'unitType', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false,}),
-    ApiQuery({style: 'pipeDelimited', name: 'program', required: false, explode: false,}),
+    ApiQuery({style: 'pipeDelimited', name: 'programCodeInfo', required: false, explode: false,}),
   );
 }

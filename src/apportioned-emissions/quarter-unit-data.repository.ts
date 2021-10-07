@@ -57,7 +57,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'qud',
       'uf',

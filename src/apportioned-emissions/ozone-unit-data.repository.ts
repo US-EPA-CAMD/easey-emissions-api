@@ -55,7 +55,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'oud',
       'uf',

@@ -18,42 +18,46 @@ import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
+  @ApiProperty({
+    enum: State,
+    description: propertyMetadata.state.description,
+  })
   @IsOptional()
   @IsStateCode({
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'state'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({
-    enum: State,
-    description: propertyMetadata.state.description,
-  })
   state?: State[];
 
+  @ApiProperty({
+    isArray: true,
+    description: propertyMetadata.facilityId.description,
+  })
   @IsOptional()
   @IsOrisCode({
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'facilityId'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({
-    isArray: true,
-    description: propertyMetadata.facilityId.description,
-  })
   facilityId?: number[];
 
+  @ApiProperty({
+    enum: UnitType,
+    description: propertyMetadata.unitType.description,
+  })
   @IsOptional()
   @IsUnitType({
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  @ApiProperty({
-    enum: UnitType,
-    description: propertyMetadata.unitType.description,
-  })
   unitType?: UnitType[];
 
+  @ApiProperty({
+    enum: UnitFuelType,
+    description: propertyMetadata.unitFuelType.description,
+  })
   @IsOptional()
   @IsUnitFuelType({
     each: true,
@@ -62,6 +66,10 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   unitFuelType?: UnitFuelType[];
 
+  @ApiProperty({
+    enum: ControlTechnology,
+    description: propertyMetadata.controlTechnologies.description,
+  })
   @IsOptional()
   @IsControlTechnology({
     each: true,
@@ -70,19 +78,19 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   controlTechnologies?: ControlTechnology[];
 
-  @IsOptional()
-  @IsEmissionsProgram({
-    each: true,
-    message:
-      ErrorMessages.UnitCharacteristics(true, 'program') +
-      '?emissionsUIFilter=true',
-  })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: Program,
     description: propertyMetadata.programCodeInfo.description,
   })
-  program?: Program[];
+  @IsOptional()
+  @IsEmissionsProgram({
+    each: true,
+    message:
+      ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
+      '?emissionsUIFilter=true',
+  })
+  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  programCodeInfo?: Program[];
 
   @ApiProperty({
     description:

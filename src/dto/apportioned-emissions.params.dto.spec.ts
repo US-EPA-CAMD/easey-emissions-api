@@ -29,7 +29,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         unitType: string,
         unitFuel: string,
         state: string,
-        program: string,
+        programCodeInfo: string,
       ) {
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -40,7 +40,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.unitType = unitType;
         this.unitFuel = unitFuel;
         this.state = state;
-        this.program = program;
+        this.programCodeInfo = programCodeInfo;
       }
       @IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false)
       @IsValidDate()
@@ -83,7 +83,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       state: string;
 
       @IsEmissionsProgram()
-      program: string;
+      programCodeInfo: string;
     }
 
     /**
@@ -123,7 +123,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
-          'program',
+          'programCodeInfo',
         ),
       );
       expect(results.length).toBe(0);
@@ -141,7 +141,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
           'unitType',
           'unitFuel',
           'state',
-          'program',
+          'programCodeInfo',
         ),
       );
       expect(results.length).toBe(1);

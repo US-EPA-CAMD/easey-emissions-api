@@ -36,7 +36,7 @@ let filters: QuarterlyApportionedEmissionsParamsDTO = {
     ControlTechnology.ADDITIVES_TO_ENHANCE,
     ControlTechnology.OTHER,
   ],
-  program: [Program.ARP, Program.RGGI],
+  programCodeInfo: [Program.ARP, Program.RGGI],
 };
 
 describe('QuarterUnitDataRepository', () => {

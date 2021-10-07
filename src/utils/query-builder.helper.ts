@@ -114,11 +114,11 @@ export class QueryBuilderHelper {
       query.andWhere(string);
     }
 
-    if (param.includes('program') && dto.program) {
+    if (param.includes('programCodeInfo') && dto.programCodeInfo) {
       let string = '(';
 
-      for (let i = 0; i < dto.program.length; i++) {
-        const regex = Regex.commaDelimited(dto.program[i].toUpperCase());
+      for (let i = 0; i < dto.programCodeInfo.length; i++) {
+        const regex = Regex.commaDelimited(dto.programCodeInfo[i].toUpperCase());
 
         if (i === 0) {
           string += `(UPPER(${unitAlias}.programCodeInfo) ~* ${regex}) `;
@@ -132,8 +132,8 @@ export class QueryBuilderHelper {
     }
 
     if (
-      param.includes('opHoursOnly') &&
-      String(dto.opHoursOnly) === String(true)
+      param.includes('operatingHoursOnly') &&
+      String(dto.operatingHoursOnly) === String(true)
     ) {
       query.andWhere(`${emissionsAlias}.opTime > 0`);
     }

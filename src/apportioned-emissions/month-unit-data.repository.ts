@@ -57,7 +57,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'mud',
       'uf',

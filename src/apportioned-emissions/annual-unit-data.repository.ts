@@ -55,7 +55,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'aud',
       'uf',
