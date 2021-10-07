@@ -26,10 +26,10 @@ const mockQueryBuilder = () => ({
 let filters: MonthlyApportionedEmissionsParamsDTO = {
   page: undefined,
   perPage: undefined,
-  opYear: [2019],
-  opMonth: [1, 2],
+  year: [2019],
+  month: [1, 2],
   state: [State.TX],
-  orisCode: [3],
+  facilityId: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [

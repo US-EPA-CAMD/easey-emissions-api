@@ -24,7 +24,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         endDate: string,
         year: string,
         month: string,
-        orisCode: string,
+        facilityId: string,
         control: string,
         unitType: string,
         unitFuel: string,
@@ -35,7 +35,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.endDate = endDate;
         this.year = year;
         this.month = month;
-        this.orisCode = orisCode;
+        this.facilityId = facilityId;
         this.control = control;
         this.unitType = unitType;
         this.unitFuel = unitFuel;
@@ -68,7 +68,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       month: string;
 
       @IsOrisCode()
-      orisCode: string;
+      facilityId: string;
 
       @IsControlTechnology()
       control: string;

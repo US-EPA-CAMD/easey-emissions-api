@@ -9,32 +9,32 @@ export class QueryBuilderHelper {
     unitAlias: string,
   ) {
     if (param.includes('beginDate') && dto.beginDate) {
-      query.andWhere(`${emissionsAlias}.opDate >= :beginDate`, {
+      query.andWhere(`${emissionsAlias}.date >= :beginDate`, {
         beginDate: dto.beginDate,
       });
     }
 
     if (param.includes('endDate') && dto.endDate) {
-      query.andWhere(`${emissionsAlias}.opDate <= :endDate`, {
+      query.andWhere(`${emissionsAlias}.date <= :endDate`, {
         endDate: dto.endDate,
       });
     }
 
-    if (param.includes('opYear') && dto.opYear) {
-      query.andWhere(`${emissionsAlias}.opYear IN (:...opYears)`, {
-        opYears: dto.opYear,
+    if (param.includes('year') && dto.year) {
+      query.andWhere(`${emissionsAlias}.year IN (:...years)`, {
+        years: dto.year,
       });
     }
 
-    if (param.includes('opMonth') && dto.opMonth) {
-      query.andWhere(`${emissionsAlias}.opMonth IN (:...opMonths)`, {
-        opMonths: dto.opMonth,
+    if (param.includes('month') && dto.month) {
+      query.andWhere(`${emissionsAlias}.month IN (:...months)`, {
+        months: dto.month,
       });
     }
 
-    if (param.includes('opQuarter') && dto.opQuarter) {
-      query.andWhere(`${emissionsAlias}.opQuarter IN (:...opQuarters)`, {
-        opQuarters: dto.opQuarter,
+    if (param.includes('quarter') && dto.quarter) {
+      query.andWhere(`${emissionsAlias}.quarter IN (:...quarters)`, {
+        quarters: dto.quarter,
       });
     }
 
@@ -46,9 +46,9 @@ export class QueryBuilderHelper {
       });
     }
 
-    if (param.includes('orisCode') && dto.orisCode) {
-      query.andWhere(`${unitAlias}.orisCode IN (:...orisCodes)`, {
-        orisCodes: dto.orisCode,
+    if (param.includes('facilityId') && dto.facilityId) {
+      query.andWhere(`${unitAlias}.facilityId IN (:...facilityIds)`, {
+        facilityIds: dto.facilityId,
       });
     }
 
@@ -59,9 +59,9 @@ export class QueryBuilderHelper {
         const regex = Regex.commaDelimited(dto.unitType[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(${unitAlias}.unitTypeInfo) ~* ${regex}) `;
+          string += `(UPPER(${unitAlias}.unitType) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(${unitAlias}.unitTypeInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${unitAlias}.unitType) ~* ${regex}) `;
         }
       }
 
@@ -85,7 +85,7 @@ export class QueryBuilderHelper {
 
         string += `OR (UPPER(${unitAlias}.noxControlInfo) ~* ${regex}) `;
 
-        string += `OR (UPPER(${unitAlias}.partControlInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${unitAlias}.pmControlInfo) ~* ${regex}) `;
 
         string += `OR (UPPER(${unitAlias}.hgControlInfo) ~* ${regex}) `;
       }
@@ -121,9 +121,9 @@ export class QueryBuilderHelper {
         const regex = Regex.commaDelimited(dto.program[i].toUpperCase());
 
         if (i === 0) {
-          string += `(UPPER(${unitAlias}.prgCodeInfo) ~* ${regex}) `;
+          string += `(UPPER(${unitAlias}.programCodeInfo) ~* ${regex}) `;
         } else {
-          string += `OR (UPPER(${unitAlias}.prgCodeInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${unitAlias}.programCodeInfo) ~* ${regex}) `;
         }
       }
 

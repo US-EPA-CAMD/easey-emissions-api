@@ -5,7 +5,7 @@ export class FuelTypeCode extends BaseEntity {
   @PrimaryColumn({
     name: 'fuel_type_cd',
   })
-  fuelTypeCd: string;
+  fuelTypeCode: string;
 
   @Column({
     name: 'fuel_type_description',

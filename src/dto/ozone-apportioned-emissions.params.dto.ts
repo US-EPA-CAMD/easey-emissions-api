@@ -15,5 +15,5 @@ export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsPara
   @OpYear()
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  opYear: number[];
+  year: number[];
 }

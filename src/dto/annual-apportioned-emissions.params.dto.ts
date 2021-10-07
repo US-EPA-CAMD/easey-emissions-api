@@ -15,17 +15,17 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
   })
   @IsYearFormat({
     each: true,
-    message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
+    message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
   })
   @IsInDateRange([new Date(1995, 0), new Date()], true, true, true, {
     each: true,
     message: ErrorMessages.DateRange(
-      'opYear',
+      'year',
       true,
       '1980, 1985, 1990, or to a year between 1995 and this year',
     ),
   })
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  opYear: number[];
+  year: number[];
 }

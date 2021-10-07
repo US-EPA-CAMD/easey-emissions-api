@@ -4,30 +4,66 @@ import { propertyMetadata } from '@us-epa-camd/easey-constants';
 import { ApportionedEmissionsDTO } from './apportioned-emissions.dto';
 
 export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
-  @ApiProperty(propertyMetadata.date)
-  opDate: string;
+  @ApiProperty({
+    description: propertyMetadata.date.description,
+    example: propertyMetadata.date.example,
+    name: propertyMetadata.date.fieldLabels.value,
+  })
+  date: string;
 
-  @ApiProperty(propertyMetadata.hour)
-  opHour: number;
+  @ApiProperty({
+    description: propertyMetadata.hour.description,
+    example: propertyMetadata.hour.example,
+    name: propertyMetadata.hour.fieldLabels.value,
+  })
+  hour: number;
 
-  @ApiProperty(propertyMetadata.opTime)
-  opTime: number;
+  @ApiProperty({
+    description: propertyMetadata.opTime.description,
+    example: propertyMetadata.opTime.example,
+    name: propertyMetadata.opTime.fieldLabels.value,
+  })
+  opTime?: number;
 
-  @ApiProperty(propertyMetadata.so2MassMeasureFlg)  
+  @ApiProperty({
+    description: propertyMetadata.so2MassMeasureFlg.description,
+    example: propertyMetadata.so2MassMeasureFlg.example,
+    name: propertyMetadata.so2MassMeasureFlg.fieldLabels.value,
+  })
   so2MassMeasureFlg: string;
 
-  @ApiProperty(propertyMetadata.so2RateMeasureFlg)
+  @ApiProperty({
+    description: propertyMetadata.so2RateMeasureFlg.description,
+    example: propertyMetadata.so2RateMeasureFlg.example,
+    name: propertyMetadata.so2RateMeasureFlg.fieldLabels.value,
+  })
   so2RateMeasureFlg: string;
 
-  @ApiProperty(propertyMetadata.noxMassMeasureFlg)
+  @ApiProperty({
+    description: propertyMetadata.noxMassMeasureFlg.description,
+    example: propertyMetadata.noxMassMeasureFlg.example,
+    name: propertyMetadata.noxMassMeasureFlg.fieldLabels.value,
+  })
   noxMassMeasureFlg: string;
 
-  @ApiProperty(propertyMetadata.noxRateMeasureFlg)
+  @ApiProperty({
+    description: propertyMetadata.noxRateMeasureFlg.description,
+    example: propertyMetadata.noxRateMeasureFlg.example,
+    name: propertyMetadata.noxRateMeasureFlg.fieldLabels.value,
+  })
   noxRateMeasureFlg: string;
 
-  @ApiProperty(propertyMetadata.co2MassMeasureFlg)
+  @ApiProperty({
+    description: propertyMetadata.co2MassMeasureFlg.description,
+    example: propertyMetadata.co2MassMeasureFlg.example,
+    name: propertyMetadata.co2MassMeasureFlg.fieldLabels.value,
+  })
   co2MassMeasureFlg: string;
 
-  @ApiProperty(propertyMetadata.co2RateMeasureFlg)
+  @ApiProperty({
+    description: propertyMetadata.co2RateMeasureFlg.description,
+    example: propertyMetadata.co2RateMeasureFlg.example,
+    name: propertyMetadata.co2RateMeasureFlg.fieldLabels.value,
+  })
   co2RateMeasureFlg: string;
 }

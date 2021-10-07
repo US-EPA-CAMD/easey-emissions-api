@@ -26,20 +26,21 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: State,
-    description: propertyMetadata.state.description
+    description: propertyMetadata.state.description,
   })
   state?: State[];
 
   @IsOptional()
   @IsOrisCode({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'orisCode'),
+    message: ErrorMessages.UnitCharacteristics(true, 'facilityId'),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
-    description: propertyMetadata.facilityId.description
+    isArray: true,
+    description: propertyMetadata.facilityId.description,
   })
-  orisCode?: number[];
+  facilityId?: number[];
 
   @IsOptional()
   @IsUnitType({
@@ -49,7 +50,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: UnitType,
-    description: propertyMetadata.unitType.description
+    description: propertyMetadata.unitType.description,
   })
   unitType?: UnitType[];
 
@@ -70,20 +71,22 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   controlTechnologies?: ControlTechnology[];
 
   @IsOptional()
-  @IsEmissionsProgram( {
+  @IsEmissionsProgram({
     each: true,
     message:
-      ErrorMessages.UnitCharacteristics(true, 'program') + '?emissionsUIFilter=true',
+      ErrorMessages.UnitCharacteristics(true, 'program') +
+      '?emissionsUIFilter=true',
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
   @ApiProperty({
     enum: Program,
-    description: propertyMetadata.programCodeInfo.description
+    description: propertyMetadata.programCodeInfo.description,
   })
   program?: Program[];
 
   @ApiProperty({
-    description: 'Attaches a file with data in the format specified by the Accept header',
+    description:
+      'Attaches a file with data in the format specified by the Accept header',
   })
   attachFile?: boolean;
 }

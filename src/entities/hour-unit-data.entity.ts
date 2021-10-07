@@ -14,33 +14,37 @@ export class HourUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
-  unitId: number;
+  id: number;
 
   @PrimaryColumn({
     name: 'op_date',
   })
-  opDate: Date;
+  date: Date;
 
   @PrimaryColumn({
     name: 'op_hour',
   })
-  opHour: number;
+  hour: number;
 
   @Column({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @Column({
     name: 'op_time',
   })
   opTime: number;
 
-  @Column()
-  gload: number;
+  @Column({
+    name: 'gload',
+  })
+  grossLoad: number;
 
-  @Column()
-  sload: number;
+  @Column({
+    name: 'sload',
+  })
+  steamLoad: number;
 
   @Column({
     name: 'heat_input',
@@ -118,7 +122,7 @@ export class HourUnitData extends BaseEntity {
     },
     {
       name: 'op_year',
-      referencedColumnName: 'opYear',
+      referencedColumnName: 'year',
     },
   ])
   unitFact: UnitFact;

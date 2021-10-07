@@ -17,7 +17,7 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
   @OpYear()
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  opYear: number[];
+  year: number[];
 
   @ApiProperty({
     isArray: true,
@@ -27,18 +27,18 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
   @IsValidNumber(4, {
     each: true,
     message: ErrorMessages.MultipleFormat(
-      'opQuarter',
+      'quarter',
       'single digit format (ex.1,2,3,4)',
     ),
   })
-  @IsInValidReportingQuarter([1, 2, 3], 'opYear', {
+  @IsInValidReportingQuarter([1, 2, 3], 'year', {
     each: true,
     message: ErrorMessages.DateRange(
-      'opQuarter',
+      'quarter',
       true,
       `a quarter between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
     ),
   })
   @Transform((value: string) => value.split('|').map(item => item.trim()))
-  opQuarter: number[];
+  quarter: number[];
 }

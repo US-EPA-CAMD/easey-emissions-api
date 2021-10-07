@@ -14,17 +14,17 @@ export class MonthUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
-  unitId: number;
+  id: number;
 
   @PrimaryColumn({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @PrimaryColumn({
     name: 'op_month',
   })
-  opMonth: number;
+  month: number;
 
   @Column({
     name: 'heat_input',
@@ -61,11 +61,15 @@ export class MonthUnitData extends BaseEntity {
   })
   co2Rate: number;
 
-  @Column()
-  sload: number;
+  @Column({
+    name: 'sload',
+  })
+  steamLoad: number;
 
-  @Column()
-  gload: number;
+  @Column({
+    name: 'gload',
+  })
+  grossLoad: number;
 
   @Column({
     name: 'sum_op_time',
@@ -88,7 +92,7 @@ export class MonthUnitData extends BaseEntity {
     },
     {
       name: 'op_year',
-      referencedColumnName: 'opYear',
+      referencedColumnName: 'year',
     },
   ])
   unitFact: UnitFact;

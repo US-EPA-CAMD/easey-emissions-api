@@ -56,14 +56,14 @@ export function OpYear() {
     IsInDateRange([new Date(1995, 0), new Date()], true, true, false, {
       each: true,
       message: ErrorMessages.DateRange(
-        'opYear',
+        'year',
         true,
         'a year between 1995 and this year',
       ),
     }),
     IsYearFormat({
       each: true,
-      message: ErrorMessages.MultipleFormat('opYear', 'YYYY format'),
+      message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
     }),
     IsDefined({ message: ErrorMessages.RequiredProperty() }),
   );

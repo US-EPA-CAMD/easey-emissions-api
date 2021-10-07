@@ -16,13 +16,13 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
 
     let query = this.createQueryBuilder('mud')
       .select([
-        'mud.unitId',
-        'mud.opYear',
-        'mud.opMonth',
+        'mud.id',
+        'mud.year',
+        'mud.month',
         'mud.sumOpTime',
         'mud.countOpTime',
-        'mud.gload',
-        'mud.sload',
+        'mud.grossLoad',
+        'mud.steamLoad',
         'mud.heatInput',
         'mud.so2Mass',
         'mud.so2Rate',
@@ -32,17 +32,17 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
         'mud.noxRate',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('mud.unitFact', 'uf');
 
@@ -50,10 +50,10 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
       query,
       monthlyApportionedEmissionsParamsDTO,
       [
-        'opYear',
-        'opMonth',
+        'year',
+        'month',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
@@ -64,10 +64,10 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('mud.unitId')
-      .addOrderBy('mud.opYear')
-      .addOrderBy('mud.opMonth');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('mud.year')
+      .addOrderBy('mud.month');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

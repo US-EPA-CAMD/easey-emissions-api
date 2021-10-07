@@ -5,7 +5,7 @@ export class UnitTypeCode extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_type_cd',
   })
-  unitTypeCd: string;
+  unitTypeCode: string;
 
   @Column({
     name: 'unit_type_description',

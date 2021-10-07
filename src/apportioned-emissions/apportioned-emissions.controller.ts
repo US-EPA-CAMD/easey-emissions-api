@@ -118,13 +118,13 @@ export class ApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opYear',
+    name: 'year',
     required: true,
     explode: false,
   })
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opMonth',
+    name: 'month',
     required: true,
     explode: false,
   })
@@ -161,13 +161,13 @@ export class ApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opYear',
+    name: 'year',
     required: true,
     explode: false,
   })
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opQuarter',
+    name: 'quarter',
     required: true,
     explode: false,
   })
@@ -204,7 +204,7 @@ export class ApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opYear',
+    name: 'year',
     required: true,
     explode: false,
   })
@@ -241,7 +241,7 @@ export class ApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'opYear',
+    name: 'year',
     required: true,
     explode: false,
   })

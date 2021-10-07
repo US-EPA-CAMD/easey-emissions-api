@@ -29,7 +29,7 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   beginDate: new Date(),
   endDate: new Date(),
   state: [State.TX],
-  orisCode: [3],
+  facilityId: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [
