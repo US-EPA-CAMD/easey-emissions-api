@@ -26,6 +26,27 @@ export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
   opTime?: number;
 
   @ApiProperty({
+    description: propertyMetadata.grossLoadHourly.description,
+    example: propertyMetadata.grossLoadHourly.example,
+    name: propertyMetadata.grossLoadHourly.fieldLabels.value,
+  })
+  grossLoad?: number;
+
+  @ApiProperty({
+    description: propertyMetadata.steamLoadHourly.description,
+    example: propertyMetadata.steamLoadHourly.example,
+    name: propertyMetadata.steamLoadHourly.fieldLabels.value,
+  })
+  steamLoad?: number;
+
+  @ApiProperty({
+    description: propertyMetadata.so2MassHourly.description,
+    example: propertyMetadata.so2MassHourly.example,
+    name: propertyMetadata.so2MassHourly.fieldLabels.value,
+  })
+  so2Mass?: number;
+
+  @ApiProperty({
     description: propertyMetadata.so2MassMeasureFlg.description,
     example: propertyMetadata.so2MassMeasureFlg.example,
     name: propertyMetadata.so2MassMeasureFlg.fieldLabels.value,
@@ -38,6 +59,13 @@ export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
     name: propertyMetadata.so2RateMeasureFlg.fieldLabels.value,
   })
   so2RateMeasureFlg: string;
+
+  @ApiProperty({
+    description: propertyMetadata.noxMassHourly.description,
+    example: propertyMetadata.noxMassHourly.example,
+    name: propertyMetadata.noxMassHourly.fieldLabels.value,
+  })
+  noxMass?: number;
 
   @ApiProperty({
     description: propertyMetadata.noxMassMeasureFlg.description,
