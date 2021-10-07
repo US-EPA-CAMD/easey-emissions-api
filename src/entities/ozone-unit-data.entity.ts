@@ -14,12 +14,12 @@ export class OzoneUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
-  unitId: number;
+  id: number;
 
   @PrimaryColumn({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @Column({
     name: 'heat_input',
@@ -56,11 +56,15 @@ export class OzoneUnitData extends BaseEntity {
   })
   so2Rate: number;
 
-  @Column()
-  sload: number;
+  @Column({
+    name: 'sload',
+  })
+  steamLoad: number;
 
-  @Column()
-  gload: number;
+  @Column({
+    name: 'gload',
+  })
+  grossLoad: number;
 
   @Column({
     name: 'sum_op_time',
@@ -83,7 +87,7 @@ export class OzoneUnitData extends BaseEntity {
     },
     {
       name: 'op_year',
-      referencedColumnName: 'opYear',
+      referencedColumnName: 'year',
     },
   ])
   unitFact: UnitFact;

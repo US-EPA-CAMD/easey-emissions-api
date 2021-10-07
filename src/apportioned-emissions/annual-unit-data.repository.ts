@@ -16,12 +16,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
 
     let query = this.createQueryBuilder('aud')
       .select([
-        'aud.unitId',
-        'aud.opYear',
+        'aud.id',
+        'aud.year',
         'aud.sumOpTime',
         'aud.countOpTime',
-        'aud.gload',
-        'aud.sload',
+        'aud.grossLoad',
+        'aud.steamLoad',
         'aud.heatInput',
         'aud.so2Mass',
         'aud.so2Rate',
@@ -31,17 +31,17 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
         'aud.noxRate',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('aud.unitFact', 'uf');
 
@@ -49,22 +49,22 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
       query,
       annualApportionedEmissionsParamsDTO,
       [
-        'opYear',
+        'year',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'aud',
       'uf',
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('aud.unitId')
-      .addOrderBy('aud.opYear');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('aud.year');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

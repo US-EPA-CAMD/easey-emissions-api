@@ -16,13 +16,13 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
 
     let query = this.createQueryBuilder('qud')
       .select([
-        'qud.unitId',
-        'qud.opYear',
-        'qud.opQuarter',
+        'qud.id',
+        'qud.year',
+        'qud.quarter',
         'qud.sumOpTime',
         'qud.countOpTime',
-        'qud.gload',
-        'qud.sload',
+        'qud.grossLoad',
+        'qud.steamLoad',
         'qud.heatInput',
         'qud.so2Mass',
         'qud.so2Rate',
@@ -32,17 +32,17 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
         'qud.noxRate',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('qud.unitFact', 'uf');
 
@@ -50,24 +50,24 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
       query,
       quarterlyApportionedEmissionsParamsDTO,
       [
-        'opYear',
-        'opQuarter',
+        'year',
+        'quarter',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'qud',
       'uf',
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('qud.unitId')
-      .addOrderBy('qud.opYear')
-      .addOrderBy('qud.opQuarter');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('qud.year')
+      .addOrderBy('qud.quarter');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

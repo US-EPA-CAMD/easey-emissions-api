@@ -16,12 +16,12 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
 
     let query = this.createQueryBuilder('dud')
       .select([
-        'dud.unitId',
-        'dud.opDate',
+        'dud.id',
+        'dud.date',
         'dud.sumOpTime',
         'dud.countOpTime',
-        'dud.gload',
-        'dud.sload',
+        'dud.grossLoad',
+        'dud.steamLoad',
         'dud.heatInput',
         'dud.so2Mass',
         'dud.so2Rate',
@@ -31,17 +31,17 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
         'dud.noxRate',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('dud.unitFact', 'uf');
 
@@ -52,20 +52,20 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
         'beginDate',
         'endDate',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'dud',
       'uf',
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('dud.unitId')
-      .addOrderBy('dud.opDate');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('dud.date');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

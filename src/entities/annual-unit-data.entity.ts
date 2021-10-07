@@ -14,12 +14,12 @@ export class AnnualUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
-  unitId: number;
+  id: number;
 
   @PrimaryColumn({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @Column({
     name: 'count_op_time',
@@ -31,11 +31,15 @@ export class AnnualUnitData extends BaseEntity {
   })
   sumOpTime: number;
 
-  @Column()
-  gload: number;
+  @Column({
+    name: 'gload',
+  })
+  grossLoad: number;
 
-  @Column()
-  sload: number;
+  @Column({
+    name: 'sload',
+  })
+  steamLoad: number;
 
   @Column({
     name: 'heat_input',
@@ -83,7 +87,7 @@ export class AnnualUnitData extends BaseEntity {
     },
     {
       name: 'op_year',
-      referencedColumnName: 'opYear',
+      referencedColumnName: 'year',
     },
   ])
   unitFact: UnitFact;

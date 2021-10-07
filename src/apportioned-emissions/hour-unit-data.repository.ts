@@ -16,12 +16,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
     let query = this.createQueryBuilder('hud')
       .select([
-        'hud.unitId',
-        'hud.opDate',
-        'hud.opHour',
+        'hud.id',
+        'hud.date',
+        'hud.hour',
         'hud.opTime',
-        'hud.gload',
-        'hud.sload',
+        'hud.grossLoad',
+        'hud.steamLoad',
         'hud.heatInput',
         'hud.so2Mass',
         'hud.so2MassMeasureFlg',
@@ -37,17 +37,17 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'hud.noxRateMeasureFlg',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('hud.unitFact', 'uf');
 
@@ -58,22 +58,22 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'beginDate',
         'endDate',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
-        'opHoursOnly',
+        'programCodeInfo',
+        'operatingHoursOnly',
       ],
       'hud',
       'uf',
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('hud.unitId')
-      .addOrderBy('hud.opDate')
-      .addOrderBy('hud.opHour');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('hud.date')
+      .addOrderBy('hud.hour');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

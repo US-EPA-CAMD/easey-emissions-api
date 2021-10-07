@@ -27,14 +27,14 @@ let filters: ApportionedEmissionsParamsDTO = {
   page: undefined,
   perPage: undefined,
   state: [State.TX],
-  orisCode: [3],
+  facilityId: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [
     ControlTechnology.ADDITIVES_TO_ENHANCE,
     ControlTechnology.OTHER,
   ],
-  program: [Program.ARP, Program.RGGI],
+  programCodeInfo: [Program.ARP, Program.RGGI],
 };
 
 describe('DayUnitDataRepository', () => {

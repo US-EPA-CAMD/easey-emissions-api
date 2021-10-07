@@ -1,4 +1,4 @@
-import { emissionsFields } from './emissions-fields';
+import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 const hourly = [];
 const daily = [];
@@ -7,84 +7,84 @@ const quarterly = [];
 const annual = [];
 
 const commonCharacteristics = [
-  { ...emissionsFields.state },
-  { ...emissionsFields.facilityName },
-  { ...emissionsFields.orisCode },
-  { ...emissionsFields.unitId },
-  { ...emissionsFields.assocStacks },
+  { ...propertyMetadata.state.fieldLabels },
+  { ...propertyMetadata.facilityName.fieldLabels },
+  { ...propertyMetadata.facilityId.fieldLabels },
+  { ...propertyMetadata.unitId.fieldLabels },
+  { ...propertyMetadata.associatedStacks.fieldLabels },
 ];
 
 const commonEmissions = [
-  { ...emissionsFields.sumOpTime },
-  { ...emissionsFields.countOpTime },
-  { ...emissionsFields.gload },
-  { ...emissionsFields.sload },
-  { ...emissionsFields.so2Mass },
-  { ...emissionsFields.so2Rate },
-  { ...emissionsFields.noxMass },
-  { ...emissionsFields.noxRate },
-  { ...emissionsFields.co2Mass },
-  { ...emissionsFields.co2Rate },
-  { ...emissionsFields.heatInput },
+  { ...propertyMetadata.sumOpTime.fieldLabels },
+  { ...propertyMetadata.countOpTime.fieldLabels },
+  { ...propertyMetadata.grossLoad.fieldLabels },
+  { ...propertyMetadata.steamLoad.fieldLabels },
+  { ...propertyMetadata.so2Mass.fieldLabels },
+  { ...propertyMetadata.so2Rate.fieldLabels },
+  { ...propertyMetadata.noxMass.fieldLabels },
+  { ...propertyMetadata.noxRate.fieldLabels },
+  { ...propertyMetadata.co2Mass.fieldLabels },
+  { ...propertyMetadata.co2Rate.fieldLabels },
+  { ...propertyMetadata.heatInput.fieldLabels },
 ];
 
 const unitCharacteristics = [
-  { ...emissionsFields.primaryFuels },
-  { ...emissionsFields.secondaryFuels },
-  { ...emissionsFields.unitTypes },
-  { ...emissionsFields.so2Controls },
-  { ...emissionsFields.pmControls },
-  { ...emissionsFields.noxControls },
-  { ...emissionsFields.hgControls },
-  { ...emissionsFields.programs },
+  { ...propertyMetadata.primaryFuelInfo.fieldLabels },
+  { ...propertyMetadata.secondaryFuelInfo.fieldLabels },
+  { ...propertyMetadata.unitType.fieldLabels },
+  { ...propertyMetadata.so2ControlInfo.fieldLabels },
+  { ...propertyMetadata.pmControlInfo.fieldLabels },
+  { ...propertyMetadata.noxControlInfo.fieldLabels },
+  { ...propertyMetadata.hgControlInfo.fieldLabels },
+  { ...propertyMetadata.programCodeInfo.fieldLabels },
 ];
 
 hourly.push(
   ...commonCharacteristics,
-  { ...emissionsFields.opDate },
-  { ...emissionsFields.opHour },
-  { ...emissionsFields.opTime },
-  { ...emissionsFields.gloadHrly },
-  { ...emissionsFields.sloadHrly },
-  { ...emissionsFields.so2MassHrly },
-  { ...emissionsFields.so2MassMeasureFlg },
-  { ...emissionsFields.so2Rate },
-  { ...emissionsFields.so2RateMeasureFlg },
-  { ...emissionsFields.noxMassHrly },
-  { ...emissionsFields.noxMassMeasureFlg },
-  { ...emissionsFields.noxRate },
-  { ...emissionsFields.noxRateMeasureFlg },
-  { ...emissionsFields.co2Mass },
-  { ...emissionsFields.co2MassMeasureFlg },
-  { ...emissionsFields.co2Rate },
-  { ...emissionsFields.co2RateMeasureFlg },
-  { ...emissionsFields.heatInput },
+  { ...propertyMetadata.date.fieldLabels },
+  { ...propertyMetadata.hour.fieldLabels },
+  { ...propertyMetadata.opTime.fieldLabels },
+  { ...propertyMetadata.grossLoadHourly.fieldLabels },
+  { ...propertyMetadata.steamLoadHourly.fieldLabels },
+  { ...propertyMetadata.so2MassHourly.fieldLabels },
+  { ...propertyMetadata.so2MassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.so2Rate.fieldLabels },
+  { ...propertyMetadata.so2RateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.noxMassHourly.fieldLabels },
+  { ...propertyMetadata.noxMassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.noxRate.fieldLabels },
+  { ...propertyMetadata.noxRateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.co2Mass.fieldLabels },
+  { ...propertyMetadata.co2MassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.co2Rate.fieldLabels },
+  { ...propertyMetadata.co2RateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.heatInput.fieldLabels },
   ...unitCharacteristics,
 );
 
 daily.push(
   ...commonCharacteristics,
-  { ...emissionsFields.opDate },
+  { ...propertyMetadata.date.fieldLabels },
   ...commonEmissions,
   ...unitCharacteristics,
 );
 monthly.push(
   ...commonCharacteristics,
-  { ...emissionsFields.opYear },
-  { ...emissionsFields.opMonth },
+  { ...propertyMetadata.year.fieldLabels },
+  { ...propertyMetadata.month.fieldLabels },
   ...commonEmissions,
   ...unitCharacteristics,
 );
 quarterly.push(
   ...commonCharacteristics,
-  { ...emissionsFields.opYear },
-  { ...emissionsFields.opQuarter },
+  { ...propertyMetadata.year.fieldLabels },
+  { ...propertyMetadata.quarter.fieldLabels },
   ...commonEmissions,
   ...unitCharacteristics,
 );
 annual.push(
   ...commonCharacteristics,
-  { ...emissionsFields.opYear },
+  { ...propertyMetadata.year.fieldLabels },
   ...commonEmissions,
   ...unitCharacteristics,
 );
