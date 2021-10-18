@@ -38,33 +38,32 @@ async function bootstrap() {
     const originHeader = req.header('Origin');
     const refererHeader = req.header('Referer');
 
-    const localhost = ['','','']
+    const localhost = ['https://localhost','127.0.0.1','[::1]']
 
-    if (refererHeader === null || refererHeader === undefined || localhost.includes(refererHeader))
-    {
+    if (refererHeader === null || refererHeader === undefined || localhost.includes(refererHeader)) {
       corsOptions = {
         origin: '*',
         exposedHeaders: '*',
         methods: '*',
       };      
+    } else {
+      const manager = getManager();
+      const corsResults = await manager.find(Cors);
+      const allowedOrigins = corsResults.filter(i => i.key === 'origin' && (i.api === null || i.api.includes(appName)));
+      const allowedHeaders = corsResults.filter(i => i.key === 'header' && (i.api === null || i.api.includes(appName)));
+      const allowedMethods = corsResults.filter(i => i.key === 'method' && (i.api === null || i.api.includes(appName)));
+
+      corsOptions = {
+        origin: allowedOrigins.map(i => i.value).includes(originHeader) ? originHeader : [],
+        exposedHeaders: allowedHeaders.length > 0 ? allowedHeaders.map(i => i.value) : [],
+        methods: allowedMethods.length > 0 ? allowedMethods.map(i => i.value) : '*',
+      };
+
+      console.log(`hostHeader: ${hostHeader}`);
+      console.log(`originHeader: ${originHeader}`);
+      console.log(`refererHeader: ${refererHeader}`);
+      console.log(corsOptions);
     }
-
-    const manager = getManager();
-    const corsResults = await manager.find(Cors);
-    const allowedOrigins = corsResults.filter(i => i.key === 'origin' && (i.api === appName || i.api === null));
-    const allowedHeaders = corsResults.filter(i => i.key === 'header' && (i.api === appName || i.api === null));
-    const allowedMethods = corsResults.filter(i => i.key === 'method' && (i.api === appName || i.api === null));
-
-    corsOptions = {
-      origin: allowedOrigins.map(i => i.value).includes(originHeader) ? originHeader : [],
-      exposedHeaders: allowedHeaders.length > 0 ? allowedHeaders.map(i => i.value) : [],
-      methods: allowedMethods.length > 0 ? allowedMethods.map(i => i.value) : '*',
-    };
-
-    console.log(`hostHeader: ${hostHeader}`);
-    console.log(`originHeader: ${originHeader}`);
-    console.log(`refererHeader: ${refererHeader}`);
-    console.log(corsOptions);
 
     callback(null, corsOptions)
   });
