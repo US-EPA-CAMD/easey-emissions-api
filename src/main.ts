@@ -34,7 +34,7 @@ async function bootstrap() {
   app.enableCors(async (req, callback) => {
     let corsOptions;
     const hostHeader = req.header('Host');
-    const originHeader = req.header('Origin');
+    let  originHeader = req.header('Origin');
     const refererHeader = req.header('Referer');
 
     if (originHeader != null && originHeader != undefined) {
