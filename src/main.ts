@@ -37,9 +37,9 @@ async function bootstrap() {
     let originHeader = req.header('Origin');
     const refererHeader = req.header('Referer');
 
-    if (originHeader != null && originHeader != undefined) {
-      originHeader = originHeader.replace(/https?:\/\/(easey|ecmps|campd)-(dev|tst|stg)\./, '');
-    }
+    // if (originHeader != null && originHeader != undefined) {
+    //   originHeader = originHeader.replace(/https?:\/\/(easey|ecmps|campd)-(dev|tst|stg)\./, '');
+    // }
 
     if (
         refererHeader === null || 
