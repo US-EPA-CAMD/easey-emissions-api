@@ -1,3 +1,4 @@
+import { getManager } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
@@ -9,6 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  const appName = 'emission-api';
   const appTitle = configService.get<string>('app.title');
   const appPath = configService.get<string>('app.path');
   const appEnv = configService.get<string>('app.env');
@@ -28,16 +30,57 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix(appPath);
-  app.enableCors({
-    origin: '*',
-    exposedHeaders: '*',
-    methods: '*'
+
+  app.enableCors(async (req, callback) => {
+    let corsOptions;
+    const hostHeader = req.header('Host');
+    const originHeader = req.header('Origin');
+    const refererHeader = req.header('Referer');
+
+    const localhost = ['https://localhost','127.0.0.1','[::1]']
+
+    if (refererHeader === null || refererHeader === undefined || localhost.includes(refererHeader)) {
+      corsOptions = {
+        origin: '*',
+        exposedHeaders: '*',
+        methods: '*',
+      };      
+    } else {
+      const manager = getManager();
+      const corsResults = await manager.query(`
+        SELECT key, value
+        FROM camdaux.cors
+        LEFT JOIN camdaux.cors_to_api
+          USING(cors_id)
+        LEFT JOIN camdaux.api
+          USING(api_id)
+        WHERE api_id IS NULL OR name = '${appName}'
+        ORDER BY key, value;
+        `);
+      const allowedOrigins = corsResults.filter(i => i.key === 'origin');
+      const allowedHeaders = corsResults.filter(i => i.key === 'header');
+      const allowedMethods = corsResults.filter(i => i.key === 'method');
+
+      corsOptions = {
+        origin: allowedOrigins.map(i => i.value).includes(originHeader) ? originHeader : [],
+        exposedHeaders: allowedHeaders.length > 0 ? allowedHeaders.map(i => i.value) : [],
+        methods: allowedMethods.length > 0 ? allowedMethods.map(i => i.value) : '*',
+      };
+
+      console.log(`hostHeader: ${hostHeader}`);
+      console.log(`originHeader: ${originHeader}`);
+      console.log(`refererHeader: ${refererHeader}`);
+      console.log(corsOptions);
+    }
+
+    callback(null, corsOptions)
   });
 
   const swaggerDocOptions = new DocumentBuilder()
     .setTitle(`${appTitle} OpenAPI Specification`)
     .setDescription(appDesc)
     .setVersion(`${appVersion} published: ${appPublished}`)
+    //.addServer('http://[::1]:8080')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerDocOptions);

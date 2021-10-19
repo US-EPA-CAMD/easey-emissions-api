@@ -17,7 +17,7 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
       isGlobal: true,
       load: [
         dbConfig,
-        appConfig
+        appConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
