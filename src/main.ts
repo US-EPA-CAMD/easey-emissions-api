@@ -34,11 +34,11 @@ async function bootstrap() {
   app.enableCors(async (req, callback) => {
     let corsOptions;
     const hostHeader = req.header('Host');
-    let  originHeader = req.header('Origin');
+    let originHeader = req.header('Origin');
     const refererHeader = req.header('Referer');
 
     if (originHeader != null && originHeader != undefined) {
-      originHeader = originHeader.replace(/https?:\/\/easey|ecmps|campd-dev|tst|stg\./, '');
+      originHeader = originHeader.replace(/https?:\/\/(easey|ecmps|campd)-(dev|tst|stg)\./, '');
     }
 
     if (
