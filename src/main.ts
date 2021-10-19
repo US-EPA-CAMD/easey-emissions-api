@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { Cors } from './entities/cors.entity';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -48,10 +47,19 @@ async function bootstrap() {
       };      
     } else {
       const manager = getManager();
-      const corsResults = await manager.find(Cors);
-      const allowedOrigins = corsResults.filter(i => i.key === 'origin' && (i.api === null || i.api.includes(appName)));
-      const allowedHeaders = corsResults.filter(i => i.key === 'header' && (i.api === null || i.api.includes(appName)));
-      const allowedMethods = corsResults.filter(i => i.key === 'method' && (i.api === null || i.api.includes(appName)));
+      const corsResults = await manager.query(`
+        SELECT key, value
+        FROM camdaux.cors
+        LEFT JOIN camdaux.cors_to_api
+          USING(cors_id)
+        LEFT JOIN camdaux.api
+          USING(api_id)
+        WHERE api_id IS NULL OR name = '${appName}'
+        ORDER BY key, value;
+        `);
+      const allowedOrigins = corsResults.filter(i => i.key === 'origin');
+      const allowedHeaders = corsResults.filter(i => i.key === 'header');
+      const allowedMethods = corsResults.filter(i => i.key === 'method');
 
       corsOptions = {
         origin: allowedOrigins.map(i => i.value).includes(originHeader) ? originHeader : [],
