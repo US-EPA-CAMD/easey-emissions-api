@@ -11,6 +11,7 @@ if (host === 'localhost') {
 }
 
 export default registerAs('app', () => ({
+  name: 'emissions-api',
   title: process.env.EASEY_EMISSIONS_API_TITLE || 'Emissions Management',
   path,
   host,
