@@ -4,12 +4,24 @@ import { propertyMetadata } from '@us-epa-camd/easey-constants';
 import { ApportionedEmissionsDTO } from './apportioned-emissions.dto';
 
 export class DailyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
-  @ApiProperty(propertyMetadata.date)
-  opDate: string;
+  @ApiProperty({
+    description: propertyMetadata.date.description,
+    example: propertyMetadata.date.example,
+    name: propertyMetadata.date.fieldLabels.value,
+  })
+  date: string;
 
-  @ApiProperty(propertyMetadata.sumOpTime)  
-  sumOpTime: number;
+  @ApiProperty({
+    description: propertyMetadata.sumOpTime.description,
+    example: propertyMetadata.sumOpTime.example,
+    name: propertyMetadata.sumOpTime.fieldLabels.value,
+  })
+  sumOpTime?: number;
 
-  @ApiProperty(propertyMetadata.countOpTime)  
-  countOpTime: number;
+  @ApiProperty({
+    description: propertyMetadata.countOpTime.description,
+    example: propertyMetadata.countOpTime.example,
+    name: propertyMetadata.countOpTime.fieldLabels.value,
+  })
+  countOpTime?: number;
 }

@@ -14,17 +14,17 @@ export class QuarterUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
   })
-  unitId: number;
+  id: number;
 
   @PrimaryColumn({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @PrimaryColumn({
     name: 'op_quarter',
   })
-  opQuarter: number;
+  quarter: number;
 
   @Column({
     name: 'count_op_time',
@@ -36,11 +36,15 @@ export class QuarterUnitData extends BaseEntity {
   })
   sumOpTime: number;
 
-  @Column()
-  gload: number;
+  @Column({
+    name: 'gload',
+  })
+  grossLoad: number;
 
-  @Column()
-  sload: number;
+  @Column({
+    name: 'sload',
+  })
+  steamLoad: number;
 
   @Column({
     name: 'heat_input',
@@ -88,7 +92,7 @@ export class QuarterUnitData extends BaseEntity {
     },
     {
       name: 'op_year',
-      referencedColumnName: 'opYear',
+      referencedColumnName: 'year',
     },
   ])
   unitFact: UnitFact;

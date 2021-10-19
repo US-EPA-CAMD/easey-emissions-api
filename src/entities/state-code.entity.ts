@@ -5,7 +5,7 @@ export class StateCode extends BaseEntity {
   @PrimaryColumn({
     name: 'state_cd',
   })
-  stateCd: string;
+  stateCode: string;
 
   @Column({
     name: 'state_name',

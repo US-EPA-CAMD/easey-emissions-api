@@ -16,12 +16,12 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
 
     let query = this.createQueryBuilder('oud')
       .select([
-        'oud.unitId',
-        'oud.opYear',
+        'oud.id',
+        'oud.year',
         'oud.sumOpTime',
         'oud.countOpTime',
-        'oud.gload',
-        'oud.sload',
+        'oud.grossLoad',
+        'oud.steamLoad',
         'oud.heatInput',
         'oud.so2Mass',
         'oud.so2Rate',
@@ -31,17 +31,17 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
         'oud.noxRate',
         'uf.state',
         'uf.facilityName',
-        'uf.orisCode',
-        'uf.unitid',
+        'uf.facilityId',
+        'uf.unitId',
         'uf.primaryFuelInfo',
         'uf.secondaryFuelInfo',
-        'uf.unitTypeInfo',
+        'uf.unitType',
         'uf.so2ControlInfo',
-        'uf.partControlInfo',
+        'uf.pmControlInfo',
         'uf.noxControlInfo',
         'uf.hgControlInfo',
-        'uf.prgCodeInfo',
-        'uf.assocStacks',
+        'uf.programCodeInfo',
+        'uf.associatedStacks',
       ])
       .innerJoin('oud.unitFact', 'uf');
 
@@ -49,22 +49,22 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
       query,
       ozoneApportionedEmissionsParamsDTO,
       [
-        'opYear',
+        'year',
         'state',
-        'orisCode',
+        'facilityId',
         'unitType',
         'controlTechnologies',
         'unitFuelType',
-        'program',
+        'programCodeInfo',
       ],
       'oud',
       'uf',
     );
 
     query
-      .orderBy('uf.orisCode')
-      .addOrderBy('oud.unitId')
-      .addOrderBy('oud.opYear');
+      .orderBy('uf.facilityId')
+      .addOrderBy('uf.unitId')
+      .addOrderBy('oud.year');
 
     if (page && perPage) {
       const totalCount = await query.getCount();

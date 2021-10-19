@@ -17,7 +17,7 @@ export class UnitFact extends BaseEntity {
   @PrimaryColumn({
     name: 'op_year',
   })
-  opYear: number;
+  year: number;
 
   @Column({
     name: 'facility_name',
@@ -27,12 +27,16 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'orispl_code',
   })
-  orisCode: number;
+  facilityId: number;
 
-  @Column()
-  unitid: string;
+  @Column({
+    name: 'unitid',
+  })
+  unitId: string;
 
-  @Column()
+  @Column({
+    name: 'state',
+  })
   state: string;
 
   @Column({
@@ -48,7 +52,7 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'unit_type_info',
   })
-  unitTypeInfo: string;
+  unitType: string;
 
   @Column({
     name: 'so2_control_info',
@@ -63,7 +67,7 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'part_control_info',
   })
-  partControlInfo: string;
+  pmControlInfo: string;
 
   @Column({
     name: 'hg_control_info',
@@ -73,12 +77,12 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'prg_code_info',
   })
-  prgCodeInfo: string;
+  programCodeInfo: string;
 
   @Column({
     name: 'assoc_stacks',
   })
-  assocStacks: string;
+  associatedStacks: string;
 
   @OneToMany(
     () => HourUnitData,

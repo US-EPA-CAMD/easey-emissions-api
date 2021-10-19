@@ -29,15 +29,15 @@ let filters: HourlyApportionedEmissionsParamsDTO = {
   beginDate: new Date(),
   endDate: new Date(),
   state: [State.TX],
-  orisCode: [3],
+  facilityId: [3],
   unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
   unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
   controlTechnologies: [
     ControlTechnology.ADDITIVES_TO_ENHANCE,
     ControlTechnology.OTHER,
   ],
-  program: [Program.ARP, Program.RGGI],
-  opHoursOnly: true,
+  programCodeInfo: [Program.ARP, Program.RGGI],
+  operatingHoursOnly: true,
 };
 
 describe('HourUnitDataRepository', () => {
