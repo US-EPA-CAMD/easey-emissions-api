@@ -1,10 +1,7 @@
-import { Request } from 'express';
-import { getManager } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { CorsOptionsCallback } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { configureCorsOptions } from '@us-epa-camd/easey-common/utilities'
 
 import { AppModule } from './app.module';
