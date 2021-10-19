@@ -35,20 +35,6 @@ async function bootstrap() {
     let corsOptions;
     const originHeader = req.header('Origin');
 
-    // if (
-    //     refererHeader === null || 
-    //     refererHeader === undefined || 
-    //     refererHeader.includes('localhost') || 
-    //     refererHeader.includes('127.0.0.1') || 
-    //     refererHeader.includes('[::1]')
-    //   ) {
-    //   corsOptions = {
-    //     origin: '*',
-    //     exposedHeaders: '*',
-    //     methods: '*',
-    //   };      
-    // } else {
-
     if (originHeader !== null && originHeader !== undefined) {
       const manager = getManager();
       const corsResults = await manager.query(`
@@ -84,7 +70,7 @@ async function bootstrap() {
         methods: []
       };
     }
-
+  
     console.log(`originHeader: ${originHeader}`);
     console.log(corsOptions);
 
