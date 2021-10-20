@@ -8,6 +8,8 @@ import dbConfig from './config/db.config';
 import appConfig from './config/app.config';
 import { TypeOrmConfigService } from './config/typeorm.config';
 
+import { LoggerModule } from '@us-epa-camd/easey-common/logger/Logger.module';
+import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options/cors-options.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 
 @Module({
@@ -23,6 +25,8 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    LoggerModule,
+    CorsOptionsModule,
     ApportionedEmissionsModule,
   ],
 })

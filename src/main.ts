@@ -2,13 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { configureCorsOptions } from '@us-epa-camd/easey-common/utilities'
+import { CorsOptionsService } from '@us-epa-camd/easey-common/cors-options/cors-options.service'
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const configService = app.get(ConfigService);
+  const corsOptionsService = app.get(CorsOptionsService);
 
   const appName = configService.get<string>('app.name');
   const appTitle = configService.get<string>('app.title');
@@ -32,7 +34,7 @@ async function bootstrap() {
   app.setGlobalPrefix(appPath);
 
   app.enableCors(async (req, callback) => {
-    await configureCorsOptions(req, appName, callback);
+    await corsOptionsService.configure(req, appName, callback);
   });
 
   const swaggerDocOptions = new DocumentBuilder()
