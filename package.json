@@ -22,7 +22,7 @@
     "@nestjs/platform-express": "^7.6.18",
     "@nestjs/swagger": "^4.8.1",
     "@nestjs/typeorm": "^7.1.5",
-    "@us-epa-camd/easey-common": "^1.4.0",
+    "@us-epa-camd/easey-common": "^1.4.1-beta.1",
     "@us-epa-camd/easey-constants": "0.0.8",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
