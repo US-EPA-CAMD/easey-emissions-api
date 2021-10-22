@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-
-import { BaseMap } from './base.map';
-import { propertyMetadata } from '@us-epa-camd/easey-constants/lib';
+import { BaseMap } from '@us-epa-camd/easey-common/maps';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 @Injectable()
 export class ApportionedEmissionsMap extends BaseMap<any, any> {

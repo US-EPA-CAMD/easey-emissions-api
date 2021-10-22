@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { ApportionedEmissionsMap } from './apportioned-emissions.map';
 import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
 import { AnnualUnitData } from '../entities/annual-unit-data.entity';
-import { propertyMetadata } from '@us-epa-camd/easey-constants/lib';
 
 @Injectable()
 export class AnnualApportionedEmissionsMap extends ApportionedEmissionsMap {

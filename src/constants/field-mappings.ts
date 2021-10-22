@@ -1,4 +1,4 @@
-import { propertyMetadata } from '@us-epa-camd/easey-constants';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 const hourly = [];
 const daily = [];

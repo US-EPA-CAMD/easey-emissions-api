@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
-import { propertyMetadata } from '@us-epa-camd/easey-constants';
 import { ApportionedEmissionsDTO } from './apportioned-emissions.dto';
 
 export class DailyApportionedEmissionsDTO extends ApportionedEmissionsDTO {

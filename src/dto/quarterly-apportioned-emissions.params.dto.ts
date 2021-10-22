@@ -1,11 +1,11 @@
 import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { OpYear } from '../utils/validator.const';
 import { ErrorMessages } from '../utils/error-messages';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
-import { propertyMetadata } from '@us-epa-camd/easey-constants';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 
@@ -16,7 +16,7 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
   })
   @OpYear()
   @IsDefined({ message: ErrorMessages.RequiredProperty() })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 
   @ApiProperty({
@@ -39,6 +39,6 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
       `a quarter between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
     ),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   quarter: number[];
 }

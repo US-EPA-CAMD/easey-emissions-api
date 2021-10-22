@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { propertyMetadata } from '@us-epa-camd/easey-constants';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { BeginDate, EndDate } from '../utils/validator.const';

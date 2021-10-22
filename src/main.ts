@@ -1,8 +1,9 @@
+import * as helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { CorsOptionsService } from '@us-epa-camd/easey-common/cors-options/cors-options.service'
+import { CorsOptionsService } from '@us-epa-camd/easey-common/cors-options';
 
 import { AppModule } from './app.module';
 
@@ -22,7 +23,7 @@ async function bootstrap() {
   let appDesc = null;
   let swaggerCustomOptions = null;
 
-  if (appEnv !== 'production') {
+  if (appEnv != 'production') {
     appDesc = `EPA ${appEnv} Environment: The content on this page is not production data and used for <strong>development</strong> and/or <strong>testing</strong> purposes only.`;
     swaggerCustomOptions = {
       customCss:
@@ -30,9 +31,9 @@ async function bootstrap() {
     };
   }
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.use(helmet());
   app.setGlobalPrefix(appPath);
-
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors(async (req, callback) => {
     await corsOptionsService.configure(req, appName, callback);
   });

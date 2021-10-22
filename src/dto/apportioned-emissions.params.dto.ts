@@ -1,6 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { ErrorMessages } from '../utils/error-messages';
 import { PaginationDTO } from './pagination.dto';
@@ -15,7 +16,6 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsOrisCode } from '../pipes/is-oris-code.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
-import { propertyMetadata } from '@us-epa-camd/easey-constants';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @ApiProperty({
@@ -27,7 +27,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'state'),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   state?: State[];
 
   @ApiProperty({
@@ -39,7 +39,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'facilityId'),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   facilityId?: number[];
 
   @ApiProperty({
@@ -51,7 +51,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   unitType?: UnitType[];
 
   @ApiProperty({
@@ -63,7 +63,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'unitFuelType'),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   unitFuelType?: UnitFuelType[];
 
   @ApiProperty({
@@ -75,7 +75,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
     each: true,
     message: ErrorMessages.UnitCharacteristics(true, 'controlTechnologies'),
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   controlTechnologies?: ControlTechnology[];
 
   @ApiProperty({
@@ -89,7 +89,7 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
       ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
       '?emissionsUIFilter=true',
   })
-  @Transform((value: string) => value.split('|').map(item => item.trim()))
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   programCodeInfo?: Program[];
 
   @ApiProperty({
