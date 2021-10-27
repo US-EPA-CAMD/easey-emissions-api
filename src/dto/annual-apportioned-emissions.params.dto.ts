@@ -1,13 +1,11 @@
 import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInDateRange, IsYearFormat } from '@us-epa-camd/easey-common/pipes';
 
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
-import { IsInDateRange } from '../pipes/is-in-date-range.pipe';
-import { ErrorMessages } from '../utils/error-messages';
-import { IsYearFormat } from '../pipes/is-year-format.pipe';
 import { ApiProperty } from '@nestjs/swagger';
-
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @ApiProperty({

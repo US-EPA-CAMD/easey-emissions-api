@@ -1,4 +1,4 @@
-import { Regex } from './regex';
+import { Regex } from '@us-epa-camd/easey-common/utilities';
 
 export class QueryBuilderHelper {
   public static createEmissionsQuery(
@@ -118,7 +118,9 @@ export class QueryBuilderHelper {
       let string = '(';
 
       for (let i = 0; i < dto.programCodeInfo.length; i++) {
-        const regex = Regex.commaDelimited(dto.programCodeInfo[i].toUpperCase());
+        const regex = Regex.commaDelimited(
+          dto.programCodeInfo[i].toUpperCase(),
+        );
 
         if (i === 0) {
           string += `(UPPER(${unitAlias}.programCodeInfo) ~* ${regex}) `;

@@ -17,10 +17,7 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
     RouterModule.forRoutes(routes),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [
-        dbConfig,
-        appConfig,
-      ],
+      load: [dbConfig, appConfig],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,

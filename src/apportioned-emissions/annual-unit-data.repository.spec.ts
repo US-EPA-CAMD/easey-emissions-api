@@ -1,12 +1,15 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
 
-import { State } from '../enums/state.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
-import { Program } from '../enums/program.enum';
-import { ResponseHeaders } from '../utils/response.headers';
+import {
+  State,
+  UnitType,
+  UnitFuelType,
+  ControlTechnology,
+  Program,
+} from '@us-epa-camd/easey-common/enums';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualUnitData } from '../entities/annual-unit-data.entity';

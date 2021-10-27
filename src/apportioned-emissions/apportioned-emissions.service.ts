@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
@@ -27,6 +27,7 @@ import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emi
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
 import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 
 @Injectable()
 export class ApportionedEmissionsService {
@@ -49,22 +50,30 @@ export class ApportionedEmissionsService {
     private readonly quarterlyMap: QuarterlyApportionedEmissionsMap,
     private readonly annualMap: AnnualApportionedEmissionsMap,
     private readonly ozoneMap: OzoneApportionedEmissionsMap,
+    private Logger: Logger,
   ) {}
 
+  // Error wrapping
   async getHourlyEmissions(
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
-    const query = await this.hourlyRepository.getHourlyEmissions(
-      hourlyApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.hourlyRepository.getHourlyEmissions(
+        hourlyApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.Logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
       JSON.stringify(fieldMappings.emissions.hourly),
     );
 
+    this.Logger.info('Executed query successfully');
     return this.hourlyMap.many(query);
   }
 

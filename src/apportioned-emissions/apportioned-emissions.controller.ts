@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { Get, Controller, Query, Req, UseInterceptors } from '@nestjs/common';
-import { Json2CsvInterceptor } from '../interceptors/json2csv.interceptor';
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import {
   ApiTags,
   ApiOkResponse,
@@ -13,6 +13,7 @@ import {
   NotFoundResponse,
   ApiQueryMultiSelect,
 } from '../utils/swagger-decorator.const';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
@@ -34,6 +35,7 @@ import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions
 export class ApportionedEmissionsController {
   constructor(
     private readonly apportionedEmissionsService: ApportionedEmissionsService,
+    private Logger: Logger,
   ) {}
 
   @Get('/hourly')
@@ -61,6 +63,7 @@ export class ApportionedEmissionsController {
     hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
     @Req() req: Request,
   ): Promise<HourlyApportionedEmissionsDTO[]> {
+    this.Logger.info('Getting hourly emissions');
     return this.apportionedEmissionsService.getHourlyEmissions(
       hourlyApportionedEmissionsParamsDTO,
       req,

@@ -2,16 +2,16 @@ import {
   registerDecorator,
   ValidationOptions,
   ValidationArguments,
-} from 'class-validator';
+} from "class-validator";
 
-import { getManager } from 'typeorm';
+import { getManager } from "typeorm";
 
-import { StateCode } from '../entities/state-code.entity';
+import { StateCode } from "../entities/state-code.entity";
 
 export function IsStateCode(validationOptions?: ValidationOptions) {
-  return function(object: Object, propertyName: string) {
+  return function (object: Object, propertyName: string) {
     registerDecorator({
-      name: 'isStateCode',
+      name: "isStateCode",
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
