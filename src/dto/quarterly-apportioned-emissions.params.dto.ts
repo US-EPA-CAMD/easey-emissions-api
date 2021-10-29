@@ -2,9 +2,9 @@ import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 import { OpYear } from '../utils/validator.const';
-import { ErrorMessages } from '../utils/error-messages';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';

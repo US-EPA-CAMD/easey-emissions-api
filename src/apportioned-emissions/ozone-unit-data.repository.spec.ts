@@ -1,11 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
 
-import { State } from '../enums/state.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
-import { Program } from '../enums/program.enum';
+import {
+  State,
+  UnitType,
+  UnitFuelType,
+  ControlTechnology,
+  Program,
+} from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '../utils/response.headers';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';

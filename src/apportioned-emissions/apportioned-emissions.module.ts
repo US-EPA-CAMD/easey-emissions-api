@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
@@ -26,6 +28,7 @@ import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emission
       AnnualUnitDataRepository,
       OzoneUnitDataRepository,
     ]),
+    HttpModule,
   ],
   controllers: [ApportionedEmissionsController],
   providers: [
@@ -36,6 +39,7 @@ import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emission
     QuarterlyApportionedEmissionsMap,
     AnnualApportionedEmissionsMap,
     OzoneApportionedEmissionsMap,
+    ConfigService,
   ],
 })
 export class ApportionedEmissionsModule {}

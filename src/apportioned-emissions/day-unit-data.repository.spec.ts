@@ -1,14 +1,17 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
+import {
+  State,
+  UnitType,
+  UnitFuelType,
+  ControlTechnology,
+  Program,
+} from '@us-epa-camd/easey-common/enums';
 
 import { ApportionedEmissionsParamsDTO } from '../dto/apportioned-emissions.params.dto';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DayUnitData } from '../entities/day-unit-data.entity';
-import { State } from '../enums/state.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { ControlTechnology } from '../enums/control-technology.enum';
-import { Program } from '../enums/program.enum';
+
 import { ResponseHeaders } from '../utils/response.headers';
 
 const mockQueryBuilder = () => ({

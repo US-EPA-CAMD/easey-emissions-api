@@ -2,20 +2,22 @@ import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import {
+  State,
+  UnitType,
+  UnitFuelType,
+  ControlTechnology,
+  Program,
+} from '@us-epa-camd/easey-common/enums';
+import { IsOrisCode } from '@us-epa-camd/easey-common/pipes';
 
-import { ErrorMessages } from '../utils/error-messages';
-import { PaginationDTO } from './pagination.dto';
-import { ControlTechnology } from '../enums/control-technology.enum';
-import { UnitFuelType } from '../enums/unit-fuel-type.enum';
-import { UnitType } from '../enums/unit-type.enum';
-import { State } from '../enums/state.enum';
-import { Program } from '../enums/program.enum';
-import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
-import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
-import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
-import { IsOrisCode } from '../pipes/is-oris-code.pipe';
-import { IsUnitType } from '../pipes/is-unit-type.pipe';
+import { IsEmissionsProgram } from 'src/pipes/is-emissions-program.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
+import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
+import { PaginationDTO } from './pagination.dto';
+import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
+import { IsUnitType } from '../pipes/is-unit-type.pipe';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
   @ApiProperty({
