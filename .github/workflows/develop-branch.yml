@@ -30,11 +30,11 @@ jobs:
         env:
           ENV_VAR_PREFIX: EASEY
       - name: Build
-        run: devops/scripts/build.sh
+        run: devops/scripts/yarn/build.sh
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Unit Tests
-        run: devops/scripts/unit-tests.sh
+        run: devops/scripts/yarn/unit-tests.sh
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
