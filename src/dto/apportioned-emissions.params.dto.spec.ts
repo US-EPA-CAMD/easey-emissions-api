@@ -11,9 +11,9 @@ import {
   IsYearFormat,
 } from '@us-epa-camd/easey-common/pipes';
 
-import { IsEmissionsProgram } from 'src/pipes/is-emissions-program.pipe';
-import { IsStateCode } from 'src/pipes/is-state-code.pipe';
-import { IsControlTechnology } from 'src/pipes/is-control-technology.pipe';
+import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
+import { IsStateCode } from '../pipes/is-state-code.pipe';
+import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';

@@ -12,7 +12,7 @@ import {
 } from '@us-epa-camd/easey-common/enums';
 import { IsOrisCode } from '@us-epa-camd/easey-common/pipes';
 
-import { IsEmissionsProgram } from 'src/pipes/is-emissions-program.pipe';
+import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { PaginationDTO } from './pagination.dto';

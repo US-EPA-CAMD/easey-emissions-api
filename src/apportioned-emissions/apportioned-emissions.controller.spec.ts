@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
@@ -43,6 +44,7 @@ describe('-- Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
+      imports: [LoggerModule],
       controllers: [ApportionedEmissionsController],
       providers: [
         HourlyApportionedEmissionsMap,

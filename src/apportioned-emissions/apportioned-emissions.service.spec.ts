@@ -24,6 +24,7 @@ import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-e
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';
 import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 const mockHourUnitDataRepository = () => ({
   getHourlyEmissions: jest.fn(),
@@ -79,6 +80,7 @@ describe('-- Apportioned Emissions Service --', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
+      imports: [LoggerModule],
       providers: [
         ApportionedEmissionsService,
         {
