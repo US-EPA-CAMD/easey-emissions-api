@@ -18,6 +18,7 @@ import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
+import { MongoClient } from 'typeorm';
 
 describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
