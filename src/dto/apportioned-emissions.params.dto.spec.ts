@@ -3,8 +3,8 @@ import * as typeorm from 'typeorm';
 import { createSandbox, SinonSandbox, createStubInstance } from 'sinon';
 
 import {
-  IsIsoFormat,
   IsInDateRange,
+  IsIsoFormat,
   IsValidDate,
   IsOrisCode,
   IsDateGreaterThanEqualTo,
@@ -18,7 +18,6 @@ import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
-import { MongoClient } from 'typeorm';
 
 describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
@@ -46,20 +45,20 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.state = state;
         this.programCodeInfo = programCodeInfo;
       }
-      @IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false)
+      @IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       beginDate: string;
 
       @IsDateGreaterThanEqualTo('beginDate')
-      @IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false)
+      @IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       endDate: string;
 
-      @IsInDateRange([new Date(1995, 0), new Date()], true, true, true)
+      @IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, true)
       @IsYearFormat()
       year: string;
 

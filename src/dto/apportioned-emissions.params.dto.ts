@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
@@ -20,6 +20,9 @@ import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 
 export class ApportionedEmissionsParamsDTO extends PaginationDTO {
+  @ApiHideProperty()
+  currentDate: Date = this.getCurrentDate;
+
   @ApiProperty({
     enum: State,
     description: propertyMetadata.state.description,
@@ -99,4 +102,8 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
       'Attaches a file with data in the format specified by the Accept header',
   })
   attachFile?: boolean;
+
+  private get getCurrentDate(): Date {
+    return new Date();
+  }
 }

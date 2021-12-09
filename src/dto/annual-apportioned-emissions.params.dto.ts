@@ -16,7 +16,7 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
     each: true,
     message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
   })
-  @IsInDateRange([new Date(1995, 0), new Date()], true, true, true, {
+  @IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, true, {
     each: true,
     message: ErrorMessages.DateRange(
       'year',
