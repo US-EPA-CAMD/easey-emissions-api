@@ -25,21 +25,20 @@ const mockQueryBuilder = () => ({
   take: jest.fn(),
 });
 
-let filters: MonthlyApportionedEmissionsParamsDTO = {
-  page: undefined,
-  perPage: undefined,
-  year: [2019],
-  month: [1, 2],
-  state: [State.TX],
-  facilityId: [3],
-  unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
-  unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
-  controlTechnologies: [
-    ControlTechnology.ADDITIVES_TO_ENHANCE,
-    ControlTechnology.OTHER,
-  ],
-  programCodeInfo: [Program.ARP, Program.RGGI],
-};
+let filters: MonthlyApportionedEmissionsParamsDTO = new MonthlyApportionedEmissionsParamsDTO();
+filters.page = undefined;
+filters.perPage = undefined;
+filters.year = [2019];
+filters.month = [1, 2];
+filters.state = [State.TX];
+filters.facilityId = [3];
+filters.unitType = [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER];
+filters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+filters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+filters.programCodeInfo = [Program.ARP, Program.RGGI];
 
 describe('MonthUnitDataRepository', () => {
   let monthUnitDataRepository;

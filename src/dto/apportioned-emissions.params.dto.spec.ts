@@ -3,7 +3,6 @@ import * as typeorm from 'typeorm';
 import { createSandbox, SinonSandbox, createStubInstance } from 'sinon';
 
 import {
-  IsInDateRange,
   IsIsoFormat,
   IsValidDate,
   IsOrisCode,
@@ -45,20 +44,17 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.state = state;
         this.programCodeInfo = programCodeInfo;
       }
-      @IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       beginDate: string;
 
       @IsDateGreaterThanEqualTo('beginDate')
-      @IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false)
       @IsValidDate()
       @IsIsoFormat()
       @IsDefined()
       endDate: string;
 
-      @IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, true)
       @IsYearFormat()
       year: string;
 

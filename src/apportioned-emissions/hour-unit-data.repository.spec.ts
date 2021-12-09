@@ -12,6 +12,7 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
 import { ResponseHeaders } from '../utils/response.headers';
+import { filter } from 'rxjs';
 
 const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
@@ -25,22 +26,21 @@ const mockQueryBuilder = () => ({
   take: jest.fn(),
 });
 
-let filters: HourlyApportionedEmissionsParamsDTO = {
-  page: undefined,
-  perPage: undefined,
-  beginDate: new Date(),
-  endDate: new Date(),
-  state: [State.TX],
-  facilityId: [3],
-  unitType: [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER],
-  unitFuelType: [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL],
-  controlTechnologies: [
-    ControlTechnology.ADDITIVES_TO_ENHANCE,
-    ControlTechnology.OTHER,
-  ],
-  programCodeInfo: [Program.ARP, Program.RGGI],
-  operatingHoursOnly: true,
-};
+let filters: HourlyApportionedEmissionsParamsDTO = new HourlyApportionedEmissionsParamsDTO();
+filters.page = undefined;
+filters.perPage = undefined;
+filters.beginDate = new Date();
+filters.endDate = new Date();
+filters.state = [State.TX];
+filters.facilityId = [3];
+filters.unitType = [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER];
+filters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+filters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+filters.programCodeInfo = [Program.ARP, Program.RGGI];
+filters.operatingHoursOnly = true;
 
 describe('HourUnitDataRepository', () => {
   let hourUnitDataRepository;
