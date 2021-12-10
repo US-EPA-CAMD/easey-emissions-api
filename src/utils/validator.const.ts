@@ -11,7 +11,7 @@ import {
 
 export function BeginDate() {
   return applyDecorators(
-    IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false, {
+    IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false, {
       message: ErrorMessages.DateRange(
         'beginDate',
         false,
@@ -35,7 +35,7 @@ export function EndDate() {
     IsDateGreaterThanEqualTo('beginDate', {
       message: ErrorMessages.BeginEndDate('beginDate'),
     }),
-    IsInDateRange([new Date('1995-01-01'), new Date()], false, true, false, {
+    IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false, {
       message: ErrorMessages.DateRange(
         'endDate',
         false,
@@ -54,7 +54,7 @@ export function EndDate() {
 
 export function OpYear() {
   return applyDecorators(
-    IsInDateRange([new Date(1995, 0), new Date()], true, true, false, {
+    IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, false, {
       each: true,
       message: ErrorMessages.DateRange(
         'year',
