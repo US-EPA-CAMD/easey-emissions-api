@@ -1,3 +1,5 @@
-environment: staging
-host: easey-stg.app.cloud.gov
+instances: 2
 memory: 2048M
+environment: staging
+host: api-easey-stg.app.cloud.gov
+apiHost: api.epa.gov/easey/staging

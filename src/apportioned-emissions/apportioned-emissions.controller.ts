@@ -7,6 +7,7 @@ import {
   ApiQuery,
   getSchemaPath,
   ApiExtraModels,
+  ApiSecurity
 } from '@nestjs/swagger';
 import {
   BadRequestResponse,
@@ -30,6 +31,7 @@ import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emi
 import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
 
 @Controller()
+@ApiSecurity('APIKey')
 @ApiTags('Apportioned Emissions')
 @UseInterceptors(Json2CsvInterceptor)
 export class ApportionedEmissionsController {

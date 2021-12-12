@@ -1,14 +1,21 @@
 applications:
   - name: ((name))
     memory: ((memory))
+    instances: ((instances))
     buildpacks:
       - nodejs_buildpack
     env:
       OPTIMIZE_MEMORY: true
+      EASEY_API_GATEWAY_HOST: ((apiHost))
       EASEY_EMISSIONS_API_TITLE: ((title))
       EASEY_EMISSIONS_API_HOST: ((host))
+      EASEY_EMISSIONS_API_PORT: ((port))
       EASEY_EMISSIONS_API_PATH: ((path))
       EASEY_EMISSIONS_API_ENV: ((environment))
+      EASEY_EMISSIONS_API_ENABLE_CORS: true
+      EASEY_EMISSIONS_API_ENABLE_API_KEY: true
+      EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN: false
+      EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE: true
     routes:
       - route: ((host))/((path))
     services:

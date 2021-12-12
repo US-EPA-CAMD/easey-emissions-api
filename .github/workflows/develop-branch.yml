@@ -9,6 +9,9 @@ on:
 jobs:
   Build-Test-Deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: Dev
+      url: https://api.epa.gov/easey/dev/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -47,5 +50,7 @@ jobs:
         env:
           CF_USERNAME: ${{ secrets.CF_DEV_DEPLOYMENT_SVC }}
           CF_PASSWORD: ${{ secrets.CF_DEV_DEPLOYMENT_SVC_PWD }}
+      - name: Init Application
+        run: devops/scripts/cf-app-init.sh
       - name: Deploy
         run: devops/scripts/deploy.sh

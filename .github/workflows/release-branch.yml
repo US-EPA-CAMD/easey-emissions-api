@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Test
-      url: https://easey-tst.app.cloud.gov/api/emissions-mgmt/swagger
+      url: https://api.epa.gov/easey/test/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -75,15 +75,16 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_STORAGE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
-      - name: Deployment
-        run: |
-          devops/scripts/deploy.sh
+      - name: Init Application
+        run: devops/scripts/cf-app-init.sh
+      - name: Deploy
+        run: devops/scripts/deploy.sh
   Beta-Deployment:
     needs: Build-Test-Package
     runs-on: ubuntu-latest
     environment:
       name: Beta
-      url: https://easey-beta.app.cloud.gov/api/emissions-mgmt/swagger
+      url: https://api.epa.gov/easey/beta/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -110,15 +111,16 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_STORAGE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
-      - name: Deployment
-        run: |
-          devops/scripts/deploy.sh
+      - name: Init Application
+        run: devops/scripts/cf-app-init.sh
+      - name: Deploy
+        run: devops/scripts/deploy.sh
   Stage-Deployment:
     needs: Test-Deployment
     runs-on: ubuntu-latest
     environment:
       name: Staging
-      url: https://easey-stg.app.cloud.gov/api/emissions-mgmt/swagger
+      url: https://api.epa.gov/easey/staging/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -145,7 +147,8 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_STORAGE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
-      - name: Deployment
-        run: |
-          devops/scripts/deploy.sh
+      - name: Init Application
+        run: devops/scripts/cf-app-init.sh
+      - name: Deploy
+        run: devops/scripts/deploy.sh
 
