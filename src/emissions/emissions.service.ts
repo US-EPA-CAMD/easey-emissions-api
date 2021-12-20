@@ -9,21 +9,25 @@ import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-pro
 export class EmissionService {
   constructor(private map: EmissionSubmissionsProgressMap, private logger: Logger){}
 
-  async getSubmissionProgress(periodDate: string): Promise<EmissionsSubmissionsProgressDTO> {
-      const entityManager = getManager();
-      let submissionPeriod;  
-    
-      try{
+  async executeSubmissionProgressQuery(periodDate: string){
+    const entityManager = getManager();    
+    let submissionPeriod;  
+
+    try{
         submissionPeriod = await entityManager.createQueryBuilder(EmissionSubmissionsProgress, "submissions")
         .where(":date >= submissions.end_date + interval '1' day", { date: periodDate })
         .andWhere(":date <= submissions.end_date + interval '38' day", { date: periodDate })
         .getOne();
-      }
-      catch(error){
-        this.logger.error(InternalServerErrorException, error, true, {date: periodDate})
-      }
+    }
+    catch(error){
+      this.logger.error(InternalServerErrorException, error, true, {date: periodDate})
+    }
+    return submissionPeriod;
+  }
 
-      //Current submission period data does not exist
+  async getSubmissionProgress(periodDate: string): Promise<EmissionsSubmissionsProgressDTO> {
+      const submissionPeriod = await this.executeSubmissionProgressQuery(periodDate);
+      
       if(submissionPeriod === undefined){
         return undefined;
       }
