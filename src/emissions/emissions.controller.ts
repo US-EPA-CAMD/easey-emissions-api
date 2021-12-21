@@ -1,10 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
 import { EmissionService } from './emissions.service';
 
 @Controller('emissions')
 @ApiTags('Emissions')
+@ApiSecurity('APIKey')
 export class EmissionController {
   constructor(private readonly service: EmissionService) {}
 
