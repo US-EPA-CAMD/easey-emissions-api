@@ -16,12 +16,6 @@ Follow these [instructions](https://github.com/US-EPA-CAMD/devops/blob/master/GE
 
 Please refer to the [Emissions Management API Swagger Documentation](https://easey-dev.app.cloud.gov/api/emissions-mgmt/swagger/) for descriptions of the endpoints.
 
-## Built With
-​
-[NestJS](https://nestjs.com/) - server-side Node.js framework
-
-[Cloud.gov](https://cloud.gov/) - Platform as a Service (PaaS)
-​ 
 ​
 
 ## License & Contributing
