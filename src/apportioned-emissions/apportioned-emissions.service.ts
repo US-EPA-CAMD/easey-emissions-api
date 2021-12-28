@@ -50,7 +50,7 @@ export class ApportionedEmissionsService {
     private readonly quarterlyMap: QuarterlyApportionedEmissionsMap,
     private readonly annualMap: AnnualApportionedEmissionsMap,
     private readonly ozoneMap: OzoneApportionedEmissionsMap,
-    private Logger: Logger,
+    private readonly logger: Logger,
   ) {}
 
   // Error wrapping
@@ -65,7 +65,7 @@ export class ApportionedEmissionsService {
         req,
       );
     } catch (e) {
-      this.Logger.error(InternalServerErrorException, e.message);
+      this.logger.error(InternalServerErrorException, e.message);
     }
 
     req.res.setHeader(
@@ -73,7 +73,7 @@ export class ApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.hourly),
     );
 
-    this.Logger.info('Executed query successfully');
+    this.logger.info('Executed query successfully');
     return this.hourlyMap.many(query);
   }
 
@@ -81,10 +81,15 @@ export class ApportionedEmissionsService {
     dailyApportionedEmissionsParamsDTO: DailyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<DailyApportionedEmissionsDTO[]> {
-    const query = await this.dailyRepository.getDailyEmissions(
-      dailyApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.dailyRepository.getDailyEmissions(
+        dailyApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
@@ -98,10 +103,15 @@ export class ApportionedEmissionsService {
     monthlyApportionedEmissionsParamsDTO: MonthlyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<MonthlyApportionedEmissionsDTO[]> {
-    const query = await this.monthlyRepository.getMonthlyEmissions(
-      monthlyApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.monthlyRepository.getMonthlyEmissions(
+        monthlyApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
@@ -115,10 +125,15 @@ export class ApportionedEmissionsService {
     quarterlyApportionedEmissionsParamsDTO: QuarterlyApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<QuarterlyApportionedEmissionsDTO[]> {
-    const query = await this.quarterlyRepository.getQuarterlyEmissions(
-      quarterlyApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.quarterlyRepository.getQuarterlyEmissions(
+        quarterlyApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
@@ -132,10 +147,15 @@ export class ApportionedEmissionsService {
     annualApportionedEmissionsParamsDTO: AnnualApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<AnnualApportionedEmissionsDTO[]> {
-    const query = await this.annualRepository.getAnnualEmissions(
-      annualApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.annualRepository.getAnnualEmissions(
+        annualApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
@@ -149,10 +169,15 @@ export class ApportionedEmissionsService {
     ozoneApportionedEmissionsParamsDTO: OzoneApportionedEmissionsParamsDTO,
     req: Request,
   ): Promise<OzoneApportionedEmissionsDTO[]> {
-    const query = await this.ozoneRepository.getOzoneEmissions(
-      ozoneApportionedEmissionsParamsDTO,
-      req,
-    );
+    let query;
+    try {
+      query = await this.ozoneRepository.getOzoneEmissions(
+        ozoneApportionedEmissionsParamsDTO,
+        req,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
 
     req.res.setHeader(
       'X-Field-Mappings',
