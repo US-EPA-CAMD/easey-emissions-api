@@ -25,15 +25,15 @@ export class ApportionedEmissionsParamsDTO extends PaginationDTO {
 
   @ApiProperty({
     enum: State,
-    description: propertyMetadata.state.description,
+    description: propertyMetadata.stateCode.description,
   })
   @IsOptional()
   @IsStateCode({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'state'),
+    message: ErrorMessages.UnitCharacteristics(true, 'stateCode'),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
-  state?: State[];
+  stateCode?: State[];
 
   @ApiProperty({
     isArray: true,

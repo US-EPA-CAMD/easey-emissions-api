@@ -37,7 +37,7 @@ export class UnitFact extends BaseEntity {
   @Column({
     name: 'state',
   })
-  state: string;
+  stateCode: string;
 
   @Column({
     name: 'primary_fuel_info',

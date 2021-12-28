@@ -7,7 +7,7 @@ const quarterly = [];
 const annual = [];
 
 const commonCharacteristics = [
-  { ...propertyMetadata.state.fieldLabels },
+  { ...propertyMetadata.stateCode.fieldLabels },
   { ...propertyMetadata.facilityName.fieldLabels },
   { ...propertyMetadata.facilityId.fieldLabels },
   { ...propertyMetadata.unitId.fieldLabels },
