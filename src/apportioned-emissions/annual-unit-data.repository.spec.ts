@@ -8,11 +8,11 @@ import {
   ControlTechnology,
   Program,
 } from '@us-epa-camd/easey-common/enums';
-import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualUnitData } from '../entities/annual-unit-data.entity';
+import { ResponseHeaders } from '../utils/response.headers';
 
 const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
