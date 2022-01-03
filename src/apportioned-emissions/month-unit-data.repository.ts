@@ -30,7 +30,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
         'mud.co2Rate',
         'mud.noxMass',
         'mud.noxRate',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -52,7 +52,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
       [
         'year',
         'month',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',

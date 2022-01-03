@@ -35,7 +35,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'hud.noxMassMeasureFlg',
         'hud.noxRate',
         'hud.noxRateMeasureFlg',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -57,7 +57,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       [
         'beginDate',
         'endDate',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',

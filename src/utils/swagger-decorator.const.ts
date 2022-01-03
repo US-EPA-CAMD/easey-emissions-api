@@ -17,7 +17,7 @@ export const NotFoundResponse = () =>
 
 export function ApiQueryMultiSelect() {
   return applyDecorators(
-    ApiQuery({style: 'pipeDelimited', name: 'state', required: false, explode: false,}),
+    ApiQuery({style: 'pipeDelimited', name: 'stateCode', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'facilityId', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'unitType', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false,}),

@@ -30,7 +30,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         control: string,
         unitType: string,
         unitFuel: string,
-        state: string,
+        stateCode: string,
         programCodeInfo: string,
       ) {
         this.beginDate = beginDate;
@@ -41,7 +41,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
         this.control = control;
         this.unitType = unitType;
         this.unitFuel = unitFuel;
-        this.state = state;
+        this.stateCode = stateCode;
         this.programCodeInfo = programCodeInfo;
       }
       @IsValidDate()
@@ -79,7 +79,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       unitFuel: string;
 
       @IsStateCode()
-      state: string;
+      stateCode: string;
 
       @IsEmissionsProgram()
       programCodeInfo: string;

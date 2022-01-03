@@ -29,7 +29,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
         'oud.co2Rate',
         'oud.noxMass',
         'oud.noxRate',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -50,7 +50,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
       ozoneApportionedEmissionsParamsDTO,
       [
         'year',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',

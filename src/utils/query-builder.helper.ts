@@ -38,9 +38,9 @@ export class QueryBuilderHelper {
       });
     }
 
-    if (param.includes('state') && dto.state) {
-      query.andWhere(`${unitAlias}.state IN (:...states)`, {
-        states: dto.state.map(states => {
+    if (param.includes('stateCode') && dto.stateCode) {
+      query.andWhere(`${unitAlias}.stateCode IN (:...states)`, {
+        states: dto.stateCode.map(states => {
           return states.toUpperCase();
         }),
       });

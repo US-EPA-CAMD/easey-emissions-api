@@ -27,17 +27,17 @@ const mockQueryBuilder = () => ({
 });
 
 let filters: ApportionedEmissionsParamsDTO = new ApportionedEmissionsParamsDTO();
-  filters.page = undefined;
-  filters.perPage = undefined;
-  filters.state = [State.TX];
-  filters.facilityId = [3];
-  filters.unitType = [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER];
-  filters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
-  filters.controlTechnologies = [
-    ControlTechnology.ADDITIVES_TO_ENHANCE,
-    ControlTechnology.OTHER,
-  ];
-  filters.programCodeInfo = [Program.ARP, Program.RGGI];
+filters.page = undefined;
+filters.perPage = undefined;
+filters.stateCode = [State.TX];
+filters.facilityId = [3];
+filters.unitType = [UnitType.BUBBLING_FLUIDIZED, UnitType.ARCH_FIRE_BOILER];
+filters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+filters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+filters.programCodeInfo = [Program.ARP, Program.RGGI];
 
 describe('DayUnitDataRepository', () => {
   let dayUnitDataRepository;
