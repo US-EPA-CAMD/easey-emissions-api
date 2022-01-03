@@ -78,8 +78,8 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       // // @IsUnitFuelType()
       // unitFuel: string;
 
-      // // @IsStateCode()
-      // state: string;
+      // @IsStateCode()
+      // stateCode: string;
 
       // // @IsEmissionsProgram()
       // programCodeInfo: string;
@@ -130,7 +130,7 @@ describe('-- Apportioned Emissions Params DTO --', () => {
       expect(results.length).toBe(0);
     });
 
-    it('should fail one of validation pipes (beginDate)', async () => {
+    it('should fail one of validation pipes (month)', async () => {
       const results = await validate(
         new MyClass(
           // '1940-01-01',

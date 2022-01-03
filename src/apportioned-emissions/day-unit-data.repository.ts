@@ -29,7 +29,7 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
         'dud.co2Rate',
         'dud.noxMass',
         'dud.noxRate',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -51,7 +51,7 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
       [
         'beginDate',
         'endDate',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',

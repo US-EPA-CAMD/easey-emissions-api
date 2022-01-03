@@ -3,11 +3,11 @@ import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 export class ApportionedEmissionsDTO {
   @ApiProperty({
-    description: propertyMetadata.state.description,
-    example: propertyMetadata.state.example,
-    name: propertyMetadata.state.fieldLabels.value,
+    description: propertyMetadata.stateCode.description,
+    example: propertyMetadata.stateCode.example,
+    name: propertyMetadata.stateCode.fieldLabels.value,
   })
-  state: string;
+  stateCode: string;
 
   @ApiProperty({
     description: propertyMetadata.facilityName.description,

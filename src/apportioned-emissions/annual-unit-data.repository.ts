@@ -29,7 +29,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
         'aud.co2Rate',
         'aud.noxMass',
         'aud.noxRate',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -50,7 +50,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
       annualApportionedEmissionsParamsDTO,
       [
         'year',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',

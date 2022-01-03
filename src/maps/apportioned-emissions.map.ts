@@ -6,7 +6,7 @@ import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 export class ApportionedEmissionsMap extends BaseMap<any, any> {
   public async one(entity: any): Promise<any> {
     return {
-      [propertyMetadata.state.fieldLabels.value]: entity.unitFact.state,
+      [propertyMetadata.stateCode.fieldLabels.value]: entity.unitFact.stateCode,
       [propertyMetadata.facilityName.fieldLabels.value]:
         entity.unitFact.facilityName,
       [propertyMetadata.facilityId.fieldLabels.value]: entity.unitFact

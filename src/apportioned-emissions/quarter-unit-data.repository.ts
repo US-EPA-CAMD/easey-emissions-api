@@ -30,7 +30,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
         'qud.co2Rate',
         'qud.noxMass',
         'qud.noxRate',
-        'uf.state',
+        'uf.stateCode',
         'uf.facilityName',
         'uf.facilityId',
         'uf.unitId',
@@ -52,7 +52,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
       [
         'year',
         'quarter',
-        'state',
+        'stateCode',
         'facilityId',
         'unitType',
         'controlTechnologies',
