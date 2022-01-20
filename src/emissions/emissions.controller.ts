@@ -1,5 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiSecurity,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
 import { EmissionService } from './emissions.service';
 
@@ -11,9 +17,21 @@ export class EmissionController {
 
   @Get('submission-progress')
   @ApiOkResponse({
-    type: String,
-    description: 'Returns emissions submissions progress for given time period',
+    description: 'Retrieve submissions for current time period',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(EmissionsSubmissionsProgressDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+        },
+      },
+    },
   })
+  @ApiExtraModels(EmissionsSubmissionsProgressDTO)
   submissionProgress(
     @Query('submissionPeriod') submissionPeriod: string,
   ): Promise<EmissionsSubmissionsProgressDTO> {
