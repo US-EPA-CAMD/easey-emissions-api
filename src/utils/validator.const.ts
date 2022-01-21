@@ -15,7 +15,7 @@ export function BeginDate() {
       message: ErrorMessages.DateRange(
         'beginDate',
         false,
-        `a date between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
+        `a date between 01/01/1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({
@@ -39,7 +39,7 @@ export function EndDate() {
       message: ErrorMessages.DateRange(
         'endDate',
         false,
-        `a date between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
+        `a date between 01/01/1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({
@@ -59,7 +59,7 @@ export function OpYear() {
       message: ErrorMessages.DateRange(
         'year',
         true,
-        'a year between 1995 and this year',
+        `a year between 1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsYearFormat({
