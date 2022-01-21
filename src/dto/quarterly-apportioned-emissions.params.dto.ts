@@ -36,7 +36,7 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     message: ErrorMessages.DateRange(
       'quarter',
       true,
-      `a quarter between 01/01/1995 and the end of the calendar quarter, ${ErrorMessages.ReportingQuarter()}`,
+      `a quarter between 01/01/1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
     ),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
