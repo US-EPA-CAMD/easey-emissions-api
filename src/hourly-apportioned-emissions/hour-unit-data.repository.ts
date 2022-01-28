@@ -10,24 +10,20 @@ import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-e
 @EntityRepository(HourUnitData)
 export class HourUnitDataRepository extends Repository<HourUnitData> {
 
-  getEmissionsStream(
+  streamEmissions(
     params: HourlyApportionedEmissionsParamsDTO,
-    count: number = 0,
   ): Promise<ReadStream> {
-    return this.buildQuery(params, count, true).stream();
+    return this.buildQuery(params, true).stream();
   }
 
-  async getHourlyEmissions(
-    params: HourlyApportionedEmissionsParamsDTO,
+  async getEmissions(
     req: Request,
+    params: HourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitData[]> {
     let totalCount: number;
     let results: HourUnitData[];
     const { page, perPage } = params;
-
     let query = this.buildQuery(params);
-    const start = new Date().getTime();
-    console.log(`HourUnitDataRepository::getHourlyEmissions: Start: ${start}`);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -35,18 +31,14 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     }
     else {
       results = await query.getMany();
-      console.log(`HourUnitDataRepository:: # of records: ${results.length}`);
     }
-
-    const stop = new Date().getTime();
-    console.log(`HourUnitDataRepository::getHourlyEmissions: Complete: ${stop}`);
-    console.log(`HourUnitDataRepository::getHourlyEmissions: Time: ${(stop - start) / 1000}`);
 
     return results;
   }
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
+      'hud.id',
       'uf.stateCode',
       'uf.facilityName',
       'uf.facilityId',
@@ -91,7 +83,6 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
   private buildQuery(
     params: HourlyApportionedEmissionsParamsDTO,
-    count: number = 0,
     isStreamed: boolean = false,
   ): SelectQueryBuilder<HourUnitData> {
     let query = this.createQueryBuilder('hud')
@@ -115,13 +106,10 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     );
 
     query
-      .limit(count)
       .orderBy('uf.facilityId')
       .addOrderBy('uf.unitId')
       .addOrderBy('hud.date')
       .addOrderBy('hud.hour');
-
-    //console.log('PgSql: ', query.getSql())
 
     return query;
   }

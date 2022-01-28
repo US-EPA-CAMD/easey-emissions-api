@@ -1,5 +1,7 @@
 import { registerAs } from '@nestjs/config';
 
+require('dotenv').config();
+
 let pgHost = process.env.EASEY_DB_HOST || 'database';
 let pgPort = process.env.EASEY_DB_PORT || 5432;
 let pgUser = process.env.EASEY_DB_USER || 'postgres';
