@@ -1,24 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
+import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
-import { ApportionedEmissionsMap } from './apportioned-emissions.map';
-import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
 import { DayUnitData } from '../entities/day-unit-data.entity';
+import { ApportionedEmissionsMap } from './apportioned-emissions.map';
+import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 
 @Injectable()
-export class DailyApportionedEmissionsMap extends ApportionedEmissionsMap {
-  public async one(entity: DayUnitData): Promise<any> {
-    const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
-      entity,
-    );
+export class DailyApportionedEmissionsMap extends BaseMap<DayUnitData, DailyApportionedEmissionsDTO> {
+  constructor(private readonly apportionedEmissionsMap: ApportionedEmissionsMap) { super(); }
+
+  public async one(entity: DayUnitData): Promise<DailyApportionedEmissionsDTO> {
     return {
-      ...apportionedEmissionsDto,
-      [propertyMetadata.date.fieldLabels
-        .value]: entity.date.toISOString().split('T')[0],
-      [propertyMetadata.sumOpTime.fieldLabels.value]: entity.sumOpTime
+      ...await this.apportionedEmissionsMap.one(entity),
+      date: entity.date.toISOString().split('T')[0],
+      sumOpTime: entity.sumOpTime
         ? Number(entity.sumOpTime)
         : entity.sumOpTime,
-      [propertyMetadata.countOpTime.fieldLabels.value]: entity.countOpTime
+      countOpTime: entity.countOpTime
         ? Number(entity.countOpTime)
         : entity.countOpTime,
     };

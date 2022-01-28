@@ -23,7 +23,7 @@ import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsMap } from '../maps/annual-apportioned-emissions.map';
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
-import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
+import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsMap } from '../maps/ozone-apportioned-emissions.map';

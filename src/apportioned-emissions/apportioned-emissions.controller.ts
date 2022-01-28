@@ -1,24 +1,32 @@
 import { Request } from 'express';
-import { Get, Controller, Query, Req, UseInterceptors } from '@nestjs/common';
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
+import {
+  Get,
+  Req,
+  Query,
+  Controller,
+  UseInterceptors,
+} from '@nestjs/common';
+
 import {
   ApiTags,
   ApiOkResponse,
   ApiQuery,
   getSchemaPath,
   ApiExtraModels,
-  ApiSecurity
+  ApiSecurity,
 } from '@nestjs/swagger';
+
 import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
 } from '../utils/swagger-decorator.const';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
-import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
-import { HourlyApportionedEmissionsParamsDTO } from '../dto/hourly-apportioned-emissions.params.dto';
 import { DailyApportionedEmissionsDTO } from '../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsParamsDTO } from '../dto/daily-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsParamsDTO } from '../dto/monthly-apportioned-emissions.params.dto';
@@ -28,7 +36,7 @@ import { QuarterlyApportionedEmissionsParamsDTO } from '../dto/quarterly-apporti
 import { AnnualApportionedEmissionsDTO } from '../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsParamsDTO } from '../dto/annual-apportioned-emissions.params.dto';
 import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
-import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions.dto';
+import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apportioned-emissions.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -37,40 +45,8 @@ import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apporitoned-emissions
 export class ApportionedEmissionsController {
   constructor(
     private readonly apportionedEmissionsService: ApportionedEmissionsService,
-    private Logger: Logger,
+    private readonly logger: Logger,
   ) {}
-
-  @Get('/hourly')
-  @ApiOkResponse({
-    description: 'Retrieve Hourly Apportioned Emissions per filter criteria',
-    content: {
-      'application/json': {
-        schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsDTO),
-        },
-      },
-      'text/csv': {
-        schema: {
-          type: 'string',
-        },
-      },
-    },
-  })
-  @BadRequestResponse()
-  @NotFoundResponse()
-  @ApiQueryMultiSelect()
-  @ApiExtraModels(HourlyApportionedEmissionsDTO)
-  getHourlyEmissions(
-    @Query()
-    hourlyApportionedEmissionsParamsDTO: HourlyApportionedEmissionsParamsDTO,
-    @Req() req: Request,
-  ): Promise<HourlyApportionedEmissionsDTO[]> {
-    this.Logger.info('Getting hourly emissions');
-    return this.apportionedEmissionsService.getHourlyEmissions(
-      hourlyApportionedEmissionsParamsDTO,
-      req,
-    );
-  }
 
   @Get('/daily')
   @ApiOkResponse({
