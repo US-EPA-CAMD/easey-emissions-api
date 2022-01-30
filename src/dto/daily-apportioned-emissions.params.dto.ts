@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
-import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { BeginDate, EndDate } from '../utils/validator.const';
+import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 
 export class DailyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @ApiProperty({
@@ -16,4 +16,16 @@ export class DailyApportionedEmissionsParamsDTO extends ApportionedEmissionsPara
   })
   @EndDate()
   endDate: Date;
+}
+
+export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportionedEmissionsParamsDTO {
+  @ApiProperty({
+    description: propertyMetadata.page.description,
+  })
+  page: number;
+
+  @ApiProperty({
+    description: propertyMetadata.perPage.description,
+  })
+  perPage: number;
 }
