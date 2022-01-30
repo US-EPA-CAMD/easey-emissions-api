@@ -7,7 +7,11 @@ import { OzoneApportionedEmissionsDTO } from '../dto/ozone-apportioned-emissions
 
 @Injectable()
 export class OzoneApportionedEmissionsMap extends BaseMap<OzoneUnitData, OzoneApportionedEmissionsDTO> {
-  constructor(private readonly annualApportionedEmissionsMap: AnnualApportionedEmissionsMap) { super(); }
+  constructor(
+    private readonly annualApportionedEmissionsMap: AnnualApportionedEmissionsMap
+  ) {
+    super();
+  }
 
   public async one(entity: OzoneUnitData): Promise<OzoneApportionedEmissionsDTO> {
     return {

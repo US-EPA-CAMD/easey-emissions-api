@@ -1,8 +1,11 @@
 import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
-import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+
+import {
+  propertyMetadata,
+  ErrorMessages
+} from '@us-epa-camd/easey-common/constants';
 
 import { OpYear } from '../utils/validator.const';
 import { IsValidNumber } from '../pipes/is-valid-number.pipe';
@@ -41,4 +44,16 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   quarter: number[];
+}
+
+export class PaginatedQuarterlyApportionedEmissionsParamsDTO extends QuarterlyApportionedEmissionsParamsDTO {
+  @ApiProperty({
+    description: propertyMetadata.page.description,
+  })
+  page: number;
+
+  @ApiProperty({
+    description: propertyMetadata.perPage.description,
+  })
+  perPage: number;
 }
