@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { UnitFact } from './unit-fact.entity';
 
@@ -13,71 +14,105 @@ import { UnitFact } from './unit-fact.entity';
 export class DayUnitData extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
+    transformer: new NumericColumnTransformer(),    
   })
   id: number;
 
   @PrimaryColumn({
     name: 'op_date',
+    type: 'date',
   })
   date: Date;
 
   @Column({
     name: 'op_year',
+    transformer: new NumericColumnTransformer(),    
   })
   year: number;
 
   @Column({
-    name: 'sum_op_time',
-  })
-  sumOpTime: number;
-
-  @Column({
     name: 'count_op_time',
+    transformer: new NumericColumnTransformer(),    
   })
   countOpTime: number;
 
-  @Column({
+  @Column('numeric', {
+    name: 'sum_op_time',
+    precision: 10,
+    scale: 2,
+    transformer: new NumericColumnTransformer(),
+  })
+  sumOpTime: number;
+
+  @Column('numeric', {
     name: 'gload',
+    precision: 12,
+    scale: 2,
+    transformer: new NumericColumnTransformer(),
   })
   grossLoad: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'sload',
+    precision: 12,
+    scale: 2,
+    transformer: new NumericColumnTransformer(),
   })
   steamLoad: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'heat_input',
+    precision: 15,
+    scale: 3,
+    transformer: new NumericColumnTransformer(),
   })
   heatInput: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'so2_mass',
+    precision: 12,
+    scale: 3,
+    transformer: new NumericColumnTransformer(),
   })
   so2Mass: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'so2_rate',
+    precision: 16,
+    scale: 4,
+    transformer: new NumericColumnTransformer(),
   })
   so2Rate: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'co2_mass',
+    precision: 12,
+    scale: 3,
+    transformer: new NumericColumnTransformer(),
   })
   co2Mass: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'co2_rate',
+    precision: 16,
+    scale: 4,
+    transformer: new NumericColumnTransformer(),
   })
   co2Rate: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'nox_mass',
+    precision: 12,
+    scale: 3,
+    transformer: new NumericColumnTransformer(),
   })
   noxMass: number;
 
-  @Column({
+  @Column('numeric', {
     name: 'nox_rate',
+    precision: 16,
+    scale: 4,
+    transformer: new NumericColumnTransformer(),
   })
   noxRate: number;
 

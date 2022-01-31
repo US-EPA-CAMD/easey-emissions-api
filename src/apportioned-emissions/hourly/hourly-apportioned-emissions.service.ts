@@ -67,7 +67,12 @@ export class HourlyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(HourlyApportionedEmissionsDTO, data, { enableImplicitConversion: true });
+        delete data.id;
+        const dto = plainToClass(
+          HourlyApportionedEmissionsDTO,
+          data,
+          { enableImplicitConversion: true }
+        );
         const date = new Date(dto.date);
         dto.date = date.toISOString().split('T')[0];
         callback(null, dto);
@@ -88,7 +93,7 @@ export class HourlyApportionedEmissionsService {
     return new StreamableFile(stream
       .pipe(toDto)
       .pipe(objToString), {
-        type: req.headers.accept,      
+        type: req.headers.accept,
         disposition: `attachment; filename="hourly-emissions-${uuid()}.json"`,
     });
   }

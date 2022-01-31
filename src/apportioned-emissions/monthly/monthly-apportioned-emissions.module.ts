@@ -3,10 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
-import { UnitFactMap } from '../../maps/unit-atributes.map';
-import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { UnitAttributesMap } from '../../maps/unit-atributes.map';
 import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
 import { MonthlyApportionedEmissionsMap } from '../../maps/monthly-apportioned-emissions.map';
+import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
+
+import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
 
@@ -21,9 +23,10 @@ import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emi
     MonthlyApportionedEmissionsController
   ],
   providers: [
-    UnitFactMap,
     ConfigService,
-    ApportionedEmissionsMap,    
+    UnitAttributesMap,
+    ApportionedEmissionsMap,
+    UnitFacilityIdentificationMap,
     MonthlyApportionedEmissionsMap,
     MonthlyApportionedEmissionsService,
   ],

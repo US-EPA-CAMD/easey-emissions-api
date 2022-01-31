@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { HourUnitData } from './hour-unit-data.entity';
 import { DayUnitData } from './day-unit-data.entity';
@@ -11,11 +12,13 @@ import { OzoneUnitData } from './ozone-unit-data.entity';
 export class UnitFact extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
+    transformer: new NumericColumnTransformer(),    
   })
   id: number;
 
   @PrimaryColumn({
     name: 'op_year',
+    transformer: new NumericColumnTransformer(),    
   })
   year: number;
 
@@ -26,6 +29,7 @@ export class UnitFact extends BaseEntity {
 
   @Column({
     name: 'orispl_code',
+    transformer: new NumericColumnTransformer(),    
   })
   facilityId: number;
 

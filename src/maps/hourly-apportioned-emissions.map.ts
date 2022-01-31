@@ -19,7 +19,7 @@ export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyA
   public async one(entity: HourUnitData): Promise<HourlyApportionedEmissionsDTO> {
     return {
       ...await this.unitFacilityIdMap.one(entity.unitFact),
-      date: entity.date.toISOString().split('T')[0],
+      date: entity.date,
       hour: entity.hour,
       opTime: entity.opTime,
       grossLoad: entity.grossLoad,

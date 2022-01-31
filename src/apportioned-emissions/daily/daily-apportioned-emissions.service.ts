@@ -1,5 +1,7 @@
-import { v4 as uuid } from 'uuid';
 import { Request } from 'express';
+import { v4 as uuid } from 'uuid';
+import { Transform } from 'stream';
+import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { 
   Injectable,
@@ -57,16 +59,42 @@ export class DailyApportionedEmissionsService {
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.daily),
+    );
+
+    const toDto = new Transform({
+      objectMode: true,
+      transform(data, _enc, callback) {
+        delete data.id;
+        const dto = plainToClass(
+          DailyApportionedEmissionsDTO,
+          data,
+          { enableImplicitConversion: true }
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        callback(null, dto);
+      }
+    });
+
     if (req.headers.accept === "text/csv") {
       const toCSV = new PlainToCSV(fieldMappings.emissions.daily);
-      return new StreamableFile(stream.pipe(toCSV), {
-        disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
+      return new StreamableFile(stream
+        .pipe(toDto)
+        .pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream.pipe(objToString), {
-      disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream
+      .pipe(toDto)
+      .pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
     });
   }
 }

@@ -1,10 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { UnitFactMap } from '../../maps/unit-atributes.map';
+import { UnitAttributesMap } from '../../maps/unit-atributes.map';
 import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
 import { OzoneApportionedEmissionsMap } from '../../maps/ozone-apportioned-emissions.map';
 import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
+import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
 
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
@@ -35,9 +36,10 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [OzoneApportionedEmissionsController],
       providers: [
-        UnitFactMap,
+        UnitAttributesMap,
         ApportionedEmissionsMap,
-        AnnualApportionedEmissionsMap,        
+        UnitFacilityIdentificationMap,
+        AnnualApportionedEmissionsMap,
         OzoneApportionedEmissionsMap,
         OzoneApportionedEmissionsService,
         OzoneUnitDataRepository,

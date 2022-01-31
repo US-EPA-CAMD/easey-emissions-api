@@ -41,6 +41,7 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
+      'dud.id',      
       'uf.stateCode',
       'uf.facilityName',
       'uf.facilityId',

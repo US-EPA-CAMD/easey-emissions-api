@@ -1,9 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { UnitFactMap } from '../../maps/unit-atributes.map';
+import { UnitAttributesMap } from '../../maps/unit-atributes.map';
 import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
 import { QuarterlyApportionedEmissionsMap } from '../../maps/quarterly-apportioned-emissions.map';
+import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
 
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
@@ -34,8 +35,9 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [QuarterlyApportionedEmissionsController],
       providers: [
-        UnitFactMap,
+        UnitAttributesMap,
         ApportionedEmissionsMap,
+        UnitFacilityIdentificationMap,
         QuarterlyApportionedEmissionsMap,
         QuarterlyApportionedEmissionsService,        
         QuarterUnitDataRepository,

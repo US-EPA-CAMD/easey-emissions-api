@@ -41,6 +41,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
+      'hud.id',
       'uf.stateCode',
       'uf.facilityName',
       'uf.facilityId',
@@ -71,7 +72,7 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       'uf.pmControlInfo',
       'uf.noxControlInfo',
       'uf.hgControlInfo',
-      'uf.programCodeInfo',      
+      'uf.programCodeInfo',
     ];
 
     return columns.map(col => {
