@@ -10,8 +10,6 @@ export class UnitFacilityIdentificationMap extends BaseMap<UnitFact, any> {
       stateCode: entity.stateCode,
       facilityName: entity.facilityName,
       facilityId: entity.facilityId,
-        // ? Number(entity.facilityId)
-        // : entity.facilityId,
       unitId: entity.unitId,
       associatedStacks: entity.associatedStacks,
     };

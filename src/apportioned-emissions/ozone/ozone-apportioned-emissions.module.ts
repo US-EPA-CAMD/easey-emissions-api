@@ -3,11 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
-import { UnitFactMap } from '../../maps/unit-atributes.map';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
+import { UnitAttributesMap } from '../../maps/unit-atributes.map';
 import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
-import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
 import { OzoneApportionedEmissionsMap } from '../../maps/ozone-apportioned-emissions.map';
+import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
+import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
+
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
 
@@ -22,9 +24,10 @@ import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissio
     OzoneApportionedEmissionsController
   ],
   providers: [
-    UnitFactMap,
     ConfigService,
+    UnitAttributesMap,
     ApportionedEmissionsMap,
+    UnitFacilityIdentificationMap,
     AnnualApportionedEmissionsMap,
     OzoneApportionedEmissionsMap,
     OzoneApportionedEmissionsService,

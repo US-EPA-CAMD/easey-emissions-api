@@ -21,7 +21,7 @@ export class DailyApportionedEmissionsMap extends BaseMap<DayUnitData, DailyAppo
   public async one(entity: DayUnitData): Promise<DailyApportionedEmissionsDTO> {
     return {
       ...await this.unitFacilityIdMap.one(entity.unitFact),
-      date: entity.date.toISOString().split('T')[0],
+      date: entity.date,
       ...await this.apportionedEmissionsMap.one(entity),
       ...await this.unitAttributesMap.one(entity.unitFact),
     };
