@@ -19,7 +19,7 @@ export class EmissionService {
     const responseDTO = new EmissionsSubmissionsResponseDTO();
 
     const date = new Date(periodDate);
-    const month = date.getMonth();
+    const month = new Date().getMonth();
 
     let quarter;
     if (queryResult === undefined) {
@@ -30,12 +30,12 @@ export class EmissionService {
         [0, 3, 6, 9].includes(month)
       ) {
         let year = date.getFullYear();
-        if (month >= 1 && month <= 3) {
+        if (month >= 0 && month <= 2) {
           quarter = 4;
           year--;
-        } else if (month >= 4 && month <= 6) {
+        } else if (month >= 3 && month <= 5) {
           quarter = 1;
-        } else if (month >= 7 && month <= 9) {
+        } else if (month >= 6 && month <= 8) {
           quarter = 2;
         } else {
           quarter = 3;
