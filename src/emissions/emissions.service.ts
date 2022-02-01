@@ -27,7 +27,7 @@ export class EmissionService {
         ['dev', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),
         ) &&
-        [1, 4, 7, 10].includes(month)
+        [0, 3, 6, 9].includes(month)
       ) {
         let year = date.getFullYear();
         if (month >= 1 && month <= 3) {
