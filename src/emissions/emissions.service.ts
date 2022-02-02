@@ -1,50 +1,72 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Logger } from '@us-epa-camd/easey-common/logger';
-import { getManager } from 'typeorm';
-import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { EmissionsSubmissionsResponseDTO } from '../dto/emissions-submissions-response.dto';
 import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
-import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
+import { EmissionsRepository } from './emissions.repository';
 
 @Injectable()
 export class EmissionService {
   constructor(
     private readonly map: EmissionSubmissionsProgressMap,
-    private readonly logger: Logger,
+    private readonly repository: EmissionsRepository,
+    private readonly configService: ConfigService,
   ) {}
 
-  async executeSubmissionProgressQuery(periodDate: string) {
-    const entityManager = getManager();
-    let submissionPeriod;
-
-    try {
-      submissionPeriod = await entityManager
-        .createQueryBuilder(EmissionSubmissionsProgress, 'submissions')
-        .where(":date >= submissions.end_date + interval '1' day", {
-          date: periodDate,
-        })
-        .andWhere(":date <= submissions.end_date + interval '38' day", {
-          date: periodDate,
-        })
-        .getOne();
-    } catch (error) {
-      this.logger.error(InternalServerErrorException, error, true, {
-        date: periodDate,
-      });
-    }
-    return submissionPeriod;
-  }
-
   async getSubmissionProgress(
-    periodDate: string,
-  ): Promise<EmissionsSubmissionsProgressDTO> {
-    const submissionPeriod = await this.executeSubmissionProgressQuery(
-      periodDate,
-    );
+    periodDate: Date,
+  ): Promise<EmissionsSubmissionsResponseDTO> {
+    const queryResult = await this.repository.getSubmissionProgress(periodDate);
+    const responseDTO = new EmissionsSubmissionsResponseDTO();
 
-    if (submissionPeriod === undefined) {
-      return undefined;
+    const date = new Date(periodDate);
+    const month = date.getUTCMonth() + 1;
+
+    let quarter;
+    if (queryResult === undefined) {
+      if (
+        ['development', 'test', 'local-dev'].includes(
+          this.configService.get<string>('app.env'),
+        ) &&
+        [1, 4, 7, 10].includes(month)
+      ) {
+        let year = date.getUTCFullYear();
+
+        if (month >= 1 && month <= 3) {
+          quarter = 4;
+          year--;
+        } else if (month >= 4 && month <= 6) {
+          quarter = 1;
+        } else if (month >= 7 && month <= 9) {
+          quarter = 2;
+        } else {
+          quarter = 3;
+        }
+        responseDTO.year = year;
+        responseDTO.percentage = Math.floor(Math.random() * 100);
+      } else {
+        return undefined;
+      }
+    } else {
+      const mappedResult = await this.map.one(queryResult);
+      quarter = mappedResult.quarter;
+      responseDTO.year = mappedResult.calendarYear;
+      responseDTO.percentage = mappedResult.submittedPercentage;
     }
 
-    return this.map.one(submissionPeriod);
+    switch (quarter) {
+      case 1:
+        responseDTO.quarterName = 'First';
+        break;
+      case 2:
+        responseDTO.quarterName = 'Second';
+        break;
+      case 3:
+        responseDTO.quarterName = 'Third';
+        break;
+      default:
+        responseDTO.quarterName = 'Fourth';
+    }
+
+    return responseDTO;
   }
 }
