@@ -21,8 +21,6 @@ export class EmissionService {
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
 
-    console.log(month);
-
     let quarter;
     if (queryResult === undefined) {
       if (
