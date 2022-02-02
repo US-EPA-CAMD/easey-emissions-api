@@ -7,6 +7,7 @@ export class EmissionsSubmissionsParamsDTO {
   @ApiProperty({
     example: propertyMetadata.date.example,
     description: propertyMetadata.date.description,
+    format: 'date',
   })
   submissionPeriod: Date;
 }

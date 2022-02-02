@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.params.dto';
 import { EmissionService } from './emissions.service';
-import { EmissionsSubmissionsResponseDTO } from 'src/dto/emissions-submissions-response.dto';
+import { EmissionsSubmissionsResponseDTO } from '../dto/emissions-submissions-response.dto';
 
 @Controller('emissions')
 @ApiTags('Emissions')

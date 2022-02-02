@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmissionsSubmissionsResponseDTO } from 'src/dto/emissions-submissions-response.dto';
+import { EmissionsSubmissionsResponseDTO } from '../dto/emissions-submissions-response.dto';
 import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
 import { EmissionsRepository } from './emissions.repository';
 
@@ -19,23 +19,26 @@ export class EmissionService {
     const responseDTO = new EmissionsSubmissionsResponseDTO();
 
     const date = new Date(periodDate);
-    const month = new Date().getMonth();
+    const month = date.getUTCMonth() + 1;
+
+    console.log(month);
 
     let quarter;
     if (queryResult === undefined) {
       if (
-        ['dev', 'test', 'local-dev'].includes(
+        ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),
         ) &&
-        [0, 3, 6, 9].includes(month)
+        [1, 4, 7, 10].includes(month)
       ) {
-        let year = date.getFullYear();
-        if (month >= 0 && month <= 2) {
+        let year = date.getUTCFullYear();
+
+        if (month >= 1 && month <= 3) {
           quarter = 4;
           year--;
-        } else if (month >= 3 && month <= 5) {
+        } else if (month >= 4 && month <= 6) {
           quarter = 1;
-        } else if (month >= 6 && month <= 8) {
+        } else if (month >= 7 && month <= 9) {
           quarter = 2;
         } else {
           quarter = 3;
