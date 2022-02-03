@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmissionsSubmissionsResponseDTO } from '../dto/emissions-submissions-response.dto';
+import { EmissionsSubmissionsProgressDTO } from 'src/dto/emissions-submission-progress.dto';
+import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
 import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
 import { EmissionsRepository } from './emissions.repository';
 
@@ -14,14 +15,12 @@ export class EmissionService {
 
   async getSubmissionProgress(
     periodDate: Date,
-  ): Promise<EmissionsSubmissionsResponseDTO> {
-    const queryResult = await this.repository.getSubmissionProgress(periodDate);
-    const responseDTO = new EmissionsSubmissionsResponseDTO();
+  ): Promise<EmissionsSubmissionsProgressDTO> {
+    let queryResult = await this.repository.getSubmissionProgress(periodDate);
 
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
 
-    let quarter;
     if (queryResult === undefined) {
       if (
         ['development', 'test', 'local-dev'].includes(
@@ -30,44 +29,26 @@ export class EmissionService {
         ([1, 4, 7, 10].includes(month) ||
           ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
       ) {
-        let year = date.getUTCFullYear();
+        queryResult = new EmissionSubmissionsProgress();
 
+        let year = date.getUTCFullYear();
         if (month >= 1 && month <= 3) {
-          quarter = 4;
+          queryResult.quarter = 4;
           year--;
         } else if (month >= 4 && month <= 6) {
-          quarter = 1;
+          queryResult.quarter = 1;
         } else if (month >= 7 && month <= 9) {
-          quarter = 2;
+          queryResult.quarter = 2;
         } else {
-          quarter = 3;
+          queryResult.quarter = 3;
         }
-        responseDTO.year = year;
-        responseDTO.percentage = Math.floor(Math.random() * 100);
+        queryResult.calendarYear = year;
+        queryResult.submittedPercentage = Math.floor(Math.random() * 100);
       } else {
         return undefined;
       }
-    } else {
-      const mappedResult = await this.map.one(queryResult);
-      quarter = mappedResult.quarter;
-      responseDTO.year = mappedResult.calendarYear;
-      responseDTO.percentage = mappedResult.submittedPercentage;
     }
 
-    switch (quarter) {
-      case 1:
-        responseDTO.quarterName = 'First';
-        break;
-      case 2:
-        responseDTO.quarterName = 'Second';
-        break;
-      case 3:
-        responseDTO.quarterName = 'Third';
-        break;
-      default:
-        responseDTO.quarterName = 'Fourth';
-    }
-
-    return responseDTO;
+    return this.map.one(queryResult);
   }
 }
