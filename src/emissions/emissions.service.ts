@@ -27,7 +27,8 @@ export class EmissionService {
         ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),
         ) &&
-        [1, 4, 7, 10].includes(month)
+        ([1, 4, 7, 10].includes(month) ||
+          ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
       ) {
         let year = date.getUTCFullYear();
 
