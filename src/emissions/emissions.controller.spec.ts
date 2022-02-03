@@ -1,8 +1,14 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
 import { EmissionController } from './emissions.controller';
+import { EmissionsRepository } from './emissions.repository';
 import { EmissionService } from './emissions.service';
+
+const mockEmissionsRepository = () => ({
+  getSubmissionProgress: jest.fn(),
+});
 
 describe('Emissions Controller', () => {
   let controller: EmissionController;
@@ -12,7 +18,12 @@ describe('Emissions Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [EmissionController],
-      providers: [EmissionService, EmissionSubmissionsProgressMap],
+      providers: [
+        EmissionService,
+        EmissionSubmissionsProgressMap,
+        ConfigService,
+        { provide: EmissionsRepository, useFactory: mockEmissionsRepository },
+      ],
     }).compile();
 
     controller = module.get(EmissionController);
@@ -29,7 +40,9 @@ describe('Emissions Controller', () => {
 
       jest.spyOn(service, 'getSubmissionProgress').mockResolvedValue(data);
 
-      expect(await controller.submissionProgress('')).toBe(data);
+      expect(
+        await controller.submissionProgress({ submissionPeriod: new Date() }),
+      ).toBe(data);
     });
   });
 });
