@@ -7,6 +7,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
+import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.params.dto';
 import { EmissionService } from './emissions.service';
 
 @Controller()
@@ -33,8 +34,11 @@ export class EmissionController {
   })
   @ApiExtraModels(EmissionsSubmissionsProgressDTO)
   submissionProgress(
-    @Query('submissionPeriod') submissionPeriod: string,
+    @Query()
+    submissionParamDTO: EmissionsSubmissionsParamsDTO,
   ): Promise<EmissionsSubmissionsProgressDTO> {
-    return this.service.getSubmissionProgress(submissionPeriod);
+    return this.service.getSubmissionProgress(
+      submissionParamDTO.submissionPeriod,
+    );
   }
 }
