@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
+import { IsValidNumber } from '@us-epa-camd/easey-common/pipes';
 
-import { IsValidNumber } from '../pipes/is-valid-number.pipe';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 
 describe('-- Apportioned Emissions Params DTO --', () => {
