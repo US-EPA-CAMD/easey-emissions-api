@@ -10,7 +10,7 @@ import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-pro
 import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.params.dto';
 import { EmissionService } from './emissions.service';
 
-@Controller('emissions')
+@Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 export class EmissionController {
