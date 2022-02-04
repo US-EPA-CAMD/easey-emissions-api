@@ -53,7 +53,6 @@ export class PaginatedMonthlyApportionedEmissionsParamsDTO extends MonthlyApport
     description: propertyMetadata.page.description,
   })
   @IsDefined()
-  @IsNumber()
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
   })  
@@ -63,7 +62,6 @@ export class PaginatedMonthlyApportionedEmissionsParamsDTO extends MonthlyApport
     description: propertyMetadata.perPage.description,
   })
   @IsDefined()
-  @IsNumber()  
   @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
     message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })
