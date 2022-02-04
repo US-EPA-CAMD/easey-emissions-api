@@ -1,36 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
+import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
-import { ApportionedEmissionsMap } from './apportioned-emissions.map';
-import { ApportionedEmissionsDTO } from '../dto/apportioned-emissions.dto';
 import { HourUnitData } from '../entities/hour-unit-data.entity';
+import { HourlyApportionedEmissionsDTO } from '../dto/hourly-apportioned-emissions.dto';
+
+import { UnitAttributesMap } from './unit-atributes.map';
+import { UnitFacilityIdentificationMap } from './unit-facility-identification.map';
 
 @Injectable()
-export class HourlyApportionedEmissionsMap extends ApportionedEmissionsMap {
-  public async one(entity: HourUnitData): Promise<any> {
-    const apportionedEmissionsDto: ApportionedEmissionsDTO = await super.one(
-      entity,
-    );
+export class HourlyApportionedEmissionsMap extends BaseMap<HourUnitData, HourlyApportionedEmissionsDTO> {
+  constructor(
+    private readonly unitAttributesMap: UnitAttributesMap,
+    private readonly unitFacilityIdMap: UnitFacilityIdentificationMap,
+  ) {
+    super();
+  }
+
+  public async one(entity: HourUnitData): Promise<HourlyApportionedEmissionsDTO> {
     return {
-      ...apportionedEmissionsDto,
-      [propertyMetadata.date.fieldLabels
-        .value]: entity.date.toISOString().split('T')[0],
-      [propertyMetadata.hour.fieldLabels.value]: Number(entity.hour),
-      [propertyMetadata.opTime.fieldLabels.value]: entity.opTime
-        ? Number(entity.opTime)
-        : entity.opTime,
-      [propertyMetadata.so2MassMeasureFlg.fieldLabels.value]:
-        entity.so2MassMeasureFlg,
-      [propertyMetadata.so2RateMeasureFlg.fieldLabels.value]:
-        entity.so2RateMeasureFlg,
-      [propertyMetadata.noxMassMeasureFlg.fieldLabels.value]:
-        entity.noxMassMeasureFlg,
-      [propertyMetadata.noxRateMeasureFlg.fieldLabels.value]:
-        entity.noxRateMeasureFlg,
-      [propertyMetadata.co2MassMeasureFlg.fieldLabels.value]:
-        entity.co2MassMeasureFlg,
-      [propertyMetadata.co2RateMeasureFlg.fieldLabels.value]:
-        entity.co2RateMeasureFlg,
+      ...await this.unitFacilityIdMap.one(entity.unitFact),
+      date: entity.date,
+      hour: entity.hour,
+      opTime: entity.opTime,
+      grossLoad: entity.grossLoad,
+      steamLoad: entity.steamLoad,
+      so2Mass: entity.so2Mass,
+      so2MassMeasureFlg: entity.so2MassMeasureFlg,
+      so2Rate: entity.so2Rate,
+      so2RateMeasureFlg: entity.so2RateMeasureFlg,
+      noxMass: entity.noxMass,
+      noxMassMeasureFlg: entity.noxMassMeasureFlg,
+      noxRate: entity.noxRate,
+      noxRateMeasureFlg: entity.noxRateMeasureFlg,
+      co2Mass: entity.co2Mass,
+      co2MassMeasureFlg: entity.co2MassMeasureFlg,
+      co2Rate: entity.co2Rate,
+      co2RateMeasureFlg: entity.co2RateMeasureFlg,
+      heatInput: entity.heatInput,
+      ...await this.unitAttributesMap.one(entity.unitFact),
     };
   }
 }

@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
-
 import {
   State,
   UnitType,
@@ -8,14 +7,31 @@ import {
   ControlTechnology,
   Program,
 } from '@us-epa-camd/easey-common/enums';
-import { ResponseHeaders } from '../utils/response.headers';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
-import { OzoneApportionedEmissionsParamsDTO } from '../dto/ozone-apportioned-emissions.params.dto';
-import { OzoneUnitData } from '../entities/ozone-unit-data.entity';
+
+import { ResponseHeaders } from '../../utils/response.headers';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
+import { 
+  AnnualApportionedEmissionsParamsDTO,
+  PaginatedAnnualApportionedEmissionsParamsDTO,
+} from '../../dto/annual-apportioned-emissions.params.dto';
+
+const mockRequest = (url?: string, page?: number, perPage?: number) => {
+  return {
+    url,
+    res: {
+      setHeader: jest.fn(),
+    },
+    query: {
+      page,
+      perPage,
+    }
+  };
+};
 
 const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
+  getManyAndCount: jest.fn(),
   select: jest.fn(),
   innerJoin: jest.fn(),
   orderBy: jest.fn(),
@@ -25,7 +41,7 @@ const mockQueryBuilder = () => ({
   take: jest.fn(),
 });
 
-let filters: OzoneApportionedEmissionsParamsDTO = new OzoneApportionedEmissionsParamsDTO();
+let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
 filters.page = undefined;
 filters.perPage = undefined;
 filters.year = [2019];
@@ -39,26 +55,28 @@ filters.controlTechnologies = [
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
 
-describe('OzoneUnitDataRepository', () => {
-  let ozoneUnitDataRepository;
-  let queryBuilder;
+describe('AnnualUnitDataRepository', () => {
+  let repository: AnnualUnitDataRepository;
+  let queryBuilder: any;
+  let req: any;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        OzoneUnitDataRepository,
-        { provide: SelectQueryBuilder, useFactory: mockQueryBuilder },
+        AnnualUnitDataRepository,
+        {
+          provide: SelectQueryBuilder,
+          useFactory: mockQueryBuilder
+        },
       ],
     }).compile();
 
-    ozoneUnitDataRepository = module.get<OzoneUnitDataRepository>(
-      OzoneUnitDataRepository,
-    );
-    queryBuilder = module.get<SelectQueryBuilder<OzoneUnitData>>(
-      SelectQueryBuilder,
-    );
+    repository = module.get(AnnualUnitDataRepository);
+    queryBuilder = module.get(SelectQueryBuilder);
+    req = mockRequest('');
+    req.res.setHeader.mockReturnValue();
 
-    ozoneUnitDataRepository.createQueryBuilder = jest
+    repository.createQueryBuilder = jest
       .fn()
       .mockReturnValue(queryBuilder);
     queryBuilder.select.mockReturnValue(queryBuilder);
@@ -70,23 +88,27 @@ describe('OzoneUnitDataRepository', () => {
     queryBuilder.take.mockReturnValue('mockPagination');
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
+    queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
   });
 
-  describe('getOzoneEmissions', () => {
-    it('calls createQueryBuilder and gets all OzoneUnitData from the repository', async () => {
-      // branch coverage
-      const emptyFilters: OzoneApportionedEmissionsParamsDTO = new OzoneApportionedEmissionsParamsDTO();
-      let result = await ozoneUnitDataRepository.getOzoneEmissions(
-        emptyFilters,
+  describe('getEmissions', () => {
+    it('calls createQueryBuilder and gets all AnnualUnitData from the repository no filters', async () => {
+      const result = await repository.getEmissions(
+        req,
+        new PaginatedAnnualApportionedEmissionsParamsDTO(),
       );
-
-      result = await ozoneUnitDataRepository.getOzoneEmissions(filters);
 
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
 
-    it('calls createQueryBuilder and gets all OzoneUnitData paginated results from the repository', async () => {
+    it('calls createQueryBuilder and gets AnnualUnitData from the repository with filters', async () => {
+      const result = await repository.getEmissions(req, filters);
+      expect(queryBuilder.getMany).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all AnnualUnitData from the repository with pagination', async () => {
       ResponseHeaders.setPagination = jest
         .fn()
         .mockReturnValue('paginated results');
@@ -95,7 +117,8 @@ describe('OzoneUnitDataRepository', () => {
       paginatedFilters.page = 1;
       paginatedFilters.perPage = 10;
 
-      const paginatedResult = await ozoneUnitDataRepository.getOzoneEmissions(
+      const paginatedResult = await repository.getEmissions(
+        req,
         paginatedFilters,
       );
 
