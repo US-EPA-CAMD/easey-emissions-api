@@ -12,6 +12,8 @@ if (host === 'localhost') {
   uri = `http://localhost:${port}/${path}`;
 }
 
+export const PAGINATION_MAX_PER_PAGE = +process.env.EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE || 25000;
+
 export default registerAs('app', () => ({
   name: 'emissions-api',
   title: process.env.EASEY_EMISSIONS_API_TITLE || 'Emissions Management',
@@ -24,8 +26,8 @@ export default registerAs('app', () => ({
   enableCors: process.env.EASEY_EMISSIONS_API_ENABLE_CORS || true,
   enableApiKey: process.env.EASEY_EMISSIONS_API_ENABLE_API_KEY || true,
   enableAuthToken: process.env.EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN || false,
-  enableGlobalValidationPipes:
-    process.env.EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE || true,
+  enableGlobalValidationPipes: process.env.EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE || true,
   version: process.env.EASEY_EMISSIONS_API_VERSION || 'v0.0.0',
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
+  perPageLimit: PAGINATION_MAX_PER_PAGE,
 }));
