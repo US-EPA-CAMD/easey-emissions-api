@@ -1,4 +1,4 @@
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsNumber } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { 
@@ -6,8 +6,14 @@ import {
   ErrorMessages 
 } from '@us-epa-camd/easey-common/constants';
 
+import {
+  IsValidNumber,
+  IsInRange,
+  Min,
+} from '@us-epa-camd/easey-common/pipes';
+
 import { OpYear } from '../utils/validator.const';
-import { IsValidNumber } from '../pipes/is-valid-number.pipe';
+import { PAGINATION_MAX_PER_PAGE } from './../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 
@@ -46,10 +52,20 @@ export class PaginatedMonthlyApportionedEmissionsParamsDTO extends MonthlyApport
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
+  @IsDefined()
+  @IsNumber()
+  @Min(1, {
+    message: ErrorMessages.GreaterThanOrEqual('page', 1),
+  })  
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
+  })
+  @IsDefined()
+  @IsNumber()  
+  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
+    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })
   perPage: number;
 }
