@@ -3,15 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { OzoneUnitData } from '../../entities/ozone-unit-data.entity';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import { 
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
-@EntityRepository(OzoneUnitData)
-export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
+@EntityRepository(OzoneUnitDataView)
+export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
 
   streamEmissions(
     params: OzoneApportionedEmissionsParamsDTO,
@@ -22,9 +22,9 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
-  ): Promise<OzoneUnitData[]> {
+  ): Promise<OzoneUnitDataView[]> {
     let totalCount: number;
-    let results: OzoneUnitData[];
+    let results: OzoneUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
@@ -41,12 +41,11 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'oud.id',      
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'oud.stateCode',
+      'oud.facilityName',
+      'oud.facilityId',
+      'oud.unitId',
+      'oud.associatedStacks',
       'oud.year',
       'oud.sumOpTime',
       'oud.countOpTime',
@@ -59,14 +58,14 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
       'oud.noxMass',
       'oud.noxRate',
       'oud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',      
+      'oud.primaryFuelInfo',
+      'oud.secondaryFuelInfo',
+      'oud.unitType',
+      'oud.so2ControlInfo',
+      'oud.pmControlInfo',
+      'oud.noxControlInfo',
+      'oud.hgControlInfo',
+      'oud.programCodeInfo',      
     ];
 
     return columns.map(col => {
@@ -81,10 +80,9 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
   private buildQuery(
     params: OzoneApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<OzoneUnitData> {
+  ): SelectQueryBuilder<OzoneUnitDataView> {
     let query = this.createQueryBuilder('oud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('oud.unitFact', 'uf');
+      .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(query, params,
       [
@@ -96,13 +94,12 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitData> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'oud',
-      'uf',
+      'oud'
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('oud.facilityId')
+      .addOrderBy('oud.unitId')
       .addOrderBy('oud.year');
 
     return query;

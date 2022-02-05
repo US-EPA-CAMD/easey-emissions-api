@@ -15,7 +15,7 @@ import {
 } from '@us-epa-camd/easey-common/transforms';
 
 import { fieldMappings } from '../../constants/field-mappings';
-import { HourUnitData } from '../../entities/hour-unit-data.entity';
+import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsMap } from '../../maps/hourly-apportioned-emissions.map';
@@ -36,8 +36,8 @@ export class HourlyApportionedEmissionsService {
   async getEmissions(
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourlyApportionedEmissionsDTO[]> {
-    let entities: HourUnitData[];
+  ): Promise<HourUnitDataView[]> {
+    let entities: HourUnitDataView[];
 
     try {
       entities = await this.repository.getEmissions(req, params);
@@ -50,8 +50,8 @@ export class HourlyApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.hourly),
     );
 
-    return this.map.many(entities);
-  }  
+    return entities;
+  }
 
   async streamEmissions(
     req: Request,
@@ -67,7 +67,6 @@ export class HourlyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        delete data.id;
         const dto = plainToClass(
           HourlyApportionedEmissionsDTO,
           data,

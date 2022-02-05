@@ -26,6 +26,7 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { 
@@ -66,7 +67,7 @@ export class AnnualApportionedEmissionsController {
   getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsDTO[]> {
+  ): Promise<AnnualUnitDataView[]> {
     return this.service.getEmissions(req, params);
   }  
 
