@@ -3,15 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { HourUnitData } from '../../entities/hour-unit-data.entity';
+import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import { 
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
-@EntityRepository(HourUnitData)
-export class HourUnitDataRepository extends Repository<HourUnitData> {
+@EntityRepository(HourUnitDataView)
+export class HourUnitDataRepository extends Repository<HourUnitDataView> {
 
   streamEmissions(
     params: HourlyApportionedEmissionsParamsDTO,
@@ -22,9 +22,9 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourUnitData[]> {
+  ): Promise<HourUnitDataView[]> {
     let totalCount: number;
-    let results: HourUnitData[];
+    let results: HourUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
@@ -41,12 +41,11 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'hud.id',
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'hud.stateCode',
+      'hud.facilityName',
+      'hud.facilityId',
+      'hud.unitId',
+      'hud.associatedStacks',
       'hud.date',
       'hud.hour',
       'hud.opTime',
@@ -65,14 +64,14 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
       'hud.noxRate',
       'hud.noxRateMeasureFlg',
       'hud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',
+      'hud.primaryFuelInfo',
+      'hud.secondaryFuelInfo',
+      'hud.unitType',
+      'hud.so2ControlInfo',
+      'hud.pmControlInfo',
+      'hud.noxControlInfo',
+      'hud.hgControlInfo',
+      'hud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -84,13 +83,12 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
     });
   }
 
-  private buildQuery(
+  buildQuery(
     params: HourlyApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<HourUnitData> {
+  ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('hud.unitFact', 'uf');
+    .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(query, params,
       [
@@ -104,16 +102,15 @@ export class HourUnitDataRepository extends Repository<HourUnitData> {
         'programCodeInfo',
         'operatingHoursOnly',
       ],
-      'hud',
-      'uf',
+      'hud'
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('hud.facilityId')
+      .addOrderBy('hud.unitId')
       .addOrderBy('hud.date')
       .addOrderBy('hud.hour');
-
+    
     return query;
   }
 }

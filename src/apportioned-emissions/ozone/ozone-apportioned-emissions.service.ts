@@ -15,7 +15,7 @@ import {
 } from '@us-epa-camd/easey-common/transforms';
 
 import { fieldMappings } from '../../constants/field-mappings';
-import { OzoneUnitData } from '../../entities/ozone-unit-data.entity';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsMap } from '../../maps/ozone-apportioned-emissions.map';
@@ -36,8 +36,8 @@ export class OzoneApportionedEmissionsService {
   async getEmissions(
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
-  ): Promise<OzoneApportionedEmissionsDTO[]> {
-    let entities: OzoneUnitData[];
+  ): Promise<OzoneUnitDataView[]> {
+    let entities: OzoneUnitDataView[];
 
     try {
       entities = await this.repository.getEmissions(req, params);
@@ -50,7 +50,7 @@ export class OzoneApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.ozone),
     );
 
-    return this.map.many(entities);
+    return entities;
   }  
 
   async streamEmissions(
@@ -67,7 +67,6 @@ export class OzoneApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        delete data.id;
         const dto = plainToClass(
           OzoneApportionedEmissionsDTO,
           data,

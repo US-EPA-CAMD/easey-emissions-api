@@ -26,6 +26,7 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { OzoneUnitDataView } from './../../entities/vw-ozone-unit-data.entity';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { 
@@ -66,7 +67,7 @@ export class OzoneApportionedEmissionsController {
   getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedOzoneApportionedEmissionsParamsDTO,
-  ): Promise<OzoneApportionedEmissionsDTO[]> {
+  ): Promise<OzoneUnitDataView[]> {
     return this.service.getEmissions(req, params);
   }  
 

@@ -3,15 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { QuarterUnitData } from '../../entities/quarter-unit-data.entity';
+import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import { 
   QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
-@EntityRepository(QuarterUnitData)
-export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
+@EntityRepository(QuarterUnitDataView)
+export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
 
   streamEmissions(
     params: QuarterlyApportionedEmissionsParamsDTO,
@@ -22,9 +22,9 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
-  ): Promise<QuarterUnitData[]> {
+  ): Promise<QuarterUnitDataView[]> {
     let totalCount: number;
-    let results: QuarterUnitData[];
+    let results: QuarterUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
@@ -41,12 +41,11 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'qud.id',      
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'qud.stateCode',
+      'qud.facilityName',
+      'qud.facilityId',
+      'qud.unitId',
+      'qud.associatedStacks',
       'qud.year',
       'qud.quarter',
       'qud.sumOpTime',
@@ -60,14 +59,14 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
       'qud.noxMass',
       'qud.noxRate',
       'qud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',
+      'qud.primaryFuelInfo',
+      'qud.secondaryFuelInfo',
+      'qud.unitType',
+      'qud.so2ControlInfo',
+      'qud.pmControlInfo',
+      'qud.noxControlInfo',
+      'qud.hgControlInfo',
+      'qud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -82,10 +81,9 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
   private buildQuery(
     params: QuarterlyApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<QuarterUnitData> {
+  ): SelectQueryBuilder<QuarterUnitDataView> {
     let query = this.createQueryBuilder('qud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('qud.unitFact', 'uf');
+      .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(query, params,
       [
@@ -98,13 +96,12 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitData> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'qud',
-      'uf',
+      'qud'
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('qud.facilityId')
+      .addOrderBy('qud.unitId')
       .addOrderBy('qud.year')
       .addOrderBy('qud.quarter');
 

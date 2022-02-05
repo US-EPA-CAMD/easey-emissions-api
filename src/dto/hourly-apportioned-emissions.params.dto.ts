@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, IsOptional } from 'class-validator';
+import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Min, IsInRange } from '@us-epa-camd/easey-common/pipes';
 import { ErrorMessages, propertyMetadata } from '@us-epa-camd/easey-common/constants';

@@ -3,15 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { AnnualUnitData } from '../../entities/annual-unit-data.entity';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import { 
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 
-@EntityRepository(AnnualUnitData)
-export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
+@EntityRepository(AnnualUnitDataView)
+export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
   streamEmissions(
     params: AnnualApportionedEmissionsParamsDTO,
@@ -22,9 +22,9 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualUnitData[]> {
+  ): Promise<AnnualUnitDataView[]> {
     let totalCount: number;
-    let results: AnnualUnitData[];
+    let results: AnnualUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
@@ -41,12 +41,11 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'aud.id',      
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'aud.stateCode',
+      'aud.facilityName',
+      'aud.facilityId',
+      'aud.unitId',
+      'aud.associatedStacks',
       'aud.year',
       'aud.sumOpTime',
       'aud.countOpTime',
@@ -59,14 +58,14 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
       'aud.noxMass',
       'aud.noxRate',
       'aud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',
+      'aud.primaryFuelInfo',
+      'aud.secondaryFuelInfo',
+      'aud.unitType',
+      'aud.so2ControlInfo',
+      'aud.pmControlInfo',
+      'aud.noxControlInfo',
+      'aud.hgControlInfo',
+      'aud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -81,10 +80,9 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
   private buildQuery(
     params: AnnualApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<AnnualUnitData> {
+  ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('aud.unitFact', 'uf');
+      .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(query, params,
       [
@@ -96,13 +94,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitData> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'aud',
-      'uf',
+      'aud'
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('aud.facilityId')
+      .addOrderBy('aud.unitId')
       .addOrderBy('aud.year');
 
     return query;

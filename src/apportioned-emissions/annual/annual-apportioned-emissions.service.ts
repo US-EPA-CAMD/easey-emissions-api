@@ -15,7 +15,7 @@ import {
 } from '@us-epa-camd/easey-common/transforms';
 
 import { fieldMappings } from '../../constants/field-mappings';
-import { AnnualUnitData } from '../../entities/annual-unit-data.entity';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
@@ -36,8 +36,8 @@ export class AnnualApportionedEmissionsService {
   async getEmissions(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsDTO[]> {
-    let entities: AnnualUnitData[];
+  ): Promise<AnnualUnitDataView[]> {
+    let entities: AnnualUnitDataView[];
 
     try {
       entities = await this.repository.getEmissions(req, params);
@@ -50,7 +50,7 @@ export class AnnualApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.annual),
     );
 
-    return this.map.many(entities);
+    return entities;
   }  
 
   async streamEmissions(
@@ -67,7 +67,6 @@ export class AnnualApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        delete data.id;
         const dto = plainToClass(
           AnnualApportionedEmissionsDTO,
           data,
