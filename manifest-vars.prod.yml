@@ -1,5 +1,6 @@
 instances: 2
-memory: 2048M
+memory: 4096
+heap: 3072
 environment: production
 host: api-easey.app.cloud.gov
 apiHost: api.epa.gov/easey
