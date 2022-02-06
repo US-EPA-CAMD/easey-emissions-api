@@ -3,8 +3,10 @@ name: emissions-api
 title: Emissions Management
 path: emissions-mgmt
 port: 8080
+memory: 2048
+heap: 1536
+disk: 1024
 instances: 1
-memory: 512M
 environment: development
 host: api-easey-dev.app.cloud.gov
 apiHost: api.epa.gov/easey/dev
