@@ -14,9 +14,10 @@ name: "CodeQL"
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ develop ]
+    paths-ignore:
+    - '**/*.md'
+    - 'LICENSE'
+    - '.github/**'
   schedule:
     - cron: '23 3 * * 2'
 
