@@ -1,16 +1,12 @@
 import { Test } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { UnitAttributesMap } from '../../maps/unit-atributes.map';
-import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
-import { MonthlyApportionedEmissionsMap } from '../../maps/monthly-apportioned-emissions.map';
-import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
-
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
 
-import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import { 
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
@@ -35,10 +31,6 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [MonthlyApportionedEmissionsController],
       providers: [
-        UnitAttributesMap,
-        ApportionedEmissionsMap,
-        UnitFacilityIdentificationMap,
-        MonthlyApportionedEmissionsMap,
         MonthlyApportionedEmissionsService,        
         MonthUnitDataRepository,
       ],
@@ -56,13 +48,26 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('should return test 1', async () => {
-      const expectedResult: MonthlyApportionedEmissionsDTO[] = [];
+      const expectedResult: MonthUnitDataView[] = [];
       const paramsDto = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissions')
         .mockResolvedValue(expectedResult);
       expect(
         await controller.getEmissions(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* streamEmissions', () => {
+    it('should return test 1', async () => {
+      const expectedResult = new StreamableFile(Buffer.from('stream'));
+      const paramsDto = new MonthlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'streamEmissions')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.streamEmissions(req, paramsDto),
       ).toBe(expectedResult);
     });
   });

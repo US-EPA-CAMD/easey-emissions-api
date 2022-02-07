@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
-import { HourlyApportionedEmissionsMap } from '../../maps/hourly-apportioned-emissions.map';
+//import { HourlyApportionedEmissionsMap } from '../../maps/hourly-apportioned-emissions.map';
 import { 
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO
@@ -29,7 +29,7 @@ export class HourlyApportionedEmissionsService {
   constructor(
     @InjectRepository(HourUnitDataRepository)
     private readonly repository: HourUnitDataRepository,
-    private readonly map: HourlyApportionedEmissionsMap,
+    //private readonly map: HourlyApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 

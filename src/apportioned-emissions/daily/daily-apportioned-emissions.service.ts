@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
-import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
+//import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
 import { 
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
@@ -29,7 +29,7 @@ export class DailyApportionedEmissionsService {
   constructor(
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
-    private readonly map: DailyApportionedEmissionsMap,
+    //private readonly map: DailyApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 

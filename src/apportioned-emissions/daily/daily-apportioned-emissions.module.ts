@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
-import { UnitAttributesMap } from '../../maps/unit-atributes.map';
-import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
-import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
-import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
+// import { UnitAttributesMap } from '../../maps/unit-atributes.map';
+// import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
+// import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
+// import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
 
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
@@ -24,15 +24,15 @@ import { DailyApportionedEmissionsController } from './daily-apportioned-emissio
   ],
   providers: [
     ConfigService,
-    UnitAttributesMap,
-    ApportionedEmissionsMap,
-    UnitFacilityIdentificationMap,
-    DailyApportionedEmissionsMap,
+    // UnitAttributesMap,
+    // ApportionedEmissionsMap,
+    // UnitFacilityIdentificationMap,
+    // DailyApportionedEmissionsMap,
     DailyApportionedEmissionsService,
   ],
   exports: [
     TypeOrmModule,    
-    DailyApportionedEmissionsMap
+    //DailyApportionedEmissionsMap
   ],
 })
 export class DailyApportionedEmissionsModule {}
