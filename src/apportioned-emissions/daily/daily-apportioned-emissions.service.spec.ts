@@ -1,10 +1,11 @@
 import { Test } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
-import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
-import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
+
 import { 
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
@@ -12,10 +13,6 @@ import {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-});
-
-const mockMap = () => ({
-  many: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -29,7 +26,6 @@ const mockRequest = () => {
 describe('-- Daily Apportioned Emissions Service --', () => {
   let service: DailyApportionedEmissionsService;
   let repository: any;
-  let map: any;
   let req: any;
 
   beforeEach(async () => {
@@ -41,10 +37,6 @@ describe('-- Daily Apportioned Emissions Service --', () => {
           provide: DayUnitDataRepository,
           useFactory: mockRepository,
         },
-        {
-          provide: DailyApportionedEmissionsMap,
-          useFactory: mockMap
-        },
       ],
     }).compile();
 
@@ -52,23 +44,25 @@ describe('-- Daily Apportioned Emissions Service --', () => {
     req.res.setHeader.mockReturnValue();    
     service = module.get(DailyApportionedEmissionsService);
     repository = module.get(DayUnitDataRepository);
-    map = module.get(DailyApportionedEmissionsMap);
   });
 
   describe('getEmissions', () => {
     it('calls DayUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      repository.getEmissions.mockResolvedValue(
-        'list of emissions',
-      );
-      const dto = new DailyApportionedEmissionsDTO();
-      map.many.mockReturnValue(dto);
-
+      const expected = DayUnitDataView[0];
+      repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
-
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
 
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual(dto);
+  describe('streamEmissions', () => {
+    it('calls DailyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
+      const expectedResult = new StreamableFile(Buffer.from('stream'));
+      repository.streamEmissions.mockResolvedValue(expectedResult);
+      let filters = new DailyApportionedEmissionsParamsDTO();
+      let result = await service.streamEmissions(req, filters);
+      expect(result).toEqual(expectedResult);
     });
   });
 });

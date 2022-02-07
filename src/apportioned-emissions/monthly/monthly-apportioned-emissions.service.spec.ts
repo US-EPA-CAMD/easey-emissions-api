@@ -1,10 +1,11 @@
 import { Test } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
-import { MonthlyApportionedEmissionsMap } from '../../maps/monthly-apportioned-emissions.map';
-import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
+
 import { 
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
@@ -12,10 +13,6 @@ import {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-});
-
-const mockMap = () => ({
-  many: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -29,7 +26,6 @@ const mockRequest = () => {
 describe('-- Monthly Apportioned Emissions Service --', () => {
   let service: MonthlyApportionedEmissionsService;
   let repository: any;
-  let map: any;
   let req: any;
 
   beforeEach(async () => {
@@ -41,10 +37,6 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
           provide: MonthUnitDataRepository,
           useFactory: mockRepository,
         },
-        {
-          provide: MonthlyApportionedEmissionsMap,
-          useFactory: mockMap
-        },
       ],
     }).compile();
 
@@ -52,23 +44,25 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
     req.res.setHeader.mockReturnValue();    
     service = module.get(MonthlyApportionedEmissionsService);
     repository = module.get(MonthUnitDataRepository);
-    map = module.get(MonthlyApportionedEmissionsMap);
   });
 
   describe('getEmissions', () => {
     it('calls MonthUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      repository.getEmissions.mockResolvedValue(
-        'list of emissions',
-      );
-      const dto = new MonthlyApportionedEmissionsDTO();
-      map.many.mockReturnValue(dto);
-
+      const expected = MonthUnitDataView[0];
+      repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
-
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
 
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual(dto);
+  describe('streamEmissions', () => {
+    it('calls MonthlyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
+      const expectedResult = new StreamableFile(Buffer.from('stream'));
+      repository.streamEmissions.mockResolvedValue(expectedResult);
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+      let result = await service.streamEmissions(req, filters);
+      expect(result).toEqual(expectedResult);
     });
   });
 });

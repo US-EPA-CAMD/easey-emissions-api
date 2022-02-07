@@ -11,7 +11,6 @@ import {
 import { ResponseHeaders } from '../../utils/response.headers';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { 
-  OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
@@ -39,6 +38,7 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
+  stream: jest.fn(),
 });
 
 let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
@@ -76,9 +76,6 @@ describe('OzoneUnitDataRepository', () => {
     req = mockRequest('');
     req.res.setHeader.mockReturnValue();
 
-    repository.createQueryBuilder = jest
-      .fn()
-      .mockReturnValue(queryBuilder);
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
@@ -89,6 +86,11 @@ describe('OzoneUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
+    queryBuilder.stream.mockReturnValue('mockEmissions');
+
+    repository.createQueryBuilder = jest
+      .fn()
+      .mockReturnValue(queryBuilder);
   });
 
   describe('getEmissions', () => {
@@ -124,6 +126,17 @@ describe('OzoneUnitDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
+    });
+  });
+
+  describe('streamEmissions', () => {
+    it('calls streamEmissions and streams OzoneUnitData from the repository', async () => {
+      const result = await repository.streamEmissions(
+        new PaginatedOzoneApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
     });
   });
 });

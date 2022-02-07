@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
-import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
+//import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
 import { 
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
@@ -29,7 +29,7 @@ export class AnnualApportionedEmissionsService {
   constructor(
     @InjectRepository(AnnualUnitDataRepository)
     private readonly repository: AnnualUnitDataRepository,
-    private readonly map: AnnualApportionedEmissionsMap,
+    //private readonly map: AnnualApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 
