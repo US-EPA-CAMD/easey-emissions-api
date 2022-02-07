@@ -16,7 +16,10 @@ export class EmissionService {
   async getSubmissionProgress(
     periodDate: Date,
   ): Promise<EmissionsSubmissionsProgressDTO> {
-    let queryResult = await this.repository.getSubmissionProgress(periodDate);
+    let queryResult = await this.repository.getSubmissionProgress(
+      periodDate,
+      this.configService.get<number>('app.submissionDays'),
+    );
 
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
