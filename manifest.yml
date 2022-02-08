@@ -19,6 +19,7 @@ applications:
       EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE: 25000
       EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE: true
       NODE_OPTIONS: --max-old-space-size=((heap))
+      EASEY_EMISSIONS_API_SUBMISSION_DAYS: 38
     routes:
       - route: ((host))/((path))
     services:
