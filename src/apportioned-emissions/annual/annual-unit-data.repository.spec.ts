@@ -10,9 +10,9 @@ import {
 
 import { ResponseHeaders } from '../../utils/response.headers';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
-import { 
-  PaginatedAnnualApportionedEmissionsParamsDTO,
-} from '../../dto/annual-apportioned-emissions.params.dto';
+import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
   return {
@@ -23,7 +23,7 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
     query: {
       page,
       perPage,
-    }
+    },
   };
 };
 
@@ -66,7 +66,7 @@ describe('AnnualUnitDataRepository', () => {
         AnnualUnitDataRepository,
         {
           provide: SelectQueryBuilder,
-          useFactory: mockQueryBuilder
+          useFactory: mockQueryBuilder,
         },
       ],
     }).compile();
@@ -75,6 +75,10 @@ describe('AnnualUnitDataRepository', () => {
     queryBuilder = module.get(SelectQueryBuilder);
     req = mockRequest('');
     req.res.setHeader.mockReturnValue();
+
+    QueryBuilderHelper.createEmissionsQuery = jest
+      .fn()
+      .mockReturnValue(queryBuilder);
 
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
@@ -88,9 +92,7 @@ describe('AnnualUnitDataRepository', () => {
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
     queryBuilder.stream.mockReturnValue('mockEmissions');
 
-    repository.createQueryBuilder = jest
-      .fn()
-      .mockReturnValue(queryBuilder);
+    repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
 
   describe('getEmissions', () => {
