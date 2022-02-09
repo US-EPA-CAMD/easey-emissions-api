@@ -5,14 +5,13 @@ import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '../../utils/response.headers';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { 
+import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
-
   streamEmissions(
     params: DailyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
@@ -31,8 +30,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -65,7 +63,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
       'dud.pmControlInfo',
       'dud.noxControlInfo',
       'dud.hgControlInfo',
-      'dud.programCodeInfo',      
+      'dud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -81,10 +79,13 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     params: DailyApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
   ): SelectQueryBuilder<DayUnitDataView> {
-    let query = this.createQueryBuilder('dud')
-      .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('dud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'beginDate',
         'endDate',
@@ -95,7 +96,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'dud'
+      'dud',
     );
 
     query

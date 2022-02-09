@@ -7,10 +7,11 @@ import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
 
-import { 
+import {
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
+
 
 const mockRequest = (url: string) => {
   return {
@@ -30,10 +31,7 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [OzoneApportionedEmissionsController],
-      providers: [
-        OzoneApportionedEmissionsService,
-        OzoneUnitDataRepository,
-      ],
+      providers: [OzoneApportionedEmissionsService, OzoneUnitDataRepository],
     }).compile();
 
     controller = module.get(OzoneApportionedEmissionsController);
@@ -50,12 +48,10 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: OzoneUnitDataView[] = [];
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 
@@ -63,12 +59,10 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
       const paramsDto = new OzoneApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'streamEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.streamEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.streamEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 });

@@ -11,12 +11,18 @@ import {
   PaginatedQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
+jest.mock('uuid', () => {
+  return { v4: jest.fn().mockReturnValue(0) };
+});
+
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  streamEmissions: jest.fn(),
 });
 
 const mockRequest = () => {
   return {
+    headers: { accept: '' },
     res: {
       setHeader: jest.fn(),
     },
@@ -41,7 +47,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
     }).compile();
 
     req = mockRequest();
-    req.res.setHeader.mockReturnValue();    
+    req.res.setHeader.mockReturnValue();
     service = module.get(QuarterlyApportionedEmissionsService);
     repository = module.get(QuarterUnitDataRepository);
   });
@@ -58,11 +64,26 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('streamEmissions', () => {
     it('calls QuarterlyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      const expectedResult = new StreamableFile(Buffer.from('stream'));
-      repository.streamEmissions.mockResolvedValue(expectedResult);
+      const expectedResult = Buffer.from('stream');
+
+      const mockStream = {
+        pipe: jest.fn().mockReturnValue({
+          pipe: jest.fn().mockReturnValue(expectedResult),
+        }),
+      };
+      repository.streamEmissions.mockResolvedValue(mockStream);
       let filters = new QuarterlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
       let result = await service.streamEmissions(req, filters);
-      expect(result).toEqual(expectedResult);
+
+      expect(result).toEqual(
+        new StreamableFile(expectedResult, {
+          type: req.headers.accept,
+          disposition: `attachment; filename="quarterly-emissions-${0}.json"`,
+        }),
+      );
     });
   });
 });
