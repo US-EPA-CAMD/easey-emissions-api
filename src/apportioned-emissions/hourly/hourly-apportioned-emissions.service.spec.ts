@@ -1,25 +1,28 @@
 import { Test } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
+import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
-import { HourlyApportionedEmissionsMap } from '../../maps/hourly-apportioned-emissions.map';
-import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
-import { 
+
+import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
-const mockRepository = () => ({
-  getEmissions: jest.fn(),
+jest.mock('uuid', () => {
+  return { v4: jest.fn().mockReturnValue(0) };
 });
 
-const mockMap = () => ({
-  many: jest.fn(),
+const mockRepository = () => ({
+  getEmissions: jest.fn(),
+  streamEmissions: jest.fn(),
 });
 
 const mockRequest = () => {
   return {
+    headers: { accept: '' },
     res: {
       setHeader: jest.fn(),
     },
@@ -29,7 +32,6 @@ const mockRequest = () => {
 describe('-- Hourly Apportioned Emissions Service --', () => {
   let service: HourlyApportionedEmissionsService;
   let repository: any;
-  let map: any;
   let req: any;
 
   beforeEach(async () => {
@@ -41,34 +43,47 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
           provide: HourUnitDataRepository,
           useFactory: mockRepository,
         },
-        {
-          provide: HourlyApportionedEmissionsMap,
-          useFactory: mockMap
-        },
       ],
     }).compile();
 
     req = mockRequest();
-    req.res.setHeader.mockReturnValue();    
+    req.res.setHeader.mockReturnValue();
     service = module.get(HourlyApportionedEmissionsService);
     repository = module.get(HourUnitDataRepository);
-    map = module.get(HourlyApportionedEmissionsMap);
   });
 
   describe('getEmissions', () => {
     it('calls HourUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      repository.getEmissions.mockResolvedValue(
-        'list of emissions',
-      );
-      const dto = new HourlyApportionedEmissionsDTO();
-      map.many.mockReturnValue(dto);
-
+      const expected = HourUnitDataView[0];
+      repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
-
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
 
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual(dto);
+  describe('streamEmissions', () => {
+    it('calls HourlyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
+      const expectedResult = Buffer.from('stream');
+
+      const mockStream = {
+        pipe: jest.fn().mockReturnValue({
+          pipe: jest.fn().mockReturnValue(expectedResult),
+        }),
+      };
+      repository.streamEmissions.mockResolvedValue(mockStream);
+      let filters = new HourlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissions(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(expectedResult, {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-${0}.json"`,
+        }),
+      );
     });
   });
 });

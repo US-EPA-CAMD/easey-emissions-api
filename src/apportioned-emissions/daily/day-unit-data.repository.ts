@@ -3,16 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { DayUnitData } from '../../entities/day-unit-data.entity';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { 
+import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
-@EntityRepository(DayUnitData)
-export class DayUnitDataRepository extends Repository<DayUnitData> {
-
+@EntityRepository(DayUnitDataView)
+export class DayUnitDataRepository extends Repository<DayUnitDataView> {
   streamEmissions(
     params: DailyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
@@ -22,17 +21,16 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DayUnitData[]> {
+  ): Promise<DayUnitDataView[]> {
     let totalCount: number;
-    let results: DayUnitData[];
+    let results: DayUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -41,12 +39,11 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'dud.id',      
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'dud.stateCode',
+      'dud.facilityName',
+      'dud.facilityId',
+      'dud.unitId',
+      'dud.associatedStacks',
       'dud.date',
       'dud.sumOpTime',
       'dud.countOpTime',
@@ -59,14 +56,14 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
       'dud.noxMass',
       'dud.noxRate',
       'dud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',      
+      'dud.primaryFuelInfo',
+      'dud.secondaryFuelInfo',
+      'dud.unitType',
+      'dud.so2ControlInfo',
+      'dud.pmControlInfo',
+      'dud.noxControlInfo',
+      'dud.hgControlInfo',
+      'dud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -81,12 +78,14 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
   private buildQuery(
     params: DailyApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<DayUnitData> {
-    let query = this.createQueryBuilder('dud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('dud.unitFact', 'uf');
+  ): SelectQueryBuilder<DayUnitDataView> {
+    let query = this.createQueryBuilder('dud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'beginDate',
         'endDate',
@@ -98,12 +97,11 @@ export class DayUnitDataRepository extends Repository<DayUnitData> {
         'programCodeInfo',
       ],
       'dud',
-      'uf',
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('dud.facilityId')
+      .addOrderBy('dud.unitId')
       .addOrderBy('dud.date');
 
     return query;

@@ -1,18 +1,12 @@
-import { ReadStream } from 'fs';
 import { Test } from '@nestjs/testing';
 import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { UnitAttributesMap } from '../../maps/unit-atributes.map';
-import { ApportionedEmissionsMap } from '../../maps/apportioned-emissions.map';
-import { AnnualApportionedEmissionsMap } from '../../maps/annual-apportioned-emissions.map';
-import { UnitFacilityIdentificationMap } from '../../maps/unit-facility-identification.map';
-
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { AnnualApportionedEmissionsController } from './annual-apportioned-emissions.controller';
 
-import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { 
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
@@ -37,10 +31,6 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [AnnualApportionedEmissionsController],
       providers: [
-        UnitAttributesMap,
-        ApportionedEmissionsMap,
-        UnitFacilityIdentificationMap,
-        AnnualApportionedEmissionsMap,
         AnnualApportionedEmissionsService,        
         AnnualUnitDataRepository,
       ],
@@ -58,7 +48,7 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('should return test 1', async () => {
-      const expectedResult: AnnualApportionedEmissionsDTO[] = [];
+      const expectedResult: AnnualUnitDataView[] = [];
       const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissions')
@@ -69,16 +59,16 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
     });
   });
 
-  // describe('* streamEmissions', () => {
-  //   it('should return test 1', async () => {
-  //     const expectedResult = new StreamableFile(new ReadStream());
-  //     const paramsDto = new AnnualApportionedEmissionsParamsDTO();
-  //     jest
-  //       .spyOn(service, 'streamEmissions')
-  //       .mockResolvedValue(expectedResult);
-  //     expect(
-  //       await controller.streamEmissions(req, paramsDto),
-  //     ).toBe(expectedResult);
-  //   });
-  // });
+  describe('* streamEmissions', () => {
+    it('should return test 1', async () => {
+      const expectedResult = new StreamableFile(Buffer.from('stream'));
+      const paramsDto = new AnnualApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'streamEmissions')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.streamEmissions(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
 });

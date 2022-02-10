@@ -1,24 +1,29 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, ViewEntity } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
-import { UnitFact } from './unit-fact.entity';
+@ViewEntity({
+  name: 'camddmw.vw_annual_unit_data'
+})
+export class AnnualUnitDataView {
+  @Column({ name: 'state' })
+  stateCode: string;
 
-@Entity({ name: 'camddmw.ozone_unit_data' })
-export class OzoneUnitData extends BaseEntity {
-  @PrimaryColumn({
-    name: 'unit_id',
+  @Column({ name: 'facility_name' })
+  facilityName: string;
+
+  @Column({
+    name: 'orispl_code',
     transformer: new NumericColumnTransformer(),    
   })
-  id: number;
+  facilityId: number;
 
-  @PrimaryColumn({
+  @Column({ name: 'unitid' })
+  unitId: string;
+
+  @Column({ name: 'assoc_stacks' })
+  associatedStacks: string;
+
+  @Column({
     name: 'op_year',
     transformer: new NumericColumnTransformer(),    
   })
@@ -53,14 +58,6 @@ export class OzoneUnitData extends BaseEntity {
     transformer: new NumericColumnTransformer(),
   })
   steamLoad: number;
-
-  @Column('numeric', {
-    name: 'heat_input',
-    precision: 15,
-    scale: 3,
-    transformer: new NumericColumnTransformer(),
-  })
-  heatInput: number;
 
   @Column('numeric', {
     name: 'so2_mass',
@@ -110,19 +107,35 @@ export class OzoneUnitData extends BaseEntity {
   })
   noxRate: number;
 
-  @ManyToOne(
-    () => UnitFact,
-    uf => uf.ozoneUnitData,
-  )
-  @JoinColumn([
-    {
-      name: 'unit_id',
-      referencedColumnName: 'id',
-    },
-    {
-      name: 'op_year',
-      referencedColumnName: 'year',
-    },
-  ])
-  unitFact: UnitFact;
+  @Column('numeric', {
+    name: 'heat_input',
+    precision: 15,
+    scale: 3,
+    transformer: new NumericColumnTransformer(),
+  })
+  heatInput: number;
+
+  @Column({ name: 'primary_fuel_info' })
+  primaryFuelInfo: string;
+
+  @Column({ name: 'secondary_fuel_info' })
+  secondaryFuelInfo: string;
+
+  @Column({ name: 'unit_type_info' })
+  unitType: string;
+
+  @Column({ name: 'so2_control_info' })
+  so2ControlInfo: string;
+
+  @Column({ name: 'nox_control_info' })
+  noxControlInfo: string;
+
+  @Column({ name: 'part_control_info' })
+  pmControlInfo: string;
+
+  @Column({ name: 'hg_control_info' })
+  hgControlInfo: string;
+
+  @Column({ name: 'prg_code_info' })
+  programCodeInfo: string;
 }

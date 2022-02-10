@@ -10,10 +10,9 @@ import {
 
 import { ResponseHeaders } from '../../utils/response.headers';
 import { DayUnitDataRepository } from './day-unit-data.repository';
-import { 
-  DailyApportionedEmissionsParamsDTO,
-  PaginatedDailyApportionedEmissionsParamsDTO,
-} from '../../dto/daily-apportioned-emissions.params.dto';
+import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
   return {
@@ -24,7 +23,7 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
     query: {
       page,
       perPage,
-    }
+    },
   };
 };
 
@@ -39,6 +38,7 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
+  stream: jest.fn(),
 });
 
 let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
@@ -59,7 +59,7 @@ filters.programCodeInfo = [Program.ARP, Program.RGGI];
 describe('DayUnitDataRepository', () => {
   let repository: DayUnitDataRepository;
   let queryBuilder: any;
-  let req: any;  
+  let req: any;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -67,7 +67,7 @@ describe('DayUnitDataRepository', () => {
         DayUnitDataRepository,
         {
           provide: SelectQueryBuilder,
-          useFactory: mockQueryBuilder
+          useFactory: mockQueryBuilder,
         },
       ],
     }).compile();
@@ -75,11 +75,12 @@ describe('DayUnitDataRepository', () => {
     repository = module.get(DayUnitDataRepository);
     queryBuilder = module.get(SelectQueryBuilder);
     req = mockRequest('');
-    req.res.setHeader.mockReturnValue();    
+    req.res.setHeader.mockReturnValue();
 
-    repository.createQueryBuilder = jest
+    QueryBuilderHelper.createEmissionsQuery = jest
       .fn()
       .mockReturnValue(queryBuilder);
+
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
@@ -90,6 +91,9 @@ describe('DayUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
+    queryBuilder.stream.mockReturnValue('mockEmissions');
+
+    repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
 
   describe('getEmissions', () => {
@@ -125,6 +129,17 @@ describe('DayUnitDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
+    });
+  });
+
+  describe('streamEmissions', () => {
+    it('calls streamEmissions and streams DayUnitData from the repository', async () => {
+      const result = await repository.streamEmissions(
+        new PaginatedDailyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
     });
   });
 });
