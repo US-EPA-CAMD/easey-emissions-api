@@ -25,7 +25,6 @@ export class AnnualApportionedEmissionsService {
   constructor(
     @InjectRepository(AnnualUnitDataRepository)
     private readonly repository: AnnualUnitDataRepository,
-    //private readonly map: AnnualApportionedEmissionsMap,
     private readonly logger: Logger,
   ) {}
 

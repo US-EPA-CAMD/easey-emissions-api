@@ -18,7 +18,6 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
-//import { QuarterlyApportionedEmissionsMap } from '../../maps/quarterly-apportioned-emissions.map';
 import { 
   QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO
@@ -29,7 +28,6 @@ export class QuarterlyApportionedEmissionsService {
   constructor(
     @InjectRepository(QuarterUnitDataRepository)
     private readonly repository: QuarterUnitDataRepository,
-    //private readonly map: QuarterlyApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 

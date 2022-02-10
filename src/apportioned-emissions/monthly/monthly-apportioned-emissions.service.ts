@@ -18,7 +18,6 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
-//import { MonthlyApportionedEmissionsMap } from '../../maps/monthly-apportioned-emissions.map';
 import { 
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
@@ -29,7 +28,6 @@ export class MonthlyApportionedEmissionsService {
   constructor(
     @InjectRepository(MonthUnitDataRepository)
     private readonly repository: MonthUnitDataRepository,
-    //private readonly map: MonthlyApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 
