@@ -181,21 +181,20 @@ export class QueryBuilderHelper {
     query: any,
     dto: any,
     params: string[],
-    emissionsAlias: string,
-    unitAlias: string = 'uf',
+    alias: string,
   ) {
-    query = this.whereBeginDate(query, dto.beginDate, params, emissionsAlias);
-    query = this.whereEndDate(query, dto.endDate, params, emissionsAlias);
-    query = this.whereYear(query, dto.year, params, emissionsAlias);
-    query = this.whereQuarter(query, dto.quarter, params, emissionsAlias);
-    query = this.whereMonth(query, dto.month, params, emissionsAlias);
-    query = this.whereStateCode(query, dto.stateCode, params, unitAlias);
-    query = this.whereFacilityId(query, dto.facilityId, params, unitAlias);
-    query = this.whereUnitType(query, dto.unitType, params, unitAlias);
-    query = this.whereUnitFuel(query, dto.unitFuel, params, unitAlias);
-    query = this.whereControlTech(query, dto.controlTechnologies, params, unitAlias);
-    query = this.whereProgramCode(query, dto.programCodeInfo, params, unitAlias);
-    query = this.whereOperatingHoursOnly(query, dto.operatingHoursOnly, params, emissionsAlias);
+    query = this.whereBeginDate(query, dto.beginDate, params, alias);
+    query = this.whereEndDate(query, dto.endDate, params, alias);
+    query = this.whereYear(query, dto.year, params, alias);
+    query = this.whereQuarter(query, dto.quarter, params, alias);
+    query = this.whereMonth(query, dto.month, params, alias);
+    query = this.whereStateCode(query, dto.stateCode, params, alias);
+    query = this.whereFacilityId(query, dto.facilityId, params, alias);
+    query = this.whereUnitType(query, dto.unitType, params, alias);
+    query = this.whereUnitFuel(query, dto.unitFuel, params, alias);
+    query = this.whereControlTech(query, dto.controlTechnologies, params, alias);
+    query = this.whereProgramCode(query, dto.programCodeInfo, params, alias);
+    query = this.whereOperatingHoursOnly(query, dto.operatingHoursOnly, params, alias);
 
     if (dto.page && dto.perPage) {
       query = query.skip((dto.page - 1) * dto.perPage).take(dto.perPage);

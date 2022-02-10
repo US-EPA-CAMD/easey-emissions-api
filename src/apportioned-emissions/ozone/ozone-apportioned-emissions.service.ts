@@ -18,7 +18,6 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
-//import { OzoneApportionedEmissionsMap } from '../../maps/ozone-apportioned-emissions.map';
 import { 
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO
@@ -29,7 +28,6 @@ export class OzoneApportionedEmissionsService {
   constructor(
     @InjectRepository(OzoneUnitDataRepository)
     private readonly repository: OzoneUnitDataRepository,
-    //private readonly map: OzoneApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 
