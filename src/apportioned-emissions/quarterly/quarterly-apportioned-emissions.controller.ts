@@ -26,6 +26,7 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { 
@@ -66,7 +67,7 @@ export class QuarterlyApportionedEmissionsController {
   getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
-  ): Promise<QuarterlyApportionedEmissionsDTO[]> {
+  ): Promise<QuarterUnitDataView[]> {
     return this.service.getEmissions(req, params);
   }  
 

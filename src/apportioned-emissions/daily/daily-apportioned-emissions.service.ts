@@ -15,10 +15,9 @@ import {
 } from '@us-epa-camd/easey-common/transforms';
 
 import { fieldMappings } from '../../constants/field-mappings';
-import { DayUnitData } from '../../entities/day-unit-data.entity';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
-import { DailyApportionedEmissionsMap } from '../../maps/daily-apportioned-emissions.map';
 import { 
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
@@ -29,15 +28,14 @@ export class DailyApportionedEmissionsService {
   constructor(
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
-    private readonly map: DailyApportionedEmissionsMap,
     private readonly logger: Logger,
   ) { }
 
   async getEmissions(
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsDTO[]> {
-    let entities: DayUnitData[];
+  ): Promise<DayUnitDataView[]> {
+    let entities: DayUnitDataView[];
 
     try {
       entities = await this.repository.getEmissions(req, params);
@@ -50,7 +48,7 @@ export class DailyApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
-    return this.map.many(entities);
+    return entities;
   }  
 
   async streamEmissions(
@@ -67,7 +65,6 @@ export class DailyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        delete data.id;
         const dto = plainToClass(
           DailyApportionedEmissionsDTO,
           data,

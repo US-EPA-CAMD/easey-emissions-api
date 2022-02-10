@@ -26,6 +26,7 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { HourUnitDataView } from './../../entities/vw-hour-unit-data.entity';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { 
@@ -66,7 +67,7 @@ export class HourlyApportionedEmissionsController {
   getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourlyApportionedEmissionsDTO[]> {
+  ): Promise<HourUnitDataView[]> {
     return this.service.getEmissions(req, params);
   }  
 

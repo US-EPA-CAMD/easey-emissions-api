@@ -3,15 +3,15 @@ import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 
 import { ResponseHeaders } from '../../utils/response.headers';
-import { MonthUnitData } from '../../entities/month-unit-data.entity';
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import { 
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
-@EntityRepository(MonthUnitData)
-export class MonthUnitDataRepository extends Repository<MonthUnitData> {
+@EntityRepository(MonthUnitDataView)
+export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
 
   streamEmissions(
     params: MonthlyApportionedEmissionsParamsDTO,
@@ -22,9 +22,9 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
   async getEmissions(
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<MonthUnitData[]> {
+  ): Promise<MonthUnitDataView[]> {
     let totalCount: number;
-    let results: MonthUnitData[];
+    let results: MonthUnitDataView[];
     const { page, perPage } = params;
     let query = this.buildQuery(params);
 
@@ -41,12 +41,11 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
 
   private getColumns(isStreamed: boolean): string[] {
     const columns = [
-      'mud.id',      
-      'uf.stateCode',
-      'uf.facilityName',
-      'uf.facilityId',
-      'uf.unitId',
-      'uf.associatedStacks',
+      'mud.stateCode',
+      'mud.facilityName',
+      'mud.facilityId',
+      'mud.unitId',
+      'mud.associatedStacks',
       'mud.year',
       'mud.month',
       'mud.sumOpTime',
@@ -60,14 +59,14 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
       'mud.noxMass',
       'mud.noxRate',
       'mud.heatInput',
-      'uf.primaryFuelInfo',
-      'uf.secondaryFuelInfo',
-      'uf.unitType',
-      'uf.so2ControlInfo',
-      'uf.pmControlInfo',
-      'uf.noxControlInfo',
-      'uf.hgControlInfo',
-      'uf.programCodeInfo',
+      'mud.primaryFuelInfo',
+      'mud.secondaryFuelInfo',
+      'mud.unitType',
+      'mud.so2ControlInfo',
+      'mud.pmControlInfo',
+      'mud.noxControlInfo',
+      'mud.hgControlInfo',
+      'mud.programCodeInfo',
     ];
 
     return columns.map(col => {
@@ -82,10 +81,9 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
   private buildQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
     isStreamed: boolean = false,
-  ): SelectQueryBuilder<MonthUnitData> {
+  ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud')
-      .select(this.getColumns(isStreamed))
-      .innerJoin('mud.unitFact', 'uf');
+      .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(query, params,
       [
@@ -98,13 +96,12 @@ export class MonthUnitDataRepository extends Repository<MonthUnitData> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'mud',
-      'uf',
+      'mud'
     );
 
     query
-      .orderBy('uf.facilityId')
-      .addOrderBy('uf.unitId')
+      .orderBy('mud.facilityId')
+      .addOrderBy('mud.unitId')
       .addOrderBy('mud.year')
       .addOrderBy('mud.month');
 

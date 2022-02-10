@@ -11,7 +11,7 @@ import { TypeOrmConfigService } from './config/typeorm.config';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
-import { EmissionsModule } from './emissions/emissions.module'
+import { EmissionsModule } from './emissions/emissions.module';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { EmissionsModule } from './emissions/emissions.module'
     LoggerModule,
     CorsOptionsModule,
     ApportionedEmissionsModule,
-    EmissionsModule
+    EmissionsModule,
   ],
 })
 export class AppModule {}

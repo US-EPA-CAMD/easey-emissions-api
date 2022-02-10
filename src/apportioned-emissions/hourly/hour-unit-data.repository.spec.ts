@@ -10,10 +10,9 @@ import {
 
 import { ResponseHeaders } from '../../utils/response.headers';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { 
-  HourlyApportionedEmissionsParamsDTO,
-  PaginatedHourlyApportionedEmissionsParamsDTO,
-} from '../../dto/hourly-apportioned-emissions.params.dto';
+import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
   return {
@@ -24,7 +23,7 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
     query: {
       page,
       perPage,
-    }
+    },
   };
 };
 
@@ -39,6 +38,7 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
+  stream: jest.fn(),
 });
 
 let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
@@ -68,7 +68,7 @@ describe('HourUnitDataRepository', () => {
         HourUnitDataRepository,
         {
           provide: SelectQueryBuilder,
-          useFactory: mockQueryBuilder
+          useFactory: mockQueryBuilder,
         },
       ],
     }).compile();
@@ -78,9 +78,10 @@ describe('HourUnitDataRepository', () => {
     req = mockRequest('');
     req.res.setHeader.mockReturnValue();
 
-    repository.createQueryBuilder = jest
+    QueryBuilderHelper.createEmissionsQuery = jest
       .fn()
       .mockReturnValue(queryBuilder);
+
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
@@ -91,6 +92,9 @@ describe('HourUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
+    queryBuilder.stream.mockReturnValue('mockEmissions');
+
+    repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
 
   describe('getEmissions', () => {
@@ -126,6 +130,17 @@ describe('HourUnitDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
+    });
+  });
+
+  describe('streamEmissions', () => {
+    it('calls streamEmissions and streams HourUnitData from the repository', async () => {
+      const result = await repository.streamEmissions(
+        new PaginatedHourlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
     });
   });
 });

@@ -1,25 +1,28 @@
 import { Test } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
-import { MonthlyApportionedEmissionsMap } from '../../maps/monthly-apportioned-emissions.map';
-import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
-import { 
+
+import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
-const mockRepository = () => ({
-  getEmissions: jest.fn(),
+jest.mock('uuid', () => {
+  return { v4: jest.fn().mockReturnValue(0) };
 });
 
-const mockMap = () => ({
-  many: jest.fn(),
+const mockRepository = () => ({
+  getEmissions: jest.fn(),
+  streamEmissions: jest.fn(),
 });
 
 const mockRequest = () => {
   return {
+    headers: { accept: '' },
     res: {
       setHeader: jest.fn(),
     },
@@ -29,7 +32,6 @@ const mockRequest = () => {
 describe('-- Monthly Apportioned Emissions Service --', () => {
   let service: MonthlyApportionedEmissionsService;
   let repository: any;
-  let map: any;
   let req: any;
 
   beforeEach(async () => {
@@ -41,34 +43,47 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
           provide: MonthUnitDataRepository,
           useFactory: mockRepository,
         },
-        {
-          provide: MonthlyApportionedEmissionsMap,
-          useFactory: mockMap
-        },
       ],
     }).compile();
 
     req = mockRequest();
-    req.res.setHeader.mockReturnValue();    
+    req.res.setHeader.mockReturnValue();
     service = module.get(MonthlyApportionedEmissionsService);
     repository = module.get(MonthUnitDataRepository);
-    map = module.get(MonthlyApportionedEmissionsMap);
   });
 
   describe('getEmissions', () => {
     it('calls MonthUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      repository.getEmissions.mockResolvedValue(
-        'list of emissions',
-      );
-      const dto = new MonthlyApportionedEmissionsDTO();
-      map.many.mockReturnValue(dto);
-
+      const expected = MonthUnitDataView[0];
+      repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
-
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
 
-      expect(map.many).toHaveBeenCalled();
-      expect(result).toEqual(dto);
+  describe('streamEmissions', () => {
+    it('calls MonthlyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
+      const expectedResult = Buffer.from('stream');
+
+      const mockStream = {
+        pipe: jest.fn().mockReturnValue({
+          pipe: jest.fn().mockReturnValue(expectedResult),
+        }),
+      };
+      repository.streamEmissions.mockResolvedValue(mockStream);
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissions(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(expectedResult, {
+          type: req.headers.accept,
+          disposition: `attachment; filename="monthly-emissions-${0}.json"`,
+        }),
+      );
     });
   });
 });

@@ -10,10 +10,9 @@ import {
 
 import { ResponseHeaders } from '../../utils/response.headers';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
-import {
-  QuarterlyApportionedEmissionsParamsDTO,
-  PaginatedQuarterlyApportionedEmissionsParamsDTO,
-} from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
   return {
@@ -24,7 +23,7 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
     query: {
       page,
       perPage,
-    }
+    },
   };
 };
 
@@ -39,6 +38,7 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
+  stream: jest.fn(),
 });
 
 let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
@@ -67,7 +67,7 @@ describe('QuarterUnitDataRepository', () => {
         QuarterUnitDataRepository,
         {
           provide: SelectQueryBuilder,
-          useFactory: mockQueryBuilder
+          useFactory: mockQueryBuilder,
         },
       ],
     }).compile();
@@ -77,9 +77,10 @@ describe('QuarterUnitDataRepository', () => {
     req = mockRequest('');
     req.res.setHeader.mockReturnValue();
 
-    repository.createQueryBuilder = jest
+    QueryBuilderHelper.createEmissionsQuery = jest
       .fn()
       .mockReturnValue(queryBuilder);
+
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
@@ -90,6 +91,9 @@ describe('QuarterUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
+    queryBuilder.stream.mockReturnValue('mockEmissions');
+
+    repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
 
   describe('getEmissions', () => {
@@ -125,6 +129,17 @@ describe('QuarterUnitDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
+    });
+  });
+
+  describe('streamEmissions', () => {
+    it('calls streamEmissions and streams QuarterUnitData from the repository', async () => {
+      const result = await repository.streamEmissions(
+        new PaginatedQuarterlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
     });
   });
 });
