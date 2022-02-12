@@ -27,8 +27,7 @@
     "up": "yarn --ignore-engines && yarn start:dev"
   },
   "resolutions": {
-    "ansi-regex": "^5.0.1",
-    "class-transformer": "0.4.0"
+    "ansi-regex": "^5.0.1"
   },
   "dependencies": {
     "@nestjs/axios": "0.0.3",
@@ -38,7 +37,7 @@
     "@nestjs/platform-express": "^8.1.1",
     "@nestjs/swagger": "^5.1.2",
     "@nestjs/typeorm": "^8.0.2",
-    "@us-epa-camd/easey-common": "^2.9.0",
+    "@us-epa-camd/easey-common": "^2.12.0",
     "class-transformer": "0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
