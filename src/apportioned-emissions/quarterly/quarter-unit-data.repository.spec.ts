@@ -7,8 +7,8 @@ import {
   ControlTechnology,
   Program,
 } from '@us-epa-camd/easey-common/enums';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
