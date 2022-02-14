@@ -79,7 +79,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
 
   private buildQuery(
     params: OzoneApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<OzoneUnitDataView> {
     let query = this.createQueryBuilder('oud')
       .select(this.getColumns(isStreamed));

@@ -85,7 +85,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
 
   buildQuery(
     params: HourlyApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud')
     .select(this.getColumns(isStreamed));
