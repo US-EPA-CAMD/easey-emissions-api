@@ -13,7 +13,7 @@ export class HourUnitDataView {
 
   @Column({
     name: 'orispl_code',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   facilityId: number;
 

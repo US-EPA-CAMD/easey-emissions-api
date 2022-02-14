@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmissionsSubmissionsProgressDTO } from 'src/dto/emissions-submission-progress.dto';
+
+import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
 import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
 import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
 import { EmissionsRepository } from './emissions.repository';

@@ -43,7 +43,7 @@ const routes: Routes = [
   {
     path: '/emissions',
     module: EmissionsModule,
-  }  
+  }
 ];
 
 export default routes;

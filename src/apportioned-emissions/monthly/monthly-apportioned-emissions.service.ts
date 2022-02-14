@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
+import {
   Injectable,
   StreamableFile,
   InternalServerErrorException
@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
-import { 
+import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
@@ -49,7 +49,7 @@ export class MonthlyApportionedEmissionsService {
     );
 
     return entities;
-  }  
+  }
 
   async streamEmissions(
     req: Request,

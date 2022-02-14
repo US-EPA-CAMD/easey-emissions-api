@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
+import {
   Injectable,
   StreamableFile,
   InternalServerErrorException
@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
-import { 
+import {
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO
 } from '../../dto/ozone-apportioned-emissions.params.dto';
@@ -49,7 +49,7 @@ export class OzoneApportionedEmissionsService {
     );
 
     return entities;
-  }  
+  }
 
   async streamEmissions(
     req: Request,
