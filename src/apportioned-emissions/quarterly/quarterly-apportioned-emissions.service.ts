@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
+import {
   Injectable,
   StreamableFile,
   InternalServerErrorException
@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
-import { 
+import {
   QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
@@ -49,7 +49,7 @@ export class QuarterlyApportionedEmissionsService {
     );
 
     return entities;
-  }  
+  }
 
   async streamEmissions(
     req: Request,

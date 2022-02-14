@@ -25,7 +25,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    let query = this.buildQuery(params);
+    const query = this.buildQuery(params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -77,7 +77,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
 
   private buildQuery(
     params: DailyApportionedEmissionsParamsDTO,
-    isStreamed: boolean = false,
+    isStreamed?: boolean,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
       this.getColumns(isStreamed),

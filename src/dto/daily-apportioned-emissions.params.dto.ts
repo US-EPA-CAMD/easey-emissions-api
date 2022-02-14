@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber } from 'class-validator';
+import { IsDefined } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -36,7 +36,7 @@ export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportione
   @IsDefined()
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })  
+  })
   page: number;
 
   @ApiProperty({

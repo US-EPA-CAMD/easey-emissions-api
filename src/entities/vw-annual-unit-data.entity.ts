@@ -13,7 +13,7 @@ export class AnnualUnitDataView {
 
   @Column({
     name: 'orispl_code',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   facilityId: number;
 
@@ -25,13 +25,13 @@ export class AnnualUnitDataView {
 
   @Column({
     name: 'op_year',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   year: number;
 
   @Column({
     name: 'count_op_time',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   countOpTime: number;
 

@@ -175,8 +175,8 @@ export class QueryBuilderHelper {
     }
 
     return query;
-  }  
-  
+  }
+
   public static createEmissionsQuery(
     query: any,
     dto: any,

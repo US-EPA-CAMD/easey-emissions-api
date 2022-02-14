@@ -29,7 +29,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
-import { 
+import {
   QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
@@ -69,7 +69,7 @@ export class QuarterlyApportionedEmissionsController {
     @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterUnitDataView[]> {
     return this.service.getEmissions(req, params);
-  }  
+  }
 
   @Get('stream')
   @ApiOkResponse({

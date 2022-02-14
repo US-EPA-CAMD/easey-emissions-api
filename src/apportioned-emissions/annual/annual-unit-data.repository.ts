@@ -5,7 +5,7 @@ import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '../../utils/response.headers';
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { 
+import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
@@ -26,7 +26,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     let totalCount: number;
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
-    let query = this.buildQuery(params);
+    const query = this.buildQuery(params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -79,7 +79,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
   private buildQuery(
     params: AnnualApportionedEmissionsParamsDTO,
-    isStreamed: boolean = false,
+    isStreamed?: boolean,
   ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud')
       .select(this.getColumns(isStreamed));
