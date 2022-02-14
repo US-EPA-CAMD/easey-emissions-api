@@ -80,7 +80,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
 
   private buildQuery(
     params: QuarterlyApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<QuarterUnitDataView> {
     let query = this.createQueryBuilder('qud')
       .select(this.getColumns(isStreamed));

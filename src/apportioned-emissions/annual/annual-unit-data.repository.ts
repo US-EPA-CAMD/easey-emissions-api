@@ -79,7 +79,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
   private buildQuery(
     params: AnnualApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud')
       .select(this.getColumns(isStreamed));

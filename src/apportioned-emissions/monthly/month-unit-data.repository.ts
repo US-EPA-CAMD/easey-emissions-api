@@ -80,7 +80,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
 
   private buildQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud')
       .select(this.getColumns(isStreamed));

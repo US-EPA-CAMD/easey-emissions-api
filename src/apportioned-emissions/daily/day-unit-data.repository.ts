@@ -77,7 +77,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
 
   private buildQuery(
     params: DailyApportionedEmissionsParamsDTO,
-    isStreamed?: boolean,
+    isStreamed = false,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
       this.getColumns(isStreamed),
