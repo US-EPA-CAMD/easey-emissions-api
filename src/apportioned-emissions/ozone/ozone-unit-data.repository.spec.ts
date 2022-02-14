@@ -7,8 +7,8 @@ import {
   ControlTechnology,
   Program,
 } from '@us-epa-camd/easey-common/enums';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';

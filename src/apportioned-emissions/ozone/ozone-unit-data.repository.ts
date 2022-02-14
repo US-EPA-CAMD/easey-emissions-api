@@ -1,8 +1,8 @@
 import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {

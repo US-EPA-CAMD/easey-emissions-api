@@ -1,8 +1,8 @@
 import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
