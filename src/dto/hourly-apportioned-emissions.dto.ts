@@ -48,8 +48,8 @@ export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
     example: propertyMetadata.co2RateMeasureFlg.example,
     name: propertyMetadata.co2RateMeasureFlg.fieldLabels.value,
   })
-  co2RateMeasureFlg: string;  
-  
+  co2RateMeasureFlg: string;
+
   @ApiProperty({
     description: propertyMetadata.date.description,
     example: propertyMetadata.date.example,

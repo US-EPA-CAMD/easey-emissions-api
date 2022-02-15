@@ -13,7 +13,7 @@ export class QuarterUnitDataView {
 
   @Column({
     name: 'orispl_code',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   facilityId: number;
 
@@ -37,7 +37,7 @@ export class QuarterUnitDataView {
 
   @Column({
     name: 'count_op_time',
-    transformer: new NumericColumnTransformer(),    
+    transformer: new NumericColumnTransformer(),
   })
   countOpTime: number;
 

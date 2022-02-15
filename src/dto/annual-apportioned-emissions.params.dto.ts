@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber } from 'class-validator';
+import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -46,7 +46,7 @@ export class PaginatedAnnualApportionedEmissionsParamsDTO extends AnnualApportio
   @IsDefined()
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })  
+  })
   page: number;
 
   @ApiProperty({

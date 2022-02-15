@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
+import {
   Injectable,
   StreamableFile,
   InternalServerErrorException
@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
-import { 
+import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
@@ -49,7 +49,7 @@ export class DailyApportionedEmissionsService {
     );
 
     return entities;
-  }  
+  }
 
   async streamEmissions(
     req: Request,

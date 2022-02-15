@@ -29,7 +29,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
-import { 
+import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
@@ -69,7 +69,7 @@ export class AnnualApportionedEmissionsController {
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
     return this.service.getEmissions(req, params);
-  }  
+  }
 
   @Get('stream')
   @ApiOkResponse({
