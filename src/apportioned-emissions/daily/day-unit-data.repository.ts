@@ -29,7 +29,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
-      ResponseHeaders.setPagination(req, totalCount);
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
     } else {
       results = await query.getMany();
     }

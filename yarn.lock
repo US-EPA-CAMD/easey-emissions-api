@@ -1088,10 +1088,10 @@
     "@typescript-eslint/types" "5.1.0"
     eslint-visitor-keys "^3.0.0"
 
-"@us-epa-camd/easey-common@^3.0.0":
-  version "3.0.0"
-  resolved "https://npm.pkg.github.com/download/@us-epa-camd/easey-common/3.0.0/dfb945ba546d0c5646be047c1f297778da9faf261ea75220ae393e3de4a10f7f#a66b72dd0ededfa5b09dd4db700d3af4d2ca24c6"
-  integrity sha512-UPwEneX2OZEQjI95UfYNy1JP6i28JPSlb7gek650eS/OrFW/viDWhhAZQx7mp+ACSqKukIQHSJqD+9NSCOh5yA==
+"@us-epa-camd/easey-common@^4.0.3":
+  version "4.0.3"
+  resolved "https://npm.pkg.github.com/download/@us-epa-camd/easey-common/4.0.3/1ab69f24d064b72aa81891ad5e512cf6bedbf5ed72dea64e583178eea9dd919d#aaf2c112073c4d26a9bcfb3d644d4a7c9851c0a2"
+  integrity sha512-M2LonjCAwNpb766HlC6xDc/91ebFJk0lvS9VU4+nef595tc5XUvCRA8vlNinf69sUgJ0C1lJlPR3GVR0Sv9Spw==
   dependencies:
     "@nestjs/axios" "0.0.3"
     "@nestjs/common" "^8.1.1"
@@ -2173,9 +2173,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.4.17:
-  version "1.4.69"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.69.tgz#d52eb7887d2ec5ba62a8cb3491b990983cb6d2e0"
-  integrity sha512-0rxK21MqWhN/fVUXNOeBksRlw79Wq26y6R8lxEEL2v7vwzRWbYhXI7Id5msee7/q1NNgu4mG78qaablN2xtfTQ==
+  version "1.4.70"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.70.tgz#b389047a844ccc84bd185f480f52d2b6306a4cfd"
+  integrity sha512-joSEu0IwP/rOY8mHcQ6J2MEm5GgsvVcrNDSGg2wQiV0epjsq6pNvRk4UA2nqV8aK0PPL+Z1Z/uD73bG8swzroA==
 
 emittery@^0.8.1:
   version "0.8.1"
