@@ -1,11 +1,11 @@
 import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { 
+import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO
 } from '../../dto/hourly-apportioned-emissions.params.dto';
@@ -26,11 +26,11 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    let query = this.buildQuery(params);
+    const query = this.buildQuery(params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
-      ResponseHeaders.setPagination(req, totalCount);
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     else {
       results = await query.getMany();
@@ -85,7 +85,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
 
   buildQuery(
     params: HourlyApportionedEmissionsParamsDTO,
-    isStreamed: boolean = false,
+    isStreamed = false,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud')
     .select(this.getColumns(isStreamed));
@@ -110,7 +110,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
       .addOrderBy('hud.unitId')
       .addOrderBy('hud.date')
       .addOrderBy('hud.hour');
-    
+
     return query;
   }
 }

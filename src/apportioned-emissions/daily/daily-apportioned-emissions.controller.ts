@@ -29,7 +29,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
-import { 
+import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
@@ -69,7 +69,7 @@ export class DailyApportionedEmissionsController {
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
     return this.service.getEmissions(req, params);
-  }  
+  }
 
   @Get('stream')
   @ApiOkResponse({

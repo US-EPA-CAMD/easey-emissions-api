@@ -7,8 +7,8 @@ import {
   ControlTechnology,
   Program,
 } from '@us-epa-camd/easey-common/enums';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';

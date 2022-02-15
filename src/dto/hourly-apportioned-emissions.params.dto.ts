@@ -34,7 +34,7 @@ export class PaginatedHourlyApportionedEmissionsParamsDTO extends HourlyApportio
   @IsDefined()
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })  
+  })
   page: number;
 
   @ApiProperty({

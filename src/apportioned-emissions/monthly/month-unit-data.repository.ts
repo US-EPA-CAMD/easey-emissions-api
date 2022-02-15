@@ -1,11 +1,11 @@
 import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { ResponseHeaders } from '../../utils/response.headers';
 import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { 
+import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
@@ -26,11 +26,11 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     let totalCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
-    let query = this.buildQuery(params);
+    const query = this.buildQuery(params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
-      ResponseHeaders.setPagination(req, totalCount);
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     else {
       results = await query.getMany();
@@ -80,7 +80,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
 
   private buildQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
-    isStreamed: boolean = false,
+    isStreamed = false,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud')
       .select(this.getColumns(isStreamed));

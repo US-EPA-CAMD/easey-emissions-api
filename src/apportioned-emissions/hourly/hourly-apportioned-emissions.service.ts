@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
+import {
   Injectable,
   StreamableFile,
   InternalServerErrorException
@@ -18,7 +18,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
-import { 
+import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO
 } from '../../dto/hourly-apportioned-emissions.params.dto';
