@@ -4,10 +4,7 @@ on:
   push:
     branches: [ release/v* ]
     paths-ignore:
-    - '**/*.md'
-    - 'LICENSE'
     - '.github/**'
-    - '.gitignore'
 
 jobs:
   Build-Test-Package:
