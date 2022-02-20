@@ -4,7 +4,6 @@ title: Emissions Management
 path: emissions-mgmt
 port: 8080
 memory: 2048
-heap: 1536
 disk: 1024
 instances: 1
 environment: development
