@@ -15,6 +15,7 @@ import {
   getSchemaPath,
   ApiSecurity,
   ApiExtraModels,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import {
@@ -31,7 +32,7 @@ import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emis
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import {
   HourlyApportionedEmissionsParamsDTO,
-  PaginatedHourlyApportionedEmissionsParamsDTO
+  PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +40,7 @@ import {
 @ApiTags('Apportioned Hourly Emissions')
 @ApiExtraModels(HourlyApportionedEmissionsDTO)
 export class HourlyApportionedEmissionsController {
-  constructor(
-    private readonly service: HourlyApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: HourlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +54,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +62,12 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +88,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
         },
       },
     },
@@ -91,6 +96,12 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   streamEmissions(
     @Req() req: Request,
     @Query() params: HourlyApportionedEmissionsParamsDTO,

@@ -6,15 +6,16 @@ import {
   UnitType,
   UnitFuelType,
   ControlTechnology,
-  Program,
 } from '@us-epa-camd/easey-common/enums';
 import { IsOrisCode } from '@us-epa-camd/easey-common/pipes';
-import { propertyMetadata, ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import {
+  propertyMetadata,
+  ErrorMessages,
+} from '@us-epa-camd/easey-common/constants';
 
 import { IsUnitType } from '../pipes/is-unit-type.pipe';
 import { IsStateCode } from '../pipes/is-state-code.pipe';
 import { IsUnitFuelType } from '../pipes/is-unit-fuel-type.pipe';
-import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 
 export class ApportionedEmissionsParamsDTO {
@@ -80,20 +81,6 @@ export class ApportionedEmissionsParamsDTO {
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   controlTechnologies?: ControlTechnology[];
-
-  @ApiProperty({
-    enum: Program,
-    description: propertyMetadata.programCodeInfo.description,
-  })
-  @IsOptional()
-  @IsEmissionsProgram({
-    each: true,
-    message:
-      ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
-      '?emissionsUIFilter=true',
-  })
-  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
-  programCodeInfo?: Program[];
 
   private get getCurrentDate(): Date {
     return new Date();

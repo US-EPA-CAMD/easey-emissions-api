@@ -1,22 +1,34 @@
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Program } from '@us-epa-camd/easey-common/enums';
+import { IsInRange, Min } from '@us-epa-camd/easey-common/pipes';
 
 import {
   propertyMetadata,
-  ErrorMessages
+  ErrorMessages,
 } from '@us-epa-camd/easey-common/constants';
-
-import {
-  IsInRange,
-  Min,
-} from '@us-epa-camd/easey-common/pipes';
 
 import { OpYear } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 
 export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
+  @ApiProperty({
+    enum: Program,
+    description: propertyMetadata.programCodeInfo.description,
+  })
+  @IsOptional()
+  @IsEmissionsProgram({
+    each: true,
+    message:
+      ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
+      '?emissionsUIFilter=true',
+  })
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  programCodeInfo?: Program[];
+
   @ApiProperty({
     isArray: true,
     description: propertyMetadata.year.description,

@@ -9,13 +9,22 @@ import {
   IsYearFormat,
 } from '@us-epa-camd/easey-common/pipes';
 
-export function BeginDate() {
+export function BeginDate(isMats = false) {
+  let date;
+  if (isMats) {
+    date = '2015-01-01';
+  } else {
+    date = '1995-01-01';
+  }
   return applyDecorators(
-    IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false, {
+    IsInDateRange([new Date(date), 'currentDate'], false, true, false, {
       message: ErrorMessages.DateRange(
         'beginDate',
         false,
-        `a date between 01/01/1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
+        `a date between 01/01/${date.substring(
+          0,
+          4,
+        )} and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({
@@ -30,16 +39,25 @@ export function BeginDate() {
   );
 }
 
-export function EndDate() {
+export function EndDate(isMats = false) {
+  let date;
+  if (isMats) {
+    date = '2015-01-01';
+  } else {
+    date = '1995-01-01';
+  }
   return applyDecorators(
     IsDateGreaterThanEqualTo('beginDate', {
       message: ErrorMessages.BeginEndDate('beginDate'),
     }),
-    IsInDateRange([new Date('1995-01-01'), 'currentDate'], false, true, false, {
+    IsInDateRange([new Date(date), 'currentDate'], false, true, false, {
       message: ErrorMessages.DateRange(
         'endDate',
         false,
-        `a date between 01/01/1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
+        `a date between 01/01/${date.substring(
+          0,
+          4,
+        )} and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
       ),
     }),
     IsValidDate({

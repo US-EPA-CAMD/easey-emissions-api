@@ -8,6 +8,8 @@ import { MonthlyApportionedEmissionsModule } from './apportioned-emissions/month
 import { QuarterlyApportionedEmissionsModule } from './apportioned-emissions/quarterly/quarterly-apportioned-emissions.module';
 import { AnnualApportionedEmissionsModule } from './apportioned-emissions/annual/annual-apportioned-emissions.module';
 import { OzoneApportionedEmissionsModule } from './apportioned-emissions/ozone/ozone-apportioned-emissions.module';
+import { MatsApportionedEmissionsModule } from './apportioned-emissions/mats/mats-apportioned-emissions.module';
+import { HourlyMatsApportionedEmissionsModule } from './apportioned-emissions/mats/hourly/hourly-mats-apportioned-emissions.module';
 
 const routes: Routes = [
   {
@@ -38,12 +40,22 @@ const routes: Routes = [
         path: '/ozone',
         module: OzoneApportionedEmissionsModule,
       },
+      {
+        path: '/mats',
+        module: MatsApportionedEmissionsModule,
+        children: [
+          {
+            path: '/hourly',
+            module: HourlyMatsApportionedEmissionsModule,
+          },
+        ],
+      },
     ],
   },
   {
     path: '/emissions',
     module: EmissionsModule,
-  }
+  },
 ];
 
 export default routes;

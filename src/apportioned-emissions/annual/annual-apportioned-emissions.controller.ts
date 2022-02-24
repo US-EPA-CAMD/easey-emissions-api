@@ -1,5 +1,7 @@
 import { Request } from 'express';
 
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
 import {
   Get,
   Req,
@@ -15,6 +17,7 @@ import {
   getSchemaPath,
   ApiSecurity,
   ApiExtraModels,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import {
@@ -22,8 +25,6 @@ import {
   NotFoundResponse,
   ApiQueryMultiSelect,
 } from '../../utils/swagger-decorator.const';
-
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
@@ -39,9 +40,7 @@ import {
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
 export class AnnualApportionedEmissionsController {
-  constructor(
-    private readonly service: AnnualApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +54,7 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(',')
+          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +62,12 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +88,7 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(',')
+          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
         },
       },
     },
@@ -91,6 +96,12 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   streamEmissions(
     @Req() req: Request,
     @Query() params: AnnualApportionedEmissionsParamsDTO,

@@ -15,7 +15,10 @@ import {
   getSchemaPath,
   ApiSecurity,
   ApiExtraModels,
+  ApiQuery,
 } from '@nestjs/swagger';
+
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import {
   BadRequestResponse,
@@ -23,15 +26,13 @@ import {
   ApiQueryMultiSelect,
 } from '../../utils/swagger-decorator.const';
 
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
-
 import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import {
   QuarterlyApportionedEmissionsParamsDTO,
-  PaginatedQuarterlyApportionedEmissionsParamsDTO
+  PaginatedQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,13 +40,12 @@ import {
 @ApiTags('Apportioned Quarterly Emissions')
 @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
 export class QuarterlyApportionedEmissionsController {
-  constructor(
-    private readonly service: QuarterlyApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: QuarterlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
-    description: 'Retrieves Quarterly Apportioned Emissions per filter criteria',
+    description:
+      'Retrieves Quarterly Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
@@ -55,7 +55,9 @@ export class QuarterlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.quarterly
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -63,6 +65,12 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +91,9 @@ export class QuarterlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.quarterly
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -91,6 +101,12 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'programCodeInfo',
+    required: false,
+    explode: false,
+  })
   streamEmissions(
     @Req() req: Request,
     @Query() params: QuarterlyApportionedEmissionsParamsDTO,
