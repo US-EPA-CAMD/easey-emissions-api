@@ -1,17 +1,12 @@
 import { IsDefined } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsValidNumber, IsInRange, Min } from '@us-epa-camd/easey-common/pipes';
 
 import {
   propertyMetadata,
-  ErrorMessages
+  ErrorMessages,
 } from '@us-epa-camd/easey-common/constants';
-
-import {
-  IsValidNumber,
-  IsInRange,
-  Min,
-} from '@us-epa-camd/easey-common/pipes';
 
 import { OpYear } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';

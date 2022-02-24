@@ -1,7 +1,11 @@
 import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Min, IsInRange } from '@us-epa-camd/easey-common/pipes';
-import { ErrorMessages, propertyMetadata } from '@us-epa-camd/easey-common/constants';
+
+import {
+  ErrorMessages,
+  propertyMetadata,
+} from '@us-epa-camd/easey-common/constants';
 
 import { BeginDate, EndDate } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';

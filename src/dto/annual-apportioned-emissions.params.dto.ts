@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import {
   propertyMetadata,
-  ErrorMessages
+  ErrorMessages,
 } from '@us-epa-camd/easey-common/constants';
 
 import {

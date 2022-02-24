@@ -1,32 +1,37 @@
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Min, IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 import {
-  propertyMetadata,
   ErrorMessages,
+  propertyMetadata,
 } from '@us-epa-camd/easey-common/constants';
-
-import { IsInRange, Min } from '@us-epa-camd/easey-common/pipes';
 
 import { BeginDate, EndDate } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
-import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { MatsApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 
-export class DailyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
+export class HourlyMatsApportionedEmissionsParamsDTO extends MatsApportionedEmissionsParamsDTO {
   @ApiProperty({
     description: propertyMetadata.beginDate.description,
   })
-  @BeginDate()
+  @BeginDate(true)
   beginDate: Date;
 
   @ApiProperty({
     description: propertyMetadata.endDate.description,
   })
-  @EndDate()
+  @EndDate(true)
   endDate: Date;
+
+  @ApiProperty({
+    description: propertyMetadata.operatingHoursOnly.description,
+  })
+  @IsOptional()
+  operatingHoursOnly?: boolean;
 }
 
-export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportionedEmissionsParamsDTO {
+export class PaginatedHourlyMatsApportionedEmissionsParamsDTO extends HourlyMatsApportionedEmissionsParamsDTO {
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
