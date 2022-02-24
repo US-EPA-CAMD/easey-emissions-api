@@ -9,9 +9,9 @@ import {
 
 import { BeginDate, EndDate } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
-import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { MatsApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 
-export class HourlyMatsApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
+export class HourlyMatsApportionedEmissionsParamsDTO extends MatsApportionedEmissionsParamsDTO {
   @ApiProperty({
     description: propertyMetadata.beginDate.description,
   })

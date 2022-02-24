@@ -15,7 +15,6 @@ import {
   getSchemaPath,
   ApiSecurity,
   ApiExtraModels,
-  ApiQuery,
 } from '@nestjs/swagger';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -24,6 +23,7 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
 } from '../../utils/swagger-decorator.const';
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
@@ -61,12 +61,7 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -95,12 +90,7 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   streamEmissions(
     @Req() req: Request,
     @Query() params: MonthlyApportionedEmissionsParamsDTO,

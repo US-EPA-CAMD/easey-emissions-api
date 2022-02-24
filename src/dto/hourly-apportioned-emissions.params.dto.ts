@@ -1,8 +1,6 @@
 import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Min, IsInRange } from '@us-epa-camd/easey-common/pipes';
-import { Transform } from 'class-transformer';
-import { Program } from '@us-epa-camd/easey-common/enums';
 
 import {
   ErrorMessages,
@@ -12,23 +10,8 @@ import {
 import { BeginDate, EndDate } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
-import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 
 export class HourlyApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
-  @ApiProperty({
-    enum: Program,
-    description: propertyMetadata.programCodeInfo.description,
-  })
-  @IsOptional()
-  @IsEmissionsProgram({
-    each: true,
-    message:
-      ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
-      '?emissionsUIFilter=true',
-  })
-  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
-  programCodeInfo?: Program[];
-
   @ApiProperty({
     description: propertyMetadata.beginDate.description,
   })

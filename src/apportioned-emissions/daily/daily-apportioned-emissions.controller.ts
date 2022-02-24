@@ -22,6 +22,7 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -62,12 +63,7 @@ export class DailyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -96,12 +92,7 @@ export class DailyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   streamEmissions(
     @Req() req: Request,
     @Query() params: DailyApportionedEmissionsParamsDTO,

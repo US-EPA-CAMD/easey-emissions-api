@@ -15,13 +15,13 @@ import {
   getSchemaPath,
   ApiSecurity,
   ApiExtraModels,
-  ApiQuery,
 } from '@nestjs/swagger';
 
 import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -62,12 +62,7 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -96,12 +91,7 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'programCodeInfo',
-    required: false,
-    explode: false,
-  })
+  @ApiProgramQuery()
   streamEmissions(
     @Req() req: Request,
     @Query() params: HourlyApportionedEmissionsParamsDTO,
