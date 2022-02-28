@@ -1,16 +1,31 @@
 import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+import {
+  Repository,
+  EntityRepository,
+  SelectQueryBuilder,
+  getManager,
+  getRepository,
+} from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 import { ReadStream } from 'fs';
 
 import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { HourUnitMatsDataArch } from '../../../entities/hour-unit-mats-data-arch.entity';
+import { HourUnitMatsData } from '../../../entities/hour-unit-mats-data.entity';
+import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
+import { UnitFact } from '../../../entities/unit-fact.entity';
+import { UnitTypeYearDim } from '../../../entities/unit-type-year-dim.entity';
+import { FuelYearDim } from '../../../entities/fuel-year-dim.entity';
+import { ControlYearDim } from '../../../entities/control-year-dim.entity';
 import {
   HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 
 @EntityRepository(HourUnitMatsDataView)
+@EntityRepository(HourUnitMatsData)
+@EntityRepository(HourUnitMatsDataArch)
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
@@ -113,5 +128,105 @@ export class HourUnitMatsDataRepository extends Repository<
       .addOrderBy('humd.hour');
 
     return query;
+  }
+
+  async getApplicableEmissions(
+    params: ApplicableMatsApportionedEmissionsAttributesParamsDTO,
+    isArchived: boolean,
+    isUnion: boolean,
+  ): Promise<any[]> {
+    const entityManager = getManager();
+    const { beginDate, endDate } = params;
+
+    if (isUnion) {
+      const curr = await this.applicableQueryBuilderHelper(
+        false,
+        beginDate,
+        endDate,
+        true,
+      );
+      const arch = await this.applicableQueryBuilderHelper(
+        true,
+        beginDate,
+        endDate,
+        true,
+      );
+
+      return entityManager.query(
+        `${curr.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2) UNION ${arch.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2)`,
+        [beginDate, endDate],
+      );
+    } else {
+      const query = await this.applicableQueryBuilderHelper(
+        isArchived,
+        beginDate,
+        endDate,
+        false,
+      );
+      return query.getRawMany();
+    }
+  }
+
+  async applicableQueryBuilderHelper(
+    isArchived: boolean,
+    beginDate: Date,
+    endDate: Date,
+    isUnion: boolean,
+  ): Promise<any> {
+    const query = isArchived
+      ? getRepository(HourUnitMatsDataArch).createQueryBuilder('humd')
+      : getRepository(HourUnitMatsData).createQueryBuilder('humd');
+
+    query
+      .select(
+        [
+          'humd.date',
+          'uf.facilityId',
+          'uf.stateCode',
+          'utyd.unitTypeCode',
+          'fyd.fuelTypeCode',
+          'cyd.controlCode',
+        ].map(col => `${col} AS "${col.split('.')[1]}"`),
+      )
+      .innerJoin(UnitFact, 'uf', 'humd.year = uf.year AND humd.id = uf.id')
+      .innerJoin(
+        UnitTypeYearDim,
+        'utyd',
+        'uf.year = utyd.year AND uf.id = utyd.id',
+      )
+      .innerJoin(
+        FuelYearDim,
+        'fyd',
+        'utyd.year = fyd.year AND utyd.id = fyd.id',
+      )
+      .innerJoin(
+        ControlYearDim,
+        'cyd',
+        'fyd.year = cyd.year AND fyd.id = cyd.id',
+      )
+      .distinctOn([
+        'humd.op_date',
+        'uf.fac_id',
+        'uf.state',
+        'utyd.unit_type',
+        'fyd.fuel_code',
+        'cyd.control_code',
+      ]);
+
+    if (!isUnion) {
+      query.andWhere(`humd.date BETWEEN (:beginDate) AND (:endDate)`, {
+        beginDate,
+        endDate,
+      });
+    }
+
+    return query;
+  }
+
+  async lastArchivedDate(): Promise<any> {
+    const result = await this.query(
+      'SELECT MAX(op_date) AS "date" FROM camddmw_arch.hour_unit_mats_data_a;',
+    );
+    return result[0].date;
   }
 }
