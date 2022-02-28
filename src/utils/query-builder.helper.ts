@@ -191,7 +191,7 @@ export class QueryBuilderHelper {
     query = this.whereStateCode(query, dto.stateCode, params, alias);
     query = this.whereFacilityId(query, dto.facilityId, params, alias);
     query = this.whereUnitType(query, dto.unitType, params, alias);
-    query = this.whereUnitFuel(query, dto.unitFuel, params, alias);
+    query = this.whereUnitFuel(query, dto.unitFuelType, params, alias);
     query = this.whereControlTech(query, dto.controlTechnologies, params, alias);
     query = this.whereProgramCode(query, dto.programCodeInfo, params, alias);
     query = this.whereOperatingHoursOnly(query, dto.operatingHoursOnly, params, alias);
