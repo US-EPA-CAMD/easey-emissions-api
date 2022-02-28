@@ -1,6 +1,13 @@
 import { Request } from 'express';
 
-import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
+import {
+  Get,
+  Req,
+  Query,
+  Controller,
+  UseInterceptors,
+  StreamableFile,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOkResponse,
@@ -18,12 +25,15 @@ import {
 import { fieldMappings } from '../../../constants/field-mappings';
 import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
-import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import {
+  HourlyMatsApportionedEmissionsParamsDTO,
+  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 
 @Controller()
 @ApiSecurity('APIKey')
-@ApiTags('Apportioned MATS Emissions')
+@ApiTags('Apportioned Hourly MATS Emissions')
 @ApiExtraModels(HourlyMatsApportionedEmissionsDTO)
 export class HourlyMatsApportionedEmissionsController {
   constructor(
@@ -32,7 +42,7 @@ export class HourlyMatsApportionedEmissionsController {
 
   @Get()
   @ApiOkResponse({
-    description: 'Retrieves MATS Apportioned Emissions per filter criteria',
+    description: 'Retrieves Hourly MATS Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
@@ -42,7 +52,9 @@ export class HourlyMatsApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
+          example: fieldMappings.emissions.mats.hourly
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -56,5 +68,35 @@ export class HourlyMatsApportionedEmissionsController {
     @Query() params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<HourUnitMatsDataView[]> {
     return this.service.getEmissions(req, params);
+  }
+
+  @Get('stream')
+  @ApiOkResponse({
+    description:
+      'Streams Hourly MATS Apportioned Emissions per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.mats.hourly
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  streamEmissions(
+    @Req() req: Request,
+    @Query() params: HourlyMatsApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissions(req, params);
   }
 }
