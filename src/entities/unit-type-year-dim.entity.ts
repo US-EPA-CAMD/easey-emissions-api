@@ -19,5 +19,5 @@ export class UnitTypeYearDim extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_type',
   })
-  unitType: string;
+  unitTypeCode: string;
 }

@@ -23,7 +23,8 @@ export class MatsApportionedEmissionsService {
     const archivedDate = await this.repository.lastArchivedDate();
 
     isArchived =
-      params.beginDate <= archivedDate || params.endDate <= archivedDate;
+      new Date(params.beginDate) <= archivedDate ||
+      new Date(params.endDate) <= archivedDate;
     this.logger.info(
       `Query params ${
         isArchived ? 'contains' : 'do not contain'
@@ -31,11 +32,10 @@ export class MatsApportionedEmissionsService {
     );
     isUnion =
       isArchived &&
-      (params.beginDate > archivedDate || params.endDate > archivedDate);
+      (new Date(params.beginDate) > archivedDate ||
+        new Date(params.endDate) > archivedDate);
     this.logger.info(
-      `Query params ${
-        isUnion ? 'contains' : 'do not contain'
-      } archived & non-archived dates`,
+      `Query ${isUnion ? 'contains' : 'does not contain'} union`,
     );
 
     let entities;
@@ -56,25 +56,16 @@ export class MatsApportionedEmissionsService {
     }
 
     return entities.map(item => {
-      return plainToClass(
+      const dto = plainToClass(
         ApplicableMatsApportionedEmissionsAttributesDTO,
         item,
         {
           enableImplicitConversion: true,
         },
       );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
     });
-
-    // return entities.map(item => {
-    //   const dto = plainToClass(
-    //     ApplicableMatsApportionedEmissionsAttributesDTO,
-    //     item,
-    //     {
-    //       enableImplicitConversion: true,
-    //     },
-    //   );
-    //   const date = new Date(dto.date);
-    //   dto.date = date.toISOString().split('T')[0];
-    // });
   }
 }

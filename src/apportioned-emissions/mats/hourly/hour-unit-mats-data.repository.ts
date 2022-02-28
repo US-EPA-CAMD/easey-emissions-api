@@ -167,19 +167,20 @@ export class HourUnitMatsDataRepository extends Repository<
     isUnion: boolean,
   ): Promise<any> {
     const query = isArchived
-      ? await getRepository(HourUnitMatsDataArch).createQueryBuilder('humd')
-      : await getRepository(HourUnitMatsData).createQueryBuilder('humd');
+      ? getRepository(HourUnitMatsDataArch).createQueryBuilder('humd')
+      : getRepository(HourUnitMatsData).createQueryBuilder('humd');
 
     query
-      .select([
-        'humd.date',
-        'uf.facilityId',
-        'uf.stateCode',
-        'utyd.unitType',
-        'fyd.fuelTypeCode',
-        'cyd.controlCode',
-        'uf.sourceCategory',
-      ])
+      .select(
+        [
+          'humd.date',
+          'uf.facilityId',
+          'uf.stateCode',
+          'utyd.unitTypeCode',
+          'fyd.fuelTypeCode',
+          'cyd.controlCode',
+        ].map(col => `${col} AS "${col.split('.')[1]}"`),
+      )
       .innerJoin(UnitFact, 'uf', 'humd.year = uf.year AND humd.id = uf.id')
       .innerJoin(
         UnitTypeYearDim,
@@ -199,7 +200,7 @@ export class HourUnitMatsDataRepository extends Repository<
       .distinctOn([
         'humd.op_date',
         'uf.fac_id',
-        'uf.stateCode',
+        'uf.state',
         'utyd.unit_type',
         'fyd.fuel_code',
         'cyd.control_code',
@@ -211,7 +212,7 @@ export class HourUnitMatsDataRepository extends Repository<
         endDate,
       });
     }
-    
+
     return query;
   }
 
