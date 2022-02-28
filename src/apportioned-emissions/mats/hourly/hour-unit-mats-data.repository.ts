@@ -101,7 +101,7 @@ export class HourUnitMatsDataRepository extends Repository<
     params: HourlyMatsApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<HourUnitMatsDataView> {
-    let query = this.createQueryBuilder('humd').select(
+    let query = getRepository(HourUnitMatsDataView).createQueryBuilder('humd').select(
       this.getColumns(isStreamed),
     );
 
