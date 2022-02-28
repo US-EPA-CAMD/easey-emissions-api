@@ -23,7 +23,7 @@ import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.e
 
 @Controller()
 @ApiSecurity('APIKey')
-@ApiTags('Apportioned MATS Emissions')
+@ApiTags('Apportioned Hourly MATS Emissions')
 @ApiExtraModels(HourlyMatsApportionedEmissionsDTO)
 export class HourlyMatsApportionedEmissionsController {
   constructor(
@@ -32,7 +32,7 @@ export class HourlyMatsApportionedEmissionsController {
 
   @Get()
   @ApiOkResponse({
-    description: 'Retrieves MATS Apportioned Emissions per filter criteria',
+    description: 'Retrieves Hourly MATS Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
