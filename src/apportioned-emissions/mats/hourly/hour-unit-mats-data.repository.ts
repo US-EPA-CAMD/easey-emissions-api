@@ -7,6 +7,7 @@ import {
   getRepository,
 } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { ReadStream } from 'fs';
 
 import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
@@ -28,6 +29,12 @@ import {
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
+  streamEmissions(
+    params: HourlyMatsApportionedEmissionsParamsDTO,
+  ): Promise<ReadStream> {
+    return this.buildQuery(params, true).stream();
+  }
+
   async getEmissions(
     req: Request,
     params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
@@ -76,8 +83,8 @@ export class HourUnitMatsDataRepository extends Repository<
       'humd.secondaryFuelInfo',
       'humd.unitType',
       'humd.so2ControlInfo',
-      'humd.pmControlInfo',
       'humd.noxControlInfo',
+      'humd.pmControlInfo',
       'humd.hgControlInfo',
     ];
 

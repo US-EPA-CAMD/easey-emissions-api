@@ -36,6 +36,7 @@ const mockQueryBuilder = () => ({
   addOrderBy: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
+  stream: jest.fn(),
 });
 
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
@@ -86,6 +87,7 @@ describe('HourUnitMatsDataRepository', () => {
     queryBuilder.take.mockReturnValue('mockPagination');
     queryBuilder.getMany.mockReturnValue('mockMatsEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockMatsEmissions', 0]);
+    queryBuilder.stream.mockReturnValue('mockEmissions');
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
@@ -123,6 +125,17 @@ describe('HourUnitMatsDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockMatsEmissions');
+    });
+  });
+
+  describe('streamEmissions', () => {
+    it('calls streamEmissions and streams HourUnitMatsData from the repository', async () => {
+      const result = await repository.streamEmissions(
+        new PaginatedHourlyMatsApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(result).toEqual('mockEmissions');
     });
   });
 });
