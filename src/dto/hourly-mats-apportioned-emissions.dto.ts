@@ -124,9 +124,9 @@ export class HourlyMatsApportionedEmissionsDTO extends UnitFactDTO {
   hfMassMeasureFlg: string;
 
   @ApiProperty({
-    description: propertyMetadata.steamLoad.description,
-    example: propertyMetadata.steamLoad.example,
-    name: propertyMetadata.steamLoad.fieldLabels.value,
+    description: propertyMetadata.steamLoadHourly.description,
+    example: propertyMetadata.steamLoadHourly.example,
+    name: propertyMetadata.steamLoadHourly.fieldLabels.value,
   })
   steamLoad?: number;
 }
