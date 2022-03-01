@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { IsDefined, IsNotEmpty } from 'class-validator';
+import { IsDefined } from 'class-validator';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
   IsInDateRange,
@@ -36,9 +36,6 @@ export function BeginDate(isMats = false) {
     IsDefined({
       message: ErrorMessages.RequiredProperty(),
     }),
-    IsNotEmpty({
-      message: ErrorMessages.RequiredProperty(),
-    })
   );
 }
 
@@ -70,9 +67,6 @@ export function EndDate(isMats = false) {
       message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
     }),
     IsDefined({ message: ErrorMessages.RequiredProperty() }),
-    IsNotEmpty({
-      message: ErrorMessages.RequiredProperty(),
-    })
   );
 }
 

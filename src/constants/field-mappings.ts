@@ -123,7 +123,7 @@ hourlyMats.push(
   { ...propertyMetadata.hfMass.fieldLabels },
   { ...propertyMetadata.hfMassMeasureFlg.fieldLabels },
   { ...propertyMetadata.associatedStacks.fieldLabels },
-  { ...propertyMetadata.steamLoad.fieldLabels },
+  { ...propertyMetadata.steamLoadHourly.fieldLabels },
   ...unitCharacteristics,
   { ...propertyMetadata.so2ControlInfo.fieldLabels },
   { ...propertyMetadata.noxControlInfo.fieldLabels },
