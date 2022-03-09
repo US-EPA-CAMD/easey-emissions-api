@@ -6,21 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
   StreamableFile,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import {
-  PlainToCSV,
-  PlainToJSON
-} from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import {
-  MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
+  StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class MonthlyApportionedEmissionsService {
     @InjectRepository(MonthUnitDataRepository)
     private readonly repository: MonthUnitDataRepository,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async getEmissions(
     req: Request,
@@ -53,7 +52,7 @@ export class MonthlyApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: MonthlyApportionedEmissionsParamsDTO,
+    params: StreamMonthlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -65,31 +64,31 @@ export class MonthlyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(
-          MonthlyApportionedEmissionsDTO,
-          data,
-          { enableImplicitConversion: true }
-        );
+        data = exclude(data, params, ExcludeApportionedEmissions);
+        const dto = plainToClass(MonthlyApportionedEmissionsDTO, data, {
+          enableImplicitConversion: true,
+        });
         callback(null, dto);
-      }
+      },
     });
 
-    if (req.headers.accept === "text/csv") {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.monthly);
-      return new StreamableFile(stream
-        .pipe(toDto)
-        .pipe(toCSV), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="monthly-emissions-${uuid()}.csv"`,
+    if (req.headers.accept === 'text/csv') {
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.monthly.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.monthly;
+      const toCSV = new PlainToCSV(fieldMappingsList);
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="monthly-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream
-      .pipe(toDto)
-      .pipe(objToString), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="monthly-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+      type: req.headers.accept,
+      disposition: `attachment; filename="monthly-emissions-${uuid()}.json"`,
     });
   }
 }

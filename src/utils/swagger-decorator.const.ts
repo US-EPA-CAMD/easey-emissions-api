@@ -29,3 +29,8 @@ export function ApiProgramQuery() {
     ApiQuery({style: 'pipeDelimited',name: 'programCodeInfo',required: false,explode: false,})
   );
 }
+export function ExcludeQuery() {
+  return applyDecorators(
+    ApiQuery({style: 'pipeDelimited', name: 'exclude', required: false, explode: false,})
+  );
+}

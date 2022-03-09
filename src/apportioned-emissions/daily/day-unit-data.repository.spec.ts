@@ -6,11 +6,15 @@ import {
   UnitFuelType,
   ControlTechnology,
   Program,
+  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { DayUnitDataRepository } from './day-unit-data.repository';
-import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
+import {
+  PaginatedDailyApportionedEmissionsParamsDTO,
+  StreamDailyApportionedEmissionsParamsDTO,
+} from '../../dto/daily-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 jest.mock('../../utils/query-builder.helper');
 
@@ -55,6 +59,26 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
+
+let streamFilters = new StreamDailyApportionedEmissionsParamsDTO();
+filters.beginDate = new Date();
+filters.endDate = new Date();
+streamFilters.stateCode = [State.TX];
+streamFilters.facilityId = [3];
+streamFilters.unitType = [
+  UnitType.BUBBLING_FLUIDIZED,
+  UnitType.ARCH_FIRE_BOILER,
+];
+streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+streamFilters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
+streamFilters.exclude = [
+  ExcludeApportionedEmissions.CO2_RATE,
+  ExcludeApportionedEmissions.COUNT_OP_TIME,
+];
 
 describe('DayUnitDataRepository', () => {
   let repository: DayUnitDataRepository;
@@ -134,9 +158,7 @@ describe('DayUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams DayUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(
-        new PaginatedDailyApportionedEmissionsParamsDTO(),
-      );
+      const result = await repository.streamEmissions(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

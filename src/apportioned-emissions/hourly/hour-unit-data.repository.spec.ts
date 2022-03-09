@@ -6,11 +6,15 @@ import {
   UnitFuelType,
   ControlTechnology,
   Program,
+  ExcludeHourlyApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import {
+  PaginatedHourlyApportionedEmissionsParamsDTO,
+  StreamHourlyApportionedEmissionsParamsDTO,
+} from '../../dto/hourly-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 jest.mock('../../utils/query-builder.helper');
 
@@ -56,6 +60,26 @@ filters.controlTechnologies = [
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
 filters.operatingHoursOnly = true;
+
+let streamFilters = new StreamHourlyApportionedEmissionsParamsDTO();
+filters.beginDate = new Date();
+filters.endDate = new Date();
+streamFilters.stateCode = [State.TX];
+streamFilters.facilityId = [3];
+streamFilters.unitType = [
+  UnitType.BUBBLING_FLUIDIZED,
+  UnitType.ARCH_FIRE_BOILER,
+];
+streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+streamFilters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
+streamFilters.exclude = [
+  ExcludeHourlyApportionedEmissions.CO2_RATE,
+  ExcludeHourlyApportionedEmissions.GROSS_LOAD,
+];
 
 describe('HourUnitDataRepository', () => {
   let repository: HourUnitDataRepository;
@@ -135,9 +159,7 @@ describe('HourUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams HourUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(
-        new PaginatedHourlyApportionedEmissionsParamsDTO(),
-      );
+      const result = await repository.streamEmissions(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

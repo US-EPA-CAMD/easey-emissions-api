@@ -24,6 +24,7 @@ import {
   NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -31,8 +32,8 @@ import { OzoneUnitDataView } from './../../entities/vw-ozone-unit-data.entity';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import {
-  OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO,
+  StreamOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
 @Controller()
@@ -92,9 +93,10 @@ export class OzoneApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: OzoneApportionedEmissionsParamsDTO,
+    @Query() params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

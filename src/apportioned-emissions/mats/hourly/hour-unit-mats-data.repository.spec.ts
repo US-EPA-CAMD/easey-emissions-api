@@ -5,10 +5,14 @@ import {
   UnitType,
   UnitFuelType,
   ControlTechnology,
+  ExcludeHourlyMatsApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import {
+  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
+} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 
@@ -53,6 +57,25 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.operatingHoursOnly = true;
+
+let streamFilters = new StreamHourlyMatsApportionedEmissionsParamsDTO();
+filters.beginDate = new Date();
+filters.endDate = new Date();
+streamFilters.stateCode = [State.TX];
+streamFilters.facilityId = [3];
+streamFilters.unitType = [
+  UnitType.BUBBLING_FLUIDIZED,
+  UnitType.ARCH_FIRE_BOILER,
+];
+streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+streamFilters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+streamFilters.exclude = [
+  ExcludeHourlyMatsApportionedEmissions.HCL_INPUT_RATE,
+  ExcludeHourlyMatsApportionedEmissions.SECONDARY_FUEL_TYPE,
+];
 
 describe('HourUnitMatsDataRepository', () => {
   let repository: HourUnitMatsDataRepository;
@@ -130,9 +153,7 @@ describe('HourUnitMatsDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams HourUnitMatsData from the repository', async () => {
-      const result = await repository.streamEmissions(
-        new PaginatedHourlyMatsApportionedEmissionsParamsDTO(),
-      );
+      const result = await repository.streamEmissions(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

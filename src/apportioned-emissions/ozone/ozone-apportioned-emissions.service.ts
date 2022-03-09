@@ -6,21 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
   StreamableFile,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import {
-  PlainToCSV,
-  PlainToJSON
-} from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import {
-  OzoneApportionedEmissionsParamsDTO,
-  PaginatedOzoneApportionedEmissionsParamsDTO
+  PaginatedOzoneApportionedEmissionsParamsDTO,
+  StreamOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class OzoneApportionedEmissionsService {
     @InjectRepository(OzoneUnitDataRepository)
     private readonly repository: OzoneUnitDataRepository,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async getEmissions(
     req: Request,
@@ -53,7 +52,7 @@ export class OzoneApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: OzoneApportionedEmissionsParamsDTO,
+    params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -65,31 +64,32 @@ export class OzoneApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(
-          OzoneApportionedEmissionsDTO,
-          data,
-          { enableImplicitConversion: true }
-        );
+        data = exclude(data, params, ExcludeApportionedEmissions);
+        const dto = plainToClass(OzoneApportionedEmissionsDTO, data, {
+          enableImplicitConversion: true,
+        });
         callback(null, dto);
-      }
+      },
     });
 
-    if (req.headers.accept === "text/csv") {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.ozone);
-      return new StreamableFile(stream
-        .pipe(toDto)
-        .pipe(toCSV), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="ozone-emissions-${uuid()}.csv"`,
+    if (req.headers.accept === 'text/csv') {
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.ozone.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.ozone;
+
+      const toCSV = new PlainToCSV(fieldMappingsList);
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="ozone-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream
-      .pipe(toDto)
-      .pipe(objToString), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="ozone-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+      type: req.headers.accept,
+      disposition: `attachment; filename="ozone-emissions-${uuid()}.json"`,
     });
   }
 }

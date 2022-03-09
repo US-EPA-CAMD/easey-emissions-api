@@ -10,14 +10,16 @@ import {
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import {
-  AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
+  StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -50,7 +52,7 @@ export class AnnualApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: AnnualApportionedEmissionsParamsDTO,
+    params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -62,6 +64,7 @@ export class AnnualApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
+        data = exclude(data, params, ExcludeApportionedEmissions);
         const dto = plainToClass(AnnualApportionedEmissionsDTO, data, {
           enableImplicitConversion: true,
         });
@@ -70,7 +73,12 @@ export class AnnualApportionedEmissionsService {
     });
 
     if (req.headers.accept === 'text/csv') {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.annual);
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.annual.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.annual;
+      const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
         disposition: `attachment; filename="annual-emissions-${uuid()}.csv"`,

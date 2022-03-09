@@ -7,14 +7,14 @@ import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity'
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   QuarterlyApportionedEmissionsParamsDTO,
-  PaginatedQuarterlyApportionedEmissionsParamsDTO
+  PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  StreamQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
 @EntityRepository(QuarterUnitDataView)
 export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
-
   streamEmissions(
-    params: QuarterlyApportionedEmissionsParamsDTO,
+    params: StreamQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -31,8 +31,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -82,10 +81,13 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     params: QuarterlyApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<QuarterUnitDataView> {
-    let query = this.createQueryBuilder('qud')
-      .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('qud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'year',
         'quarter',
@@ -96,7 +98,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'qud'
+      'qud',
     );
 
     query

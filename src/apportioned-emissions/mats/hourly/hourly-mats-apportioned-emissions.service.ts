@@ -10,12 +10,14 @@ import { v4 as uuid } from 'uuid';
 import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeHourlyMatsApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../../constants/field-mappings';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import {
-  HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
@@ -50,7 +52,7 @@ export class HourlyMatsApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: HourlyMatsApportionedEmissionsParamsDTO,
+    params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -62,6 +64,7 @@ export class HourlyMatsApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
+        data = exclude(data, params, ExcludeHourlyMatsApportionedEmissions);
         const dto = plainToClass(HourlyMatsApportionedEmissionsDTO, data, {
           enableImplicitConversion: true,
         });
@@ -72,7 +75,12 @@ export class HourlyMatsApportionedEmissionsService {
     });
 
     if (req.headers.accept === 'text/csv') {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.mats.hourly);
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.mats.hourly.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.mats.hourly;
+      const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
         disposition: `attachment; filename="hourly-mats-emissions-${uuid()}.csv"`,

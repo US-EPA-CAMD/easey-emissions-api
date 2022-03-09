@@ -8,13 +8,13 @@ import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
+  StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 
 @EntityRepository(AnnualUnitDataView)
 export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
-
   streamEmissions(
-    params: AnnualApportionedEmissionsParamsDTO,
+    params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -31,8 +31,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -81,10 +80,13 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     params: AnnualApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
-    let query = this.createQueryBuilder('aud')
-      .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('aud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'year',
         'stateCode',
@@ -94,7 +96,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'aud'
+      'aud',
     );
 
     query

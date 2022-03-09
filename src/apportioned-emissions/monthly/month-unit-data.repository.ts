@@ -8,13 +8,13 @@ import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
+  StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
 @EntityRepository(MonthUnitDataView)
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
-
   streamEmissions(
-    params: MonthlyApportionedEmissionsParamsDTO,
+    params: StreamMonthlyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -31,8 +31,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -82,10 +81,13 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     params: MonthlyApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<MonthUnitDataView> {
-    let query = this.createQueryBuilder('mud')
-      .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('mud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'year',
         'month',
@@ -96,7 +98,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'mud'
+      'mud',
     );
 
     query
