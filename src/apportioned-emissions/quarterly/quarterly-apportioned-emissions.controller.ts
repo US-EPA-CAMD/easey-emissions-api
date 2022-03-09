@@ -24,6 +24,7 @@ import {
   NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -31,8 +32,8 @@ import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entit
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import {
-  QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  StreamQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
 @Controller()
@@ -97,9 +98,10 @@ export class QuarterlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: QuarterlyApportionedEmissionsParamsDTO,
+    @Query() params: StreamQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

@@ -6,11 +6,15 @@ import {
   UnitFuelType,
   ControlTechnology,
   Program,
+  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
-import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import {
+  PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  StreamQuarterlyApportionedEmissionsParamsDTO,
+} from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 jest.mock('../../utils/query-builder.helper');
 
@@ -55,6 +59,26 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
+
+let streamFilters = new StreamQuarterlyApportionedEmissionsParamsDTO();
+streamFilters.year = [2019];
+streamFilters.quarter = [1, 3];
+streamFilters.stateCode = [State.TX];
+streamFilters.facilityId = [3];
+streamFilters.unitType = [
+  UnitType.BUBBLING_FLUIDIZED,
+  UnitType.ARCH_FIRE_BOILER,
+];
+streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+streamFilters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
+streamFilters.exclude = [
+  ExcludeApportionedEmissions.CO2_RATE,
+  ExcludeApportionedEmissions.COUNT_OP_TIME,
+];
 
 describe('QuarterUnitDataRepository', () => {
   let repository: QuarterUnitDataRepository;
@@ -134,9 +158,7 @@ describe('QuarterUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams QuarterUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(
-        new PaginatedQuarterlyApportionedEmissionsParamsDTO(),
-      );
+      const result = await repository.streamEmissions(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

@@ -21,13 +21,14 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ExcludeQuery,
 } from '../../../utils/swagger-decorator.const';
 import { fieldMappings } from '../../../constants/field-mappings';
 import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
 import {
-  HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 
@@ -42,7 +43,8 @@ export class HourlyMatsApportionedEmissionsController {
 
   @Get()
   @ApiOkResponse({
-    description: 'Retrieves Hourly MATS Apportioned Emissions per filter criteria',
+    description:
+      'Retrieves Hourly MATS Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
@@ -93,9 +95,10 @@ export class HourlyMatsApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: HourlyMatsApportionedEmissionsParamsDTO,
+    @Query() params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

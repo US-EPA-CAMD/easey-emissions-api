@@ -6,21 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
   StreamableFile,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import {
-  PlainToCSV,
-  PlainToJSON
-} from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import {
-  QuarterlyApportionedEmissionsParamsDTO,
-  PaginatedQuarterlyApportionedEmissionsParamsDTO
+  PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  StreamQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class QuarterlyApportionedEmissionsService {
     @InjectRepository(QuarterUnitDataRepository)
     private readonly repository: QuarterUnitDataRepository,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async getEmissions(
     req: Request,
@@ -53,7 +52,7 @@ export class QuarterlyApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: QuarterlyApportionedEmissionsParamsDTO,
+    params: StreamQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -65,31 +64,31 @@ export class QuarterlyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(
-          QuarterlyApportionedEmissionsDTO,
-          data,
-          { enableImplicitConversion: true }
-        );
+        data = exclude(data, params, ExcludeApportionedEmissions);
+        const dto = plainToClass(QuarterlyApportionedEmissionsDTO, data, {
+          enableImplicitConversion: true,
+        });
         callback(null, dto);
-      }
+      },
     });
 
-    if (req.headers.accept === "text/csv") {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.quarterly);
-      return new StreamableFile(stream
-        .pipe(toDto)
-        .pipe(toCSV), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="quarterly-emissions-${uuid()}.csv"`,
+    if (req.headers.accept === 'text/csv') {
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.quarterly.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.quarterly;
+      const toCSV = new PlainToCSV(fieldMappingsList);
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="quarterly-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream
-      .pipe(toDto)
-      .pipe(objToString), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="quarterly-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+      type: req.headers.accept,
+      disposition: `attachment; filename="quarterly-emissions-${uuid()}.json"`,
     });
   }
 }

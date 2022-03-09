@@ -7,14 +7,14 @@ import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   HourlyApportionedEmissionsParamsDTO,
-  PaginatedHourlyApportionedEmissionsParamsDTO
+  PaginatedHourlyApportionedEmissionsParamsDTO,
+  StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-
   streamEmissions(
-    params: HourlyApportionedEmissionsParamsDTO,
+    params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -31,8 +31,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -87,10 +86,13 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     params: HourlyApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<HourUnitDataView> {
-    let query = this.createQueryBuilder('hud')
-    .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('hud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'beginDate',
         'endDate',
@@ -102,7 +104,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
         'programCodeInfo',
         'operatingHoursOnly',
       ],
-      'hud'
+      'hud',
     );
 
     query

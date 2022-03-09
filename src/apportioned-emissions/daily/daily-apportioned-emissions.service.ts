@@ -6,21 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
   StreamableFile,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import {
-  PlainToCSV,
-  PlainToJSON
-} from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import {
-  DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
+  StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class DailyApportionedEmissionsService {
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async getEmissions(
     req: Request,
@@ -53,7 +52,7 @@ export class DailyApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: DailyApportionedEmissionsParamsDTO,
+    params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -65,33 +64,33 @@ export class DailyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(
-          DailyApportionedEmissionsDTO,
-          data,
-          { enableImplicitConversion: true }
-        );
+        data = exclude(data, params, ExcludeApportionedEmissions);
+        const dto = plainToClass(DailyApportionedEmissionsDTO, data, {
+          enableImplicitConversion: true,
+        });
         const date = new Date(dto.date);
         dto.date = date.toISOString().split('T')[0];
         callback(null, dto);
-      }
+      },
     });
 
-    if (req.headers.accept === "text/csv") {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.daily);
-      return new StreamableFile(stream
-        .pipe(toDto)
-        .pipe(toCSV), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
+    if (req.headers.accept === 'text/csv') {
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.daily.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.daily;
+      const toCSV = new PlainToCSV(fieldMappingsList);
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream
-      .pipe(toDto)
-      .pipe(objToString), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+      type: req.headers.accept,
+      disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
     });
   }
 }

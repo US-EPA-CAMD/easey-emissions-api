@@ -6,11 +6,15 @@ import {
   UnitFuelType,
   ControlTechnology,
   Program,
+  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { MonthUnitDataRepository } from './month-unit-data.repository';
-import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
+import {
+  PaginatedMonthlyApportionedEmissionsParamsDTO,
+  StreamMonthlyApportionedEmissionsParamsDTO,
+} from '../../dto/monthly-apportioned-emissions.params.dto';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 jest.mock('../../utils/query-builder.helper');
 
@@ -55,6 +59,26 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
+
+let streamFilters = new StreamMonthlyApportionedEmissionsParamsDTO();
+streamFilters.year = [2019];
+streamFilters.month = [1, 2];
+streamFilters.stateCode = [State.TX];
+streamFilters.facilityId = [3];
+streamFilters.unitType = [
+  UnitType.BUBBLING_FLUIDIZED,
+  UnitType.ARCH_FIRE_BOILER,
+];
+streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
+streamFilters.controlTechnologies = [
+  ControlTechnology.ADDITIVES_TO_ENHANCE,
+  ControlTechnology.OTHER,
+];
+streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
+streamFilters.exclude = [
+  ExcludeApportionedEmissions.CO2_RATE,
+  ExcludeApportionedEmissions.COUNT_OP_TIME,
+];
 
 describe('MonthUnitDataRepository', () => {
   let repository: MonthUnitDataRepository;

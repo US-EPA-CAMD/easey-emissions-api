@@ -21,6 +21,7 @@ import { ControlYearDim } from '../../../entities/control-year-dim.entity';
 import {
   HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 
 @EntityRepository(HourUnitMatsDataView)
@@ -30,7 +31,7 @@ export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
   streamEmissions(
-    params: HourlyMatsApportionedEmissionsParamsDTO,
+    params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -101,9 +102,9 @@ export class HourUnitMatsDataRepository extends Repository<
     params: HourlyMatsApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<HourUnitMatsDataView> {
-    let query = getRepository(HourUnitMatsDataView).createQueryBuilder('humd').select(
-      this.getColumns(isStreamed),
-    );
+    let query = getRepository(HourUnitMatsDataView)
+      .createQueryBuilder('humd')
+      .select(this.getColumns(isStreamed));
 
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
