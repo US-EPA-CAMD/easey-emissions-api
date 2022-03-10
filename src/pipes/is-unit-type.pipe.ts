@@ -3,7 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { getManager, Raw } from 'typeorm';
+import { getManager, ILike } from 'typeorm';
 
 import { UnitTypeCode } from '../entities/unit-type-code.entity';
 
@@ -19,7 +19,7 @@ export function IsUnitType(validationOptions?: ValidationOptions) {
           const manager = getManager();
 
           const found = await manager.findOne(UnitTypeCode, {
-            unitTypeDescription: Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
+            unitTypeDescription: ILike(value),
           });
           return found != null;
         },

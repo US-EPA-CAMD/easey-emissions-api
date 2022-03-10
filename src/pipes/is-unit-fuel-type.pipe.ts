@@ -3,7 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { getManager, Raw } from 'typeorm';
+import { getManager, ILike } from 'typeorm';
 
 import { FuelTypeCode } from '../entities/fuel-type-code.entity';
 
@@ -19,7 +19,7 @@ export function IsUnitFuelType(validationOptions?: ValidationOptions) {
           const manager = getManager();
 
           const found = await manager.findOne(FuelTypeCode, {
-            fuelTypeDescription:  Raw(alias => `UPPER(${alias}) LIKE '${value.toUpperCase()}'`),
+            fuelTypeDescription: ILike(value),
           });
           return found != null;
         },
