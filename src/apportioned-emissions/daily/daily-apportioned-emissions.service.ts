@@ -9,8 +9,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToJSON } from '@us-epa-camd/easey-common/transforms';
-import { PlainToCSV } from './plain-to-csv.transform';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
@@ -62,7 +61,6 @@ export class DailyApportionedEmissionsService {
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
-    /*
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
@@ -75,7 +73,6 @@ export class DailyApportionedEmissionsService {
         callback(null, dto);
       },
     });
-    */
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
@@ -84,14 +81,14 @@ export class DailyApportionedEmissionsService {
           )
         : fieldMappings.emissions.daily;
       const toCSV = new PlainToCSV(fieldMappingsList);
-      return new StreamableFile(stream.pipe(toCSV), {
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
         disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream.pipe(objToString), {
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
       type: req.headers.accept,
       disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
     });
