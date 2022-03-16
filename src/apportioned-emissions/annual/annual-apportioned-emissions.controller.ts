@@ -1,5 +1,7 @@
 import { Request } from 'express';
 
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
 import {
   Get,
   Req,
@@ -21,17 +23,17 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
-
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import {
-  AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
+  StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +41,7 @@ import {
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
 export class AnnualApportionedEmissionsController {
-  constructor(
-    private readonly service: AnnualApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +55,7 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(',')
+          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +63,7 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +84,7 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(',')
+          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
         },
       },
     },
@@ -91,9 +92,11 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: AnnualApportionedEmissionsParamsDTO,
+    @Query() params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

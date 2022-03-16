@@ -21,6 +21,8 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -30,8 +32,8 @@ import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import {
-  DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
+  StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +41,7 @@ import {
 @ApiTags('Apportioned Daily Emissions')
 @ApiExtraModels(DailyApportionedEmissionsDTO)
 export class DailyApportionedEmissionsController {
-  constructor(
-    private readonly service: DailyApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: DailyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +55,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.map(i => i.label).join(',')
+          example: fieldMappings.emissions.daily.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +63,7 @@ export class DailyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +84,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.map(i => i.label).join(',')
+          example: fieldMappings.emissions.daily.map(i => i.label).join(','),
         },
       },
     },
@@ -91,9 +92,11 @@ export class DailyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: DailyApportionedEmissionsParamsDTO,
+    @Query() params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

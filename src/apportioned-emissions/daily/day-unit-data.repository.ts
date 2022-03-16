@@ -8,12 +8,13 @@ import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
+  StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
   streamEmissions(
-    params: DailyApportionedEmissionsParamsDTO,
+    params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }

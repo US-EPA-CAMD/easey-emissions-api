@@ -1,20 +1,23 @@
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsInEnum,
+  IsInRange,
+  IsInResponse,
+  Min,
+} from '@us-epa-camd/easey-common/pipes';
 
 import {
   propertyMetadata,
-  ErrorMessages
+  ErrorMessages,
 } from '@us-epa-camd/easey-common/constants';
-
-import {
-  IsInRange,
-  Min,
-} from '@us-epa-camd/easey-common/pipes';
+import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { OpYear } from '../utils/validator.const';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { fieldMappings } from '../constants/field-mappings';
 
 export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @ApiProperty({
@@ -45,4 +48,22 @@ export class PaginatedOzoneApportionedEmissionsParamsDTO extends OzoneApportione
     message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })
   perPage: number;
+}
+
+export class StreamOzoneApportionedEmissionsParamsDTO extends OzoneApportionedEmissionsParamsDTO {
+  @ApiProperty({
+    enum: ExcludeApportionedEmissions,
+    description: propertyMetadata.exclude.description,
+  })
+  @IsOptional()
+  @IsInEnum(ExcludeApportionedEmissions, {
+    each: true,
+    message: ErrorMessages.RemovableParameter(),
+  })
+  @IsInResponse(fieldMappings.emissions.ozone, {
+    each: true,
+    message: ErrorMessages.ValidParameter(),
+  })
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  exclude?: ExcludeApportionedEmissions[];
 }

@@ -8,7 +8,6 @@ import {
   UseInterceptors,
   StreamableFile,
 } from '@nestjs/common';
-
 import {
   ApiTags,
   ApiOkResponse,
@@ -16,47 +15,46 @@ import {
   ApiSecurity,
   ApiExtraModels,
 } from '@nestjs/swagger';
-
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
-  ApiProgramQuery,
   ExcludeQuery,
-} from '../../utils/swagger-decorator.const';
-
-import { fieldMappings } from '../../constants/field-mappings';
-import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
-import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
-import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
+} from '../../../utils/swagger-decorator.const';
+import { fieldMappings } from '../../../constants/field-mappings';
+import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
+import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
 import {
-  PaginatedQuarterlyApportionedEmissionsParamsDTO,
-  StreamQuarterlyApportionedEmissionsParamsDTO,
-} from '../../dto/quarterly-apportioned-emissions.params.dto';
+  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
+} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 
 @Controller()
 @ApiSecurity('APIKey')
-@ApiTags('Apportioned Quarterly Emissions')
-@ApiExtraModels(QuarterlyApportionedEmissionsDTO)
-export class QuarterlyApportionedEmissionsController {
-  constructor(private readonly service: QuarterlyApportionedEmissionsService) {}
+@ApiTags('Apportioned Hourly MATS Emissions')
+@ApiExtraModels(HourlyMatsApportionedEmissionsDTO)
+export class HourlyMatsApportionedEmissionsController {
+  constructor(
+    private readonly service: HourlyMatsApportionedEmissionsService,
+  ) {}
 
   @Get()
   @ApiOkResponse({
     description:
-      'Retrieves Quarterly Apportioned Emissions per filter criteria',
+      'Retrieves Hourly MATS Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(QuarterlyApportionedEmissionsDTO),
+          $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO),
         },
       },
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly
+          example: fieldMappings.emissions.mats.hourly
             .map(i => i.label)
             .join(','),
         },
@@ -66,28 +64,28 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
-    @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
-  ): Promise<QuarterUnitDataView[]> {
+    @Query() params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  ): Promise<HourUnitMatsDataView[]> {
     return this.service.getEmissions(req, params);
   }
 
   @Get('stream')
   @ApiOkResponse({
-    description: 'Streams Quarterly Apportioned Emissions per filter criteria',
+    description:
+      'Streams Hourly MATS Apportioned Emissions per filter criteria',
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(QuarterlyApportionedEmissionsDTO),
+          $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO),
         },
       },
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly
+          example: fieldMappings.emissions.mats.hourly
             .map(i => i.label)
             .join(','),
         },
@@ -97,11 +95,10 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
-  @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: StreamQuarterlyApportionedEmissionsParamsDTO,
+    @Query() params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

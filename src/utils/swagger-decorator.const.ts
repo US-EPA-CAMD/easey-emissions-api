@@ -22,6 +22,15 @@ export function ApiQueryMultiSelect() {
     ApiQuery({style: 'pipeDelimited', name: 'unitType', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'controlTechnologies', required: false, explode: false,}),
     ApiQuery({style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false,}),
-    ApiQuery({style: 'pipeDelimited', name: 'programCodeInfo', required: false, explode: false,}),
+  );
+}
+export function ApiProgramQuery() {
+  return applyDecorators(
+    ApiQuery({style: 'pipeDelimited',name: 'programCodeInfo',required: false,explode: false,})
+  );
+}
+export function ExcludeQuery() {
+  return applyDecorators(
+    ApiQuery({style: 'pipeDelimited', name: 'exclude', required: false, explode: false,})
   );
 }

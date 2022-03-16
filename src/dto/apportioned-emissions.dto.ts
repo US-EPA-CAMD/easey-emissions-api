@@ -7,6 +7,12 @@ export class ApportionedEmissionsDTO extends UnitFactDTO {
   constructor() {
     super();
   }
+  @ApiProperty({
+    description: propertyMetadata.programCodeInfo.description,
+    example: propertyMetadata.programCodeInfo.example,
+    name: propertyMetadata.programCodeInfo.fieldLabels.value,
+  })
+  programCodeInfo: string;
 
   @ApiProperty({
     description: propertyMetadata.grossLoad.description,

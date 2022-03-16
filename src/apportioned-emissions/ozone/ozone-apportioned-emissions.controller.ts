@@ -17,21 +17,23 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
 import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
-
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from './../../entities/vw-ozone-unit-data.entity';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import {
-  OzoneApportionedEmissionsParamsDTO,
-  PaginatedOzoneApportionedEmissionsParamsDTO
+  PaginatedOzoneApportionedEmissionsParamsDTO,
+  StreamOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +41,7 @@ import {
 @ApiTags('Apportioned Ozone Emissions')
 @ApiExtraModels(OzoneApportionedEmissionsDTO)
 export class OzoneApportionedEmissionsController {
-  constructor(
-    private readonly service: OzoneApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: OzoneApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +55,7 @@ export class OzoneApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.ozone.map(i => i.label).join(',')
+          example: fieldMappings.emissions.ozone.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +63,7 @@ export class OzoneApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +84,7 @@ export class OzoneApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.ozone.map(i => i.label).join(',')
+          example: fieldMappings.emissions.ozone.map(i => i.label).join(','),
         },
       },
     },
@@ -91,9 +92,11 @@ export class OzoneApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: OzoneApportionedEmissionsParamsDTO,
+    @Query() params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

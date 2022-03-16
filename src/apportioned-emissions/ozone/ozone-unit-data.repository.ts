@@ -7,14 +7,14 @@ import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   OzoneApportionedEmissionsParamsDTO,
-  PaginatedOzoneApportionedEmissionsParamsDTO
+  PaginatedOzoneApportionedEmissionsParamsDTO,
+  StreamOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
 
 @EntityRepository(OzoneUnitDataView)
 export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
-
   streamEmissions(
-    params: OzoneApportionedEmissionsParamsDTO,
+    params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<ReadStream> {
     return this.buildQuery(params, true).stream();
   }
@@ -31,8 +31,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
-    }
-    else {
+    } else {
       results = await query.getMany();
     }
 
@@ -81,10 +80,13 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     params: OzoneApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<OzoneUnitDataView> {
-    let query = this.createQueryBuilder('oud')
-      .select(this.getColumns(isStreamed));
+    let query = this.createQueryBuilder('oud').select(
+      this.getColumns(isStreamed),
+    );
 
-    query = QueryBuilderHelper.createEmissionsQuery(query, params,
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
       [
         'year',
         'stateCode',
@@ -94,7 +96,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'oud'
+      'oud',
     );
 
     query

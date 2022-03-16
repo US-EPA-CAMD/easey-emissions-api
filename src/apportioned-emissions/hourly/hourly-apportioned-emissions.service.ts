@@ -6,21 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
   StreamableFile,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import {
-  PlainToCSV,
-  PlainToJSON
-} from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { exclude } from '@us-epa-camd/easey-common/utilities';
+import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import {
-  HourlyApportionedEmissionsParamsDTO,
-  PaginatedHourlyApportionedEmissionsParamsDTO
+  PaginatedHourlyApportionedEmissionsParamsDTO,
+  StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class HourlyApportionedEmissionsService {
     @InjectRepository(HourUnitDataRepository)
     private readonly repository: HourUnitDataRepository,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async getEmissions(
     req: Request,
@@ -53,7 +52,7 @@ export class HourlyApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: HourlyApportionedEmissionsParamsDTO,
+    params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
@@ -65,33 +64,34 @@ export class HourlyApportionedEmissionsService {
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        const dto = plainToClass(
-          HourlyApportionedEmissionsDTO,
-          data,
-          { enableImplicitConversion: true }
-        );
+        data = exclude(data, params, ExcludeHourlyApportionedEmissions);
+        const dto = plainToClass(HourlyApportionedEmissionsDTO, data, {
+          enableImplicitConversion: true,
+        });
         const date = new Date(dto.date);
         dto.date = date.toISOString().split('T')[0];
         callback(null, dto);
-      }
+      },
     });
 
-    if (req.headers.accept === "text/csv") {
-      const toCSV = new PlainToCSV(fieldMappings.emissions.hourly);
-      return new StreamableFile(stream
-        .pipe(toDto)
-        .pipe(toCSV), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="hourly-emissions-${uuid()}.csv"`,
+    if (req.headers.accept === 'text/csv') {
+      const fieldMappingsList = params.exclude
+        ? fieldMappings.emissions.hourly.filter(
+            item => !params.exclude.includes(item.value),
+          )
+        : fieldMappings.emissions.hourly;
+
+      const toCSV = new PlainToCSV(fieldMappingsList);
+      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="hourly-emissions-${uuid()}.csv"`,
       });
     }
 
     const objToString = new PlainToJSON();
-    return new StreamableFile(stream
-      .pipe(toDto)
-      .pipe(objToString), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="hourly-emissions-${uuid()}.json"`,
+    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+      type: req.headers.accept,
+      disposition: `attachment; filename="hourly-emissions-${uuid()}.json"`,
     });
   }
 }

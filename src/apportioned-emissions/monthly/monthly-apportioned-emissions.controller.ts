@@ -17,21 +17,22 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
 import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
-
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
-
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import {
-  MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
+  StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +40,7 @@ import {
 @ApiTags('Apportioned Monthly Emissions')
 @ApiExtraModels(MonthlyApportionedEmissionsDTO)
 export class MonthlyApportionedEmissionsController {
-  constructor(
-    private readonly service: MonthlyApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: MonthlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +54,7 @@ export class MonthlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.monthly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.monthly.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +62,7 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +83,7 @@ export class MonthlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.monthly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.monthly.map(i => i.label).join(','),
         },
       },
     },
@@ -91,9 +91,11 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: MonthlyApportionedEmissionsParamsDTO,
+    @Query() params: StreamMonthlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

@@ -1,40 +1,40 @@
 import { Request } from 'express';
-import { v4 as uuid } from 'uuid';
-import { Transform } from 'stream';
-import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
-  StreamableFile,
   InternalServerErrorException,
+  StreamableFile,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { v4 as uuid } from 'uuid';
 import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { Transform } from 'stream';
+import { plainToClass } from 'class-transformer';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
-import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
+import { ExcludeHourlyMatsApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings } from '../../constants/field-mappings';
-import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
-import { DayUnitDataRepository } from './day-unit-data.repository';
-import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
+import { fieldMappings } from '../../../constants/field-mappings';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import {
-  PaginatedDailyApportionedEmissionsParamsDTO,
-  StreamDailyApportionedEmissionsParamsDTO,
-} from '../../dto/daily-apportioned-emissions.params.dto';
+  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  StreamHourlyMatsApportionedEmissionsParamsDTO,
+} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
 
 @Injectable()
-export class DailyApportionedEmissionsService {
+export class HourlyMatsApportionedEmissionsService {
   constructor(
-    @InjectRepository(DayUnitDataRepository)
-    private readonly repository: DayUnitDataRepository,
+    @InjectRepository(HourUnitMatsDataRepository)
+    private readonly repository: HourUnitMatsDataRepository,
     private readonly logger: Logger,
   ) {}
 
   async getEmissions(
     req: Request,
-    params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DayUnitDataView[]> {
-    let entities: DayUnitDataView[];
+    params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
+  ): Promise<HourUnitMatsDataView[]> {
+    let entities: HourUnitMatsDataView[];
 
     try {
       entities = await this.repository.getEmissions(req, params);
@@ -44,7 +44,7 @@ export class DailyApportionedEmissionsService {
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.daily),
+      JSON.stringify(fieldMappings.emissions.mats.hourly),
     );
 
     return entities;
@@ -52,20 +52,20 @@ export class DailyApportionedEmissionsService {
 
   async streamEmissions(
     req: Request,
-    params: StreamDailyApportionedEmissionsParamsDTO,
+    params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.daily),
+      JSON.stringify(fieldMappings.emissions.mats.hourly),
     );
 
     const toDto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
-        data = exclude(data, params, ExcludeApportionedEmissions);
-        const dto = plainToClass(DailyApportionedEmissionsDTO, data, {
+        data = exclude(data, params, ExcludeHourlyMatsApportionedEmissions);
+        const dto = plainToClass(HourlyMatsApportionedEmissionsDTO, data, {
           enableImplicitConversion: true,
         });
         const date = new Date(dto.date);
@@ -76,21 +76,20 @@ export class DailyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.daily.filter(
+        ? fieldMappings.emissions.mats.hourly.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.daily;
+        : fieldMappings.emissions.mats.hourly;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
-        disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
+        disposition: `attachment; filename="hourly-mats-emissions-${uuid()}.csv"`,
       });
     }
-
     const objToString = new PlainToJSON();
     return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
       type: req.headers.accept,
-      disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
+      disposition: `attachment; filename="hourly-mats-emissions-${uuid()}.json"`,
     });
   }
 }

@@ -21,6 +21,8 @@ import {
   BadRequestResponse,
   NotFoundResponse,
   ApiQueryMultiSelect,
+  ApiProgramQuery,
+  ExcludeQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -30,8 +32,8 @@ import { HourUnitDataView } from './../../entities/vw-hour-unit-data.entity';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import {
-  HourlyApportionedEmissionsParamsDTO,
-  PaginatedHourlyApportionedEmissionsParamsDTO
+  PaginatedHourlyApportionedEmissionsParamsDTO,
+  StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
 @Controller()
@@ -39,9 +41,7 @@ import {
 @ApiTags('Apportioned Hourly Emissions')
 @ApiExtraModels(HourlyApportionedEmissionsDTO)
 export class HourlyApportionedEmissionsController {
-  constructor(
-    private readonly service: HourlyApportionedEmissionsService,
-  ) {}
+  constructor(private readonly service: HourlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +55,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
         },
       },
     },
@@ -63,6 +63,7 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -83,7 +84,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(',')
+          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
         },
       },
     },
@@ -91,9 +92,11 @@ export class HourlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
-    @Query() params: HourlyApportionedEmissionsParamsDTO,
+    @Query() params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
   }

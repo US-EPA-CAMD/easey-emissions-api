@@ -85,11 +85,4 @@ export class UnitFactDTO {
     name: propertyMetadata.hgControlInfo.fieldLabels.value,
   })
   hgControlInfo: string;
-
-  @ApiProperty({
-    description: propertyMetadata.programCodeInfo.description,
-    example: propertyMetadata.programCodeInfo.example,
-    name: propertyMetadata.programCodeInfo.fieldLabels.value,
-  })
-  programCodeInfo: string;
 }
