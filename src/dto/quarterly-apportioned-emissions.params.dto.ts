@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -7,6 +7,7 @@ import {
   Min,
   IsInEnum,
   IsInResponse,
+  IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
 
 import {
@@ -27,7 +28,6 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     description: propertyMetadata.year.description,
   })
   @OpYear()
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 
@@ -35,7 +35,7 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     isArray: true,
     description: propertyMetadata.quarter.description,
   })
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @IsValidNumber(4, {
     each: true,
     message: ErrorMessages.MultipleFormat(
@@ -59,7 +59,7 @@ export class PaginatedQuarterlyApportionedEmissionsParamsDTO extends QuarterlyAp
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
   })
@@ -68,7 +68,7 @@ export class PaginatedQuarterlyApportionedEmissionsParamsDTO extends QuarterlyAp
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
     message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })

@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { IsDefined } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
   IsInDateRange,
@@ -7,6 +7,7 @@ import {
   IsIsoFormat,
   IsDateGreaterThanEqualTo,
   IsYearFormat,
+  IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
 
 export function BeginDate(isMats = false) {
@@ -33,7 +34,7 @@ export function BeginDate(isMats = false) {
     IsIsoFormat({
       message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD format'),
     }),
-    IsDefined({
+    IsNotEmpty({
       message: ErrorMessages.RequiredProperty(),
     }),
   );
@@ -66,7 +67,7 @@ export function EndDate(isMats = false) {
     IsIsoFormat({
       message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
     }),
-    IsDefined({ message: ErrorMessages.RequiredProperty() }),
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
   );
 }
 
@@ -84,6 +85,6 @@ export function OpYear() {
       each: true,
       message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
     }),
-    IsDefined({ message: ErrorMessages.RequiredProperty() }),
+    IsNotEmptyString({ message: ErrorMessages.RequiredProperty() }),
   );
 }

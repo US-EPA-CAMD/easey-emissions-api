@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -38,7 +38,7 @@ export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportione
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
   })
@@ -47,7 +47,7 @@ export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportione
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
     message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })

@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -25,7 +25,6 @@ export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsPara
     description: propertyMetadata.year.description,
   })
   @OpYear()
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 }
@@ -34,7 +33,7 @@ export class PaginatedOzoneApportionedEmissionsParamsDTO extends OzoneApportione
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @Min(1, {
     message: ErrorMessages.GreaterThanOrEqual('page', 1),
   })
@@ -43,7 +42,7 @@ export class PaginatedOzoneApportionedEmissionsParamsDTO extends OzoneApportione
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
+  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
   @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
     message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
   })
