@@ -1,5 +1,5 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsValidNumber,

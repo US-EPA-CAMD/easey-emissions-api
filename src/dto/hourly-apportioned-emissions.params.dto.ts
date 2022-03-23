@@ -1,4 +1,3 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Min,
@@ -6,6 +5,7 @@ import {
   IsInEnum,
   IsInResponse,
 } from '@us-epa-camd/easey-common/pipes';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 
 import {
   ErrorMessages,

@@ -1,4 +1,3 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -9,6 +8,7 @@ import {
   IsInResponse,
   IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
+import { IsOptional, IsNotEmpty } from 'class-validator';
 
 import {
   propertyMetadata,
