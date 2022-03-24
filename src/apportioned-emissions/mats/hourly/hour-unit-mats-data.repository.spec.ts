@@ -1,5 +1,6 @@
+import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import {
   State,
   UnitType,
@@ -8,6 +9,7 @@ import {
   ExcludeHourlyMatsApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import * as typeorm_functions from 'typeorm/globals';
 
 import {
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
@@ -42,6 +44,20 @@ const mockQueryBuilder = () => ({
   take: jest.fn(),
   stream: jest.fn(),
 });
+
+jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue({
+  createQueryBuilder: jest.fn().mockImplementation(() => ({
+       subQuery: jest.fn().mockReturnThis() as unknown,
+       from: jest.fn().mockReturnThis() as unknown,
+       where: jest.fn().mockReturnThis() as unknown,
+       select: jest.fn().mockReturnThis() as unknown,
+       getQuery: jest.fn().mockReturnThis() as unknown,
+       setParameter: jest.fn().mockReturnThis() as unknown,
+       getMany: jest
+         .fn()
+         .mockResolvedValue(new HourUnitMatsDataView) as unknown,
+     })),
+ } as unknown as Repository<unknown>);
 
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
 filters.page = undefined;
