@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -6,17 +6,11 @@ import {
   ErrorMessages,
 } from '@us-epa-camd/easey-common/constants';
 
-import {
-  IsInEnum,
-  IsInRange,
-  IsInResponse,
-  Min,
-} from '@us-epa-camd/easey-common/pipes';
+import { IsInEnum, IsInResponse } from '@us-epa-camd/easey-common/pipes';
 import { Transform } from 'class-transformer';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { BeginDate, EndDate } from '../utils/validator.const';
-import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
+import { BeginDate, EndDate, Page, PerPage } from '../utils/validator.const';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { fieldMappings } from '../constants/field-mappings';
 
@@ -38,19 +32,13 @@ export class PaginatedDailyApportionedEmissionsParamsDTO extends DailyApportione
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 

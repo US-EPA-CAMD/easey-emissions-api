@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -10,8 +10,6 @@ import {
 import {
   IsInDateRange,
   IsYearFormat,
-  IsInRange,
-  Min,
   IsInEnum,
   IsInResponse,
   IsNotEmptyString,
@@ -19,8 +17,8 @@ import {
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../constants/field-mappings';
-import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { Page, PerPage } from '../utils/validator.const';
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @ApiProperty({
@@ -48,19 +46,13 @@ export class PaginatedAnnualApportionedEmissionsParamsDTO extends AnnualApportio
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsNotEmpty({ message: ErrorMessages.RequiredProperty() })
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 

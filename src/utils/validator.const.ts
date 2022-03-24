@@ -8,7 +8,10 @@ import {
   IsDateGreaterThanEqualTo,
   IsYearFormat,
   IsNotEmptyString,
+  IsInRange,
+  Min
 } from '@us-epa-camd/easey-common/pipes';
+import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 
 export function BeginDate(isMats = false) {
   let date;
@@ -68,6 +71,24 @@ export function EndDate(isMats = false) {
       message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
     }),
     IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+  );
+}
+
+export function Page() {
+  return applyDecorators(
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+    Min(1, {
+      message: ErrorMessages.GreaterThanOrEqual('page', 1),
+    }),
+  );
+}
+
+export function PerPage() {
+  return applyDecorators(
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+    IsInRange(1, PAGINATION_MAX_PER_PAGE, {
+      message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
+    }),
   );
 }
 
