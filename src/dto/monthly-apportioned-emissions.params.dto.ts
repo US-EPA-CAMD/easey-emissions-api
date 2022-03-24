@@ -1,12 +1,11 @@
-import { IsDefined, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsValidNumber,
-  IsInRange,
-  Min,
   IsInEnum,
   IsInResponse,
+  IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
 
 import {
@@ -15,8 +14,7 @@ import {
 } from '@us-epa-camd/easey-common/constants';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { OpYear } from '../utils/validator.const';
-import { PAGINATION_MAX_PER_PAGE } from './../config/app.config';
+import { OpYear, Page, PerPage } from '../utils/validator.const';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 import { fieldMappings } from '../constants/field-mappings';
@@ -27,7 +25,6 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
     description: propertyMetadata.year.description,
   })
   @OpYear()
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 
@@ -35,7 +32,7 @@ export class MonthlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPa
     isArray: true,
     description: propertyMetadata.month.description,
   })
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @IsValidNumber(12, {
     each: true,
     message: ErrorMessages.MultipleFormat('month', 'M or MM format'),
@@ -56,19 +53,13 @@ export class PaginatedMonthlyApportionedEmissionsParamsDTO extends MonthlyApport
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 
