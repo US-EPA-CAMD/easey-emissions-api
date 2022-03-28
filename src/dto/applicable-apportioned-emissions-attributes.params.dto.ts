@@ -18,10 +18,6 @@ export class ApplicableApportionedEmissionsAttributesParamsDTO {
     isArray: true,
     description: propertyMetadata.year.description,
   })
-  @IsYearFormat({
-    each: true,
-    message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
-  })
   @IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, true, {
     each: true,
     message: ErrorMessages.DateRange(
@@ -29,6 +25,10 @@ export class ApplicableApportionedEmissionsAttributesParamsDTO {
       true,
       `1980, 1985, 1990, or to a year between 1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
     ),
+  })
+  @IsYearFormat({
+    each: true,
+    message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
   })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
