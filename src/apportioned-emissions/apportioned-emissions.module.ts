@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { HourlyApportionedEmissionsModule } from './hourly/hourly-apportioned-emissions.module';
 import { DailyApportionedEmissionsModule } from './daily/daily-apportioned-emissions.module';
@@ -7,9 +8,13 @@ import { QuarterlyApportionedEmissionsModule } from './quarterly/quarterly-appor
 import { AnnualApportionedEmissionsModule } from './annual/annual-apportioned-emissions.module';
 import { OzoneApportionedEmissionsModule } from './ozone/ozone-apportioned-emissions.module';
 import { MatsApportionedEmissionsModule } from './mats/mats-apportioned-emissions.module';
+import { ApportionedEmissionsController } from './apportioned-emissions.controller';
+import { ApportionedEmissionsService } from './apportioned-emissions.service';
+import { ProgramYearDimRepository } from './program-year-dim.repository';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([ProgramYearDimRepository]),
     HourlyApportionedEmissionsModule,
     DailyApportionedEmissionsModule,
     MonthlyApportionedEmissionsModule,
@@ -18,7 +23,7 @@ import { MatsApportionedEmissionsModule } from './mats/mats-apportioned-emission
     OzoneApportionedEmissionsModule,
     MatsApportionedEmissionsModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [ApportionedEmissionsController],
+  providers: [ApportionedEmissionsService],
 })
 export class ApportionedEmissionsModule {}
