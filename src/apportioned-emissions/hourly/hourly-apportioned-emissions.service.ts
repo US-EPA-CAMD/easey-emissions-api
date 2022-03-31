@@ -9,7 +9,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
@@ -55,6 +55,13 @@ export class HourlyApportionedEmissionsService {
     params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
+
+    req.on('close', () => {
+      if (!stream.destroyed) {
+        stream.destroy();
+        return null;
+      }
+    });
 
     req.res.setHeader(
       'X-Field-Mappings',

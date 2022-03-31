@@ -56,6 +56,13 @@ export class DailyApportionedEmissionsService {
   ): Promise<StreamableFile> {
     const stream = await this.repository.streamEmissions(params);
 
+    req.on('close', () => {
+      if (!stream.destroyed) {
+        stream.destroy();
+        return null;
+      }
+    });
+
     req.res.setHeader(
       'X-Field-Mappings',
       JSON.stringify(fieldMappings.emissions.daily),
