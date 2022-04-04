@@ -103,6 +103,7 @@ export class HourlyApportionedEmissionsService {
       });
     } catch (e) {
       console.log(e);
+      return null;
     }
   }
 }
