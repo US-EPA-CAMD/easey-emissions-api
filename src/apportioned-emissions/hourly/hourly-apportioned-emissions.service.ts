@@ -54,51 +54,55 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const stream = await this.repository.streamEmissions(params);
+    try {
+      const stream = await this.repository.streamEmissions(params);
 
-    req.on('close', () => {
-      if (!stream.destroyed) {
-        stream.destroy();
-        return null;
-      }
-    });
-
-    req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly),
-    );
-
-    const toDto = new Transform({
-      objectMode: true,
-      transform(data, _enc, callback) {
-        data = exclude(data, params, ExcludeHourlyApportionedEmissions);
-        const dto = plainToClass(HourlyApportionedEmissionsDTO, data, {
-          enableImplicitConversion: true,
-        });
-        const date = new Date(dto.date);
-        dto.date = date.toISOString().split('T')[0];
-        callback(null, dto);
-      },
-    });
-
-    if (req.headers.accept === 'text/csv') {
-      const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.hourly.filter(
-            item => !params.exclude.includes(item.value),
-          )
-        : fieldMappings.emissions.hourly;
-
-      const toCSV = new PlainToCSV(fieldMappingsList);
-      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="hourly-emissions-${uuid()}.csv"`,
+      req.on('close', () => {
+        if (!stream.destroyed) {
+          stream.destroy();
+          return null;
+        }
       });
-    }
 
-    const objToString = new PlainToJSON();
-    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
-      type: req.headers.accept,
-      disposition: `attachment; filename="hourly-emissions-${uuid()}.json"`,
-    });
+      req.res.setHeader(
+        'X-Field-Mappings',
+        JSON.stringify(fieldMappings.emissions.hourly),
+      );
+
+      const toDto = new Transform({
+        objectMode: true,
+        transform(data, _enc, callback) {
+          data = exclude(data, params, ExcludeHourlyApportionedEmissions);
+          const dto = plainToClass(HourlyApportionedEmissionsDTO, data, {
+            enableImplicitConversion: true,
+          });
+          const date = new Date(dto.date);
+          dto.date = date.toISOString().split('T')[0];
+          callback(null, dto);
+        },
+      });
+
+      if (req.headers.accept === 'text/csv') {
+        const fieldMappingsList = params.exclude
+          ? fieldMappings.emissions.hourly.filter(
+              item => !params.exclude.includes(item.value),
+            )
+          : fieldMappings.emissions.hourly;
+
+        const toCSV = new PlainToCSV(fieldMappingsList);
+        return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-${uuid()}.csv"`,
+        });
+      }
+
+      const objToString = new PlainToJSON();
+      return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="hourly-emissions-${uuid()}.json"`,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
