@@ -1,6 +1,7 @@
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 const hourly = [];
+const hourlyFacilityAggregation = [];
 const daily = [];
 const monthly = [];
 const quarterly = [];
@@ -71,6 +72,20 @@ hourly.push(
   ...controlInfoCharacteristics,
 );
 
+hourlyFacilityAggregation.push(
+  { ...propertyMetadata.stateCode.fieldLabels },
+  { ...propertyMetadata.facilityName.fieldLabels },
+  { ...propertyMetadata.facilityId.fieldLabels },
+  { ...propertyMetadata.date.fieldLabels },
+  { ...propertyMetadata.hour.fieldLabels },
+  { ...propertyMetadata.grossLoadHourly.fieldLabels },
+  { ...propertyMetadata.steamLoadHourly.fieldLabels },
+  { ...propertyMetadata.so2MassHourly.fieldLabels },
+  { ...propertyMetadata.co2Mass.fieldLabels },
+  { ...propertyMetadata.noxMassHourly.fieldLabels },
+  { ...propertyMetadata.heatInput.fieldLabels },
+);
+
 daily.push(
   ...commonCharacteristics,
   { ...propertyMetadata.associatedStacks.fieldLabels },
@@ -133,7 +148,7 @@ hourlyMats.push(
 
 export const fieldMappings = {
   emissions: {
-    hourly: hourly,
+    hourly: { unit: hourly, facility: hourlyFacilityAggregation },
     daily: daily,
     monthly: monthly,
     quarterly: quarterly,

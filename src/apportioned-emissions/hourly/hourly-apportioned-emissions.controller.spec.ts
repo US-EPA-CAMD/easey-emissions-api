@@ -7,10 +7,11 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
 
-import { 
+import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -30,10 +31,7 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [HourlyApportionedEmissionsController],
-      providers: [
-        HourlyApportionedEmissionsService,        
-        HourUnitDataRepository,
-      ],
+      providers: [HourlyApportionedEmissionsService, HourUnitDataRepository],
     }).compile();
 
     controller = module.get(HourlyApportionedEmissionsController);
@@ -50,11 +48,22 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: HourUnitDataView[] = [];
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
+    });
+  });
+
+  describe('* getEmissionsFacilityAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: HourlyApportionedEmissionsFacilityAggregationDTO[] = [];
+      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
       jest
-        .spyOn(service, 'getEmissions')
+        .spyOn(service, 'getEmissionsFacilityAggregation')
         .mockResolvedValue(expectedResult);
       expect(
-        await controller.getEmissions(req, paramsDto),
+        await controller.getEmissionsFacilityAggregation(req, paramsDto),
       ).toBe(expectedResult);
     });
   });
@@ -63,11 +72,22 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
       const paramsDto = new HourlyApportionedEmissionsParamsDTO();
+      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.streamEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
+    });
+  });
+
+  describe('* streamEmissionsFacilityAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult = new StreamableFile(Buffer.from('stream'));
+      const paramsDto = new HourlyApportionedEmissionsParamsDTO();
       jest
-        .spyOn(service, 'streamEmissions')
+        .spyOn(service, 'streamEmissionsFacilityAggregation')
         .mockResolvedValue(expectedResult);
       expect(
-        await controller.streamEmissions(req, paramsDto),
+        await controller.streamEmissionsFacilityAggregation(req, paramsDto),
       ).toBe(expectedResult);
     });
   });
