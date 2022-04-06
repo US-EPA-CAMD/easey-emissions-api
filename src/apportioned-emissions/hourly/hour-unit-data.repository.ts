@@ -115,4 +115,79 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
 
     return query;
   }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourUnitDataView[]> {
+    let totalCount: number;
+    let results: HourUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildFacilityAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  streamEmissionsFacilityAggregation(
+    params: HourlyApportionedEmissionsParamsDTO,
+  ): Promise<ReadStream> {
+    return this.buildFacilityAggregationQuery(params).stream();
+  }
+
+  buildFacilityAggregationQuery(
+    params: HourlyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<HourUnitDataView> {
+    let query = this.createQueryBuilder('hud')
+      .select(
+        [
+          'hud.stateCode',
+          'hud.facilityName',
+          'hud.facilityId',
+          'hud.date',
+          'hud.hour',
+        ].map(col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        }),
+      )
+      .addSelect('SUM(hud.grossLoad)', 'grossLoad')
+      .addSelect('SUM(hud.steamLoad)', 'steamLoad')
+      .addSelect('SUM(hud.so2Mass)', 'so2Mass')
+      .addSelect('SUM(hud.co2Mass)', 'co2Mass')
+      .addSelect('SUM(hud.noxMass)', 'noxMass')
+      .addSelect('SUM(hud.heatInput)', 'heatInput')
+      .addGroupBy('hud.stateCode')
+      .addGroupBy('hud.facilityName')
+      .addGroupBy('hud.facilityId')
+      .addGroupBy('hud.date')
+      .addGroupBy('hud.hour');
+
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
+      [
+        'beginDate',
+        'endDate',
+        'stateCode',
+        'facilityId',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'programCodeInfo',
+        'operatingHoursOnly',
+      ],
+      'hud',
+    );
+
+    query
+      .orderBy('hud.facilityId')
+      .addOrderBy('hud.date')
+      .addOrderBy('hud.hour');
+
+    return query;
+  }
 }

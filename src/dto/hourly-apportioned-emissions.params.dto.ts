@@ -57,7 +57,7 @@ export class StreamHourlyApportionedEmissionsParamsDTO extends HourlyApportioned
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.hourly, {
+  @IsInResponse(fieldMappings.emissions.hourly.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

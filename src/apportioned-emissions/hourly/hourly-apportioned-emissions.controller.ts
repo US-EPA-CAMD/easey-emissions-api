@@ -31,7 +31,9 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { HourUnitDataView } from './../../entities/vw-hour-unit-data.entity';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
+import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
 import {
+  HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
   StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
@@ -40,6 +42,7 @@ import {
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Hourly Emissions')
 @ApiExtraModels(HourlyApportionedEmissionsDTO)
+@ApiExtraModels(HourlyApportionedEmissionsFacilityAggregationDTO)
 export class HourlyApportionedEmissionsController {
   constructor(private readonly service: HourlyApportionedEmissionsService) {}
 
@@ -55,7 +58,9 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
+          example: fieldMappings.emissions.hourly.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -84,7 +89,9 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.map(i => i.label).join(','),
+          example: fieldMappings.emissions.hourly.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -99,5 +106,68 @@ export class HourlyApportionedEmissionsController {
     @Query() params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
+  }
+
+  @Get('facility')
+  @ApiOkResponse({
+    description:
+      'Retrieves Hourly Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(HourlyApportionedEmissionsFacilityAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.hourly.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourlyApportionedEmissionsFacilityAggregationDTO[]> {
+    return this.service.getEmissionsFacilityAggregation(req, params);
+  }
+
+  @Get('facility/stream')
+  @ApiOkResponse({
+    description:
+      'Streams Hourly Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(HourlyApportionedEmissionsFacilityAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.hourly.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  streamEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: HourlyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 }
