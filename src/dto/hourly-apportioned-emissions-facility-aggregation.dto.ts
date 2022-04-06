@@ -52,9 +52,9 @@ export class HourlyApportionedEmissionsFacilityAggregationDTO {
   steamLoad?: number;
 
   @ApiProperty({
-    description: propertyMetadata.so2Mass.description,
-    example: propertyMetadata.so2Mass.example,
-    name: propertyMetadata.so2Mass.fieldLabels.value,
+    description: propertyMetadata.so2MassHourly.description,
+    example: propertyMetadata.so2MassHourly.example,
+    name: propertyMetadata.so2MassHourly.fieldLabels.value,
   })
   so2Mass?: number;
 
@@ -66,9 +66,9 @@ export class HourlyApportionedEmissionsFacilityAggregationDTO {
   co2Mass?: number;
 
   @ApiProperty({
-    description: propertyMetadata.noxMass.description,
-    example: propertyMetadata.noxMass.example,
-    name: propertyMetadata.noxMass.fieldLabels.value,
+    description: propertyMetadata.noxMassHourly.description,
+    example: propertyMetadata.noxMassHourly.example,
+    name: propertyMetadata.noxMassHourly.fieldLabels.value,
   })
   noxMass?: number;
 
