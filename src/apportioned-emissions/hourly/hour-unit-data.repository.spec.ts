@@ -165,7 +165,7 @@ describe('HourUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams HourUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(streamFilters);
+      const result = await repository.getStreamQuery(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
@@ -213,9 +213,7 @@ describe('HourUnitDataRepository', () => {
 
   describe('streamEmissionsFacilityAggregation', () => {
     it('calls streamEmissions and streams HourUnitData aggregated by facility from the repository', async () => {
-      const result = await repository.streamEmissionsFacilityAggregation(
-        streamFilters,
-      );
+      const result = repository.getFacilityStreamQuery(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

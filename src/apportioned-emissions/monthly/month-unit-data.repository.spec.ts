@@ -158,7 +158,7 @@ describe('MonthUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams MonthUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(
+      const result = repository.getStreamQuery(
         new PaginatedMonthlyApportionedEmissionsParamsDTO(),
       );
 

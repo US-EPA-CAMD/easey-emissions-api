@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,10 +12,8 @@ import {
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
-  streamEmissions(
-    params: StreamDailyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamDailyApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(

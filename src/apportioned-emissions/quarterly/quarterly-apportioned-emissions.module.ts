@@ -6,9 +6,14 @@ import { HttpModule } from '@nestjs/axios';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { QuarterlyApportionedEmissionsController } from './quarterly-apportioned-emissions.controller';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([QuarterUnitDataRepository]), HttpModule],
+  imports: [
+    TypeOrmModule.forFeature([QuarterUnitDataRepository]),
+    HttpModule,
+    StreamModule,
+  ],
   controllers: [QuarterlyApportionedEmissionsController],
   providers: [ConfigService, QuarterlyApportionedEmissionsService],
   exports: [TypeOrmModule],

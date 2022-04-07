@@ -3,13 +3,14 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import {
   Injectable,
   StreamableFile,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
@@ -21,6 +22,7 @@ import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
+import { ReadStream } from 'fs';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
@@ -28,6 +30,7 @@ export class DailyApportionedEmissionsService {
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
     private readonly logger: Logger,
+    private readonly streamService: StreamService,
   ) {}
 
   async getEmissions(
@@ -54,13 +57,12 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const stream = await this.repository.streamEmissions(params);
+    const query = this.repository.getStreamQuery(params);
+    let stream: ReadStream = await this.streamService.getStream(query);
 
     req.on('close', () => {
-      if (!stream.destroyed) {
-        stream.destroy();
-        return null;
-      }
+      stream.destroy();
+      stream = null;
     });
 
     req.res.setHeader(
