@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import {
   Injectable,
   StreamableFile,
@@ -23,6 +24,7 @@ import {
   PaginatedHourlyApportionedEmissionsParamsDTO,
   StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { ReadStream } from 'fs';
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
@@ -30,6 +32,7 @@ export class HourlyApportionedEmissionsService {
     @InjectRepository(HourUnitDataRepository)
     private readonly repository: HourUnitDataRepository,
     private readonly logger: Logger,
+    private readonly streamService: StreamService,
   ) {}
 
   async getEmissions(
@@ -57,13 +60,12 @@ export class HourlyApportionedEmissionsService {
     params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     try {
-      const stream = await this.repository.streamEmissions(params);
+      const query = this.repository.getStreamQuery(params);
+      let stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
-        if (!stream.destroyed) {
-          stream.destroy();
-          return null;
-        }
+        stream.destroy();
+        stream = null;
       });
 
       req.res.setHeader(
@@ -148,15 +150,12 @@ export class HourlyApportionedEmissionsService {
     params: HourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     try {
-      const stream = await this.repository.streamEmissionsFacilityAggregation(
-        params,
-      );
+      const query = this.repository.getStreamQuery(params);
+      let stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
-        if (!stream.destroyed) {
-          stream.destroy();
-          return null;
-        }
+        stream.destroy();
+        stream = null;
       });
 
       req.res.setHeader(

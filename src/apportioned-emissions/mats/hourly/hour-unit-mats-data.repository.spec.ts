@@ -45,19 +45,17 @@ const mockQueryBuilder = () => ({
   stream: jest.fn(),
 });
 
-jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue({
+jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue(({
   createQueryBuilder: jest.fn().mockImplementation(() => ({
-       subQuery: jest.fn().mockReturnThis() as unknown,
-       from: jest.fn().mockReturnThis() as unknown,
-       where: jest.fn().mockReturnThis() as unknown,
-       select: jest.fn().mockReturnThis() as unknown,
-       getQuery: jest.fn().mockReturnThis() as unknown,
-       setParameter: jest.fn().mockReturnThis() as unknown,
-       getMany: jest
-         .fn()
-         .mockResolvedValue(new HourUnitMatsDataView) as unknown,
-     })),
- } as unknown as Repository<unknown>);
+    subQuery: jest.fn().mockReturnThis() as unknown,
+    from: jest.fn().mockReturnThis() as unknown,
+    where: jest.fn().mockReturnThis() as unknown,
+    select: jest.fn().mockReturnThis() as unknown,
+    getQuery: jest.fn().mockReturnThis() as unknown,
+    setParameter: jest.fn().mockReturnThis() as unknown,
+    getMany: jest.fn().mockResolvedValue(new HourUnitMatsDataView()) as unknown,
+  })),
+} as unknown) as Repository<unknown>);
 
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
 filters.page = undefined;
@@ -169,7 +167,7 @@ describe('HourUnitMatsDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams HourUnitMatsData from the repository', async () => {
-      const result = await repository.streamEmissions(streamFilters);
+      const result = repository.getStreamQuery(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

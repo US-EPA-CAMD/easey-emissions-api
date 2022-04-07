@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(QuarterUnitDataView)
 export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
-  streamEmissions(
-    params: StreamQuarterlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamQuarterlyApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(
