@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
-import { StreamModule } from '../stream/stream.module';
 
 @Module({
   imports: [

@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import {
   Injectable,
   StreamableFile,
@@ -21,7 +22,6 @@ import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
-import { StreamService } from '../stream/stream.service';
 import { ReadStream } from 'fs';
 
 @Injectable()
