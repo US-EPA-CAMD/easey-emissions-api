@@ -61,8 +61,7 @@ export class HourlyMatsApportionedEmissionsService {
     let stream: ReadStream = await this.streamService.getStream(query);
 
     req.on('close', () => {
-      stream.destroy();
-      stream = null;
+      stream.emit('end');
     });
 
     req.res.setHeader(
