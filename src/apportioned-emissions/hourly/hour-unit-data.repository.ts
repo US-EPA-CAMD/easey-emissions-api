@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-  streamEmissions(
-    params: StreamHourlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(
@@ -133,10 +131,8 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  streamEmissionsFacilityAggregation(
-    params: HourlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildFacilityAggregationQuery(params).stream();
+  getFacilityStreamQuery(params: HourlyApportionedEmissionsParamsDTO) {
+    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
   }
 
   buildFacilityAggregationQuery(

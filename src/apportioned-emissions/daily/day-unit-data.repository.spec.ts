@@ -158,7 +158,7 @@ describe('DayUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams DayUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(streamFilters);
+      const result = repository.getStreamQuery(streamFilters);
 
       expect(queryBuilder.stream).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

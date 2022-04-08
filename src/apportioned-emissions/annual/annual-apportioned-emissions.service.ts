@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import {
   Injectable,
   StreamableFile,
@@ -21,6 +22,7 @@ import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { ReadStream } from 'fs';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
@@ -28,6 +30,7 @@ export class AnnualApportionedEmissionsService {
     @InjectRepository(AnnualUnitDataRepository)
     private readonly repository: AnnualUnitDataRepository,
     private readonly logger: Logger,
+    private readonly streamService: StreamService,
   ) {}
 
   async getEmissions(
@@ -54,13 +57,11 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const stream = await this.repository.streamEmissions(params);
+    const query = this.repository.getStreamQuery(params);
+    let stream: ReadStream = await this.streamService.getStream(query);
 
     req.on('close', () => {
-      if (!stream.destroyed) {
-        stream.destroy();
-        return null;
-      }
+      stream.emit('end');
     });
 
     req.res.setHeader(

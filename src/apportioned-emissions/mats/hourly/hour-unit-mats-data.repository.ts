@@ -30,10 +30,8 @@ import {
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
-  streamEmissions(
-    params: StreamHourlyMatsApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamHourlyMatsApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(
