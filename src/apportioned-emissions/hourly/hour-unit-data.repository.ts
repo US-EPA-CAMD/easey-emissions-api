@@ -1,5 +1,4 @@
-import { ReadStream } from 'fs';
-import { query, Request } from 'express';
+import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
