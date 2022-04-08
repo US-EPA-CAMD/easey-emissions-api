@@ -7,10 +7,11 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
 
-import { 
+import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -28,12 +29,9 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [HourlyApportionedEmissionsController],
-      providers: [
-        HourlyApportionedEmissionsService,        
-        HourUnitDataRepository,
-      ],
+      providers: [HourlyApportionedEmissionsService, HourUnitDataRepository],
     }).compile();
 
     controller = module.get(HourlyApportionedEmissionsController);
@@ -50,12 +48,10 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: HourUnitDataView[] = [];
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 
@@ -63,12 +59,10 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
       const paramsDto = new HourlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'streamEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.streamEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.streamEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 });

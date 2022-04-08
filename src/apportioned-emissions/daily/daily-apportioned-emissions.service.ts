@@ -12,6 +12,7 @@ import { Logger } from '@us-epa-camd/easey-common/logger';
 import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
@@ -21,6 +22,7 @@ import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
+import { ReadStream } from 'fs';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
@@ -28,6 +30,7 @@ export class DailyApportionedEmissionsService {
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
     private readonly logger: Logger,
+    private readonly streamService: StreamService,
   ) {}
 
   async getEmissions(
@@ -54,7 +57,13 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const stream = await this.repository.streamEmissions(params);
+    const query = this.repository.getStreamQuery(params);
+    let stream: ReadStream = await this.streamService.getStream(query);
+
+    req.on('close', () => {
+      stream.destroy();
+      stream = null;
+    });
 
     req.res.setHeader(
       'X-Field-Mappings',

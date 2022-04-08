@@ -12,6 +12,7 @@ import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyMatsApportionedEmissions } from '@us-epa-camd/easey-common/enums';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 
 import { fieldMappings } from '../../../constants/field-mappings';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
@@ -21,6 +22,7 @@ import {
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-apportioned-emissions.dto';
+import { ReadStream } from 'fs';
 
 @Injectable()
 export class HourlyMatsApportionedEmissionsService {
@@ -28,6 +30,7 @@ export class HourlyMatsApportionedEmissionsService {
     @InjectRepository(HourUnitMatsDataRepository)
     private readonly repository: HourUnitMatsDataRepository,
     private readonly logger: Logger,
+    private readonly streamService: StreamService,
   ) {}
 
   async getEmissions(
@@ -54,7 +57,13 @@ export class HourlyMatsApportionedEmissionsService {
     req: Request,
     params: StreamHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const stream = await this.repository.streamEmissions(params);
+    const query = this.repository.getStreamQuery(params);
+    let stream: ReadStream = await this.streamService.getStream(query);
+
+    req.on('close', () => {
+      stream.destroy();
+      stream = null;
+    });
 
     req.res.setHeader(
       'X-Field-Mappings',

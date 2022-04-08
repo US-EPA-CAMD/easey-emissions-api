@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(OzoneUnitDataView)
 export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
-  streamEmissions(
-    params: StreamOzoneApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamOzoneApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(

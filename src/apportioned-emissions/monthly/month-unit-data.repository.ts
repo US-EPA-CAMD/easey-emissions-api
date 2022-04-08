@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(MonthUnitDataView)
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
-  streamEmissions(
-    params: StreamMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamMonthlyApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(

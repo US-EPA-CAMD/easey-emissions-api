@@ -10,6 +10,8 @@ import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
+import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('uuid', () => {
   return { v4: jest.fn().mockReturnValue(0) };
@@ -17,16 +19,25 @@ jest.mock('uuid', () => {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  streamEmissions: jest.fn(),
+  getStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
   return {
-    headers: { accept: '' },
+    headers: {
+      accept: '',
+    },
     res: {
       setHeader: jest.fn(),
     },
+    on: jest.fn(),
   };
+};
+
+const mockStream = {
+  pipe: jest.fn().mockReturnValue({
+    pipe: jest.fn().mockReturnValue(Buffer.from('stream')),
+  }),
 };
 
 describe('-- Monthly Apportioned Emissions Service --', () => {
@@ -38,6 +49,15 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        {
+          provide: StreamService,
+          useFactory: () => ({
+            getStream: () => {
+              return mockStream;
+            },
+          }),
+        },
+        ConfigService,
         MonthlyApportionedEmissionsService,
         {
           provide: MonthUnitDataRepository,
@@ -64,14 +84,8 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('streamEmissions', () => {
     it('calls MonthlyUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      const expectedResult = Buffer.from('stream');
+      repository.getStreamQuery.mockResolvedValue('');
 
-      const mockStream = {
-        pipe: jest.fn().mockReturnValue({
-          pipe: jest.fn().mockReturnValue(expectedResult),
-        }),
-      };
-      repository.streamEmissions.mockResolvedValue(mockStream);
       let filters = new MonthlyApportionedEmissionsParamsDTO();
 
       req.headers.accept = '';
@@ -79,7 +93,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
       let result = await service.streamEmissions(req, filters);
 
       expect(result).toEqual(
-        new StreamableFile(expectedResult, {
+        new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="monthly-emissions-${0}.json"`,
         }),

@@ -43,6 +43,7 @@ const mockQueryBuilder = () => ({
   skip: jest.fn(),
   take: jest.fn(),
   stream: jest.fn(),
+  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
 let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
@@ -158,9 +159,9 @@ describe('QuarterUnitDataRepository', () => {
 
   describe('streamEmissions', () => {
     it('calls streamEmissions and streams QuarterUnitData from the repository', async () => {
-      const result = await repository.streamEmissions(streamFilters);
+      const result = await repository.getStreamQuery(streamFilters);
 
-      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
   });

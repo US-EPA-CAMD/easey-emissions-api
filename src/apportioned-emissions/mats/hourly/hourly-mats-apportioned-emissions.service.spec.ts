@@ -9,6 +9,8 @@ import {
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { StreamableFile } from '@nestjs/common';
+import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('uuid', () => {
   return { v4: jest.fn().mockReturnValue(0) };
@@ -16,16 +18,25 @@ jest.mock('uuid', () => {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  streamEmissions: jest.fn(),
+  getStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
   return {
-    headers: { accept: '' },
+    headers: {
+      accept: '',
+    },
     res: {
       setHeader: jest.fn(),
     },
+    on: jest.fn(),
   };
+};
+
+const mockStream = {
+  pipe: jest.fn().mockReturnValue({
+    pipe: jest.fn().mockReturnValue(Buffer.from('stream')),
+  }),
 };
 
 describe('-- Hourly MATS Apportioned Emissions Service --', () => {
@@ -37,6 +48,15 @@ describe('-- Hourly MATS Apportioned Emissions Service --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        ConfigService,
+        {
+          provide: StreamService,
+          useFactory: () => ({
+            getStream: () => {
+              return mockStream;
+            },
+          }),
+        },
         HourlyMatsApportionedEmissionsService,
         {
           provide: HourUnitMatsDataRepository,
@@ -63,14 +83,8 @@ describe('-- Hourly MATS Apportioned Emissions Service --', () => {
 
   describe('streamEmissions', () => {
     it('calls HourlyUnitMatsDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      const expectedResult = Buffer.from('stream');
+      repository.getStreamQuery.mockResolvedValue('');
 
-      const mockStream = {
-        pipe: jest.fn().mockReturnValue({
-          pipe: jest.fn().mockReturnValue(expectedResult),
-        }),
-      };
-      repository.streamEmissions.mockResolvedValue(mockStream);
       let filters = new HourlyMatsApportionedEmissionsParamsDTO();
 
       req.headers.accept = '';
@@ -78,7 +92,7 @@ describe('-- Hourly MATS Apportioned Emissions Service --', () => {
       let result = await service.streamEmissions(req, filters);
 
       expect(result).toEqual(
-        new StreamableFile(expectedResult, {
+        new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="hourly-mats-emissions-${0}.json"`,
         }),

@@ -10,6 +10,8 @@ import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { ConfigService } from '@nestjs/config';
+import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
 
 jest.mock('uuid', () => {
   return { v4: jest.fn().mockReturnValue(0) };
@@ -17,7 +19,7 @@ jest.mock('uuid', () => {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  streamEmissions: jest.fn(),
+  getStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -28,7 +30,14 @@ const mockRequest = () => {
     res: {
       setHeader: jest.fn(),
     },
+    on: jest.fn(),
   };
+};
+
+const mockStream = {
+  pipe: jest.fn().mockReturnValue({
+    pipe: jest.fn().mockReturnValue(Buffer.from('stream')),
+  }),
 };
 
 let service: AnnualApportionedEmissionsService;
@@ -40,7 +49,16 @@ describe('-- Annual Apportioned Emissions Service --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        ConfigService,
         AnnualApportionedEmissionsService,
+        {
+          provide: StreamService,
+          useFactory: () => ({
+            getStream: () => {
+              return mockStream;
+            },
+          }),
+        },
         {
           provide: AnnualUnitDataRepository,
           useFactory: mockRepository,
@@ -66,14 +84,8 @@ describe('-- Annual Apportioned Emissions Service --', () => {
 
   describe('streamEmissions', () => {
     it('calls AnnualUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      const expectedResult = Buffer.from('stream');
-
-      const mockStream = {
-        pipe: jest.fn().mockReturnValue({
-          pipe: jest.fn().mockReturnValue(expectedResult),
-        }),
-      };
-      repository.streamEmissions.mockResolvedValue(mockStream);
+      repository.getStreamQuery.mockResolvedValue('');
+      
       let filters = new AnnualApportionedEmissionsParamsDTO();
 
       req.headers.accept = '';
@@ -81,7 +93,7 @@ describe('-- Annual Apportioned Emissions Service --', () => {
       let result = await service.streamEmissions(req, filters);
 
       expect(result).toEqual(
-        new StreamableFile(expectedResult, {
+        new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="annual-emissions-${0}.json"`,
         }),

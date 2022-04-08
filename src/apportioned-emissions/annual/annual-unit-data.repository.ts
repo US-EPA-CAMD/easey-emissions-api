@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(AnnualUnitDataView)
 export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
-  streamEmissions(
-    params: StreamAnnualApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamAnnualApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(

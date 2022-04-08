@@ -13,10 +13,8 @@ import {
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-  streamEmissions(
-    params: StreamHourlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildQuery(params, true).stream();
+  getStreamQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
+    return this.buildQuery(params, true).getQueryAndParameters();
   }
 
   async getEmissions(
