@@ -150,7 +150,7 @@ export class HourlyApportionedEmissionsService {
     params: HourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     try {
-      const query = this.repository.getStreamQuery(params);
+      const query = this.repository.getFacilityStreamQuery(params);
       let stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
@@ -233,15 +233,12 @@ export class HourlyApportionedEmissionsService {
     params: HourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     try {
-      const stream = await this.repository.streamEmissionsStateAggregation(
-        params,
-      );
+      const query = this.repository.getStateStreamQuery(params);
+      let stream: ReadStream = await this.streamService.getStream(query);
+
 
       req.on('close', () => {
-        if (!stream.destroyed) {
-          stream.destroy();
-          return null;
-        }
+        stream.emit('end');
       });
 
       req.res.setHeader(

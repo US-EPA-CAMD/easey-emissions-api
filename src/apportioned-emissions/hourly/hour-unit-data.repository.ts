@@ -182,10 +182,8 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  streamEmissionsStateAggregation(
-    params: HourlyApportionedEmissionsParamsDTO,
-  ): Promise<ReadStream> {
-    return this.buildStateAggregationQuery(params).stream();
+  getStateStreamQuery(params: HourlyApportionedEmissionsParamsDTO) {
+    return this.buildStateAggregationQuery(params).getQueryAndParameters();
   }
 
   buildStateAggregationQuery(
