@@ -221,4 +221,43 @@ describe('HourUnitDataRepository', () => {
       expect(result).toEqual('mockEmissions');
     });
   });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls createQueryBuilder and gets all HourUnitData aggregated by state from the repository no filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedHourlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets HourUnitData aggregated by state from the repository with filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all HourUnitData aggregated by state from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsStateAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
+    });
+  });
 });
