@@ -12,6 +12,7 @@ import {
   PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
+import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -64,6 +65,19 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
         .mockResolvedValue(expectedResult);
       expect(
         await controller.getEmissionsFacilityAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getEmissionsStateAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: HourlyApportionedEmissionsStateAggregationDTO[] = [];
+      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsStateAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsStateAggregation(req, paramsDto),
       ).toBe(expectedResult);
     });
   });
