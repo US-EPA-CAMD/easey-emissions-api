@@ -7,10 +7,11 @@ import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
 
-import { 
+import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -28,12 +29,9 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [MonthlyApportionedEmissionsController],
-      providers: [
-        MonthlyApportionedEmissionsService,        
-        MonthUnitDataRepository,
-      ],
+      providers: [MonthlyApportionedEmissionsService, MonthUnitDataRepository],
     }).compile();
 
     controller = module.get(MonthlyApportionedEmissionsController);
@@ -50,12 +48,10 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: MonthUnitDataView[] = [];
       const paramsDto = new PaginatedMonthlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 
@@ -63,12 +59,10 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
       const paramsDto = new MonthlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'streamEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.streamEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.streamEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 });

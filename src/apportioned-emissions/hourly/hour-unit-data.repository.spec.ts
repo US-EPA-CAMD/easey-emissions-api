@@ -46,6 +46,7 @@ const mockQueryBuilder = () => ({
   skip: jest.fn(),
   take: jest.fn(),
   stream: jest.fn(),
+  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
 let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
@@ -167,8 +168,7 @@ describe('HourUnitDataRepository', () => {
     it('calls streamEmissions and streams HourUnitData from the repository', async () => {
       const result = await repository.getStreamQuery(streamFilters);
 
-      expect(queryBuilder.stream).toHaveBeenCalled();
-      expect(result).toEqual('mockEmissions');
+      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
     });
   });
 
@@ -215,8 +215,7 @@ describe('HourUnitDataRepository', () => {
     it('calls streamEmissions and streams HourUnitData aggregated by facility from the repository', async () => {
       const result = repository.getFacilityStreamQuery(streamFilters);
 
-      expect(queryBuilder.stream).toHaveBeenCalled();
-      expect(result).toEqual('mockEmissions');
+      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
     });
   });
 

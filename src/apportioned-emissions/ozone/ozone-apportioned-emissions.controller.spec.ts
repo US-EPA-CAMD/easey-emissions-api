@@ -11,7 +11,7 @@ import {
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
-
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -29,7 +29,7 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [OzoneApportionedEmissionsController],
       providers: [OzoneApportionedEmissionsService, OzoneUnitDataRepository],
     }).compile();

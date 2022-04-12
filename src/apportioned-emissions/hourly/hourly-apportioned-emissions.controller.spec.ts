@@ -13,6 +13,7 @@ import {
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
 import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -30,7 +31,7 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [HourlyApportionedEmissionsController],
       providers: [HourlyApportionedEmissionsService, HourUnitDataRepository],
     }).compile();
@@ -56,32 +57,6 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     });
   });
 
-  describe('* getEmissionsFacilityAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: HourlyApportionedEmissionsFacilityAggregationDTO[] = [];
-      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissionsFacilityAggregation(req, paramsDto),
-      ).toBe(expectedResult);
-    });
-  });
-
-  describe('* getEmissionsStateAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: HourlyApportionedEmissionsStateAggregationDTO[] = [];
-      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissionsStateAggregation(req, paramsDto),
-      ).toBe(expectedResult);
-    });
-  });
-
   describe('* streamEmissions', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
@@ -90,19 +65,6 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
       expect(await controller.streamEmissions(req, paramsDto)).toBe(
         expectedResult,
       );
-    });
-  });
-
-  describe('* streamEmissionsFacilityAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult = new StreamableFile(Buffer.from('stream'));
-      const paramsDto = new HourlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'streamEmissionsFacilityAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.streamEmissionsFacilityAggregation(req, paramsDto),
-      ).toBe(expectedResult);
     });
   });
 });

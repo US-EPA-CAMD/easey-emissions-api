@@ -9,6 +9,7 @@ import {
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { StreamableFile } from '@nestjs/common';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -26,7 +27,7 @@ describe('-- Hourly MATS Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [HourlyMatsApportionedEmissionsController],
       providers: [
         HourlyMatsApportionedEmissionsService,
