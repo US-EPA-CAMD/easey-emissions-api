@@ -43,6 +43,7 @@ const mockQueryBuilder = () => ({
   skip: jest.fn(),
   take: jest.fn(),
   stream: jest.fn(),
+  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
 let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
@@ -160,8 +161,7 @@ describe('DayUnitDataRepository', () => {
     it('calls streamEmissions and streams DayUnitData from the repository', async () => {
       const result = repository.getStreamQuery(streamFilters);
 
-      expect(queryBuilder.stream).toHaveBeenCalled();
-      expect(result).toEqual('mockEmissions');
+      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
     });
   });
 });

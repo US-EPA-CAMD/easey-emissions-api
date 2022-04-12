@@ -11,6 +11,7 @@ import {
   QuarterlyApportionedEmissionsParamsDTO,
   PaginatedQuarterlyApportionedEmissionsParamsDTO,
 } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -28,10 +29,10 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [QuarterlyApportionedEmissionsController],
       providers: [
-        QuarterlyApportionedEmissionsService,        
+        QuarterlyApportionedEmissionsService,
         QuarterUnitDataRepository,
       ],
     }).compile();
@@ -50,12 +51,10 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: QuarterUnitDataView[] = [];
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'getEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 
@@ -63,12 +62,10 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult = new StreamableFile(Buffer.from('stream'));
       const paramsDto = new QuarterlyApportionedEmissionsParamsDTO();
-      jest
-        .spyOn(service, 'streamEmissions')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.streamEmissions(req, paramsDto),
-      ).toBe(expectedResult);
+      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+      expect(await controller.streamEmissions(req, paramsDto)).toBe(
+        expectedResult,
+      );
     });
   });
 });
