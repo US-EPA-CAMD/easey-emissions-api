@@ -236,7 +236,6 @@ export class HourlyApportionedEmissionsService {
       const query = this.repository.getStateStreamQuery(params);
       let stream: ReadStream = await this.streamService.getStream(query);
 
-
       req.on('close', () => {
         stream.emit('end');
       });

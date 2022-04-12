@@ -43,6 +43,7 @@ const mockQueryBuilder = () => ({
   skip: jest.fn(),
   take: jest.fn(),
   stream: jest.fn(),
+  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
 jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue(({
@@ -169,7 +170,7 @@ describe('HourUnitMatsDataRepository', () => {
     it('calls streamEmissions and streams HourUnitMatsData from the repository', async () => {
       const result = repository.getStreamQuery(streamFilters);
 
-      expect(queryBuilder.stream).toHaveBeenCalled();
+      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
   });

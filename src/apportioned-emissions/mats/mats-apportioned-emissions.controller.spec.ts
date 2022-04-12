@@ -6,6 +6,7 @@ import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/appli
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsService } from './hourly/hourly-mats-apportioned-emissions.service';
+import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -23,7 +24,7 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, StreamModule],
       controllers: [MatsApportionedEmissionsController],
       providers: [
         MatsApportionedEmissionsService,
@@ -46,7 +47,9 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
     it('should return test 1', async () => {
       const expectedResult: ApplicableMatsApportionedEmissionsAttributesDTO[] = [];
       const paramsDto = new ApplicableMatsApportionedEmissionsAttributesParamsDTO();
-      jest.spyOn(service, 'getApplicableEmissions').mockResolvedValue(expectedResult);
+      jest
+        .spyOn(service, 'getApplicableEmissions')
+        .mockResolvedValue(expectedResult);
       expect(await controller.getApplicableEmissions(paramsDto)).toBe(
         expectedResult,
       );
