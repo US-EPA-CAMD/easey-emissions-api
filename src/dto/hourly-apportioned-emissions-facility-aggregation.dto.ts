@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
-import { ApportionedEmissionsAggregationDTO } from './apportioned-emissions-aggregation.dto';
+import { HourlyApportionedEmissionsAggregationDTO } from './hourly-apportioned-emissions-aggregation.dto';
 
-export class HourlyApportionedEmissionsFacilityAggregationDTO extends ApportionedEmissionsAggregationDTO {
+export class HourlyApportionedEmissionsFacilityAggregationDTO extends HourlyApportionedEmissionsAggregationDTO {
   constructor() {
     super();
   }
@@ -26,18 +26,4 @@ export class HourlyApportionedEmissionsFacilityAggregationDTO extends Apportione
     name: propertyMetadata.facilityId.fieldLabels.value,
   })
   facilityId?: number;
-
-  @ApiProperty({
-    description: propertyMetadata.date.description,
-    example: propertyMetadata.date.example,
-    name: propertyMetadata.date.fieldLabels.value,
-  })
-  date: string;
-
-  @ApiProperty({
-    description: propertyMetadata.hour.description,
-    example: propertyMetadata.hour.example,
-    name: propertyMetadata.hour.fieldLabels.value,
-  })
-  hour: number;
 }
