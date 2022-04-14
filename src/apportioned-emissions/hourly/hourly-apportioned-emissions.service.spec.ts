@@ -19,10 +19,12 @@ jest.mock('uuid', () => {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
   streamEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   streamEmissionsFacilityAggregationy: jest.fn(),
   getStreamQuery: jest.fn(),
+  getNationalStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -99,6 +101,28 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="hourly-emissions-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('streamEmissionsNationalAggregation', () => {
+    it('calls HourlyUnitDataRepository.getNationalStreamQuery() and streams all emissions nationally aggregated from the repository', async () => {
+      repository.getStreamQuery.mockResolvedValue('');
+
+      let filters = new HourlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsNationalAggregation(
+        req,
+        filters,
+      );
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-national-aggregation${0}.json"`,
         }),
       );
     });
