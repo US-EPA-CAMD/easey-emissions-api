@@ -26,6 +26,7 @@ import {
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
+import { HourlyApportionedEmissionsNationalAggregationDTO } from '../../dto/hourly-apportioned-emissions-national-aggregation.dto';
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
@@ -50,7 +51,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly.unit),
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
     );
 
     return entities;
@@ -87,10 +88,10 @@ export class HourlyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.hourly.unit.filter(
+        ? fieldMappings.emissions.hourly.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.hourly.unit;
+        : fieldMappings.emissions.hourly.aggregation.unit;
 
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
@@ -123,7 +124,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly.facility),
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
     );
 
     return query.map(item => {
@@ -154,7 +155,7 @@ export class HourlyApportionedEmissionsService {
 
       req.res.setHeader(
         'X-Field-Mappings',
-        JSON.stringify(fieldMappings.emissions.hourly.facility),
+        JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
       );
 
       const toDto = new Transform({
@@ -174,7 +175,9 @@ export class HourlyApportionedEmissionsService {
       });
 
       if (req.headers.accept === 'text/csv') {
-        const toCSV = new PlainToCSV(fieldMappings.emissions.hourly.facility);
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.hourly.aggregation.facility,
+        );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
           disposition: `attachment; filename="hourly-emissions-facility-aggregation${uuid()}.csv"`,
@@ -206,7 +209,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly.state),
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
     );
 
     return query.map(item => {
@@ -237,7 +240,7 @@ export class HourlyApportionedEmissionsService {
 
       req.res.setHeader(
         'X-Field-Mappings',
-        JSON.stringify(fieldMappings.emissions.hourly.state),
+        JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
       );
 
       const toDto = new Transform({
@@ -257,7 +260,9 @@ export class HourlyApportionedEmissionsService {
       });
 
       if (req.headers.accept === 'text/csv') {
-        const toCSV = new PlainToCSV(fieldMappings.emissions.hourly.state);
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.hourly.aggregation.state,
+        );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
           disposition: `attachment; filename="hourly-emissions-state-aggregation${uuid()}.csv"`,
@@ -268,6 +273,94 @@ export class HourlyApportionedEmissionsService {
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
         disposition: `attachment; filename="hourly-emissions-state-aggregation${uuid()}.json"`,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourlyApportionedEmissionsNationalAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      'X-Field-Mappings',
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        HourlyApportionedEmissionsNationalAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
+    });
+  }
+
+  async streamEmissionsNationalAggregation(
+    req: Request,
+    params: HourlyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    try {
+      const query = this.repository.getNationalStreamQuery(params);
+      let stream: ReadStream = await this.streamService.getStream(query);
+
+      req.on('close', () => {
+        stream.emit('end');
+      });
+
+      req.res.setHeader(
+        'X-Field-Mappings',
+        JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
+      );
+
+      const toDto = new Transform({
+        objectMode: true,
+        transform(data, _enc, callback) {
+          const dto = plainToClass(
+            HourlyApportionedEmissionsNationalAggregationDTO,
+            data,
+            {
+              enableImplicitConversion: true,
+            },
+          );
+          const date = new Date(dto.date);
+          dto.date = date.toISOString().split('T')[0];
+          callback(null, dto);
+        },
+      });
+
+      if (req.headers.accept === 'text/csv') {
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.hourly.aggregation.national,
+        );
+        return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-national-aggregation${uuid()}.csv"`,
+        });
+      }
+
+      const objToString = new PlainToJSON();
+      return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="hourly-emissions-national-aggregation${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
