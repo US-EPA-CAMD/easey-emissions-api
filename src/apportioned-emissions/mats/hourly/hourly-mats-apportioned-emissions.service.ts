@@ -14,7 +14,7 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyMatsApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings } from '../../../constants/field-mappings';
+import { fieldMappings, fieldMappingHeader } from '../../../constants/field-mappings';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import {
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
@@ -46,7 +46,7 @@ export class HourlyMatsApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.mats.hourly),
     );
 
@@ -65,7 +65,7 @@ export class HourlyMatsApportionedEmissionsService {
     });
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.mats.hourly),
     );
 

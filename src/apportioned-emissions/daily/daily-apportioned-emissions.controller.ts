@@ -31,11 +31,11 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
-import { DailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
+  DailyApportionedEmissionsParamsDTO
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @Controller()

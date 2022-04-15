@@ -14,17 +14,17 @@ import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings } from '../../constants/field-mappings';
+import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
+  DailyApportionedEmissionsParamsDTO
 } from '../../dto/daily-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
-import { DailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
@@ -48,7 +48,7 @@ export class DailyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
@@ -67,7 +67,7 @@ export class DailyApportionedEmissionsService {
     });
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
@@ -120,7 +120,7 @@ export class DailyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
     );
 
@@ -151,7 +151,7 @@ export class DailyApportionedEmissionsService {
       });
 
       req.res.setHeader(
-        'X-Field-Mappings',
+        fieldMappingHeader,
         JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
       );
 

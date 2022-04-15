@@ -209,3 +209,5 @@ export const fieldMappings = {
     },
   },
 };
+
+export const fieldMappingHeader = 'X-Field-Mappings';
