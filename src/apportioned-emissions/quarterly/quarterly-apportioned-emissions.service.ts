@@ -14,7 +14,7 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings } from '../../constants/field-mappings';
+import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
@@ -46,7 +46,7 @@ export class QuarterlyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.quarterly),
     );
 
@@ -65,7 +65,7 @@ export class QuarterlyApportionedEmissionsService {
     });
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.quarterly),
     );
 

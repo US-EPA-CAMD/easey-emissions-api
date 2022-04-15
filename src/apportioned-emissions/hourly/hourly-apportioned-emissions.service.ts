@@ -14,7 +14,7 @@ import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings } from '../../constants/field-mappings';
+import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
@@ -50,7 +50,7 @@ export class HourlyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
     );
 
@@ -69,8 +69,8 @@ export class HourlyApportionedEmissionsService {
     });
 
     req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly),
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -123,7 +123,7 @@ export class HourlyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
     );
 
@@ -154,7 +154,7 @@ export class HourlyApportionedEmissionsService {
       });
 
       req.res.setHeader(
-        'X-Field-Mappings',
+        fieldMappingHeader,
         JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
       );
 
@@ -208,7 +208,7 @@ export class HourlyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
     );
 
@@ -239,7 +239,7 @@ export class HourlyApportionedEmissionsService {
       });
 
       req.res.setHeader(
-        'X-Field-Mappings',
+        fieldMappingHeader,
         JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
       );
 
@@ -296,7 +296,7 @@ export class HourlyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
     );
 
@@ -327,7 +327,7 @@ export class HourlyApportionedEmissionsService {
       });
 
       req.res.setHeader(
-        'X-Field-Mappings',
+        fieldMappingHeader,
         JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
       );
 

@@ -14,15 +14,17 @@ import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings } from '../../constants/field-mappings';
+import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
+  DailyApportionedEmissionsParamsDTO
 } from '../../dto/daily-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
+import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
@@ -46,7 +48,7 @@ export class DailyApportionedEmissionsService {
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
@@ -65,7 +67,7 @@ export class DailyApportionedEmissionsService {
     });
 
     req.res.setHeader(
-      'X-Field-Mappings',
+      fieldMappingHeader,
       JSON.stringify(fieldMappings.emissions.daily),
     );
 
@@ -84,10 +86,10 @@ export class DailyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.daily.filter(
+        ? fieldMappings.emissions.daily.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.daily;
+        : fieldMappings.emissions.daily.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
@@ -100,5 +102,93 @@ export class DailyApportionedEmissionsService {
       type: req.headers.accept,
       disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
     });
+  }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DailyApportionedEmissionsFacilityAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsFacilityAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        DailyApportionedEmissionsFacilityAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
+    });
+  }
+
+  async streamEmissionsFacilityAggregation(
+    req: Request,
+    params: DailyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    try {
+      const query = this.repository.getFacilityStreamQuery(params);
+      let stream: ReadStream = await this.streamService.getStream(query);
+
+      req.on('close', () => {
+        stream.emit('end');
+      });
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
+      );
+
+      const toDto = new Transform({
+        objectMode: true,
+        transform(data, _enc, callback) {
+          const dto = plainToClass(
+            DailyApportionedEmissionsFacilityAggregationDTO,
+            data,
+            {
+              enableImplicitConversion: true,
+            },
+          );
+          const date = new Date(dto.date);
+          dto.date = date.toISOString().split('T')[0];
+          callback(null, dto);
+        },
+      });
+
+      if (req.headers.accept === 'text/csv') {
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.daily.aggregation.facility,
+        );
+        return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="daily-emissions-facility-aggregation${uuid()}.csv"`,
+        });
+      }
+
+      const objToString = new PlainToJSON();
+      return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="daily-emissions-facility-aggregation${uuid()}.json"`,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }

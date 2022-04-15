@@ -104,4 +104,80 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
 
     return query;
   }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DayUnitDataView[]> {
+    let totalCount: number;
+    let results: DayUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildFacilityAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getFacilityStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
+    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildFacilityAggregationQuery(
+    params: DailyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<DayUnitDataView> {
+    let query = this.createQueryBuilder('dud').select(
+      [
+        'dud.stateCode',
+        'dud.facilityName',
+        'dud.facilityId',
+        'dud.date',
+      ].map(col => {
+        return `${col} AS "${col.split('.')[1]}"`;
+      }),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query
+      .addGroupBy('dud.stateCode')
+      .addGroupBy('dud.facilityName')
+      .addGroupBy('dud.facilityId')
+      .addGroupBy('dud.date')
+
+    query
+      .orderBy('dud.facilityId')
+      .addOrderBy('dud.date')
+
+    return query;
+  }
+
+  buildAggregationQuery(query, params): SelectQueryBuilder<DayUnitDataView> {
+    query
+      .addSelect('SUM(dud.grossLoad)', 'grossLoad')
+      .addSelect('SUM(dud.steamLoad)', 'steamLoad')
+      .addSelect('SUM(dud.so2Mass)', 'so2Mass')
+      .addSelect('SUM(dud.co2Mass)', 'co2Mass')
+      .addSelect('SUM(dud.noxMass)', 'noxMass')
+      .addSelect('SUM(dud.heatInput)', 'heatInput');
+
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
+      [
+        'beginDate',
+        'endDate',
+        'stateCode',
+        'facilityId',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'programCodeInfo',
+      ],
+      'dud',
+    );
+
+    return query;
+  }
 }

@@ -20,6 +20,8 @@ jest.mock('uuid', () => {
 const mockRepository = () => ({
   getEmissions: jest.fn(),
   getStreamQuery: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  streamEmissionsFacilityAggregationy: jest.fn(),
 });
 
 const mockRequest = () => {
