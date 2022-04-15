@@ -70,7 +70,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly),
+      JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
     );
 
     const toDto = new Transform({

@@ -5,6 +5,7 @@ const hourlyFacilityAggregation = [];
 const hourlyStateAggregation = [];
 const hourlyNationalAggregation = [];
 const daily = [];
+const dailyFacilityAggregation = [];
 const monthly = [];
 const quarterly = [];
 const annual = [];
@@ -51,6 +52,21 @@ const hourlyCharacteristics = [
   { ...propertyMetadata.opTime.fieldLabels },
 ];
 
+const aggregationData = [
+  { ...propertyMetadata.grossLoad.fieldLabels },
+  { ...propertyMetadata.steamLoad.fieldLabels },
+  { ...propertyMetadata.so2Mass.fieldLabels },
+  { ...propertyMetadata.co2Mass.fieldLabels },
+  { ...propertyMetadata.noxMass.fieldLabels },
+  { ...propertyMetadata.heatInput.fieldLabels },
+];
+
+const facilityAggregationData = [
+  { ...propertyMetadata.stateCode.fieldLabels },
+  { ...propertyMetadata.facilityName.fieldLabels },
+  { ...propertyMetadata.facilityId.fieldLabels },
+];
+
 const hourlyAggregationData = [
   { ...propertyMetadata.date.fieldLabels },
   { ...propertyMetadata.hour.fieldLabels },
@@ -60,6 +76,11 @@ const hourlyAggregationData = [
   { ...propertyMetadata.co2Mass.fieldLabels },
   { ...propertyMetadata.noxMassHourly.fieldLabels },
   { ...propertyMetadata.heatInput.fieldLabels },
+];
+
+const dailyAggregationData = [
+  { ...propertyMetadata.date.fieldLabels },
+  ...aggregationData,
 ];
 
 hourly.push(
@@ -86,9 +107,7 @@ hourly.push(
 );
 
 hourlyFacilityAggregation.push(
-  { ...propertyMetadata.stateCode.fieldLabels },
-  { ...propertyMetadata.facilityName.fieldLabels },
-  { ...propertyMetadata.facilityId.fieldLabels },
+  ...facilityAggregationData,
   ...hourlyAggregationData,
 );
 
@@ -107,6 +126,12 @@ daily.push(
   ...unitCharacteristics,
   ...controlInfoCharacteristics,
 );
+
+dailyFacilityAggregation.push(
+  ...facilityAggregationData,
+  ...dailyAggregationData,
+);
+
 monthly.push(
   ...commonCharacteristics,
   { ...propertyMetadata.associatedStacks.fieldLabels },
@@ -169,7 +194,12 @@ export const fieldMappings = {
         national: hourlyNationalAggregation,
       },
     },
-    daily: daily,
+    daily: {
+      aggregation: {
+        unit: daily,
+        facility: dailyFacilityAggregation,
+      },
+    },
     monthly: monthly,
     quarterly: quarterly,
     annual: annual,
