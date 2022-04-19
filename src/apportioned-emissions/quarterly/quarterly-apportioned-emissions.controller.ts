@@ -56,7 +56,7 @@ export class QuarterlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly
+          example: fieldMappings.emissions.quarterly.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },
@@ -87,7 +87,7 @@ export class QuarterlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.quarterly
+          example: fieldMappings.emissions.quarterly.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },

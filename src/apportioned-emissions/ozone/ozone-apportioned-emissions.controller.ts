@@ -55,7 +55,9 @@ export class OzoneApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.ozone.map(i => i.label).join(','),
+          example: fieldMappings.emissions.ozone.data.aggregation.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -84,7 +86,9 @@ export class OzoneApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.ozone.map(i => i.label).join(','),
+          example: fieldMappings.emissions.ozone.data.aggregation.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },

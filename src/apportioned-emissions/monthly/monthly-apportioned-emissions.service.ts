@@ -14,7 +14,11 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
 import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
@@ -47,7 +51,11 @@ export class MonthlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.monthly),
+      JSON.stringify(fieldMappings.emissions.monthly.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.monthly.excludableColumns),
     );
 
     return entities;
@@ -66,7 +74,7 @@ export class MonthlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.monthly),
+      JSON.stringify(fieldMappings.emissions.monthly.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -82,10 +90,10 @@ export class MonthlyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.monthly.filter(
+        ? fieldMappings.emissions.monthly.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.monthly;
+        : fieldMappings.emissions.monthly.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,

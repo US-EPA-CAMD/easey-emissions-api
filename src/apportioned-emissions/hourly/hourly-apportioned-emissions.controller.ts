@@ -62,7 +62,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.unit
+          example: fieldMappings.emissions.hourly.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },
@@ -93,7 +93,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.unit
+          example: fieldMappings.emissions.hourly.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },
@@ -130,7 +130,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.facility
+          example: fieldMappings.emissions.hourly.data.aggregation.facility
             .map(i => i.label)
             .join(','),
         },
@@ -162,7 +162,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.facility
+          example: fieldMappings.emissions.hourly.data.aggregation.facility
             .map(i => i.label)
             .join(','),
         },
@@ -193,7 +193,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.state
+          example: fieldMappings.emissions.hourly.data.aggregation.state
             .map(i => i.label)
             .join(','),
         },
@@ -225,7 +225,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.state
+          example: fieldMappings.emissions.hourly.data.aggregation.state
             .map(i => i.label)
             .join(','),
         },
@@ -256,7 +256,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.national
+          example: fieldMappings.emissions.hourly.data.aggregation.national
             .map(i => i.label)
             .join(','),
         },
@@ -288,7 +288,7 @@ export class HourlyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.hourly.aggregation.national
+          example: fieldMappings.emissions.hourly.data.aggregation.national
             .map(i => i.label)
             .join(','),
         },

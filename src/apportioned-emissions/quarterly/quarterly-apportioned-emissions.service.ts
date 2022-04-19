@@ -14,7 +14,11 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
@@ -47,7 +51,11 @@ export class QuarterlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly),
+      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.quarterly.excludableColumns),
     );
 
     return entities;
@@ -66,7 +74,7 @@ export class QuarterlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly),
+      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -82,10 +90,10 @@ export class QuarterlyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.quarterly.filter(
+        ? fieldMappings.emissions.quarterly.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.quarterly;
+        : fieldMappings.emissions.quarterly.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,

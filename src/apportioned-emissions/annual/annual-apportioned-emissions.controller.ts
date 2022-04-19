@@ -55,7 +55,9 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
+          example: fieldMappings.emissions.annual.data.aggregation.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },
@@ -84,7 +86,9 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.map(i => i.label).join(','),
+          example: fieldMappings.emissions.annual.data.aggregation.unit
+            .map(i => i.label)
+            .join(','),
         },
       },
     },

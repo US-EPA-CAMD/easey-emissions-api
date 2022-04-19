@@ -66,7 +66,7 @@ export class StreamAnnualApportionedEmissionsParamsDTO extends AnnualApportioned
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.annual, {
+  @IsInResponse(fieldMappings.emissions.annual.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

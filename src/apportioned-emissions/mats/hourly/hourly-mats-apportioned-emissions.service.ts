@@ -14,7 +14,11 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyMatsApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings, fieldMappingHeader } from '../../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../../constants/field-mappings';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import {
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
@@ -47,7 +51,11 @@ export class HourlyMatsApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.mats.hourly),
+      JSON.stringify(fieldMappings.emissions.mats.hourly.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.mats.hourly.excludableColumns),
     );
 
     return entities;
@@ -66,7 +74,7 @@ export class HourlyMatsApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.mats.hourly),
+      JSON.stringify(fieldMappings.emissions.mats.hourly.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -84,10 +92,10 @@ export class HourlyMatsApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.mats.hourly.filter(
+        ? fieldMappings.emissions.mats.hourly.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.mats.hourly;
+        : fieldMappings.emissions.mats.hourly.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,

@@ -35,7 +35,7 @@ import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
-  DailyApportionedEmissionsParamsDTO
+  DailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @Controller()
@@ -58,7 +58,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.aggregation.unit
+          example: fieldMappings.emissions.daily.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },
@@ -89,7 +89,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.aggregation.unit
+          example: fieldMappings.emissions.daily.data.aggregation.unit
             .map(i => i.label)
             .join(','),
         },
@@ -121,7 +121,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.aggregation.facility
+          example: fieldMappings.emissions.daily.data.aggregation.facility
             .map(i => i.label)
             .join(','),
         },
@@ -153,7 +153,7 @@ export class DailyApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.daily.aggregation.facility
+          example: fieldMappings.emissions.daily.data.aggregation.facility
             .map(i => i.label)
             .join(','),
         },

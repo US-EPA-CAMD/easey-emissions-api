@@ -57,7 +57,7 @@ export class StreamHourlyMatsApportionedEmissionsParamsDTO extends HourlyMatsApp
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.mats.hourly, {
+  @IsInResponse(fieldMappings.emissions.mats.hourly.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

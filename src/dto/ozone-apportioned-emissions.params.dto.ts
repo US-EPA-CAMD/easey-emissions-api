@@ -47,7 +47,7 @@ export class StreamOzoneApportionedEmissionsParamsDTO extends OzoneApportionedEm
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.ozone, {
+  @IsInResponse(fieldMappings.emissions.ozone.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

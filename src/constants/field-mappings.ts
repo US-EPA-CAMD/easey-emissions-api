@@ -10,6 +10,9 @@ const monthly = [];
 const quarterly = [];
 const annual = [];
 const hourlyMats = [];
+const excludableHourlyEmissionsColumns = [];
+const excludableHourlyMatsEmissionsColumns = [];
+const excludableOtherEmissionsColumns = [];
 
 const commonCharacteristics = [
   { ...propertyMetadata.stateCode.fieldLabels },
@@ -38,11 +41,15 @@ const unitCharacteristics = [
   { ...propertyMetadata.unitType.fieldLabels },
 ];
 
-const controlInfoCharacteristics = [
+const excludableControlInfoCharacteristics = [
   { ...propertyMetadata.so2ControlInfo.fieldLabels },
   { ...propertyMetadata.pmControlInfo.fieldLabels },
   { ...propertyMetadata.noxControlInfo.fieldLabels },
   { ...propertyMetadata.hgControlInfo.fieldLabels },
+];
+
+const controlInfoCharacteristics = [
+  ...excludableControlInfoCharacteristics,
   { ...propertyMetadata.programCodeInfo.fieldLabels },
 ];
 
@@ -184,30 +191,116 @@ hourlyMats.push(
   { ...propertyMetadata.hgControlInfo.fieldLabels },
 );
 
+excludableOtherEmissionsColumns.push(
+  { ...propertyMetadata.co2Rate.fieldLabels },
+  { ...propertyMetadata.countOpTime.fieldLabels },
+  { ...propertyMetadata.grossLoad.fieldLabels },
+  { ...propertyMetadata.so2Rate.fieldLabels },
+  { ...propertyMetadata.steamLoad.fieldLabels },
+  { ...propertyMetadata.sumOpTime.fieldLabels },
+  ...unitCharacteristics,
+  ...excludableControlInfoCharacteristics,
+);
+
+excludableHourlyEmissionsColumns.push(
+  { ...propertyMetadata.co2MassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.co2Rate.fieldLabels },
+  { ...propertyMetadata.co2RateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.grossLoadHourly.fieldLabels },
+  { ...propertyMetadata.noxMassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.noxRateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.opTime.fieldLabels },
+  { ...propertyMetadata.so2MassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.so2Rate.fieldLabels },
+  { ...propertyMetadata.so2RateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.steamLoadHourly.fieldLabels },
+  ...unitCharacteristics,
+  ...excludableControlInfoCharacteristics,
+);
+
+excludableHourlyMatsEmissionsColumns.push(
+  { ...propertyMetadata.hclInputRate.fieldLabels },
+  { ...propertyMetadata.hclMassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.hclOutputRate.fieldLabels },
+  { ...propertyMetadata.hfInputRate.fieldLabels },
+  { ...propertyMetadata.hfMassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.hfOutputRate.fieldLabels },
+  { ...propertyMetadata.hgInputRate.fieldLabels },
+  { ...propertyMetadata.hgMassMeasureFlg.fieldLabels },
+  { ...propertyMetadata.hgOutputRate.fieldLabels },
+  { ...propertyMetadata.matsGrossLoad.fieldLabels },
+  { ...propertyMetadata.opTime.fieldLabels },
+  { ...propertyMetadata.steamLoadHourly.fieldLabels },
+  ...unitCharacteristics,
+  ...excludableControlInfoCharacteristics,
+);
+
 export const fieldMappings = {
   emissions: {
     hourly: {
-      aggregation: {
-        unit: hourly,
-        facility: hourlyFacilityAggregation,
-        state: hourlyStateAggregation,
-        national: hourlyNationalAggregation,
+      data: {
+        aggregation: {
+          unit: hourly,
+          facility: hourlyFacilityAggregation,
+          state: hourlyStateAggregation,
+          national: hourlyNationalAggregation,
+        },
       },
+      excludableColumns: excludableHourlyEmissionsColumns,
     },
     daily: {
-      aggregation: {
-        unit: daily,
-        facility: dailyFacilityAggregation,
+      data: {
+        aggregation: {
+          unit: daily,
+          facility: dailyFacilityAggregation,
+        },
       },
+      excludableColumns: excludableOtherEmissionsColumns,
     },
-    monthly: monthly,
-    quarterly: quarterly,
-    annual: annual,
-    ozone: annual,
+    monthly: {
+      data: {
+        aggregation: {
+          unit: monthly,
+        },
+      },
+      excludableColumns: excludableOtherEmissionsColumns,
+    },
+    quarterly: {
+      data: {
+        aggregation: {
+          unit: quarterly,
+        },
+      },
+      excludableColumns: excludableOtherEmissionsColumns,
+    },
+    annual: {
+      data: {
+        aggregation: {
+          unit: annual,
+        },
+      },
+      excludableColumns: excludableOtherEmissionsColumns,
+    },
+    ozone: {
+      data: {
+        aggregation: {
+          unit: annual,
+        },
+      },
+      excludableColumns: excludableOtherEmissionsColumns,
+    },
     mats: {
-      hourly: hourlyMats,
+      hourly: {
+        data: {
+          aggregation: {
+            unit: hourlyMats,
+          },
+        },
+        excludableColumns: excludableHourlyMatsEmissionsColumns,
+      },
     },
   },
 };
 
 export const fieldMappingHeader = 'X-Field-Mappings';
+export const excludableColumnHeader = 'X-Excludable-Columns';
