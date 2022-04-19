@@ -52,7 +52,7 @@ export class StreamDailyApportionedEmissionsParamsDTO extends DailyApportionedEm
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.daily, {
+  @IsInResponse(fieldMappings.emissions.daily.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

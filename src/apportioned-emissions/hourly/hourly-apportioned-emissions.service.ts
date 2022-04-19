@@ -14,7 +14,11 @@ import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
@@ -51,7 +55,11 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.excludableColumns),
     );
 
     return entities;
@@ -70,7 +78,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.aggregation.unit),
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -88,10 +96,10 @@ export class HourlyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.hourly.aggregation.unit.filter(
+        ? fieldMappings.emissions.hourly.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.hourly.aggregation.unit;
+        : fieldMappings.emissions.hourly.data.aggregation.unit;
 
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
@@ -124,7 +132,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.facility),
     );
 
     return query.map(item => {
@@ -155,7 +163,9 @@ export class HourlyApportionedEmissionsService {
 
       req.res.setHeader(
         fieldMappingHeader,
-        JSON.stringify(fieldMappings.emissions.hourly.aggregation.facility),
+        JSON.stringify(
+          fieldMappings.emissions.hourly.data.aggregation.facility,
+        ),
       );
 
       const toDto = new Transform({
@@ -176,7 +186,7 @@ export class HourlyApportionedEmissionsService {
 
       if (req.headers.accept === 'text/csv') {
         const toCSV = new PlainToCSV(
-          fieldMappings.emissions.hourly.aggregation.facility,
+          fieldMappings.emissions.hourly.data.aggregation.facility,
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
@@ -209,7 +219,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.state),
     );
 
     return query.map(item => {
@@ -240,7 +250,7 @@ export class HourlyApportionedEmissionsService {
 
       req.res.setHeader(
         fieldMappingHeader,
-        JSON.stringify(fieldMappings.emissions.hourly.aggregation.state),
+        JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.state),
       );
 
       const toDto = new Transform({
@@ -261,7 +271,7 @@ export class HourlyApportionedEmissionsService {
 
       if (req.headers.accept === 'text/csv') {
         const toCSV = new PlainToCSV(
-          fieldMappings.emissions.hourly.aggregation.state,
+          fieldMappings.emissions.hourly.data.aggregation.state,
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
@@ -297,7 +307,7 @@ export class HourlyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.national),
     );
 
     return query.map(item => {
@@ -328,7 +338,9 @@ export class HourlyApportionedEmissionsService {
 
       req.res.setHeader(
         fieldMappingHeader,
-        JSON.stringify(fieldMappings.emissions.hourly.aggregation.national),
+        JSON.stringify(
+          fieldMappings.emissions.hourly.data.aggregation.national,
+        ),
       );
 
       const toDto = new Transform({
@@ -349,7 +361,7 @@ export class HourlyApportionedEmissionsService {
 
       if (req.headers.accept === 'text/csv') {
         const toCSV = new PlainToCSV(
-          fieldMappings.emissions.hourly.aggregation.national,
+          fieldMappings.emissions.hourly.data.aggregation.national,
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,

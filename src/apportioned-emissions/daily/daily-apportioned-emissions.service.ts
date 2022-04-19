@@ -14,14 +14,18 @@ import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
-  DailyApportionedEmissionsParamsDTO
+  DailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
@@ -49,7 +53,11 @@ export class DailyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily),
+      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.daily.excludableColumns),
     );
 
     return entities;
@@ -68,7 +76,7 @@ export class DailyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily),
+      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -86,10 +94,10 @@ export class DailyApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.daily.aggregation.unit.filter(
+        ? fieldMappings.emissions.daily.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.daily.aggregation.unit;
+        : fieldMappings.emissions.daily.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
@@ -121,7 +129,7 @@ export class DailyApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
+      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.facility),
     );
 
     return query.map(item => {
@@ -152,7 +160,7 @@ export class DailyApportionedEmissionsService {
 
       req.res.setHeader(
         fieldMappingHeader,
-        JSON.stringify(fieldMappings.emissions.daily.aggregation.facility),
+        JSON.stringify(fieldMappings.emissions.daily.data.aggregation.facility),
       );
 
       const toDto = new Transform({
@@ -173,7 +181,7 @@ export class DailyApportionedEmissionsService {
 
       if (req.headers.accept === 'text/csv') {
         const toCSV = new PlainToCSV(
-          fieldMappings.emissions.daily.aggregation.facility,
+          fieldMappings.emissions.daily.data.aggregation.facility,
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,

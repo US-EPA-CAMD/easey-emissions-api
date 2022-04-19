@@ -73,7 +73,7 @@ export class StreamMonthlyApportionedEmissionsParamsDTO extends MonthlyApportion
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.monthly, {
+  @IsInResponse(fieldMappings.emissions.monthly.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

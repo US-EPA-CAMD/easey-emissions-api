@@ -14,7 +14,11 @@ import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 import { StreamService } from '@us-epa-camd/easey-common/stream';
 
-import { fieldMappings, fieldMappingHeader } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
@@ -47,7 +51,11 @@ export class OzoneApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.ozone),
+      JSON.stringify(fieldMappings.emissions.ozone.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.ozone.excludableColumns),
     );
 
     return entities;
@@ -66,7 +74,7 @@ export class OzoneApportionedEmissionsService {
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.ozone),
+      JSON.stringify(fieldMappings.emissions.ozone.data.aggregation.unit),
     );
 
     const toDto = new Transform({
@@ -82,10 +90,10 @@ export class OzoneApportionedEmissionsService {
 
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.ozone.filter(
+        ? fieldMappings.emissions.ozone.data.aggregation.unit.filter(
             item => !params.exclude.includes(item.value),
           )
-        : fieldMappings.emissions.ozone;
+        : fieldMappings.emissions.ozone.data.aggregation.unit;
 
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
