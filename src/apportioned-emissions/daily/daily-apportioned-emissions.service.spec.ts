@@ -21,7 +21,9 @@ const mockRepository = () => ({
   getEmissions: jest.fn(),
   getStreamQuery: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
-  streamEmissionsFacilityAggregationy: jest.fn(),
+  getFacilityStreamQuery: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getStateStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {

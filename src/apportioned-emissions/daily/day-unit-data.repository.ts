@@ -130,25 +130,57 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     params: DailyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
-      [
-        'dud.stateCode',
-        'dud.facilityName',
-        'dud.facilityId',
-        'dud.date',
-      ].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
+      ['dud.stateCode', 'dud.facilityName', 'dud.facilityId', 'dud.date'].map(
+        col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        },
+      ),
     );
     query = this.buildAggregationQuery(query, params);
     query
       .addGroupBy('dud.stateCode')
       .addGroupBy('dud.facilityName')
       .addGroupBy('dud.facilityId')
-      .addGroupBy('dud.date')
+      .addGroupBy('dud.date');
 
-    query
-      .orderBy('dud.facilityId')
-      .addOrderBy('dud.date')
+    query.orderBy('dud.facilityId').addOrderBy('dud.date');
+
+    return query;
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DayUnitDataView[]> {
+    let totalCount: number;
+    let results: DayUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildStateAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getStateStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
+    return this.buildStateAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildStateAggregationQuery(
+    params: DailyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<DayUnitDataView> {
+    let query = this.createQueryBuilder('dud').select(
+      ['dud.stateCode', 'dud.date'].map(col => {
+        return `${col} AS "${col.split('.')[1]}"`;
+      }),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query.addGroupBy('dud.stateCode').addGroupBy('dud.date');
+
+    query.orderBy('dud.stateCode').addOrderBy('dud.date');
 
     return query;
   }

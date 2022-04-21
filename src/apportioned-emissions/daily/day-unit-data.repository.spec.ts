@@ -209,4 +209,43 @@ describe('DayUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls createQueryBuilder and gets all DayUnitData aggregated by state from the repository no filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedDailyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets DayUnitData aggregated by state from the repository with filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all DayUnitData aggregated by state from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsStateAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
+    });
+  });
 });
