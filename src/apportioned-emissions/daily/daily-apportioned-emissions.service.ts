@@ -69,7 +69,7 @@ export class DailyApportionedEmissionsService {
     params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     const query = this.repository.getStreamQuery(params);
-    let stream: ReadStream = await this.streamService.getStream(query);
+    const stream: ReadStream = await this.streamService.getStream(query);
 
     req.on('close', () => {
       stream.emit('end');
@@ -153,7 +153,7 @@ export class DailyApportionedEmissionsService {
   ): Promise<StreamableFile> {
     try {
       const query = this.repository.getFacilityStreamQuery(params);
-      let stream: ReadStream = await this.streamService.getStream(query);
+      const stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
         stream.emit('end');
@@ -186,14 +186,14 @@ export class DailyApportionedEmissionsService {
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
-          disposition: `attachment; filename="daily-emissions-facility-aggregation${uuid()}.csv"`,
+          disposition: `attachment; filename="daily-emissions-facility-aggregation-${uuid()}.csv"`,
         });
       }
 
       const objToString = new PlainToJSON();
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
-        disposition: `attachment; filename="daily-emissions-facility-aggregation${uuid()}.json"`,
+        disposition: `attachment; filename="daily-emissions-facility-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
@@ -238,7 +238,7 @@ export class DailyApportionedEmissionsService {
   ): Promise<StreamableFile> {
     try {
       const query = this.repository.getStateStreamQuery(params);
-      let stream: ReadStream = await this.streamService.getStream(query);
+      const stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
         stream.emit('end');
@@ -271,14 +271,14 @@ export class DailyApportionedEmissionsService {
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
-          disposition: `attachment; filename="daily-emissions-state-aggregation${uuid()}.csv"`,
+          disposition: `attachment; filename="daily-emissions-state-aggregation-${uuid()}.csv"`,
         });
       }
 
       const objToString = new PlainToJSON();
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
-        disposition: `attachment; filename="daily-emissions-state-aggregation${uuid()}.json"`,
+        disposition: `attachment; filename="daily-emissions-state-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
