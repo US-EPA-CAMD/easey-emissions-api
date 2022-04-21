@@ -32,6 +32,7 @@ import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
+import { DailyApportionedEmissionsStateAggregationDTO } from '../../dto/daily-apportioned-emissions-state-aggregation.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
@@ -169,5 +170,68 @@ export class DailyApportionedEmissionsController {
     @Query() params: DailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissionsFacilityAggregation(req, params);
+  }
+
+  @Get('state')
+  @ApiOkResponse({
+    description:
+      'Retrieves Daily Apportioned Emissions State Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.daily.data.aggregation.state
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsStateAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DailyApportionedEmissionsStateAggregationDTO[]> {
+    return this.service.getEmissionsStateAggregation(req, params);
+  }
+
+  @Get('state/stream')
+  @ApiOkResponse({
+    description:
+      'Streams Daily Apportioned Emissions State Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.daily.data.aggregation.state
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  streamEmissionsStateAggregation(
+    @Req() req: Request,
+    @Query() params: DailyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissionsStateAggregation(req, params);
   }
 }
