@@ -44,6 +44,7 @@ import {
 @ApiTags('Apportioned Daily Emissions')
 @ApiExtraModels(DailyApportionedEmissionsDTO)
 @ApiExtraModels(DailyApportionedEmissionsFacilityAggregationDTO)
+@ApiExtraModels(DailyApportionedEmissionsStateAggregationDTO)
 export class DailyApportionedEmissionsController {
   constructor(private readonly service: DailyApportionedEmissionsService) {}
 
