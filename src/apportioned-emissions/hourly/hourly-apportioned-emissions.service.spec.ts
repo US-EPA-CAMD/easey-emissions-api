@@ -10,7 +10,7 @@ import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
-import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import { ConfigService } from '@nestjs/config';
 
 jest.mock('uuid', () => {
@@ -19,11 +19,12 @@ jest.mock('uuid', () => {
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  getEmissionsNationalAggregation: jest.fn(),
-  streamEmissions: jest.fn(),
-  getEmissionsFacilityAggregation: jest.fn(),
-  streamEmissionsFacilityAggregationy: jest.fn(),
   getStreamQuery: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getFacilityStreamQuery: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getStateStreamQuery: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
   getNationalStreamQuery: jest.fn(),
 });
 
@@ -106,23 +107,88 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
     });
   });
 
-  describe('streamEmissionsNationalAggregation', () => {
-    it('calls HourlyUnitDataRepository.getNationalStreamQuery() and streams all emissions nationally aggregated from the repository', async () => {
-      repository.getStreamQuery.mockResolvedValue('');
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsFacilityAggregation', () => {
+    it('calls HourlyUnitDataRepository.getFacilityStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getFacilityStreamQuery.mockResolvedValue('');
 
       let filters = new HourlyApportionedEmissionsParamsDTO();
 
       req.headers.accept = '';
 
-      let result = await service.streamEmissionsNationalAggregation(
-        req,
-        filters,
-      );
+      let result = await service.streamEmissionsFacilityAggregation(req, filters);
 
       expect(result).toEqual(
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
-          disposition: `attachment; filename="hourly-emissions-national-aggregation${0}.json"`,
+          disposition: `attachment; filename="hourly-emissions-facility-aggregation-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsStateAggregation', () => {
+    it('calls HourlyUnitDataRepository.getStateStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getStateStreamQuery.mockResolvedValue('');
+
+      let filters = new HourlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsStateAggregation(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-state-aggregation-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsNationalAggregation', () => {
+    it('calls HourlyUnitDataRepository.getNationalStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getNationalStreamQuery.mockResolvedValue('');
+
+      let filters = new HourlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsNationalAggregation(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="hourly-emissions-national-aggregation-${0}.json"`,
         }),
       );
     });
