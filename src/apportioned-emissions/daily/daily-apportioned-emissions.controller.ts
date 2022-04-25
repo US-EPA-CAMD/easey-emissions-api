@@ -33,6 +33,7 @@ import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissi
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
 import { DailyApportionedEmissionsStateAggregationDTO } from '../../dto/daily-apportioned-emissions-state-aggregation.dto';
+import { DailyApportionedEmissionsNationalAggregationDTO } from '../../dto/daily-apportioned-emissions-national-aggregation.dto';
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
@@ -45,6 +46,7 @@ import {
 @ApiExtraModels(DailyApportionedEmissionsDTO)
 @ApiExtraModels(DailyApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(DailyApportionedEmissionsStateAggregationDTO)
+@ApiExtraModels(DailyApportionedEmissionsNationalAggregationDTO)
 export class DailyApportionedEmissionsController {
   constructor(private readonly service: DailyApportionedEmissionsService) {}
 
@@ -234,5 +236,68 @@ export class DailyApportionedEmissionsController {
     @Query() params: DailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissionsStateAggregation(req, params);
+  }
+
+    @Get('national')
+  @ApiOkResponse({
+    description:
+      'Retrieves Daily Apportioned Emissions National Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.daily.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DailyApportionedEmissionsNationalAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
+  }
+
+  @Get('national/stream')
+  @ApiOkResponse({
+    description:
+      'Streams Daily Apportioned Emissions National Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.daily.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  streamEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: DailyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissionsNationalAggregation(req, params);
   }
 }

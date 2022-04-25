@@ -190,14 +190,14 @@ export class HourlyApportionedEmissionsService {
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
-          disposition: `attachment; filename="hourly-emissions-facility-aggregation${uuid()}.csv"`,
+          disposition: `attachment; filename="hourly-emissions-facility-aggregation-${uuid()}.csv"`,
         });
       }
 
       const objToString = new PlainToJSON();
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
-        disposition: `attachment; filename="hourly-emissions-facility-aggregation${uuid()}.json"`,
+        disposition: `attachment; filename="hourly-emissions-facility-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
@@ -275,14 +275,14 @@ export class HourlyApportionedEmissionsService {
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
-          disposition: `attachment; filename="hourly-emissions-state-aggregation${uuid()}.csv"`,
+          disposition: `attachment; filename="hourly-emissions-state-aggregation-${uuid()}.csv"`,
         });
       }
 
       const objToString = new PlainToJSON();
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
-        disposition: `attachment; filename="hourly-emissions-state-aggregation${uuid()}.json"`,
+        disposition: `attachment; filename="hourly-emissions-state-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
@@ -365,14 +365,14 @@ export class HourlyApportionedEmissionsService {
         );
         return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
           type: req.headers.accept,
-          disposition: `attachment; filename="hourly-emissions-national-aggregation${uuid()}.csv"`,
+          disposition: `attachment; filename="hourly-emissions-national-aggregation-${uuid()}.csv"`,
         });
       }
 
       const objToString = new PlainToJSON();
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
-        disposition: `attachment; filename="hourly-emissions-national-aggregation${uuid()}.json"`,
+        disposition: `attachment; filename="hourly-emissions-national-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);

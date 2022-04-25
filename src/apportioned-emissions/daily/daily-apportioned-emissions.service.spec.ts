@@ -10,7 +10,7 @@ import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
-import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import { ConfigService } from '@nestjs/config';
 
 jest.mock('uuid', () => {
@@ -24,6 +24,8 @@ const mockRepository = () => ({
   getFacilityStreamQuery: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getStateStreamQuery: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
+  getNationalStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -158,6 +160,35 @@ describe('-- Daily Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="daily-emissions-state-aggregation-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls DayUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsNationalAggregation', () => {
+    it('calls DailyUnitDataRepository.getNationalStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getNationalStreamQuery.mockResolvedValue('');
+
+      let filters = new DailyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsNationalAggregation(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="daily-emissions-national-aggregation-${0}.json"`,
         }),
       );
     });

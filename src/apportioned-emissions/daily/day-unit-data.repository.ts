@@ -185,6 +185,42 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return query;
   }
 
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedDailyApportionedEmissionsParamsDTO,
+  ): Promise<DayUnitDataView[]> {
+    let totalCount: number;
+    let results: DayUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildNationalAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getNationalStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
+    return this.buildNationalAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildNationalAggregationQuery(
+    params: DailyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<DayUnitDataView> {
+    let query = this.createQueryBuilder('dud').select(
+      ['dud.date'].map(col => {
+        return `${col} AS "${col.split('.')[1]}"`;
+      }),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query.addGroupBy('dud.date');
+    query.addOrderBy('dud.date');
+
+    return query;
+  }
+
   buildAggregationQuery(query, params): SelectQueryBuilder<DayUnitDataView> {
     query
       .addSelect('SUM(dud.grossLoad)', 'grossLoad')
