@@ -327,7 +327,7 @@ export class DailyApportionedEmissionsService {
   ): Promise<StreamableFile> {
     try {
       const query = this.repository.getNationalStreamQuery(params);
-      let stream: ReadStream = await this.streamService.getStream(query);
+      const stream: ReadStream = await this.streamService.getStream(query);
 
       req.on('close', () => {
         stream.emit('end');
