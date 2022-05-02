@@ -34,11 +34,14 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
 const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
+  getRawMany: jest.fn(),
   getManyAndCount: jest.fn(),
   select: jest.fn(),
+  addSelect: jest.fn(),
   innerJoin: jest.fn(),
   orderBy: jest.fn(),
   addOrderBy: jest.fn(),
+  addGroupBy: jest.fn(),
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
@@ -107,14 +110,17 @@ describe('MonthUnitDataRepository', () => {
       .mockReturnValue(queryBuilder);
 
     queryBuilder.select.mockReturnValue(queryBuilder);
+    queryBuilder.addSelect.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
     queryBuilder.orderBy.mockReturnValue(queryBuilder);
     queryBuilder.addOrderBy.mockReturnValue(queryBuilder);
+    queryBuilder.addGroupBy.mockReturnValue(queryBuilder);
     queryBuilder.skip.mockReturnValue(queryBuilder);
     queryBuilder.take.mockReturnValue('mockPagination');
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
+    queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
     queryBuilder.stream.mockReturnValue('mockEmissions');
 
@@ -164,6 +170,45 @@ describe('MonthUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls createQueryBuilder and gets all MonthUnitData aggregated by facility from the repository with no filters', async () => {
+      const result = await repository.getEmissionsFacilityAggregation(
+        req,
+        new PaginatedMonthlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets MonthUnitData aggregated by facility from the repository with filters', async () => {
+      const result = await repository.getEmissionsFacilityAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all MonthUnitData aggregated by facility from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsFacilityAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
 });

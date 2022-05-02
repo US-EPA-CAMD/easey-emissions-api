@@ -10,7 +10,7 @@ import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
-import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
+import { StreamService } from '@us-epa-camd/easey-common/stream';
 import { ConfigService } from '@nestjs/config';
 
 jest.mock('uuid', () => {
@@ -20,6 +20,8 @@ jest.mock('uuid', () => {
 const mockRepository = () => ({
   getEmissions: jest.fn(),
   getStreamQuery: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getFacilityStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -96,6 +98,38 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="monthly-emissions-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{month: 1}];
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsFacilityAggregation', () => {
+    it('calls MonthUnitDataRepository.getFacilityStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getFacilityStreamQuery.mockResolvedValue('');
+
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsFacilityAggregation(
+        req,
+        filters,
+      );
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="monthly-emissions-facility-aggregation-${0}.json"`,
         }),
       );
     });

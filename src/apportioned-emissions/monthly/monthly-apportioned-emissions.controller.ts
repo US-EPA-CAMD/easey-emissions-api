@@ -25,20 +25,24 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryMonthly,
 } from '../../utils/swagger-decorator.const';
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import {
+  MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
   StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
+import { MonthlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/monthly-apportioned-emissions-facility-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Monthly Emissions')
 @ApiExtraModels(MonthlyApportionedEmissionsDTO)
+@ApiExtraModels(MonthlyApportionedEmissionsFacilityAggregationDTO)
 export class MonthlyApportionedEmissionsController {
   constructor(private readonly service: MonthlyApportionedEmissionsService) {}
 
@@ -102,5 +106,74 @@ export class MonthlyApportionedEmissionsController {
     @Query() params: StreamMonthlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
+  }
+
+  @Get('facility')
+  @ApiOkResponse({
+    description:
+      'Retrieves Monthly Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(
+            MonthlyApportionedEmissionsFacilityAggregationDTO,
+          ),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.monthly.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiQueryMonthly()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
+  ): Promise<MonthlyApportionedEmissionsFacilityAggregationDTO[]> {
+    return this.service.getEmissionsFacilityAggregation(req, params);
+  }
+
+  @Get('facility/stream')
+  @ApiOkResponse({
+    description:
+      'Streams Monthly Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(
+            MonthlyApportionedEmissionsFacilityAggregationDTO,
+          ),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.monthly.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiQueryMonthly()
+  @ApiProgramQuery()
+  streamEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: MonthlyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 }

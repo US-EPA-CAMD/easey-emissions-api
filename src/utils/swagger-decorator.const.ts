@@ -24,9 +24,15 @@ export function ApiQueryMultiSelect() {
     ApiQuery({style: 'pipeDelimited', name: 'unitFuelType', required: false, explode: false,}),
   );
 }
+export function ApiQueryMonthly() {
+  return applyDecorators(
+    ApiQuery({style: 'pipeDelimited', name: 'month', required: true, explode: false,}),
+    ApiQuery({style: 'pipeDelimited', name: 'year', required: true, explode: false,})
+  )
+}
 export function ApiProgramQuery() {
   return applyDecorators(
-    ApiQuery({style: 'pipeDelimited',name: 'programCodeInfo',required: false,explode: false,})
+    ApiQuery({style: 'pipeDelimited', name: 'programCodeInfo', required: false, explode: false,})
   );
 }
 export function ExcludeQuery() {
