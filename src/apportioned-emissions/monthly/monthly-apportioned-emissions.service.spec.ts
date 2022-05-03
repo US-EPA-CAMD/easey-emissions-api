@@ -22,6 +22,8 @@ const mockRepository = () => ({
   getStreamQuery: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getFacilityStreamQuery: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getStateStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -105,7 +107,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls MonthUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{month: 1}];
+      const expected = [{ month: 1 }];
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -130,6 +132,35 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="monthly-emissions-facility-aggregation-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ month: 1 }];
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsStateAggregation', () => {
+    it('calls MonthUnitDataRepository.getStateStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getStateStreamQuery.mockResolvedValue('');
+
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsStateAggregation(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="monthly-emissions-state-aggregation-${0}.json"`,
         }),
       );
     });

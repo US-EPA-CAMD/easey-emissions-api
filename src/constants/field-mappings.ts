@@ -10,6 +10,7 @@ const dailyStateAggregation = [];
 const dailyNationalAggregation = [];
 const monthly = [];
 const monthlyFacilityAggregation = [];
+const monthlyStateAggregation = [];
 const quarterly = [];
 const annual = [];
 const annualFacilityAggregation = [];
@@ -176,6 +177,11 @@ monthlyFacilityAggregation.push(
   ...monthlyAggregationData,
 );
 
+monthlyStateAggregation.push(
+  { ...propertyMetadata.stateCode.fieldLabels },
+  ...monthlyAggregationData,
+);
+
 quarterly.push(
   ...commonCharacteristics,
   { ...propertyMetadata.associatedStacks.fieldLabels },
@@ -298,6 +304,7 @@ export const fieldMappings = {
         aggregation: {
           unit: monthly,
           facility: monthlyFacilityAggregation,
+          state: monthlyStateAggregation,
         },
       },
       excludableColumns: excludableOtherEmissionsColumns,
