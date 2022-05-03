@@ -159,6 +159,49 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return query;
   }
 
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedMonthlyApportionedEmissionsParamsDTO,
+  ): Promise<MonthUnitDataView[]> {
+    let totalCount: number;
+    let results: MonthUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildStateAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getStateStreamQuery(params: MonthlyApportionedEmissionsParamsDTO) {
+    return this.buildStateAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildStateAggregationQuery(
+    params: MonthlyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<MonthUnitDataView> {
+    let query = this.createQueryBuilder('mud').select(
+      ['mud.stateCode', 'mud.year', 'mud.month'].map(col => {
+        return `${col} AS "${col.split('.')[1]}"`;
+      }),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query
+      .addGroupBy('mud.stateCode')
+      .addGroupBy('mud.year')
+      .addGroupBy('mud.month');
+
+    query
+      .orderBy('mud.stateCode')
+      .addOrderBy('mud.year')
+      .addOrderBy('mud.month');
+
+    return query;
+  }
+
   buildAggregationQuery(query, params): SelectQueryBuilder<MonthUnitDataView> {
     query
       .addSelect('SUM(mud.grossLoad)', 'grossLoad')
