@@ -104,4 +104,74 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
     return query;
   }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualUnitDataView[]> {
+    let totalCount: number;
+    let results: AnnualUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildFacilityAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getFacilityStreamQuery(params: AnnualApportionedEmissionsParamsDTO) {
+    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildFacilityAggregationQuery(
+    params: AnnualApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<AnnualUnitDataView> {
+    let query = this.createQueryBuilder('aud').select(
+      ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'].map(
+        col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        },
+      ),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query
+      .addGroupBy('aud.stateCode')
+      .addGroupBy('aud.facilityName')
+      .addGroupBy('aud.facilityId')
+      .addGroupBy('aud.year');
+
+    query.orderBy('aud.facilityId').addOrderBy('aud.year');
+
+    return query;
+  }
+
+  buildAggregationQuery(query, params): SelectQueryBuilder<AnnualUnitDataView> {
+    query
+      .addSelect('SUM(aud.grossLoad)', 'grossLoad')
+      .addSelect('SUM(aud.steamLoad)', 'steamLoad')
+      .addSelect('SUM(aud.so2Mass)', 'so2Mass')
+      .addSelect('SUM(aud.co2Mass)', 'co2Mass')
+      .addSelect('SUM(aud.noxMass)', 'noxMass')
+      .addSelect('SUM(aud.heatInput)', 'heatInput');
+
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
+      [
+        'year',
+        'stateCode',
+        'facilityId',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'programCodeInfo',
+      ],
+      'aud',
+    );
+
+    return query;
+  }
 }

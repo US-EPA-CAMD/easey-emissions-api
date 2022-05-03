@@ -27,6 +27,7 @@ import {
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
+import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
@@ -106,5 +107,91 @@ export class AnnualApportionedEmissionsService {
       type: req.headers.accept,
       disposition: `attachment; filename="annual-emissions-${uuid()}.json"`,
     });
+  }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsFacilityAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsFacilityAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.facility),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        AnnualApportionedEmissionsFacilityAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
+    });
+  }
+
+  async streamEmissionsFacilityAggregation(
+    req: Request,
+    params: StreamAnnualApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    try {
+      const query = this.repository.getFacilityStreamQuery(params);
+      const stream: ReadStream = await this.streamService.getStream(query);
+
+      req.on('close', () => {
+        stream.emit('end');
+      });
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(
+          fieldMappings.emissions.annual.data.aggregation.facility,
+        ),
+      );
+
+      const toDto = new Transform({
+        objectMode: true,
+        transform(data, _enc, callback) {
+          const dto = plainToClass(
+            AnnualApportionedEmissionsFacilityAggregationDTO,
+            data,
+            {
+              enableImplicitConversion: true,
+            },
+          );
+          callback(null, dto);
+        },
+      });
+
+      if (req.headers.accept === 'text/csv') {
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.annual.data.aggregation.facility,
+        );
+        return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="annual-emissions-facility-aggregation-${uuid()}.csv"`,
+        });
+      }
+
+      const objToString = new PlainToJSON();
+      return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="annual-emissions-facility-aggregation-${uuid()}.json"`,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }

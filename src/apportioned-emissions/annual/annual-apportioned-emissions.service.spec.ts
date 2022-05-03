@@ -20,6 +20,12 @@ jest.mock('uuid', () => {
 const mockRepository = () => ({
   getEmissions: jest.fn(),
   getStreamQuery: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getFacilityStreamQuery: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getStateStreamQuery: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
+  getNationalStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -96,6 +102,35 @@ describe('-- Annual Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="annual-emissions-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{year: 2019}]
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsFacilityAggregation', () => {
+    it('calls AnnualUnitDataRepository.getFacilityStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getFacilityStreamQuery.mockResolvedValue('');
+
+      let filters = new AnnualApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsFacilityAggregation(req, filters);
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="annual-emissions-facility-aggregation-${0}.json"`,
         }),
       );
     });
