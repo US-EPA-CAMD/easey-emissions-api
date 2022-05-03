@@ -6,7 +6,7 @@ export class AnnualApportionedEmissionsAggregationDTO extends ApportionedEmissio
   constructor() {
     super();
   }
-  
+
   @ApiProperty({
     description: propertyMetadata.year.description,
     example: propertyMetadata.year.example,

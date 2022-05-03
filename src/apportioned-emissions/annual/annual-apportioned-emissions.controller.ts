@@ -41,6 +41,7 @@ import {
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
+@ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 export class AnnualApportionedEmissionsController {
   constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
