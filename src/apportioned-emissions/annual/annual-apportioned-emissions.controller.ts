@@ -31,6 +31,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
+import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
@@ -40,6 +41,7 @@ import {
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
+@ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 export class AnnualApportionedEmissionsController {
   constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
@@ -103,5 +105,72 @@ export class AnnualApportionedEmissionsController {
     @Query() params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissions(req, params);
+  }
+
+  @Get('facility')
+  @ApiOkResponse({
+    description:
+      'Retrieves Annual Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(
+            AnnualApportionedEmissionsFacilityAggregationDTO,
+          ),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsFacilityAggregationDTO[]> {
+    return this.service.getEmissionsFacilityAggregation(req, params);
+  }
+
+  @Get('facility/stream')
+  @ApiOkResponse({
+    description:
+      'Streams Annual Apportioned Emissions Facility Aggregation data per filter criteria',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(
+            AnnualApportionedEmissionsFacilityAggregationDTO,
+          ),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  streamEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: StreamAnnualApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 }

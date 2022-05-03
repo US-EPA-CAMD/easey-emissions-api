@@ -34,8 +34,11 @@ const mockRequest = (url?: string, page?: number, perPage?: number) => {
 const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
+  getRawMany: jest.fn(),
   getManyAndCount: jest.fn(),
   select: jest.fn(),
+  addSelect: jest.fn(),
+  addGroupBy: jest.fn(),
   innerJoin: jest.fn(),
   orderBy: jest.fn(),
   addOrderBy: jest.fn(),
@@ -43,7 +46,7 @@ const mockQueryBuilder = () => ({
   skip: jest.fn(),
   take: jest.fn(),
   stream: jest.fn(),
-  getQueryAndParameters: jest.fn().mockReturnValue(''),
+  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
 let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
@@ -105,6 +108,8 @@ describe('AnnualUnitDataRepository', () => {
       .mockReturnValue(queryBuilder);
 
     queryBuilder.select.mockReturnValue(queryBuilder);
+    queryBuilder.addSelect.mockReturnValue(queryBuilder);
+    queryBuilder.addGroupBy.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
     queryBuilder.orderBy.mockReturnValue(queryBuilder);
@@ -113,6 +118,7 @@ describe('AnnualUnitDataRepository', () => {
     queryBuilder.take.mockReturnValue('mockPagination');
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
+    queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
     queryBuilder.stream.mockReturnValue('mockEmissions');
 
@@ -160,7 +166,46 @@ describe('AnnualUnitDataRepository', () => {
       const result = await repository.getStreamQuery(streamFilters);
 
       expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
-      expect(result).toEqual('');
+      expect(result).toEqual('mockEmissions');
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls createQueryBuilder and gets all AnnualUnitData aggregated by facility from the repository no filters', async () => {
+      const result = await repository.getEmissionsFacilityAggregation(
+        req,
+        new PaginatedAnnualApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets AnnualUnitData aggregated by facility from the repository with filters', async () => {
+      const result = await repository.getEmissionsFacilityAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all AnnualUnitData aggregated by facility from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsFacilityAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
 });
