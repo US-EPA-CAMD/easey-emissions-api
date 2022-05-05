@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -198,6 +197,42 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       .orderBy('mud.stateCode')
       .addOrderBy('mud.year')
       .addOrderBy('mud.month');
+
+    return query;
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedMonthlyApportionedEmissionsParamsDTO,
+  ): Promise<MonthUnitDataView[]> {
+    let totalCount: number;
+    let results: MonthUnitDataView[];
+    const { page, perPage } = params;
+    const query = this.buildNationalAggregationQuery(params);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      totalCount = await query.getCount();
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  getNationalStreamQuery(params: MonthlyApportionedEmissionsParamsDTO) {
+    return this.buildNationalAggregationQuery(params).getQueryAndParameters();
+  }
+
+  buildNationalAggregationQuery(
+    params: MonthlyApportionedEmissionsParamsDTO,
+  ): SelectQueryBuilder<MonthUnitDataView> {
+    let query = this.createQueryBuilder('mud').select(
+      ['mud.year', 'mud.month'].map(col => {
+        return `${col} AS "${col.split('.')[1]}"`;
+      }),
+    );
+    query = this.buildAggregationQuery(query, params);
+    query.addGroupBy('mud.year').addGroupBy('mud.month');
+    query.addOrderBy('mud.year').addOrderBy('mud.month');
 
     return query;
   }

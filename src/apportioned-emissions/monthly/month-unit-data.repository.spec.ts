@@ -250,4 +250,43 @@ describe('MonthUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls createQueryBuilder and gets all MonthUnitData aggregated nationally from the repository with no filters', async () => {
+      const result = await repository.getEmissionsNationalAggregation(
+        req,
+        new PaginatedMonthlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets MonthUnitData aggregated nationally from the repository with filters', async () => {
+      const result = await repository.getEmissionsNationalAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all MonthUnitData aggregated nationally from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsNationalAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
+    });
+  });
 });

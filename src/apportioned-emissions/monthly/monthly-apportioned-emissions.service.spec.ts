@@ -24,6 +24,8 @@ const mockRepository = () => ({
   getFacilityStreamQuery: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getStateStreamQuery: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
+  getNationalStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -161,6 +163,38 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
         new StreamableFile(Buffer.from('stream'), {
           type: req.headers.accept,
           disposition: `attachment; filename="monthly-emissions-state-aggregation-${0}.json"`,
+        }),
+      );
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ month: 1 }];
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('streamEmissionsNationalAggregation', () => {
+    it('calls MonthUnitDataRepository.getNationalStreamQuery() and streams all emissions from the repository', async () => {
+      repository.getNationalStreamQuery.mockResolvedValue('');
+
+      let filters = new MonthlyApportionedEmissionsParamsDTO();
+
+      req.headers.accept = '';
+
+      let result = await service.streamEmissionsNationalAggregation(
+        req,
+        filters,
+      );
+
+      expect(result).toEqual(
+        new StreamableFile(Buffer.from('stream'), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="monthly-emissions-national-aggregation-${0}.json"`,
         }),
       );
     });
