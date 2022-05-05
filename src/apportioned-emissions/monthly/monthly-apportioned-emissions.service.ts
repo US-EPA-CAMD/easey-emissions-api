@@ -30,6 +30,7 @@ import {
 import { ReadStream } from 'fs';
 import { MonthlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/monthly-apportioned-emissions-facility-aggregation.dto';
 import { MonthlyApportionedEmissionsStateAggregationDTO } from '../../dto/monthly-apportioned-emissions-state-aggregation.dto';
+import { MonthlyApportionedEmissionsNationalAggregationDTO } from '../../dto/monthly-apportioned-emissions-national-aggregation.dto';
 
 @Injectable()
 export class MonthlyApportionedEmissionsService {
@@ -271,6 +272,92 @@ export class MonthlyApportionedEmissionsService {
       return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
         type: req.headers.accept,
         disposition: `attachment; filename="monthly-emissions-state-aggregation-${uuid()}.json"`,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedMonthlyApportionedEmissionsParamsDTO,
+  ): Promise<MonthlyApportionedEmissionsNationalAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.monthly.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        MonthlyApportionedEmissionsNationalAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
+    });
+  }
+
+  async streamEmissionsNationalAggregation(
+    req: Request,
+    params: MonthlyApportionedEmissionsParamsDTO,
+  ): Promise<StreamableFile> {
+    try {
+      const query = this.repository.getNationalStreamQuery(params);
+      const stream: ReadStream = await this.streamService.getStream(query);
+
+      req.on('close', () => {
+        stream.emit('end');
+      });
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(
+          fieldMappings.emissions.monthly.data.aggregation.national,
+        ),
+      );
+
+      const toDto = new Transform({
+        objectMode: true,
+        transform(data, _enc, callback) {
+          const dto = plainToClass(
+            MonthlyApportionedEmissionsNationalAggregationDTO,
+            data,
+            {
+              enableImplicitConversion: true,
+            },
+          );
+          callback(null, dto);
+        },
+      });
+
+      if (req.headers.accept === 'text/csv') {
+        const toCSV = new PlainToCSV(
+          fieldMappings.emissions.monthly.data.aggregation.national,
+        );
+        return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
+          type: req.headers.accept,
+          disposition: `attachment; filename="monthly-emissions-national-aggregation-${uuid()}.csv"`,
+        });
+      }
+
+      const objToString = new PlainToJSON();
+      return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
+        type: req.headers.accept,
+        disposition: `attachment; filename="monthly-emissions-national-aggregation-${uuid()}.json"`,
       });
     } catch (e) {
       console.log(e);
