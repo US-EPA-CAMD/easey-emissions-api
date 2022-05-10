@@ -23,6 +23,7 @@ import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import {
+  AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
@@ -143,7 +144,7 @@ export class AnnualApportionedEmissionsService {
 
   async streamEmissionsFacilityAggregation(
     req: Request,
-    params: StreamAnnualApportionedEmissionsParamsDTO,
+    params: AnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     try {
       const query = this.repository.getFacilityStreamQuery(params);

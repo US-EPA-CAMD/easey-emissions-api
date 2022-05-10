@@ -33,6 +33,7 @@ import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emis
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 import {
+  AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
@@ -169,7 +170,7 @@ export class AnnualApportionedEmissionsController {
   @ApiProgramQuery()
   streamEmissionsFacilityAggregation(
     @Req() req: Request,
-    @Query() params: StreamAnnualApportionedEmissionsParamsDTO,
+    @Query() params: AnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
