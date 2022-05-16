@@ -59,7 +59,7 @@ export class MonthlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.monthly.data.aggregation.unit
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },
@@ -69,6 +69,7 @@ export class MonthlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryMonthly()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -90,7 +91,7 @@ export class MonthlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.monthly.data.aggregation.unit
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },
@@ -100,6 +101,7 @@ export class MonthlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryMonthly()
   @ExcludeQuery()
   streamEmissions(
     @Req() req: Request,
@@ -124,7 +126,7 @@ export class MonthlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.monthly.data.aggregation.facility
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },
@@ -140,6 +142,7 @@ export class MonthlyApportionedEmissionsController {
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthlyApportionedEmissionsFacilityAggregationDTO[]> {
+    console.log('getEmissionsFacilityAggregation');
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
@@ -159,7 +162,7 @@ export class MonthlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.monthly.data.aggregation.facility
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },

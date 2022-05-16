@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryQuarterly,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -57,7 +58,7 @@ export class QuarterlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.quarterly.data.aggregation.unit
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },
@@ -67,6 +68,7 @@ export class QuarterlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryQuarterly()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -88,7 +90,7 @@ export class QuarterlyApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.quarterly.data.aggregation.unit
-            .map(i => i.label)
+            .map((i) => i.label)
             .join(','),
         },
       },
@@ -97,6 +99,7 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryQuarterly()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(
