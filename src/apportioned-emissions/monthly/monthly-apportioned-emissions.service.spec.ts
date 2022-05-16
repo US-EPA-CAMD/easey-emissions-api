@@ -105,7 +105,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls MonthUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{month: 1}];
+      const expected = [{ month: 1 }];
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);

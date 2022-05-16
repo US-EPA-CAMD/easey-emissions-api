@@ -59,7 +59,7 @@ export class AnnualApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.annual.data.aggregation.unit
-            .map((i) => i.label)
+            .map(i => i.label)
             .join(','),
         },
       },
@@ -91,7 +91,7 @@ export class AnnualApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.annual.data.aggregation.unit
-            .map((i) => i.label)
+            .map(i => i.label)
             .join(','),
         },
       },
@@ -124,7 +124,7 @@ export class AnnualApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.annual.data.aggregation.facility
-            .map((i) => i.label)
+            .map(i => i.label)
             .join(','),
         },
       },
@@ -157,7 +157,7 @@ export class AnnualApportionedEmissionsController {
         schema: {
           type: 'string',
           example: fieldMappings.emissions.annual.data.aggregation.facility
-            .map((i) => i.label)
+            .map(i => i.label)
             .join(','),
         },
       },

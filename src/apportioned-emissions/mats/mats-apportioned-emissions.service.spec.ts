@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
@@ -48,7 +47,7 @@ describe('-- MATS Apportioned Emissions Service --', () => {
     it('calls HourUnitDataRepository.getApplicableEmissions() and gets all applicable emissions attributes from the repository', async () => {
       const expected: HourUnitMatsDataArch[] = [];
       repository.getApplicableEmissions.mockResolvedValue(expected);
-      repository.lastArchivedDate.mockResolvedValue('2019-01-01')
+      repository.lastArchivedDate.mockResolvedValue('2019-01-01');
       let filters = new ApplicableMatsApportionedEmissionsAttributesParamsDTO();
       let result = await service.getApplicableEmissions(filters);
       expect(result).toEqual(expected);

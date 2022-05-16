@@ -238,7 +238,7 @@ export class DailyApportionedEmissionsController {
     return this.service.streamEmissionsStateAggregation(req, params);
   }
 
-    @Get('national')
+  @Get('national')
   @ApiOkResponse({
     description:
       'Retrieves Daily Apportioned Emissions National Aggregation data per filter criteria',

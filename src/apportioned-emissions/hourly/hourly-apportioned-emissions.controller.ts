@@ -109,7 +109,7 @@ export class HourlyApportionedEmissionsController {
     @Req() req: Request,
     @Query() params: StreamHourlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-      return this.service.streamEmissions(req, params);
+    return this.service.streamEmissions(req, params);
   }
 
   @Get('facility')
