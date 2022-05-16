@@ -10,7 +10,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToJSON, PlainToCSV } from '@us-epa-camd/easey-common/transforms';
+import { PlainToJSON } from '@us-epa-camd/easey-common/transforms';
+import { PlainToCSV } from './plain-to-csv.transform';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
