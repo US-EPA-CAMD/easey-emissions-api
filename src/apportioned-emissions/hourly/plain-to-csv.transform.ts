@@ -2,7 +2,7 @@ import { Transform, TransformOptions, TransformCallback } from 'stream';
 
 import { Parser } from 'json2csv';
 
-const DEFAULT_BUFFER_SIZE = 104857; //1KB
+const DEFAULT_BUFFER_SIZE = 10485;
 
 export class PlainToCSV extends Transform {
   private isFirstChunk: boolean = true;
