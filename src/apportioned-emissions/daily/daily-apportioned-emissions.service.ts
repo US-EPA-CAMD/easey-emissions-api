@@ -23,6 +23,7 @@ import {
   StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
@@ -31,6 +32,7 @@ export class DailyApportionedEmissionsService {
     private readonly repository: DayUnitDataRepository,
     private readonly logger: Logger,
     private readonly streamService: StreamService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getEmissions(
@@ -88,14 +90,21 @@ export class DailyApportionedEmissionsService {
             item => !params.exclude.includes(item.value),
           )
         : fieldMappings.emissions.daily;
-      const toCSV = new PlainToCSV(fieldMappingsList);
+      const toCSV = new PlainToCSV(
+        fieldMappingsList,
+        this.configService.get<number>('app.streamDelay'),
+        this.configService.get<number>('app.streamBufferSize'),
+      );
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
         disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
       });
     }
 
-    const objToString = new PlainToJSON();
+    const objToString = new PlainToJSON(
+      this.configService.get<number>('app.streamDelay'),
+      this.configService.get<number>('app.streamBufferSize'),
+    );
     return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
       type: req.headers.accept,
       disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,

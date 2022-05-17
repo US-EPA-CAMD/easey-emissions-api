@@ -23,6 +23,7 @@ import {
   StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MonthlyApportionedEmissionsService {
@@ -31,6 +32,7 @@ export class MonthlyApportionedEmissionsService {
     private readonly repository: MonthUnitDataRepository,
     private readonly logger: Logger,
     private readonly streamService: StreamService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getEmissions(
@@ -86,14 +88,21 @@ export class MonthlyApportionedEmissionsService {
             item => !params.exclude.includes(item.value),
           )
         : fieldMappings.emissions.monthly;
-      const toCSV = new PlainToCSV(fieldMappingsList);
+      const toCSV = new PlainToCSV(
+        fieldMappingsList,
+        this.configService.get<number>('app.streamDelay'),
+        this.configService.get<number>('app.streamBufferSize'),
+      );
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
         type: req.headers.accept,
         disposition: `attachment; filename="monthly-emissions-${uuid()}.csv"`,
       });
     }
 
-    const objToString = new PlainToJSON();
+    const objToString = new PlainToJSON(
+      this.configService.get<number>('app.streamDelay'),
+      this.configService.get<number>('app.streamBufferSize'),
+    );
     return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
       type: req.headers.accept,
       disposition: `attachment; filename="monthly-emissions-${uuid()}.json"`,

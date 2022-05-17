@@ -25,13 +25,8 @@ export default registerAs('app', () => ({
   uri,
   env: process.env.EASEY_EMISSIONS_API_ENV || 'local-dev',
   enableCors: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_CORS, true),
-  enableApiKey: parseBool(
-    process.env.EASEY_EMISSIONS_API_ENABLE_API_KEY,
-    true,
-  ),
-  enableAuthToken: parseBool(
-    process.env.EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN,
-  ),
+  enableApiKey: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_API_KEY, true),
+  enableAuthToken: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN),
   enableGlobalValidationPipes: parseBool(
     process.env.EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE,
     true,
@@ -40,4 +35,6 @@ export default registerAs('app', () => ({
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   submissionDays: +process.env.EASEY_EMISSIONS_API_SUBMISSION_DAYS || 38,
+  streamDelay: +process.env.EASEY_EMISSIONS_API_STREAM_DELAY || 100, //100 Miliseconds
+  streamBufferSize: +process.env.EASEY_EMISSIONS_API_BUFFER_SIZE || 1048576, //1KB
 }));
