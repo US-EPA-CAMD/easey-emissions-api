@@ -146,7 +146,6 @@ export class MonthlyApportionedEmissionsController {
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthlyApportionedEmissionsFacilityAggregationDTO[]> {
-    console.log('getEmissionsFacilityAggregation');
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
