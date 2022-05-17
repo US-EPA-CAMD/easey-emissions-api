@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryMonthly,
 } from '../../utils/swagger-decorator.const';
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
@@ -40,7 +41,7 @@ import {
 @ApiTags('Apportioned Monthly Emissions')
 @ApiExtraModels(MonthlyApportionedEmissionsDTO)
 export class MonthlyApportionedEmissionsController {
-  constructor(private readonly service: MonthlyApportionedEmissionsService) {}
+  constructor(private readonly service: MonthlyApportionedEmissionsService) { }
 
   @Get()
   @ApiOkResponse({
@@ -62,6 +63,7 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryMonthly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
@@ -91,6 +93,7 @@ export class MonthlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryMonthly()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(

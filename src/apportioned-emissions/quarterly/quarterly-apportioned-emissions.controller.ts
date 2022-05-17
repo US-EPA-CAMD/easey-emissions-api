@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryQuarterly,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -41,7 +42,7 @@ import {
 @ApiTags('Apportioned Quarterly Emissions')
 @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
 export class QuarterlyApportionedEmissionsController {
-  constructor(private readonly service: QuarterlyApportionedEmissionsService) {}
+  constructor(private readonly service: QuarterlyApportionedEmissionsService) { }
 
   @Get()
   @ApiOkResponse({
@@ -66,6 +67,7 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryQuarterly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
@@ -97,6 +99,7 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryQuarterly()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(
