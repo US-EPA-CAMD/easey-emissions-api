@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryQuarterly,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -67,6 +68,7 @@ export class QuarterlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryQuarterly()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
     @Req() req: Request,
@@ -97,6 +99,7 @@ export class QuarterlyApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryQuarterly()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(

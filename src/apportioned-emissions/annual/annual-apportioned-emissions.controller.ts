@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryAnnually,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -68,6 +69,7 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
@@ -99,6 +101,7 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(
@@ -115,9 +118,7 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            AnnualApportionedEmissionsFacilityAggregationDTO,
-          ),
+          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
         },
       },
       'text/csv': {
@@ -133,6 +134,7 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissionsFacilityAggregation(
@@ -149,9 +151,7 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            AnnualApportionedEmissionsFacilityAggregationDTO,
-          ),
+          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
         },
       },
       'text/csv': {
@@ -167,6 +167,7 @@ export class AnnualApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   streamEmissionsFacilityAggregation(
     @Req() req: Request,

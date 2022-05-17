@@ -109,7 +109,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = [{ date: '2019-01-01' }];
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -125,7 +125,10 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
       req.headers.accept = '';
 
-      let result = await service.streamEmissionsFacilityAggregation(req, filters);
+      let result = await service.streamEmissionsFacilityAggregation(
+        req,
+        filters,
+      );
 
       expect(result).toEqual(
         new StreamableFile(Buffer.from('stream'), {
@@ -138,7 +141,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = [{ date: '2019-01-01' }];
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -167,7 +170,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = [{ date: '2019-01-01' }];
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);
@@ -183,7 +186,10 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
       req.headers.accept = '';
 
-      let result = await service.streamEmissionsNationalAggregation(req, filters);
+      let result = await service.streamEmissionsNationalAggregation(
+        req,
+        filters,
+      );
 
       expect(result).toEqual(
         new StreamableFile(Buffer.from('stream'), {

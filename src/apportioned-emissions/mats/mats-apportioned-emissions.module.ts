@@ -9,7 +9,11 @@ import { HourlyMatsApportionedEmissionsModule } from './hourly/hourly-mats-appor
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HourUnitMatsDataRepository]), HourlyMatsApportionedEmissionsModule, HttpModule],
+  imports: [
+    TypeOrmModule.forFeature([HourUnitMatsDataRepository]),
+    HourlyMatsApportionedEmissionsModule,
+    HttpModule,
+  ],
   controllers: [MatsApportionedEmissionsController],
   providers: [ConfigService, MatsApportionedEmissionsService],
   exports: [TypeOrmModule],

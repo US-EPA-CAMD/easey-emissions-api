@@ -2,7 +2,7 @@ import { Column, ViewEntity } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @ViewEntity({
-  name: 'camddmw.vw_quarter_unit_data'
+  name: 'camddmw.vw_quarter_unit_data',
 })
 export class QuarterUnitDataView {
   @Column({ name: 'state' })

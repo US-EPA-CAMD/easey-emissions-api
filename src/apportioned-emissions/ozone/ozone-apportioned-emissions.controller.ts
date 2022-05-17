@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryAnnually,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -65,6 +66,7 @@ export class OzoneApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissions(
@@ -96,6 +98,7 @@ export class OzoneApportionedEmissionsController {
   @BadRequestResponse()
   @NotFoundResponse()
   @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
   @ApiProgramQuery()
   @ExcludeQuery()
   streamEmissions(

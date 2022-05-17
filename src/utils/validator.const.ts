@@ -9,7 +9,7 @@ import {
   IsYearFormat,
   IsNotEmptyString,
   IsInRange,
-  Min
+  Min,
 } from '@us-epa-camd/easey-common/pipes';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 
