@@ -24,16 +24,16 @@ export default registerAs('app', () => ({
   port,
   uri,
   env: process.env.EASEY_EMISSIONS_API_ENV || 'local-dev',
-  enableCors: parseBool(process.env.EASEY_NOTIFICATIONS_API_ENABLE_CORS, true),
+  enableCors: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_CORS, true),
   enableApiKey: parseBool(
-    process.env.EASEY_NOTIFICATIONS_API_ENABLE_API_KEY,
+    process.env.EASEY_EMISSIONS_API_ENABLE_API_KEY,
     true,
   ),
   enableAuthToken: parseBool(
-    process.env.EASEY_NOTIFICATIONS_API_ENABLE_AUTH_TOKEN,
+    process.env.EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN,
   ),
   enableGlobalValidationPipes: parseBool(
-    process.env.EASEY_NOTIFICATIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE,
+    process.env.EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE,
     true,
   ),
   version: process.env.EASEY_EMISSIONS_API_VERSION || 'v0.0.0',
