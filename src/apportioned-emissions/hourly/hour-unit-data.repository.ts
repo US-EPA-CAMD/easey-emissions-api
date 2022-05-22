@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,7 +12,8 @@ import {
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-  getStreamQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
+
+  getQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
     return this.buildQuery(params, true).getQueryAndParameters();
   }
 

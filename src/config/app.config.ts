@@ -35,6 +35,8 @@ export default registerAs('app', () => ({
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   submissionDays: +process.env.EASEY_EMISSIONS_API_SUBMISSION_DAYS || 38,
+  streamBatchSize: +process.env.EASEY_EMISSIONS_API_STREAM_BATCH_SIZE || 20000,
+  streamHighWaterMark: +process.env.EASEY_EMISSIONS_API_STREAM_HIGH_WATER_MARK || 100000,
   streamDelay: +process.env.EASEY_EMISSIONS_API_STREAM_DELAY || 100, //100 Miliseconds
-  streamBufferSize: +process.env.EASEY_EMISSIONS_API_BUFFER_SIZE || 1048576, //1KB
+  streamBufferSize: +process.env.EASEY_EMISSIONS_API_BUFFER_SIZE || 1048576, //1MB
 }));

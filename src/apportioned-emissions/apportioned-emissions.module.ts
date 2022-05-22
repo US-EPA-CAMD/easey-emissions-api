@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { StreamingModule } from './../streaming/streaming.module';
 import { HourlyApportionedEmissionsModule } from './hourly/hourly-apportioned-emissions.module';
 import { DailyApportionedEmissionsModule } from './daily/daily-apportioned-emissions.module';
 import { MonthlyApportionedEmissionsModule } from './monthly/monthly-apportioned-emissions.module';
@@ -9,6 +10,7 @@ import { OzoneApportionedEmissionsModule } from './ozone/ozone-apportioned-emiss
 
 @Module({
   imports: [
+    StreamingModule,
     HourlyApportionedEmissionsModule,
     DailyApportionedEmissionsModule,
     MonthlyApportionedEmissionsModule,
