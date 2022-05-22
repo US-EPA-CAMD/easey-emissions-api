@@ -116,7 +116,8 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildFacilityAggregationQuery(params, true);
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
@@ -128,15 +129,21 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
 
   buildFacilityAggregationQuery(
     params: AnnualApportionedEmissionsParamsDTO,
+    countQuery: boolean = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
-    let query = this.createQueryBuilder('aud').select(
-      ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'].map(
-        col => {
-          return `${col} AS "${col.split('.')[1]}"`;
-        },
-      ),
-    );
-    query = this.buildAggregationQuery(query, params);
+    let query = null;
+    if (countQuery) {
+      query = this.createQueryBuilder('aud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('aud').select(
+        ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'].map(
+          col => {
+            return `${col} AS "${col.split('.')[1]}"`;
+          },
+        ),
+      );
+    }
+    query = this.buildAggregationQuery(query, params, countQuery);
     query
       .addGroupBy('aud.stateCode')
       .addGroupBy('aud.facilityName')
@@ -148,15 +155,20 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     return query;
   }
 
-  buildAggregationQuery(query, params): SelectQueryBuilder<AnnualUnitDataView> {
-    query
-      .addSelect('SUM(aud.grossLoad)', 'grossLoad')
-      .addSelect('SUM(aud.steamLoad)', 'steamLoad')
-      .addSelect('SUM(aud.so2Mass)', 'so2Mass')
-      .addSelect('SUM(aud.co2Mass)', 'co2Mass')
-      .addSelect('SUM(aud.noxMass)', 'noxMass')
-      .addSelect('SUM(aud.heatInput)', 'heatInput');
-
+  buildAggregationQuery(
+    query,
+    params,
+    countQuery: boolean = false,
+  ): SelectQueryBuilder<AnnualUnitDataView> {
+    if (!countQuery) {
+      query
+        .addSelect('SUM(aud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(aud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(aud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(aud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(aud.noxMass)', 'noxMass')
+        .addSelect('SUM(aud.heatInput)', 'heatInput');
+    }
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
       params,
