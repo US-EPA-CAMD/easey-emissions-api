@@ -38,7 +38,7 @@ export class AnnualApportionedEmissionsService {
     private readonly repository: AnnualUnitDataRepository,
     private readonly logger: Logger,
     private readonly streamService: StreamService,
-  ) {}
+  ) { }
 
   async getEmissions(
     req: Request,
@@ -94,8 +94,8 @@ export class AnnualApportionedEmissionsService {
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
         ? fieldMappings.emissions.annual.data.aggregation.unit.filter(
-            item => !params.exclude.includes(item.value),
-          )
+          item => !params.exclude.includes(item.value),
+        )
         : fieldMappings.emissions.annual.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {

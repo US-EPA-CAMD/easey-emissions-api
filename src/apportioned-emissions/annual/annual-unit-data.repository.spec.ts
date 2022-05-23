@@ -249,5 +249,5 @@ describe('AnnualUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
-  
+
 });

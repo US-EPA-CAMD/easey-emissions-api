@@ -46,7 +46,7 @@ import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-appor
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 export class AnnualApportionedEmissionsController {
-  constructor(private readonly service: AnnualApportionedEmissionsService) {}
+  constructor(private readonly service: AnnualApportionedEmissionsService) { }
 
   @Get()
   @ApiOkResponse({

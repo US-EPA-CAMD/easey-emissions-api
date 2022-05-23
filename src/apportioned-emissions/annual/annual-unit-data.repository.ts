@@ -127,7 +127,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     return results;
   }
 
-  async getEmissionsNationalAggregation(    
+  async getEmissionsNationalAggregation(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
@@ -135,8 +135,8 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
 
-    const selectColumns = ['aud.year'], 
-          orderByColumns = ['aud.year'];
+    const selectColumns = ['aud.year'],
+      orderByColumns = ['aud.year'];
 
     const query = this.buildAggregationQuery(params, selectColumns, orderByColumns);
 
@@ -176,12 +176,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
       );
 
       query
-      .addSelect('SUM(aud.grossLoad)', 'grossLoad')
-      .addSelect('SUM(aud.steamLoad)', 'steamLoad')
-      .addSelect('SUM(aud.so2Mass)', 'so2Mass')
-      .addSelect('SUM(aud.co2Mass)', 'co2Mass')
-      .addSelect('SUM(aud.noxMass)', 'noxMass')
-      .addSelect('SUM(aud.heatInput)', 'heatInput');
+        .addSelect('SUM(aud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(aud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(aud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(aud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(aud.noxMass)', 'noxMass')
+        .addSelect('SUM(aud.heatInput)', 'heatInput');
     }
 
     query = QueryBuilderHelper.createEmissionsQuery(
