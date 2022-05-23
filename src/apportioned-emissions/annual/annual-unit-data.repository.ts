@@ -127,6 +127,28 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     return results;
   }
 
+  async getEmissionsNationalAggregation(    
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualUnitDataView[]> {
+    let totalCount: number;
+    let results: AnnualUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = ['aud.year'], 
+          orderByColumns = ['aud.year'];
+
+    const query = this.buildAggregationQuery(params, selectColumns, orderByColumns);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      const countQuery = this.buildAggregationQuery(params, selectColumns, orderByColumns, true);
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
   getFacilityStreamQuery(params: AnnualApportionedEmissionsParamsDTO) {
     const columns = ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'];
     const orderByColumns = ['aud.facilityId', 'aud.year'];

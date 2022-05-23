@@ -38,6 +38,7 @@ import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from 'src/dto/annual-apportioned-emissions-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -173,4 +174,38 @@ export class AnnualApportionedEmissionsController {
   ): Promise<StreamableFile> {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
+
+  @Get('nationally')
+  @ApiOkResponse({
+    description:
+      'Retrieves Annual Apportioned Emissions data per filter criteria aggregated nationally',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ApiQueryAnnually()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
+  }
+
 }
