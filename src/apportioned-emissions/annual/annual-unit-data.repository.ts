@@ -127,6 +127,28 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     return results;
   }
 
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualUnitDataView[]> {
+    let totalCount: number;
+    let results: AnnualUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = ['aud.year'];
+    const orderByColumns = ['aud.year'];
+
+    const query = this.buildAggregationQuery(params, selectColumns, orderByColumns);
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      const countQuery = this.buildAggregationQuery(params, selectColumns, orderByColumns, true);
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
   getFacilityStreamQuery(params: AnnualApportionedEmissionsParamsDTO) {
     const columns = ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'];
     const orderByColumns = ['aud.facilityId', 'aud.year'];
@@ -154,12 +176,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
       );
 
       query
-      .addSelect('SUM(aud.grossLoad)', 'grossLoad')
-      .addSelect('SUM(aud.steamLoad)', 'steamLoad')
-      .addSelect('SUM(aud.so2Mass)', 'so2Mass')
-      .addSelect('SUM(aud.co2Mass)', 'co2Mass')
-      .addSelect('SUM(aud.noxMass)', 'noxMass')
-      .addSelect('SUM(aud.heatInput)', 'heatInput');
+        .addSelect('SUM(aud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(aud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(aud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(aud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(aud.noxMass)', 'noxMass')
+        .addSelect('SUM(aud.heatInput)', 'heatInput');
     }
 
     query = QueryBuilderHelper.createEmissionsQuery(

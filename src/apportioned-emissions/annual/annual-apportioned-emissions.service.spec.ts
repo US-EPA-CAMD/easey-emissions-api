@@ -91,7 +91,7 @@ describe('-- Annual Apportioned Emissions Service --', () => {
   describe('streamEmissions', () => {
     it('calls AnnualUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
       repository.getStreamQuery.mockResolvedValue('');
-      
+
       let filters = new AnnualApportionedEmissionsParamsDTO();
 
       req.headers.accept = '';
@@ -109,7 +109,7 @@ describe('-- Annual Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{year: 2019}]
+      const expected = [{ year: 2019 }]
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -133,6 +133,16 @@ describe('-- Annual Apportioned Emissions Service --', () => {
           disposition: `attachment; filename="annual-emissions-facility-aggregation-${0}.json"`,
         }),
       );
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls AnnualUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ year: 2019 }]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
+      expect(result).toEqual(expected);
     });
   });
 });

@@ -29,6 +29,7 @@ import {
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
@@ -37,7 +38,7 @@ export class AnnualApportionedEmissionsService {
     private readonly repository: AnnualUnitDataRepository,
     private readonly logger: Logger,
     private readonly streamService: StreamService,
-  ) {}
+  ) { }
 
   async getEmissions(
     req: Request,
@@ -93,8 +94,8 @@ export class AnnualApportionedEmissionsService {
     if (req.headers.accept === 'text/csv') {
       const fieldMappingsList = params.exclude
         ? fieldMappings.emissions.annual.data.aggregation.unit.filter(
-            item => !params.exclude.includes(item.value),
-          )
+          item => !params.exclude.includes(item.value),
+        )
         : fieldMappings.emissions.annual.data.aggregation.unit;
       const toCSV = new PlainToCSV(fieldMappingsList);
       return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
@@ -194,5 +195,37 @@ export class AnnualApportionedEmissionsService {
       console.log(e);
       return null;
     }
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        AnnualApportionedEmissionsAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
+    });
   }
 }

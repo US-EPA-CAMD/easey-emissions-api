@@ -38,14 +38,16 @@ import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
+@ApiExtraModels(AnnualApportionedEmissionsAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 export class AnnualApportionedEmissionsController {
-  constructor(private readonly service: AnnualApportionedEmissionsService) {}
+  constructor(private readonly service: AnnualApportionedEmissionsService) { }
 
   @Get()
   @ApiOkResponse({
@@ -173,4 +175,38 @@ export class AnnualApportionedEmissionsController {
   ): Promise<StreamableFile> {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
+
+  @Get('nationally')
+  @ApiOkResponse({
+    description:
+      'Retrieves Annual Apportioned Emissions data per filter criteria aggregated nationally',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ApiQueryAnnually()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
+  }
+
 }
