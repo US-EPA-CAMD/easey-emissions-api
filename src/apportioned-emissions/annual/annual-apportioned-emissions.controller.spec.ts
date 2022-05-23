@@ -91,4 +91,17 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
       ).toBe(expectedResult);
     });
   });
+
+  describe('* getEmissionsNationalAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: AnnualUnitDataView[] = [];
+      const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsNationalAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsNationalAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
 });
