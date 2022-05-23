@@ -15,6 +15,7 @@ const monthlyNationalAggregation = [];
 const quarterly = [];
 const annual = [];
 const annualFacilityAggregation = [];
+const annualStateAggregation = [];
 const annualNationalAggregation = [];
 const hourlyMats = [];
 const excludableHourlyEmissionsColumns = [];
@@ -80,7 +81,6 @@ const facilityAggregationData = [
   { ...propertyMetadata.facilityName.fieldLabels },
   { ...propertyMetadata.facilityId.fieldLabels },
 ];
-
 
 const hourlyAggregationData = [
   { ...propertyMetadata.date.fieldLabels },
@@ -209,10 +209,12 @@ annualFacilityAggregation.push(
   ...facilityAggregationData,
   ...annualAggregationData,
 );
+annualStateAggregation.push(
+  { ...propertyMetadata.stateCode.fieldLabels },
+  ...annualAggregationData,
+);
 
-annualNationalAggregation.push(
-  ...annualAggregationData
-)
+annualNationalAggregation.push(...annualAggregationData);
 
 hourlyMats.push(
   ...commonCharacteristics,
@@ -332,6 +334,7 @@ export const fieldMappings = {
         aggregation: {
           unit: annual,
           facility: annualFacilityAggregation,
+          state: annualStateAggregation,
           national: annualNationalAggregation,
         },
       },

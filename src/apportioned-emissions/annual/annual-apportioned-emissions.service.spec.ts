@@ -23,7 +23,6 @@ const mockRepository = () => ({
   getEmissionsFacilityAggregation: jest.fn(),
   getFacilityStreamQuery: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
-  getStateStreamQuery: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
   getNationalStreamQuery: jest.fn(),
 });
@@ -109,7 +108,7 @@ describe('-- Annual Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ year: 2019 }]
+      const expected = [{ year: 2019 }];
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -125,7 +124,10 @@ describe('-- Annual Apportioned Emissions Service --', () => {
 
       req.headers.accept = '';
 
-      let result = await service.streamEmissionsFacilityAggregation(req, filters);
+      let result = await service.streamEmissionsFacilityAggregation(
+        req,
+        filters,
+      );
 
       expect(result).toEqual(
         new StreamableFile(Buffer.from('stream'), {
@@ -136,9 +138,19 @@ describe('-- Annual Apportioned Emissions Service --', () => {
     });
   });
 
+  describe('getEmissionsStateAggregation', () => {
+    it('calls AnnualUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ year: 2019 }];
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe('getEmissionsNationalAggregation', () => {
     it('calls AnnualUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ year: 2019 }]
+      const expected = [{ year: 2019 }];
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);

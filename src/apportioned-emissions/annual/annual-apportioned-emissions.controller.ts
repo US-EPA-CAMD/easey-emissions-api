@@ -39,6 +39,7 @@ import {
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
+import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -46,8 +47,9 @@ import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-appor
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
 @ApiExtraModels(AnnualApportionedEmissionsAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
+@ApiExtraModels(AnnualApportionedEmissionsStateAggregationDTO)
 export class AnnualApportionedEmissionsController {
-  constructor(private readonly service: AnnualApportionedEmissionsService) { }
+  constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -176,6 +178,39 @@ export class AnnualApportionedEmissionsController {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 
+  @Get('by-state')
+  @ApiOkResponse({
+    description:
+      'Retrieves Annual Apportioned Emissions data per filter criteria aggregated by state',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(AnnualApportionedEmissionsStateAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.state
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ApiQueryAnnually()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsStateAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
+    return this.service.getEmissionsStateAggregation(req, params);
+  }
+
   @Get('nationally')
   @ApiOkResponse({
     description:
@@ -208,5 +243,4 @@ export class AnnualApportionedEmissionsController {
   ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
     return this.service.getEmissionsNationalAggregation(req, params);
   }
-
 }
