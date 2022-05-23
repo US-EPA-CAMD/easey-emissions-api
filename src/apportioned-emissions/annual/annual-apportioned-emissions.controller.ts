@@ -25,6 +25,7 @@ import {
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ExcludeQuery,
+  ApiQueryAnnually,
 } from '../../utils/swagger-decorator.const';
 
 import { fieldMappings } from '../../constants/field-mappings';
@@ -108,16 +109,14 @@ export class AnnualApportionedEmissionsController {
     return this.service.streamEmissions(req, params);
   }
 
-  @Get('facility')
+  @Get('by-facility')
   @ApiOkResponse({
     description:
-      'Retrieves Annual Apportioned Emissions Facility Aggregation data per filter criteria',
+      'Retrieves Annual Apportioned Emissions data per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            AnnualApportionedEmissionsFacilityAggregationDTO,
-          ),
+          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
         },
       },
       'text/csv': {
@@ -134,6 +133,7 @@ export class AnnualApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryAnnually()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissionsFacilityAggregation(
     @Req() req: Request,
@@ -142,16 +142,14 @@ export class AnnualApportionedEmissionsController {
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
-  @Get('facility/stream')
+  @Get('by-facility/stream')
   @ApiOkResponse({
     description:
-      'Streams Annual Apportioned Emissions Facility Aggregation data per filter criteria',
+      'Streams Annual Apportioned Emissions data per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            AnnualApportionedEmissionsFacilityAggregationDTO,
-          ),
+          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
         },
       },
       'text/csv': {
@@ -168,6 +166,7 @@ export class AnnualApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiQueryAnnually()
   streamEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: AnnualApportionedEmissionsParamsDTO,

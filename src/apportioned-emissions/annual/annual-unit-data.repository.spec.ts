@@ -35,6 +35,7 @@ const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
   getRawMany: jest.fn(),
+  getRawOne: jest.fn(),
   getManyAndCount: jest.fn(),
   select: jest.fn(),
   addSelect: jest.fn(),
@@ -119,6 +120,7 @@ describe('AnnualUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
+    queryBuilder.getRawOne.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
     queryBuilder.stream.mockReturnValue('mockEmissions');
 

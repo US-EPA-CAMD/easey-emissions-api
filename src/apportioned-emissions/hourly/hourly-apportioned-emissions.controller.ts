@@ -144,10 +144,10 @@ export class HourlyApportionedEmissionsController {
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
-  @Get('facility/stream')
+  @Get('by-facility/stream')
   @ApiOkResponse({
     description:
-      'Streams Hourly Apportioned Emissions Facility Aggregation data per filter criteria',
+      'Streams Hourly Apportioned Emissions data per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
@@ -175,10 +175,10 @@ export class HourlyApportionedEmissionsController {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 
-  @Get('state')
+  @Get('by-state')
   @ApiOkResponse({
     description:
-      'Retrieves Hourly Apportioned Emissions State Aggregation data per filter criteria',
+      'Retrieves Hourly Apportioned Emissions data per filter criteria aggregated by state',
     content: {
       'application/json': {
         schema: {
@@ -207,10 +207,10 @@ export class HourlyApportionedEmissionsController {
     return this.service.getEmissionsStateAggregation(req, params);
   }
 
-  @Get('state/stream')
+  @Get('by-state/stream')
   @ApiOkResponse({
     description:
-      'Streams Hourly Apportioned Emissions State Aggregation data per filter criteria',
+      'Streams Hourly Apportioned Emissions data per filter criteria aggregated by state',
     content: {
       'application/json': {
         schema: {
@@ -238,10 +238,10 @@ export class HourlyApportionedEmissionsController {
     return this.service.streamEmissionsStateAggregation(req, params);
   }
 
-  @Get('national')
+  @Get('nationally')
   @ApiOkResponse({
     description:
-      'Retrieves Hourly Apportioned Emissions National Aggregation data per filter criteria',
+      'Retrieves Hourly Apportioned Emissions data per filter criteria aggregated nationally',
     content: {
       'application/json': {
         schema: {
@@ -270,10 +270,10 @@ export class HourlyApportionedEmissionsController {
     return this.service.getEmissionsNationalAggregation(req, params);
   }
 
-  @Get('national/stream')
+  @Get('nationally/stream')
   @ApiOkResponse({
     description:
-      'Streams Hourly Apportioned Emissions National Aggregation data per filter criteria',
+      'Streams Hourly Apportioned Emissions data per filter criteria aggregated nationally',
     content: {
       'application/json': {
         schema: {
