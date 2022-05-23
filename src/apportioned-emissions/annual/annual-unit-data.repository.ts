@@ -112,50 +112,55 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     let totalCount: number;
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildFacilityAggregationQuery(params);
+
+    const selectColumns = ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'];
+    const orderByColumns = ['aud.facilityId', 'aud.year'];
+
+    const query = this.buildAggregationQuery(params, selectColumns, orderByColumns);
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(params, selectColumns, orderByColumns, true);
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
   }
 
   getFacilityStreamQuery(params: AnnualApportionedEmissionsParamsDTO) {
-    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
+    const columns = ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'];
+    const orderByColumns = ['aud.facilityId', 'aud.year'];
+
+    return this.buildAggregationQuery(params, columns, orderByColumns).getQueryAndParameters();
   }
 
-  buildFacilityAggregationQuery(
-    params: AnnualApportionedEmissionsParamsDTO,
+  buildAggregationQuery(
+    params,
+    selectColumns: string[],
+    orderByColumns: string[],
+    countQuery: boolean = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
-    let query = this.createQueryBuilder('aud').select(
-      ['aud.stateCode', 'aud.facilityName', 'aud.facilityId', 'aud.year'].map(
-        col => {
-          return `${col} AS "${col.split('.')[1]}"`;
-        },
-      ),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query
-      .addGroupBy('aud.stateCode')
-      .addGroupBy('aud.facilityName')
-      .addGroupBy('aud.facilityId')
-      .addGroupBy('aud.year');
+    let query = null;
 
-    query.orderBy('aud.facilityId').addOrderBy('aud.year');
+    if (countQuery) {
+      query = this.createQueryBuilder('aud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('aud').select(
+        selectColumns.map(
+          col => {
+            return `${col} AS "${col.split('.')[1]}"`;
+          },
+        ),
+      );
 
-    return query;
-  }
-
-  buildAggregationQuery(query, params): SelectQueryBuilder<AnnualUnitDataView> {
-    query
+      query
       .addSelect('SUM(aud.grossLoad)', 'grossLoad')
       .addSelect('SUM(aud.steamLoad)', 'steamLoad')
       .addSelect('SUM(aud.so2Mass)', 'so2Mass')
       .addSelect('SUM(aud.co2Mass)', 'co2Mass')
       .addSelect('SUM(aud.noxMass)', 'noxMass')
       .addSelect('SUM(aud.heatInput)', 'heatInput');
+    }
 
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
@@ -171,6 +176,9 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
       ],
       'aud',
     );
+
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c))
 
     return query;
   }

@@ -112,10 +112,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.streamEmissions(req, params);
   }
 
-  @Get('facility')
+  @Get('by-facility')
   @ApiOkResponse({
     description:
-      'Retrieves Monthly Apportioned Emissions Facility Aggregation data per filter criteria',
+      'Retrieves Monthly Apportioned Emissions data per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
@@ -147,10 +147,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
-  @Get('facility/stream')
+  @Get('by-facility/stream')
   @ApiOkResponse({
     description:
-      'Streams Monthly Apportioned Emissions Facility Aggregation data per filter criteria',
+      'Streams Monthly Apportioned Emissions data per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
@@ -181,10 +181,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.streamEmissionsFacilityAggregation(req, params);
   }
 
-  @Get('state')
+  @Get('by-state')
   @ApiOkResponse({
     description:
-      'Retrieves Monthly Apportioned Emissions State Aggregation data per filter criteria',
+      'Retrieves Monthly Apportioned Emissions data per filter criteria aggregated by state',
     content: {
       'application/json': {
         schema: {
@@ -214,10 +214,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.getEmissionsStateAggregation(req, params);
   }
 
-  @Get('state/stream')
+  @Get('by-state/stream')
   @ApiOkResponse({
     description:
-      'Streams Monthly Apportioned Emissions State Aggregation data per filter criteria',
+      'Streams Monthly Apportioned Emissions data per filter criteria aggregated by state',
     content: {
       'application/json': {
         schema: {
@@ -246,10 +246,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.streamEmissionsStateAggregation(req, params);
   }
 
-  @Get('national')
+  @Get('nationally')
   @ApiOkResponse({
     description:
-      'Retrieves Monthly Apportioned Emissions National Aggregation data per filter criteria',
+      'Retrieves Monthly Apportioned Emissions data per filter criteria aggregated nationally',
     content: {
       'application/json': {
         schema: {
@@ -281,10 +281,10 @@ export class MonthlyApportionedEmissionsController {
     return this.service.getEmissionsNationalAggregation(req, params);
   }
 
-  @Get('national/stream')
+  @Get('nationally/stream')
   @ApiOkResponse({
     description:
-      'Streams Monthly Apportioned Emissions National Aggregation data per filter criteria',
+      'Streams Monthly Apportioned Emissions data per filter criteria aggregated nationally',
     content: {
       'application/json': {
         schema: {
