@@ -43,7 +43,6 @@ import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-appor
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
-@ApiExtraModels(AnnualApportionedEmissionsDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 export class AnnualApportionedEmissionsController {
   constructor(private readonly service: AnnualApportionedEmissionsService) { }
@@ -188,7 +187,7 @@ export class AnnualApportionedEmissionsController {
       'text/csv': {
         schema: {
           type: 'string',
-          example: fieldMappings.emissions.annual.data.aggregation.facility
+          example: fieldMappings.emissions.annual.data.aggregation.national
             .map(i => i.label)
             .join(','),
         },
