@@ -147,4 +147,14 @@ describe('-- Annual Apportioned Emissions Service --', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls AnnualUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ year: 2019 }];
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
 });

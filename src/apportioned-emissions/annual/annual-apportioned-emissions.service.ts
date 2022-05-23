@@ -29,6 +29,7 @@ import {
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
 
 @Injectable()
@@ -143,35 +144,6 @@ export class AnnualApportionedEmissionsService {
     });
   }
 
-  async getEmissionsStateAggregation(
-    req: Request,
-    params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
-    let query;
-
-    try {
-      query = await this.repository.getEmissionsStateAggregation(req, params);
-    } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
-    }
-
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.state),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        AnnualApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
-      return dto;
-    });
-  }
-
   async streamEmissionsFacilityAggregation(
     req: Request,
     params: AnnualApportionedEmissionsParamsDTO,
@@ -224,5 +196,62 @@ export class AnnualApportionedEmissionsService {
       console.log(e);
       return null;
     }
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsStateAggregation(req, params);
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.state),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        AnnualApportionedEmissionsStateAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
+    });
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(AnnualApportionedEmissionsAggregationDTO, item, {
+        enableImplicitConversion: true,
+      });
+      return dto;
+    });
   }
 }

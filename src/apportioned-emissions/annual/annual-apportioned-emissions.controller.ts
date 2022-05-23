@@ -38,12 +38,14 @@ import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
 @ApiExtraModels(AnnualApportionedEmissionsDTO)
+@ApiExtraModels(AnnualApportionedEmissionsAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsStateAggregationDTO)
 export class AnnualApportionedEmissionsController {
@@ -207,5 +209,38 @@ export class AnnualApportionedEmissionsController {
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
     return this.service.getEmissionsStateAggregation(req, params);
+  }
+
+  @Get('nationally')
+  @ApiOkResponse({
+    description:
+      'Retrieves Annual Apportioned Emissions data per filter criteria aggregated nationally',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.annual.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ApiQueryAnnually()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
   }
 }
