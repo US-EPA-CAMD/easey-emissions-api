@@ -31,6 +31,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { HourUnitDataView } from './../../entities/vw-hour-unit-data.entity';
 import { HourlyApportionedEmissionsDTO } from '../../dto/hourly-apportioned-emissions.dto';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
+
 import {
   PaginatedHourlyApportionedEmissionsParamsDTO,
   StreamHourlyApportionedEmissionsParamsDTO,

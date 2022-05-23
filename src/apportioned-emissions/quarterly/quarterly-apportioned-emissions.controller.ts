@@ -32,6 +32,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
+
 import {
   PaginatedQuarterlyApportionedEmissionsParamsDTO,
   StreamQuarterlyApportionedEmissionsParamsDTO,
@@ -70,7 +71,7 @@ export class QuarterlyApportionedEmissionsController {
   @ApiQueryQuarterly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterUnitDataView[]> {
@@ -102,7 +103,7 @@ export class QuarterlyApportionedEmissionsController {
   @ApiQueryQuarterly()
   @ApiProgramQuery()
   @ExcludeQuery()
-  streamEmissions(
+  async streamEmissions(
     @Req() req: Request,
     @Query() params: StreamQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {

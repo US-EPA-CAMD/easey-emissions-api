@@ -3,36 +3,35 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import {
   Injectable,
   StreamableFile,
   InternalServerErrorException,
 } from '@nestjs/common';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
-import { StreamService } from '@us-epa-camd/easey-common/stream';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { StreamingService } from '../../streaming/streaming.service';
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
+
 import {
   PaginatedOzoneApportionedEmissionsParamsDTO,
   StreamOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
-import { ReadStream } from 'fs';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OzoneApportionedEmissionsService {
   constructor(
+    private readonly logger: Logger,
+    private readonly streamService: StreamingService,
     @InjectRepository(OzoneUnitDataRepository)
     private readonly repository: OzoneUnitDataRepository,
-    private readonly logger: Logger,
-    private readonly streamService: StreamService,
-    private readonly configService: ConfigService,
   ) {}
 
   async getEmissions(
@@ -42,7 +41,11 @@ export class OzoneApportionedEmissionsService {
     let entities: OzoneUnitDataView[];
 
     try {
-      entities = await this.repository.getEmissions(req, params);
+      entities = await this.repository.getEmissions(
+        req,
+        fieldMappings.emissions.ozone,
+        params
+      );
     } catch (e) {
       this.logger.error(InternalServerErrorException, e.message);
     }
@@ -59,19 +62,15 @@ export class OzoneApportionedEmissionsService {
     req: Request,
     params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const query = this.repository.getStreamQuery(params);
-    let stream: ReadStream = await this.streamService.getStream(query);
+    const disposition = `attachment; filename="ozone-emissions-${uuid()}`;
 
-    req.on('close', () => {
-      stream.emit('end');
-    });
+    const fieldMappingsList = params.exclude
+      ? fieldMappings.emissions.ozone.filter(
+          item => !params.exclude.includes(item.value),
+        )
+      : fieldMappings.emissions.ozone;
 
-    req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.ozone),
-    );
-
-    const toDto = new Transform({
+    const json2Dto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
         data = exclude(data, params, ExcludeApportionedEmissions);
@@ -82,31 +81,15 @@ export class OzoneApportionedEmissionsService {
       },
     });
 
-    if (req.headers.accept === 'text/csv') {
-      const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.ozone.filter(
-            item => !params.exclude.includes(item.value),
-          )
-        : fieldMappings.emissions.ozone;
+    const [sql, values] = await this.repository.getQuery(fieldMappingsList, params);
 
-      const toCSV = new PlainToCSV(
-        fieldMappingsList,
-        this.configService.get<number>('app.streamDelay'),
-        this.configService.get<number>('app.streamBufferSize'),
-      );
-      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="ozone-emissions-${uuid()}.csv"`,
-      });
-    }
-
-    const objToString = new PlainToJSON(
-      this.configService.get<number>('app.streamDelay'),
-      this.configService.get<number>('app.streamBufferSize'),
+    return this.streamService.getStream(
+      req,
+      sql,
+      values,
+      json2Dto,
+      disposition,
+      fieldMappingsList,
     );
-    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
-      type: req.headers.accept,
-      disposition: `attachment; filename="ozone-emissions-${uuid()}.json"`,
-    });
   }
 }

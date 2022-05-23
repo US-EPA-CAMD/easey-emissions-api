@@ -41,7 +41,11 @@ export class HourlyApportionedEmissionsService {
     let entities: HourUnitDataView[];
 
     try {
-      entities = await this.repository.getEmissions(req, params);
+      entities = await this.repository.getEmissions(
+        req,
+        fieldMappings.emissions.hourly,
+        params
+      );
     } catch (e) {
       this.logger.error(InternalServerErrorException, e.message);
     }
@@ -54,14 +58,14 @@ export class HourlyApportionedEmissionsService {
     return entities;
   }
 
-  streamEmissions(
+  async streamEmissions(
     req: Request,
     params: StreamHourlyApportionedEmissionsParamsDTO,
-  ): StreamableFile {
+  ): Promise<StreamableFile> {
     const disposition = `attachment; filename="hourly-emissions-${uuid()}`;
 
     const fieldMappingsList = params.exclude
-      ? fieldMappings.emissions.annual.filter(
+      ? fieldMappings.emissions.hourly.filter(
           item => !params.exclude.includes(item.value),
         )
       : fieldMappings.emissions.hourly;
@@ -79,9 +83,12 @@ export class HourlyApportionedEmissionsService {
       },
     });
 
+    const [sql, values] = await this.repository.getQuery(fieldMappingsList, params);
+
     return this.streamService.getStream(
       req,
-      ...this.repository.getQuery(params),
+      sql,
+      values,
       json2Dto,
       disposition,
       fieldMappingsList,

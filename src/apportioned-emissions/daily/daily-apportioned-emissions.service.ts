@@ -3,36 +3,35 @@ import { v4 as uuid } from 'uuid';
 import { Transform } from 'stream';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import {
   Injectable,
   StreamableFile,
   InternalServerErrorException,
 } from '@nestjs/common';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
-import { StreamService } from '@us-epa-camd/easey-common/stream';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { StreamingService } from '../../streaming/streaming.service';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
+
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
-import { ReadStream } from 'fs';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DailyApportionedEmissionsService {
   constructor(
+    private readonly logger: Logger,
+    private readonly streamService: StreamingService,
     @InjectRepository(DayUnitDataRepository)
     private readonly repository: DayUnitDataRepository,
-    private readonly logger: Logger,
-    private readonly streamService: StreamService,
-    private readonly configService: ConfigService,
   ) {}
 
   async getEmissions(
@@ -42,7 +41,11 @@ export class DailyApportionedEmissionsService {
     let entities: DayUnitDataView[];
 
     try {
-      entities = await this.repository.getEmissions(req, params);
+      entities = await this.repository.getEmissions(
+        req,
+        fieldMappings.emissions.daily,
+        params
+      );
     } catch (e) {
       this.logger.error(InternalServerErrorException, e.message);
     }
@@ -59,19 +62,15 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const query = this.repository.getStreamQuery(params);
-    let stream: ReadStream = await this.streamService.getStream(query);
+    const disposition = `attachment; filename="daily-emissions-${uuid()}`;
 
-    req.on('close', () => {
-      stream.emit('end');
-    });
+    const fieldMappingsList = params.exclude
+      ? fieldMappings.emissions.daily.filter(
+          item => !params.exclude.includes(item.value),
+        )
+      : fieldMappings.emissions.daily;
 
-    req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.daily),
-    );
-
-    const toDto = new Transform({
+    const json2Dto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
         data = exclude(data, params, ExcludeApportionedEmissions);
@@ -84,30 +83,15 @@ export class DailyApportionedEmissionsService {
       },
     });
 
-    if (req.headers.accept === 'text/csv') {
-      const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.daily.filter(
-            item => !params.exclude.includes(item.value),
-          )
-        : fieldMappings.emissions.daily;
-      const toCSV = new PlainToCSV(
-        fieldMappingsList,
-        this.configService.get<number>('app.streamDelay'),
-        this.configService.get<number>('app.streamBufferSize'),
-      );
-      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="daily-emissions-${uuid()}.csv"`,
-      });
-    }
+    const [sql, values] = await this.repository.getQuery(fieldMappingsList, params);
 
-    const objToString = new PlainToJSON(
-      this.configService.get<number>('app.streamDelay'),
-      this.configService.get<number>('app.streamBufferSize'),
+    return this.streamService.getStream(
+      req,
+      sql,
+      values,
+      json2Dto,
+      disposition,
+      fieldMappingsList,
     );
-    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
-      type: req.headers.accept,
-      disposition: `attachment; filename="daily-emissions-${uuid()}.json"`,
-    });
   }
 }

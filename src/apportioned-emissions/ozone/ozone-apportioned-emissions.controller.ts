@@ -32,6 +32,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from './../../entities/vw-ozone-unit-data.entity';
 import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
+
 import {
   PaginatedOzoneApportionedEmissionsParamsDTO,
   StreamOzoneApportionedEmissionsParamsDTO,
@@ -67,7 +68,7 @@ export class OzoneApportionedEmissionsController {
   @ApiQueryAnnually()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneUnitDataView[]> {
@@ -97,7 +98,7 @@ export class OzoneApportionedEmissionsController {
   @ApiQueryAnnually()
   @ApiProgramQuery()
   @ExcludeQuery()
-  streamEmissions(
+  async streamEmissions(
     @Req() req: Request,
     @Query() params: StreamOzoneApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {

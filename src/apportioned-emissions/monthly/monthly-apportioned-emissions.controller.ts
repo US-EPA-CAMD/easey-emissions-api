@@ -27,10 +27,12 @@ import {
   ExcludeQuery,
   ApiQueryMonthly,
 } from '../../utils/swagger-decorator.const';
+
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
 import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
+
 import {
   PaginatedMonthlyApportionedEmissionsParamsDTO,
   StreamMonthlyApportionedEmissionsParamsDTO,
@@ -66,7 +68,7 @@ export class MonthlyApportionedEmissionsController {
   @ApiQueryMonthly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
@@ -96,7 +98,7 @@ export class MonthlyApportionedEmissionsController {
   @ApiQueryMonthly()
   @ApiProgramQuery()
   @ExcludeQuery()
-  streamEmissions(
+  async streamEmissions(
     @Req() req: Request,
     @Query() params: StreamMonthlyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {

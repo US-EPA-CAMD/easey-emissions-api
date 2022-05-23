@@ -13,18 +13,22 @@ import {
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
 
-  getQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+  async getQuery(
+    columns: any[],
+    params: StreamHourlyApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitDataView[]> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,56 +40,15 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'hud.stateCode',
-      'hud.facilityName',
-      'hud.facilityId',
-      'hud.unitId',
-      'hud.associatedStacks',
-      'hud.date',
-      'hud.hour',
-      'hud.opTime',
-      'hud.grossLoad',
-      'hud.steamLoad',
-      'hud.so2Mass',
-      'hud.so2MassMeasureFlg',
-      'hud.so2Rate',
-      'hud.so2RateMeasureFlg',
-      'hud.co2Mass',
-      'hud.co2MassMeasureFlg',
-      'hud.co2Rate',
-      'hud.co2RateMeasureFlg',
-      'hud.noxMass',
-      'hud.noxMassMeasureFlg',
-      'hud.noxRate',
-      'hud.noxRateMeasureFlg',
-      'hud.heatInput',
-      'hud.primaryFuelInfo',
-      'hud.secondaryFuelInfo',
-      'hud.unitType',
-      'hud.so2ControlInfo',
-      'hud.pmControlInfo',
-      'hud.noxControlInfo',
-      'hud.hgControlInfo',
-      'hud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
   buildQuery(
+    columns: any[],
     params: HourlyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `hud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `hud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

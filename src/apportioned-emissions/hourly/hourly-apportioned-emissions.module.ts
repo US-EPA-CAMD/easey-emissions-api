@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
 
 import { StreamingService } from './../../streaming/streaming.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
@@ -11,7 +10,6 @@ import { HourlyApportionedEmissionsController } from './hourly-apportioned-emiss
 @Module({
   imports: [
     TypeOrmModule.forFeature([HourUnitDataRepository]),
-    HttpModule,
   ],
   controllers: [HourlyApportionedEmissionsController],
   providers: [

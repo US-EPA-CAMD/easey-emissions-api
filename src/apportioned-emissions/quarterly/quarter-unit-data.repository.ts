@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,18 +12,23 @@ import {
 
 @EntityRepository(QuarterUnitDataView)
 export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
-  getStreamQuery(params: StreamQuarterlyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+  
+  async getQuery(
+    columns: any[],
+    params: StreamQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterUnitDataView[]> {
     let totalCount: number;
     let results: QuarterUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,51 +40,15 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'qud.stateCode',
-      'qud.facilityName',
-      'qud.facilityId',
-      'qud.unitId',
-      'qud.associatedStacks',
-      'qud.year',
-      'qud.quarter',
-      'qud.sumOpTime',
-      'qud.countOpTime',
-      'qud.grossLoad',
-      'qud.steamLoad',
-      'qud.so2Mass',
-      'qud.so2Rate',
-      'qud.co2Mass',
-      'qud.co2Rate',
-      'qud.noxMass',
-      'qud.noxRate',
-      'qud.heatInput',
-      'qud.primaryFuelInfo',
-      'qud.secondaryFuelInfo',
-      'qud.unitType',
-      'qud.so2ControlInfo',
-      'qud.pmControlInfo',
-      'qud.noxControlInfo',
-      'qud.hgControlInfo',
-      'qud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  private buildQuery(
+  buildQuery(
+    columns: any[],
     params: QuarterlyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<QuarterUnitDataView> {
     let query = this.createQueryBuilder('qud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `qud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `qud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

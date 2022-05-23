@@ -1,7 +1,5 @@
 import { Request } from 'express';
 
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
-
 import {
   Get,
   Req,
@@ -28,10 +26,13 @@ import {
   ApiQueryAnnually,
 } from '../../utils/swagger-decorator.const';
 
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+
 import { fieldMappings } from '../../constants/field-mappings';
 import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
+
 import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
@@ -67,7 +68,7 @@ export class AnnualApportionedEmissionsController {
   @ApiQueryAnnually()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
@@ -97,7 +98,7 @@ export class AnnualApportionedEmissionsController {
   @ApiQueryAnnually()
   @ApiProgramQuery()
   @ExcludeQuery()
-  streamEmissions(
+  async streamEmissions(
     @Req() req: Request,
     @Query() params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {

@@ -8,31 +8,29 @@ import {
   StreamableFile,
   InternalServerErrorException,
 } from '@nestjs/common';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { StreamService } from '@us-epa-camd/easey-common/stream';
-import { PlainToCSV, PlainToJSON } from '@us-epa-camd/easey-common/transforms';
 import { exclude } from '@us-epa-camd/easey-common/utilities';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../../constants/field-mappings';
+import { StreamingService } from '../../streaming/streaming.service';
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
+
 import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
-import { ReadStream } from 'fs';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
   constructor(
+    private readonly logger: Logger,
+    private readonly streamService: StreamingService,
     @InjectRepository(AnnualUnitDataRepository)
     private readonly repository: AnnualUnitDataRepository,
-    private readonly logger: Logger,
-    private readonly streamService: StreamService,
-    private readonly configService: ConfigService,
   ) {}
 
   async getEmissions(
@@ -42,7 +40,11 @@ export class AnnualApportionedEmissionsService {
     let entities: AnnualUnitDataView[];
 
     try {
-      entities = await this.repository.getEmissions(req, params);
+      entities = await this.repository.getEmissions(
+        req,
+        fieldMappings.emissions.annual,
+        params
+      );
     } catch (e) {
       this.logger.error(InternalServerErrorException, e.message);
     }
@@ -59,19 +61,15 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: StreamAnnualApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {
-    const query = this.repository.getStreamQuery(params);
-    let stream: ReadStream = await this.streamService.getStream(query);
+    const disposition = `attachment; filename="annual-emissions-${uuid()}`;
 
-    req.on('close', () => {
-      stream.emit('end');
-    });
+    const fieldMappingsList = params.exclude
+      ? fieldMappings.emissions.annual.filter(
+          item => !params.exclude.includes(item.value),
+        )
+      : fieldMappings.emissions.annual;
 
-    req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.annual),
-    );
-
-    const toDto = new Transform({
+    const json2Dto = new Transform({
       objectMode: true,
       transform(data, _enc, callback) {
         data = exclude(data, params, ExcludeApportionedEmissions);
@@ -82,30 +80,15 @@ export class AnnualApportionedEmissionsService {
       },
     });
 
-    if (req.headers.accept === 'text/csv') {
-      const fieldMappingsList = params.exclude
-        ? fieldMappings.emissions.annual.filter(
-            item => !params.exclude.includes(item.value),
-          )
-        : fieldMappings.emissions.annual;
-      const toCSV = new PlainToCSV(
-        fieldMappingsList,
-        this.configService.get<number>('app.streamDelay'),
-        this.configService.get<number>('app.streamBufferSize'),
-      );
-      return new StreamableFile(stream.pipe(toDto).pipe(toCSV), {
-        type: req.headers.accept,
-        disposition: `attachment; filename="annual-emissions-${uuid()}.csv"`,
-      });
-    }
+    const [sql, values] = await this.repository.getQuery(fieldMappingsList, params);
 
-    const objToString = new PlainToJSON(
-      this.configService.get<number>('app.streamDelay'),
-      this.configService.get<number>('app.streamBufferSize'),
+    return this.streamService.getStream(
+      req,
+      sql,
+      values,
+      json2Dto,
+      disposition,
+      fieldMappingsList,
     );
-    return new StreamableFile(stream.pipe(toDto).pipe(objToString), {
-      type: req.headers.accept,
-      disposition: `attachment; filename="annual-emissions-${uuid()}.json"`,
-    });
   }
 }

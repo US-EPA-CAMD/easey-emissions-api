@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,18 +12,23 @@ import {
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
-  getStreamQuery(params: StreamDailyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+
+  async getQuery(
+    columns: any[],
+    params: StreamDailyApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,50 +40,15 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'dud.stateCode',
-      'dud.facilityName',
-      'dud.facilityId',
-      'dud.unitId',
-      'dud.associatedStacks',
-      'dud.date',
-      'dud.sumOpTime',
-      'dud.countOpTime',
-      'dud.grossLoad',
-      'dud.steamLoad',
-      'dud.so2Mass',
-      'dud.so2Rate',
-      'dud.co2Mass',
-      'dud.co2Rate',
-      'dud.noxMass',
-      'dud.noxRate',
-      'dud.heatInput',
-      'dud.primaryFuelInfo',
-      'dud.secondaryFuelInfo',
-      'dud.unitType',
-      'dud.so2ControlInfo',
-      'dud.pmControlInfo',
-      'dud.noxControlInfo',
-      'dud.hgControlInfo',
-      'dud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  private buildQuery(
+  buildQuery(
+    columns: any[],
     params: DailyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `dud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `dud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

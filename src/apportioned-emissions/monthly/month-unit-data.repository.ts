@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,18 +12,23 @@ import {
 
 @EntityRepository(MonthUnitDataView)
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
-  getStreamQuery(params: StreamMonthlyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+  
+  async getQuery(
+    columns: any[],
+    params: StreamMonthlyApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
     let totalCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,51 +40,15 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'mud.stateCode',
-      'mud.facilityName',
-      'mud.facilityId',
-      'mud.unitId',
-      'mud.associatedStacks',
-      'mud.year',
-      'mud.month',
-      'mud.sumOpTime',
-      'mud.countOpTime',
-      'mud.grossLoad',
-      'mud.steamLoad',
-      'mud.so2Mass',
-      'mud.so2Rate',
-      'mud.co2Mass',
-      'mud.co2Rate',
-      'mud.noxMass',
-      'mud.noxRate',
-      'mud.heatInput',
-      'mud.primaryFuelInfo',
-      'mud.secondaryFuelInfo',
-      'mud.unitType',
-      'mud.so2ControlInfo',
-      'mud.pmControlInfo',
-      'mud.noxControlInfo',
-      'mud.hgControlInfo',
-      'mud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  private buildQuery(
+  buildQuery(
+    columns: any[],
     params: MonthlyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `mud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `mud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

@@ -31,6 +31,7 @@ import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
 import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
+
 import {
   PaginatedDailyApportionedEmissionsParamsDTO,
   StreamDailyApportionedEmissionsParamsDTO,
@@ -65,7 +66,7 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
@@ -94,7 +95,7 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @ExcludeQuery()
-  streamEmissions(
+  async streamEmissions(
     @Req() req: Request,
     @Query() params: StreamDailyApportionedEmissionsParamsDTO,
   ): Promise<StreamableFile> {

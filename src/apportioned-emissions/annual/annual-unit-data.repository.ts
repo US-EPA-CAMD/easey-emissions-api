@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,18 +12,23 @@ import {
 
 @EntityRepository(AnnualUnitDataView)
 export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
-  getStreamQuery(params: StreamAnnualApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+  
+  async getQuery(
+    columns: any[],
+    params: StreamAnnualApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
     let totalCount: number;
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,50 +40,15 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'aud.stateCode',
-      'aud.facilityName',
-      'aud.facilityId',
-      'aud.unitId',
-      'aud.associatedStacks',
-      'aud.year',
-      'aud.sumOpTime',
-      'aud.countOpTime',
-      'aud.grossLoad',
-      'aud.steamLoad',
-      'aud.so2Mass',
-      'aud.so2Rate',
-      'aud.co2Mass',
-      'aud.co2Rate',
-      'aud.noxMass',
-      'aud.noxRate',
-      'aud.heatInput',
-      'aud.primaryFuelInfo',
-      'aud.secondaryFuelInfo',
-      'aud.unitType',
-      'aud.so2ControlInfo',
-      'aud.pmControlInfo',
-      'aud.noxControlInfo',
-      'aud.hgControlInfo',
-      'aud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  private buildQuery(
+  buildQuery(
+    columns: any[],
     params: AnnualApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `aud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `aud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

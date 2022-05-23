@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
@@ -13,18 +12,23 @@ import {
 
 @EntityRepository(OzoneUnitDataView)
 export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
-  getStreamQuery(params: StreamOzoneApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
+  
+  async getQuery(
+    columns: any[],
+    params: StreamOzoneApportionedEmissionsParamsDTO,
+  ): Promise<[string, any[]]> {
+    return this.buildQuery(columns, params, true).getQueryAndParameters();
   }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneUnitDataView[]> {
     let totalCount: number;
     let results: OzoneUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -36,50 +40,15 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'oud.stateCode',
-      'oud.facilityName',
-      'oud.facilityId',
-      'oud.unitId',
-      'oud.associatedStacks',
-      'oud.year',
-      'oud.sumOpTime',
-      'oud.countOpTime',
-      'oud.grossLoad',
-      'oud.steamLoad',
-      'oud.so2Mass',
-      'oud.so2Rate',
-      'oud.co2Mass',
-      'oud.co2Rate',
-      'oud.noxMass',
-      'oud.noxRate',
-      'oud.heatInput',
-      'oud.primaryFuelInfo',
-      'oud.secondaryFuelInfo',
-      'oud.unitType',
-      'oud.so2ControlInfo',
-      'oud.pmControlInfo',
-      'oud.noxControlInfo',
-      'oud.hgControlInfo',
-      'oud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  private buildQuery(
+  buildQuery(
+    columns: any[],
     params: OzoneApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<OzoneUnitDataView> {
     let query = this.createQueryBuilder('oud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `oud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `oud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
