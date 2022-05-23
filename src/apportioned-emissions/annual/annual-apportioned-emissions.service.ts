@@ -29,6 +29,7 @@ import {
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
+import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
@@ -133,6 +134,35 @@ export class AnnualApportionedEmissionsService {
     return query.map(item => {
       const dto = plainToClass(
         AnnualApportionedEmissionsFacilityAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
+    });
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedAnnualApportionedEmissionsParamsDTO,
+  ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsStateAggregation(req, params);
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.state),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        AnnualApportionedEmissionsStateAggregationDTO,
         item,
         {
           enableImplicitConversion: true,
