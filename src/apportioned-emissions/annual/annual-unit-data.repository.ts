@@ -135,8 +135,8 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
 
-    const selectColumns = ['aud.year'],
-      orderByColumns = ['aud.year'];
+    const selectColumns = ['aud.year'];
+    const orderByColumns = ['aud.year'];
 
     const query = this.buildAggregationQuery(params, selectColumns, orderByColumns);
 
