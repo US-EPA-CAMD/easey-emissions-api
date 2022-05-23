@@ -38,7 +38,7 @@ import {
   PaginatedAnnualApportionedEmissionsParamsDTO,
   StreamAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
-import { AnnualApportionedEmissionsAggregationDTO } from 'src/dto/annual-apportioned-emissions-aggregation.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')

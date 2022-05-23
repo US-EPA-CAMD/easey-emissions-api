@@ -29,7 +29,7 @@ import {
 } from '../../dto/annual-apportioned-emissions.params.dto';
 import { ReadStream } from 'fs';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
-import { AnnualApportionedEmissionsAggregationDTO } from 'src/dto/annual-apportioned-emissions-aggregation.dto';
+import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
