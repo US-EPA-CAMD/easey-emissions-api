@@ -1,15 +1,12 @@
 import { Test } from '@nestjs/testing';
+
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+
 import { HourlyMatsApportionedEmissionsController } from './hourly-mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
-import {
-  HourlyMatsApportionedEmissionsParamsDTO,
-  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
-} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
-import { StreamableFile } from '@nestjs/common';
-import { StreamModule } from '@us-epa-camd/easey-common/stream';
+import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 
 const mockRequest = (url: string) => {
   return {
@@ -27,7 +24,7 @@ describe('-- Hourly MATS Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, StreamModule],
+      imports: [LoggerModule],
       controllers: [HourlyMatsApportionedEmissionsController],
       providers: [
         HourlyMatsApportionedEmissionsService,
@@ -56,14 +53,14 @@ describe('-- Hourly MATS Apportioned Emissions Controller --', () => {
     });
   });
 
-  describe('* streamEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult = new StreamableFile(Buffer.from('stream'));
-      const paramsDto = new HourlyMatsApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.streamEmissions(req, paramsDto)).toBe(
-        expectedResult,
-      );
-    });
-  });
+  // describe('* streamEmissions', () => {
+  //   it('should return test 1', async () => {
+  //     const expectedResult = new StreamableFile(Buffer.from('stream'));
+  //     const paramsDto = new HourlyMatsApportionedEmissionsParamsDTO();
+  //     jest.spyOn(service, 'streamEmissions').mockResolvedValue(expectedResult);
+  //     expect(await controller.streamEmissions(req, paramsDto)).toBe(
+  //       expectedResult,
+  //     );
+  //   });
+  // });
 });

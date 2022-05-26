@@ -1,18 +1,20 @@
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
 
+import { ProgramYearDimRepository } from './program-year-dim.repository';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-apportioned-emissions-attributes.dto';
-import { ProgramYearDimRepository } from './program-year-dim.repository';
 
 @Injectable()
 export class ApportionedEmissionsService {
+  
   constructor(
+    private readonly logger: Logger,
     @InjectRepository(ProgramYearDimRepository)
     private readonly programYearRepository: ProgramYearDimRepository,
-    private readonly logger: Logger,
   ) {}
 
   async getApplicableApportionedEmissionsAttributes(

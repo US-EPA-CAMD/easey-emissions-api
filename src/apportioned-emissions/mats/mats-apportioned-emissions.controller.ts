@@ -1,4 +1,5 @@
 import { Get, Query, Controller } from '@nestjs/common';
+
 import {
   ApiTags,
   ApiOkResponse,
@@ -19,7 +20,10 @@ import {
 @ApiTags('Apportioned MATS Emissions')
 @ApiExtraModels(ApplicableMatsApportionedEmissionsAttributesDTO)
 export class MatsApportionedEmissionsController {
-  constructor(private readonly service: MatsApportionedEmissionsService) {}
+  
+  constructor(
+    private readonly service: MatsApportionedEmissionsService
+  ) {}
 
   @Get('attributes/applicable')
   @ApiExtraModels(ApplicableMatsApportionedEmissionsAttributesDTO)

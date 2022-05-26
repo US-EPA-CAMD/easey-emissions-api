@@ -1,21 +1,21 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
+
 import {
   State,
   UnitType,
   UnitFuelType,
   ControlTechnology,
   Program,
-  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { AnnualUnitDataRepository } from './annual-unit-data.repository';
-import {
-  PaginatedAnnualApportionedEmissionsParamsDTO,
-  StreamAnnualApportionedEmissionsParamsDTO,
-} from '../../dto/annual-apportioned-emissions.params.dto';
+import { fieldMappings } from './../../constants/field-mappings';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
+import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
+
 jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
@@ -46,8 +46,7 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
-  stream: jest.fn(),
-  getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
+  getQueryAndParameters: jest.fn().mockReturnValue(''),
 });
 
 let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
@@ -63,25 +62,6 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
-
-let streamFilters = new StreamAnnualApportionedEmissionsParamsDTO();
-streamFilters.year = [2019];
-streamFilters.stateCode = [State.TX];
-streamFilters.facilityId = [3];
-streamFilters.unitType = [
-  UnitType.BUBBLING_FLUIDIZED,
-  UnitType.ARCH_FIRE_BOILER,
-];
-streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
-streamFilters.controlTechnologies = [
-  ControlTechnology.ADDITIVES_TO_ENHANCE,
-  ControlTechnology.OTHER,
-];
-streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
-streamFilters.exclude = [
-  ExcludeApportionedEmissions.CO2_RATE,
-  ExcludeApportionedEmissions.COUNT_OP_TIME,
-];
 
 describe('AnnualUnitDataRepository', () => {
   let repository: AnnualUnitDataRepository;
@@ -122,7 +102,6 @@ describe('AnnualUnitDataRepository', () => {
     queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
     queryBuilder.getRawOne.mockReturnValue('mockRawCount');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
-    queryBuilder.stream.mockReturnValue('mockEmissions');
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
@@ -131,6 +110,7 @@ describe('AnnualUnitDataRepository', () => {
     it('calls createQueryBuilder and gets all AnnualUnitData from the repository no filters', async () => {
       const result = await repository.getEmissions(
         req,
+        fieldMappings.emissions.annual.data.aggregation.unit,
         new PaginatedAnnualApportionedEmissionsParamsDTO(),
       );
 
@@ -139,7 +119,11 @@ describe('AnnualUnitDataRepository', () => {
     });
 
     it('calls createQueryBuilder and gets AnnualUnitData from the repository with filters', async () => {
-      const result = await repository.getEmissions(req, filters);
+      const result = await repository.getEmissions(
+        req,
+        fieldMappings.emissions.annual.data.aggregation.unit,
+        filters
+      );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
@@ -155,20 +139,12 @@ describe('AnnualUnitDataRepository', () => {
 
       const paginatedResult = await repository.getEmissions(
         req,
+        fieldMappings.emissions.annual.data.aggregation.unit,
         paginatedFilters,
       );
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
-    });
-  });
-
-  describe('streamEmissions', () => {
-    it('calls streamEmissions and streams AnnualUnitData from the repository', async () => {
-      const result = await repository.getStreamQuery(streamFilters);
-
-      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
-      expect(result).toEqual('mockEmissions');
     });
   });
 

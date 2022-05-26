@@ -1,22 +1,20 @@
-import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
 import { Test } from '@nestjs/testing';
+import * as typeorm_functions from 'typeorm/globals';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+
 import {
   State,
   UnitType,
   UnitFuelType,
   ControlTechnology,
-  ExcludeHourlyMatsApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
-import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
-import * as typeorm_functions from 'typeorm/globals';
 
-import {
-  PaginatedHourlyMatsApportionedEmissionsParamsDTO,
-  StreamHourlyMatsApportionedEmissionsParamsDTO,
-} from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
+import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+
 import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
+import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
+import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 
 jest.mock('../../../utils/query-builder.helper');
 
@@ -42,7 +40,6 @@ const mockQueryBuilder = () => ({
   addOrderBy: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
-  stream: jest.fn(),
   getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
@@ -72,25 +69,6 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.operatingHoursOnly = true;
-
-let streamFilters = new StreamHourlyMatsApportionedEmissionsParamsDTO();
-filters.beginDate = new Date();
-filters.endDate = new Date();
-streamFilters.stateCode = [State.TX];
-streamFilters.facilityId = [3];
-streamFilters.unitType = [
-  UnitType.BUBBLING_FLUIDIZED,
-  UnitType.ARCH_FIRE_BOILER,
-];
-streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
-streamFilters.controlTechnologies = [
-  ControlTechnology.ADDITIVES_TO_ENHANCE,
-  ControlTechnology.OTHER,
-];
-streamFilters.exclude = [
-  ExcludeHourlyMatsApportionedEmissions.HCL_INPUT_RATE,
-  ExcludeHourlyMatsApportionedEmissions.SECONDARY_FUEL_TYPE,
-];
 
 describe('HourUnitMatsDataRepository', () => {
   let repository: HourUnitMatsDataRepository;
@@ -125,7 +103,6 @@ describe('HourUnitMatsDataRepository', () => {
     queryBuilder.take.mockReturnValue('mockPagination');
     queryBuilder.getMany.mockReturnValue('mockMatsEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockMatsEmissions', 0]);
-    queryBuilder.stream.mockReturnValue('mockEmissions');
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
@@ -163,14 +140,6 @@ describe('HourUnitMatsDataRepository', () => {
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockMatsEmissions');
-    });
-  });
-
-  describe('streamEmissions', () => {
-    it('calls streamEmissions and streams HourUnitMatsData from the repository', async () => {
-      const result = repository.getStreamQuery(streamFilters);
-
-      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
     });
   });
 });

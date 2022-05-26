@@ -1,5 +1,4 @@
 instances: 2
-memory: 4096
 environment: production
 host: api-easey.app.cloud.gov
 apiHost: api.epa.gov/easey

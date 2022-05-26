@@ -1,5 +1,3 @@
-instances: 1
-memory: 2048
 environment: testing
 host: api-easey-tst.app.cloud.gov
 apiHost: api.epa.gov/easey/test

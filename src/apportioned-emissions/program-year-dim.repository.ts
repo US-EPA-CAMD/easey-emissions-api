@@ -90,6 +90,7 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
     }
     return query;
   }
+  
   async lastArchivedYear(): Promise<number> {
     const result = await this.query(
       'SELECT MAX(op_year) AS "year" FROM camddmw_arch.hour_unit_data_a;',

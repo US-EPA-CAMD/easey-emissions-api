@@ -1,21 +1,21 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
+
 import {
   State,
   UnitType,
   UnitFuelType,
   ControlTechnology,
   Program,
-  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { MonthUnitDataRepository } from './month-unit-data.repository';
-import {
-  PaginatedMonthlyApportionedEmissionsParamsDTO,
-  StreamMonthlyApportionedEmissionsParamsDTO,
-} from '../../dto/monthly-apportioned-emissions.params.dto';
+import { fieldMappings } from './../../constants/field-mappings';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
+
 jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
@@ -45,7 +45,6 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
-  stream: jest.fn(),
   getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
@@ -63,26 +62,6 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
-
-let streamFilters = new StreamMonthlyApportionedEmissionsParamsDTO();
-streamFilters.year = [2019];
-streamFilters.month = [1, 2];
-streamFilters.stateCode = [State.TX];
-streamFilters.facilityId = [3];
-streamFilters.unitType = [
-  UnitType.BUBBLING_FLUIDIZED,
-  UnitType.ARCH_FIRE_BOILER,
-];
-streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
-streamFilters.controlTechnologies = [
-  ControlTechnology.ADDITIVES_TO_ENHANCE,
-  ControlTechnology.OTHER,
-];
-streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
-streamFilters.exclude = [
-  ExcludeApportionedEmissions.CO2_RATE,
-  ExcludeApportionedEmissions.COUNT_OP_TIME,
-];
 
 describe('MonthUnitDataRepository', () => {
   let repository: MonthUnitDataRepository;
@@ -122,7 +101,6 @@ describe('MonthUnitDataRepository', () => {
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
-    queryBuilder.stream.mockReturnValue('mockEmissions');
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
@@ -131,6 +109,7 @@ describe('MonthUnitDataRepository', () => {
     it('calls createQueryBuilder and gets all MonthUnitData from the repository no filters', async () => {
       const result = await repository.getEmissions(
         req,
+        fieldMappings.emissions.monthly.data.aggregation.unit,
         new PaginatedMonthlyApportionedEmissionsParamsDTO(),
       );
 
@@ -139,7 +118,11 @@ describe('MonthUnitDataRepository', () => {
     });
 
     it('calls createQueryBuilder and gets MonthUnitData from the repository with filters', async () => {
-      const result = await repository.getEmissions(req, filters);
+      const result = await repository.getEmissions(
+        req,
+        fieldMappings.emissions.monthly.data.aggregation.unit,
+        filters
+      );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
@@ -155,21 +138,12 @@ describe('MonthUnitDataRepository', () => {
 
       const paginatedResult = await repository.getEmissions(
         req,
+        fieldMappings.emissions.monthly.data.aggregation.unit,
         paginatedFilters,
       );
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
-    });
-  });
-
-  describe('streamEmissions', () => {
-    it('calls streamEmissions and streams MonthUnitData from the repository', async () => {
-      const result = repository.getStreamQuery(
-        new PaginatedMonthlyApportionedEmissionsParamsDTO(),
-      );
-
-      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
     });
   });
 

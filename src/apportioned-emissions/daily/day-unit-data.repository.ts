@@ -1,29 +1,27 @@
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
-  StreamDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
-  getStreamQuery(params: StreamDailyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
-  }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -35,50 +33,15 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'dud.stateCode',
-      'dud.facilityName',
-      'dud.facilityId',
-      'dud.unitId',
-      'dud.associatedStacks',
-      'dud.date',
-      'dud.sumOpTime',
-      'dud.countOpTime',
-      'dud.grossLoad',
-      'dud.steamLoad',
-      'dud.so2Mass',
-      'dud.so2Rate',
-      'dud.co2Mass',
-      'dud.co2Rate',
-      'dud.noxMass',
-      'dud.noxRate',
-      'dud.heatInput',
-      'dud.primaryFuelInfo',
-      'dud.secondaryFuelInfo',
-      'dud.unitType',
-      'dud.so2ControlInfo',
-      'dud.pmControlInfo',
-      'dud.noxControlInfo',
-      'dud.hgControlInfo',
-      'dud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
   private buildQuery(
+    columns: any[],
     params: DailyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `dud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `dud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -122,11 +85,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return results;
   }
 
-  getFacilityStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
-    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildFacilityAggregationQuery(
+  private buildFacilityAggregationQuery(
     params: DailyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
@@ -165,11 +124,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return results;
   }
 
-  getStateStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
-    return this.buildStateAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildStateAggregationQuery(
+  private buildStateAggregationQuery(
     params: DailyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
@@ -202,11 +157,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return results;
   }
 
-  getNationalStreamQuery(params: DailyApportionedEmissionsParamsDTO) {
-    return this.buildNationalAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildNationalAggregationQuery(
+  private buildNationalAggregationQuery(
     params: DailyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
@@ -221,7 +172,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     return query;
   }
 
-  buildAggregationQuery(query, params): SelectQueryBuilder<DayUnitDataView> {
+  private buildAggregationQuery(query, params): SelectQueryBuilder<DayUnitDataView> {
     query
       .addSelect('SUM(dud.grossLoad)', 'grossLoad')
       .addSelect('SUM(dud.steamLoad)', 'steamLoad')

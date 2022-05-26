@@ -1,30 +1,18 @@
 import { Test } from '@nestjs/testing';
-import { StreamableFile } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
-
-import {
-  AnnualApportionedEmissionsParamsDTO,
-  PaginatedAnnualApportionedEmissionsParamsDTO,
-} from '../../dto/annual-apportioned-emissions.params.dto';
-import { ConfigService } from '@nestjs/config';
-import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
-
-jest.mock('uuid', () => {
-  return { v4: jest.fn().mockReturnValue(0) };
-});
+import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  getStreamQuery: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
-  getFacilityStreamQuery: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
-  getNationalStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -39,31 +27,17 @@ const mockRequest = () => {
   };
 };
 
-const mockStream = {
-  pipe: jest.fn().mockReturnValue({
-    pipe: jest.fn().mockReturnValue(Buffer.from('stream')),
-  }),
-};
-
-let service: AnnualApportionedEmissionsService;
-let repository: any;
-let req: any;
-
 describe('-- Annual Apportioned Emissions Service --', () => {
+  let service: AnnualApportionedEmissionsService;
+  let repository: any;
+  let req: any;
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
         ConfigService,
         AnnualApportionedEmissionsService,
-        {
-          provide: StreamService,
-          useFactory: () => ({
-            getStream: () => {
-              return mockStream;
-            },
-          }),
-        },
         {
           provide: AnnualUnitDataRepository,
           useFactory: mockRepository,
@@ -87,25 +61,6 @@ describe('-- Annual Apportioned Emissions Service --', () => {
     });
   });
 
-  describe('streamEmissions', () => {
-    it('calls AnnualUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      repository.getStreamQuery.mockResolvedValue('');
-
-      let filters = new AnnualApportionedEmissionsParamsDTO();
-
-      req.headers.accept = '';
-
-      let result = await service.streamEmissions(req, filters);
-
-      expect(result).toEqual(
-        new StreamableFile(Buffer.from('stream'), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="annual-emissions-${0}.json"`,
-        }),
-      );
-    });
-  });
-
   describe('getEmissionsFacilityAggregation', () => {
     it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
       const expected = [{ year: 2019 }];
@@ -113,28 +68,6 @@ describe('-- Annual Apportioned Emissions Service --', () => {
       let filters = new PaginatedAnnualApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
       expect(result).toEqual(expected);
-    });
-  });
-
-  describe('streamEmissionsFacilityAggregation', () => {
-    it('calls AnnualUnitDataRepository.getFacilityStreamQuery() and streams all emissions from the repository', async () => {
-      repository.getFacilityStreamQuery.mockResolvedValue('');
-
-      let filters = new AnnualApportionedEmissionsParamsDTO();
-
-      req.headers.accept = '';
-
-      let result = await service.streamEmissionsFacilityAggregation(
-        req,
-        filters,
-      );
-
-      expect(result).toEqual(
-        new StreamableFile(Buffer.from('stream'), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="annual-emissions-facility-aggregation-${0}.json"`,
-        }),
-      );
     });
   });
 

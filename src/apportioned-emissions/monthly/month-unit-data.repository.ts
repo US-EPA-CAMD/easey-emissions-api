@@ -1,29 +1,27 @@
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
-  StreamMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
 
 @EntityRepository(MonthUnitDataView)
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
-  getStreamQuery(params: StreamMonthlyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
-  }
-
+  
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
     let totalCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -35,51 +33,15 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'mud.stateCode',
-      'mud.facilityName',
-      'mud.facilityId',
-      'mud.unitId',
-      'mud.associatedStacks',
-      'mud.year',
-      'mud.month',
-      'mud.sumOpTime',
-      'mud.countOpTime',
-      'mud.grossLoad',
-      'mud.steamLoad',
-      'mud.so2Mass',
-      'mud.so2Rate',
-      'mud.co2Mass',
-      'mud.co2Rate',
-      'mud.noxMass',
-      'mud.noxRate',
-      'mud.heatInput',
-      'mud.primaryFuelInfo',
-      'mud.secondaryFuelInfo',
-      'mud.unitType',
-      'mud.so2ControlInfo',
-      'mud.pmControlInfo',
-      'mud.noxControlInfo',
-      'mud.hgControlInfo',
-      'mud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
   private buildQuery(
+    columns: any[],
     params: MonthlyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `mud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `mud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -124,11 +86,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-  getFacilityStreamQuery(params: MonthlyApportionedEmissionsParamsDTO) {
-    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildFacilityAggregationQuery(
+  private buildFacilityAggregationQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
@@ -175,11 +133,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-  getStateStreamQuery(params: MonthlyApportionedEmissionsParamsDTO) {
-    return this.buildStateAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildStateAggregationQuery(
+  private buildStateAggregationQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
@@ -218,11 +172,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-  getNationalStreamQuery(params: MonthlyApportionedEmissionsParamsDTO) {
-    return this.buildNationalAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildNationalAggregationQuery(
+  private buildNationalAggregationQuery(
     params: MonthlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
@@ -237,7 +187,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return query;
   }
 
-  buildAggregationQuery(query, params): SelectQueryBuilder<MonthUnitDataView> {
+  private buildAggregationQuery(query, params): SelectQueryBuilder<MonthUnitDataView> {
     query
       .addSelect('SUM(mud.grossLoad)', 'grossLoad')
       .addSelect('SUM(mud.steamLoad)', 'steamLoad')

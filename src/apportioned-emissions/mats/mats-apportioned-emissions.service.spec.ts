@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';

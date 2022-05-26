@@ -1,4 +1,5 @@
 import { Request } from 'express';
+
 import {
   Repository,
   EntityRepository,
@@ -6,8 +7,8 @@ import {
   getManager,
   getRepository,
 } from 'typeorm';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
-import { ReadStream } from 'fs';
 
 import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
@@ -21,7 +22,6 @@ import { ControlYearDim } from '../../../entities/control-year-dim.entity';
 import {
   HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
-  StreamHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 
 @EntityRepository(HourUnitMatsDataView)
@@ -30,9 +30,6 @@ import {
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
-  getStreamQuery(params: StreamHourlyMatsApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
-  }
 
   async getEmissions(
     req: Request,
@@ -96,7 +93,7 @@ export class HourUnitMatsDataRepository extends Repository<
     });
   }
 
-  buildQuery(
+  private buildQuery(
     params: HourlyMatsApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<HourUnitMatsDataView> {

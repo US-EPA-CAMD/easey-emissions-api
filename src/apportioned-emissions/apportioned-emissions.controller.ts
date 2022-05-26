@@ -22,7 +22,10 @@ import { ApportionedEmissionsService } from './apportioned-emissions.service';
 @ApiTags('Apportioned Emissions')
 @ApiExtraModels()
 export class ApportionedEmissionsController {
-  constructor(private readonly service: ApportionedEmissionsService) {}
+  
+  constructor(
+    private readonly service: ApportionedEmissionsService
+  ) {}
 
   @Get('/attributes/applicable')
   @ApiOkResponse({

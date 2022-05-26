@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';

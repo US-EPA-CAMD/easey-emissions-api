@@ -1,7 +1,8 @@
+import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { plainToClass } from 'class-transformer';
 
 import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes.dto';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
@@ -9,10 +10,11 @@ import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.reposit
 
 @Injectable()
 export class MatsApportionedEmissionsService {
+  
   constructor(
+    private readonly logger: Logger,
     @InjectRepository(HourUnitMatsDataRepository)
     private readonly repository: HourUnitMatsDataRepository,
-    private readonly logger: Logger,
   ) {}
 
   async getApplicableEmissions(

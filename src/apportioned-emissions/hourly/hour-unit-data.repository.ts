@@ -1,29 +1,27 @@
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import {
   HourlyApportionedEmissionsParamsDTO,
   PaginatedHourlyApportionedEmissionsParamsDTO,
-  StreamHourlyApportionedEmissionsParamsDTO,
 } from '../../dto/hourly-apportioned-emissions.params.dto';
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-  getStreamQuery(params: StreamHourlyApportionedEmissionsParamsDTO) {
-    return this.buildQuery(params, true).getQueryAndParameters();
-  }
 
   async getEmissions(
     req: Request,
+    columns: any[],
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitDataView[]> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildQuery(params);
+    const query = this.buildQuery(columns, params);
 
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
@@ -35,56 +33,15 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  private getColumns(isStreamed: boolean): string[] {
-    const columns = [
-      'hud.stateCode',
-      'hud.facilityName',
-      'hud.facilityId',
-      'hud.unitId',
-      'hud.associatedStacks',
-      'hud.date',
-      'hud.hour',
-      'hud.opTime',
-      'hud.grossLoad',
-      'hud.steamLoad',
-      'hud.so2Mass',
-      'hud.so2MassMeasureFlg',
-      'hud.so2Rate',
-      'hud.so2RateMeasureFlg',
-      'hud.co2Mass',
-      'hud.co2MassMeasureFlg',
-      'hud.co2Rate',
-      'hud.co2RateMeasureFlg',
-      'hud.noxMass',
-      'hud.noxMassMeasureFlg',
-      'hud.noxRate',
-      'hud.noxRateMeasureFlg',
-      'hud.heatInput',
-      'hud.primaryFuelInfo',
-      'hud.secondaryFuelInfo',
-      'hud.unitType',
-      'hud.so2ControlInfo',
-      'hud.pmControlInfo',
-      'hud.noxControlInfo',
-      'hud.hgControlInfo',
-      'hud.programCodeInfo',
-    ];
-
-    return columns.map(col => {
-      if (isStreamed) {
-        return `${col} AS "${col.split('.')[1]}"`;
-      } else {
-        return col;
-      }
-    });
-  }
-
-  buildQuery(
+  private buildQuery(
+    columns: any[],
     params: HourlyApportionedEmissionsParamsDTO,
-    isStreamed = false,
+    alias: boolean = false
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
-      this.getColumns(isStreamed),
+      alias
+        ? columns.map(col => `hud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `hud.${col.value}`)
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -130,11 +87,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  getFacilityStreamQuery(params: HourlyApportionedEmissionsParamsDTO) {
-    return this.buildFacilityAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildFacilityAggregationQuery(
+  private buildFacilityAggregationQuery(
     params: HourlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
@@ -181,11 +134,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  getStateStreamQuery(params: HourlyApportionedEmissionsParamsDTO) {
-    return this.buildStateAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildStateAggregationQuery(
+  private buildStateAggregationQuery(
     params: HourlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
@@ -224,11 +173,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return results;
   }
 
-  getNationalStreamQuery(params: HourlyApportionedEmissionsParamsDTO) {
-    return this.buildNationalAggregationQuery(params).getQueryAndParameters();
-  }
-
-  buildNationalAggregationQuery(
+  private buildNationalAggregationQuery(
     params: HourlyApportionedEmissionsParamsDTO,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
@@ -243,7 +188,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     return query;
   }
 
-  buildAggregationQuery(query, params): SelectQueryBuilder<HourUnitDataView> {
+  private buildAggregationQuery(query, params): SelectQueryBuilder<HourUnitDataView> {
     query
       .addSelect('SUM(hud.grossLoad)', 'grossLoad')
       .addSelect('SUM(hud.steamLoad)', 'steamLoad')

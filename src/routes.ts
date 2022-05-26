@@ -13,7 +13,7 @@ import { HourlyMatsApportionedEmissionsModule } from './apportioned-emissions/ma
 
 const routes: Routes = [
   {
-    path: '/apportioned',
+    path: 'emissions/apportioned',
     module: ApportionedEmissionsModule,
     children: [
       {

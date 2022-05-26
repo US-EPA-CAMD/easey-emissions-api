@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { HourlyApportionedEmissionsModule } from './hourly/hourly-apportioned-emissions.module';
@@ -15,6 +16,7 @@ import { ProgramYearDimRepository } from './program-year-dim.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProgramYearDimRepository]),
+    HttpModule,
     HourlyApportionedEmissionsModule,
     DailyApportionedEmissionsModule,
     MonthlyApportionedEmissionsModule,

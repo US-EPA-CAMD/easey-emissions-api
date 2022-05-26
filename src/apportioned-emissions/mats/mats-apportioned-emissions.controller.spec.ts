@@ -1,12 +1,13 @@
 import { Test } from '@nestjs/testing';
+
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsService } from './hourly/hourly-mats-apportioned-emissions.service';
-import { StreamModule } from '@us-epa-camd/easey-common/stream';
 
 const mockRequest = (url: string) => {
   return {
@@ -24,7 +25,7 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, StreamModule],
+      imports: [LoggerModule],
       controllers: [MatsApportionedEmissionsController],
       providers: [
         MatsApportionedEmissionsService,
