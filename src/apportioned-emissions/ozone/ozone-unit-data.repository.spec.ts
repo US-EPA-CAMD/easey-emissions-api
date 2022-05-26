@@ -1,21 +1,21 @@
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
+
 import {
   State,
   UnitType,
   UnitFuelType,
   ControlTechnology,
   Program,
-  ExcludeApportionedEmissions,
 } from '@us-epa-camd/easey-common/enums';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
-import {
-  PaginatedOzoneApportionedEmissionsParamsDTO,
-  StreamOzoneApportionedEmissionsParamsDTO,
-} from '../../dto/ozone-apportioned-emissions.params.dto';
+import { fieldMappings } from './../../constants/field-mappings';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
+import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+
 jest.mock('../../utils/query-builder.helper');
 
 const mockRequest = (url?: string, page?: number, perPage?: number) => {
@@ -42,7 +42,6 @@ const mockQueryBuilder = () => ({
   getCount: jest.fn(),
   skip: jest.fn(),
   take: jest.fn(),
-  stream: jest.fn(),
   getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
@@ -59,25 +58,6 @@ filters.controlTechnologies = [
   ControlTechnology.OTHER,
 ];
 filters.programCodeInfo = [Program.ARP, Program.RGGI];
-
-let streamFilters = new StreamOzoneApportionedEmissionsParamsDTO();
-streamFilters.year = [2019];
-streamFilters.stateCode = [State.TX];
-streamFilters.facilityId = [3];
-streamFilters.unitType = [
-  UnitType.BUBBLING_FLUIDIZED,
-  UnitType.ARCH_FIRE_BOILER,
-];
-streamFilters.unitFuelType = [UnitFuelType.COAL, UnitFuelType.DIESEL_OIL];
-streamFilters.controlTechnologies = [
-  ControlTechnology.ADDITIVES_TO_ENHANCE,
-  ControlTechnology.OTHER,
-];
-streamFilters.programCodeInfo = [Program.ARP, Program.RGGI];
-streamFilters.exclude = [
-  ExcludeApportionedEmissions.CO2_RATE,
-  ExcludeApportionedEmissions.COUNT_OP_TIME,
-];
 
 describe('OzoneUnitDataRepository', () => {
   let repository: OzoneUnitDataRepository;
@@ -114,7 +94,6 @@ describe('OzoneUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
-    queryBuilder.stream.mockReturnValue('mockEmissions');
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
   });
@@ -123,6 +102,7 @@ describe('OzoneUnitDataRepository', () => {
     it('calls createQueryBuilder and gets all OzoneUnitData from the repository no filters', async () => {
       const result = await repository.getEmissions(
         req,
+        fieldMappings.emissions.ozone,
         new PaginatedOzoneApportionedEmissionsParamsDTO(),
       );
 
@@ -131,7 +111,7 @@ describe('OzoneUnitDataRepository', () => {
     });
 
     it('calls createQueryBuilder and gets OzoneUnitData from the repository with filters', async () => {
-      const result = await repository.getEmissions(req, filters);
+      const result = await repository.getEmissions(req, fieldMappings.emissions.ozone, filters);
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
     });
@@ -147,20 +127,12 @@ describe('OzoneUnitDataRepository', () => {
 
       const paginatedResult = await repository.getEmissions(
         req,
+        fieldMappings.emissions.ozone,
         paginatedFilters,
       );
 
       expect(ResponseHeaders.setPagination).toHaveBeenCalled();
       expect(paginatedResult).toEqual('mockEmissions');
-    });
-  });
-
-  describe('streamEmissions', () => {
-    it('calls streamEmissions and streams OzoneUnitData from the repository', async () => {
-      const result = await repository.getStreamQuery(streamFilters);
-
-      expect(queryBuilder.getQueryAndParameters).toHaveBeenCalled();
-      expect(result).toEqual('mockEmissions');
     });
   });
 });

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 
-import { StreamingService } from './../../streaming/streaming.service';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
@@ -14,7 +13,6 @@ import { HourlyApportionedEmissionsController } from './hourly-apportioned-emiss
   controllers: [HourlyApportionedEmissionsController],
   providers: [
     ConfigService,
-    StreamingService,
     HourlyApportionedEmissionsService],
   exports: [TypeOrmModule],
 })

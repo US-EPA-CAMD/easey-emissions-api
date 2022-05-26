@@ -11,7 +11,7 @@ import { OzoneApportionedEmissionsModule } from './apportioned-emissions/ozone/o
 
 const routes: Routes = [
   {
-    path: '/apportioned',
+    path: 'emissions/apportioned',
     module: ApportionedEmissionsModule,
     children: [
       {

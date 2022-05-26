@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 
-import { StreamingService } from './../../streaming/streaming.service';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
@@ -14,7 +13,6 @@ import { DailyApportionedEmissionsController } from './daily-apportioned-emissio
   controllers: [DailyApportionedEmissionsController],
   providers: [
     ConfigService,
-    StreamingService,
     DailyApportionedEmissionsService
   ],
   exports: [TypeOrmModule],

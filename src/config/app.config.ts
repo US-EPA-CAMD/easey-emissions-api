@@ -35,6 +35,4 @@ export default registerAs('app', () => ({
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   submissionDays: +process.env.EASEY_EMISSIONS_API_SUBMISSION_DAYS || 38,
-  streamBatchSize: +process.env.EASEY_EMISSIONS_API_STREAM_BATCH_SIZE || 20000,
-  maxPoolSize: +process.env.EASEY_EMISSIONS_API_MAX_POOL_SIZE || 20,
 }));

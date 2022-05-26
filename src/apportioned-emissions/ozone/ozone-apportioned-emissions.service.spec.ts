@@ -1,25 +1,15 @@
 import { Test } from '@nestjs/testing';
-import { StreamableFile } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
-
-import {
-  OzoneApportionedEmissionsParamsDTO,
-  PaginatedOzoneApportionedEmissionsParamsDTO,
-} from '../../dto/ozone-apportioned-emissions.params.dto';
-import { StreamModule, StreamService } from '@us-epa-camd/easey-common/stream';
-import { ConfigService } from '@nestjs/config';
-
-jest.mock('uuid', () => {
-  return { v4: jest.fn().mockReturnValue(0) };
-});
+import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
-  getStreamQuery: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -34,12 +24,6 @@ const mockRequest = () => {
   };
 };
 
-const mockStream = {
-  pipe: jest.fn().mockReturnValue({
-    pipe: jest.fn().mockReturnValue(Buffer.from('stream')),
-  }),
-};
-
 describe('-- Ozone Apportioned Emissions Service --', () => {
   let service: OzoneApportionedEmissionsService;
   let repository: any;
@@ -49,14 +33,6 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
-        {
-          provide: StreamService,
-          useFactory: () => ({
-            getStream: () => {
-              return mockStream;
-            },
-          }),
-        },
         ConfigService,
         OzoneApportionedEmissionsService,
         {
@@ -79,25 +55,6 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
       let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
       expect(result).toEqual(expected);
-    });
-  });
-
-  describe('streamEmissions', () => {
-    it('calls OzoneUnitDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-      repository.getStreamQuery.mockResolvedValue('');
-
-      let filters = new OzoneApportionedEmissionsParamsDTO();
-
-      req.headers.accept = '';
-
-      let result = await service.streamEmissions(req, filters);
-
-      expect(result).toEqual(
-        new StreamableFile(Buffer.from('stream'), {
-          type: req.headers.accept,
-          disposition: `attachment; filename="ozone-emissions-${0}.json"`,
-        }),
-      );
     });
   });
 });

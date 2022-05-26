@@ -1,9 +1,11 @@
 import { Request } from 'express';
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
+
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
 
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+
 import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
