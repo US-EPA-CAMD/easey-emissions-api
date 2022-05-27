@@ -13,7 +13,7 @@ export class EmissionSubmissionsProgressMap extends BaseMap<
     entity: EmissionSubmissionsProgress,
   ): Promise<EmissionsSubmissionsProgressDTO> {
     let quarterN;
-    switch (entity.quarter) {
+    switch (+entity.quarter) {
       case 1:
         quarterN = 'First';
         break;
