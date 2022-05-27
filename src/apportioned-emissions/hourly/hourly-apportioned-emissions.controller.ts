@@ -78,7 +78,7 @@ export class HourlyApportionedEmissionsController {
     return this.service.getEmissions(req, params);
   }
 
-  @Get('facility')
+  @Get('by-facility')
   @ApiOkResponse({
     description:
       'Retrieves Hourly Apportioned Emissions Facility Aggregation data per filter criteria',
