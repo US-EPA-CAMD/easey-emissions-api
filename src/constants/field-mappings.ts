@@ -15,8 +15,8 @@ const commonCharacteristics = [
 ];
 
 const commonEmissions = [
-  { ...propertyMetadata.sumOpTime.fieldLabels },
   { ...propertyMetadata.countOpTime.fieldLabels },
+  { ...propertyMetadata.sumOpTime.fieldLabels },
   { ...propertyMetadata.grossLoad.fieldLabels },
   { ...propertyMetadata.steamLoad.fieldLabels },
   { ...propertyMetadata.so2Mass.fieldLabels },
@@ -36,8 +36,8 @@ const unitCharacteristics = [
 
 const controlInfoCharacteristics = [
   { ...propertyMetadata.so2ControlInfo.fieldLabels },
-  { ...propertyMetadata.pmControlInfo.fieldLabels },
   { ...propertyMetadata.noxControlInfo.fieldLabels },
+  { ...propertyMetadata.pmControlInfo.fieldLabels },
   { ...propertyMetadata.hgControlInfo.fieldLabels },
   { ...propertyMetadata.programCodeInfo.fieldLabels },
 ];
