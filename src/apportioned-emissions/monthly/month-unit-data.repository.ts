@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(MonthUnitDataView)
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
-  
   async getEmissions(
     req: Request,
     columns: any[],
@@ -22,7 +21,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
     const query = this.buildQuery(columns, params);
-    
+
     if (page && perPage) {
       [results, totalCount] = await query.getManyAndCount();
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
@@ -36,12 +35,12 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
   private buildQuery(
     columns: any[],
     params: MonthlyApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
       alias
-        ? columns.map(col => `mud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `mud.${col.value}`)
+        ? columns.map((col) => `mud.${col.value} AS "${col.value}"`)
+        : columns.map((col) => `mud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -77,8 +76,14 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
 
-    const selectColumns = ['mud.stateCode', 'mud.facilityName', 'mud.facilityId', 'mud.year', 'mud.month',];
-    const orderByColumns = ['mud.facilityId', 'mud.year', 'mud.month',];
+    const selectColumns = [
+      'mud.stateCode',
+      'mud.facilityName',
+      'mud.facilityId',
+      'mud.year',
+      'mud.month',
+    ];
+    const orderByColumns = ['mud.facilityId', 'mud.year', 'mud.month'];
 
     const query = this.buildAggregationQuery(
       params,
@@ -100,12 +105,10 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     return results;
   }
 
-
   async getEmissionsStateAggregation(
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
-
     let totalCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
@@ -131,14 +134,12 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
-
-  }   
+  }
 
   async getEmissionsNationalAggregation(
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
-
     let totalCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
@@ -163,7 +164,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
-    
+
     return results;
   }
 
@@ -179,7 +180,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       query = this.createQueryBuilder('mud').select('COUNT(*) OVER() as count');
     } else {
       query = this.createQueryBuilder('mud').select(
-        selectColumns.map(col => {
+        selectColumns.map((col) => {
           return `${col} AS "${col.split('.')[1]}"`;
         }),
       );
@@ -209,8 +210,8 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       'mud',
     );
 
-    selectColumns.forEach(c => query.addGroupBy(c));
-    orderByColumns.forEach(c => query.addOrderBy(c));
+    selectColumns.forEach((c) => query.addGroupBy(c));
+    orderByColumns.forEach((c) => query.addOrderBy(c));
 
     return query;
   }
