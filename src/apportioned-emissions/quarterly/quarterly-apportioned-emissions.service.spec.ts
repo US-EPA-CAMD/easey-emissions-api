@@ -10,6 +10,7 @@ import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quart
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -55,6 +56,16 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
       let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
       expect(result).toEqual(expected);
+    });
+
+    describe('getEmissionsFacilityAggregation', () => {
+      it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+        const expected = [{ quarter: 1 }];
+        repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+        let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+        let result = await service.getEmissionsFacilityAggregation(req, filters);
+        expect(result).toEqual(expected);
+      });
     });
   });
 });

@@ -52,4 +52,17 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
       );
     });
   });
+
+  describe('* getEmissionsFacilityAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: QuarterUnitDataView[] = [];
+      const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsFacilityAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsFacilityAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
 });
