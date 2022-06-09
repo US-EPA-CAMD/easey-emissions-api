@@ -35,6 +35,7 @@ const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
   getRawMany: jest.fn(),
+  getRawOne: jest.fn(),
   getManyAndCount: jest.fn(),
   select: jest.fn(),
   addSelect: jest.fn(),
@@ -100,6 +101,7 @@ describe('DayUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
+    queryBuilder.getRawOne.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
@@ -121,7 +123,7 @@ describe('DayUnitDataRepository', () => {
       const result = await repository.getEmissions(
         req,
         fieldMappings.emissions.daily.data.aggregation.unit,
-        filters
+        filters,
       );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
@@ -155,6 +157,8 @@ describe('DayUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -164,6 +168,7 @@ describe('DayUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -194,6 +199,7 @@ describe('DayUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -203,6 +209,7 @@ describe('DayUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -233,6 +240,7 @@ describe('DayUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -242,6 +250,7 @@ describe('DayUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
