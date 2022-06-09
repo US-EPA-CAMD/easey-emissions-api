@@ -78,13 +78,13 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     const { page, perPage } = params;
 
     const selectColumns = [
-      'aud.stateCode',
-      'aud.facilityName',
-      'aud.facilityId',
-      'aud.year',
-      'aud.quarter'
+      'qud.stateCode',
+      'qud.facilityName',
+      'qud.facilityId',
+      'qud.year',
+      'qud.quarter'
     ];
-    const orderByColumns = ['aud.facilityId', 'aud.year', 'aud.quarter'];
+    const orderByColumns = ['qud.facilityId', 'qud.year', 'qud.quarter'];
 
     const query = this.buildAggregationQuery(
       params,
@@ -115,21 +115,21 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('aud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('qud').select('COUNT(*) OVER() as count');
     } else {
-      query = this.createQueryBuilder('aud').select(
+      query = this.createQueryBuilder('qud').select(
         selectColumns.map(col => {
           return `${col} AS "${col.split('.')[1]}"`;
         }),
       );
 
       query
-        .addSelect('SUM(aud.grossLoad)', 'grossLoad')
-        .addSelect('SUM(aud.steamLoad)', 'steamLoad')
-        .addSelect('SUM(aud.so2Mass)', 'so2Mass')
-        .addSelect('SUM(aud.co2Mass)', 'co2Mass')
-        .addSelect('SUM(aud.noxMass)', 'noxMass')
-        .addSelect('SUM(aud.heatInput)', 'heatInput');
+        .addSelect('SUM(qud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(qud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(qud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(qud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(qud.noxMass)', 'noxMass')
+        .addSelect('SUM(qud.heatInput)', 'heatInput');
     }
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -145,7 +145,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
         'unitFuelType',
         'programCodeInfo',
       ],
-      'aud',
+      'qud',
     );
 
     selectColumns.forEach(c => query.addGroupBy(c));
