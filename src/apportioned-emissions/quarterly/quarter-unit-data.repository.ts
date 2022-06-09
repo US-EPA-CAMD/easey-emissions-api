@@ -68,4 +68,89 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
 
     return query;
   }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterUnitDataView[]> {
+    let totalCount: number;
+    let results: QuarterUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = [
+      'qud.stateCode',
+      'qud.facilityName',
+      'qud.facilityId',
+      'qud.year',
+      'qud.quarter'
+    ];
+    const orderByColumns = ['qud.facilityId', 'qud.year', 'qud.quarter'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
+
+    results = await query.getRawMany();
+    if (page && perPage) {
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  private buildAggregationQuery(
+    params,
+    selectColumns: string[],
+    orderByColumns: string[],
+    countQuery: boolean = false,
+  ): SelectQueryBuilder<QuarterUnitDataView> {
+    let query = null;
+
+    if (countQuery) {
+      query = this.createQueryBuilder('qud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('qud').select(
+        selectColumns.map(col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        }),
+      );
+
+      query
+        .addSelect('SUM(qud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(qud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(qud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(qud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(qud.noxMass)', 'noxMass')
+        .addSelect('SUM(qud.heatInput)', 'heatInput');
+    }
+
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
+      [
+        'year',
+        'quarter',
+        'stateCode',
+        'facilityId',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'programCodeInfo',
+      ],
+      'qud',
+    );
+
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c));
+
+    return query;
+  }
 }

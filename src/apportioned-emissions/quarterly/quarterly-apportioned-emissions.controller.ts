@@ -31,11 +31,13 @@ import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entit
 import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Quarterly Emissions')
 @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
+@ApiExtraModels(QuarterlyApportionedEmissionsFacilityAggregationDTO)
 export class QuarterlyApportionedEmissionsController {
 
   constructor(
@@ -74,4 +76,38 @@ export class QuarterlyApportionedEmissionsController {
   ): Promise<QuarterUnitDataView[]> {
     return this.service.getEmissions(req, params);
   }
+
+  @Get('by-facility')
+  @ApiOkResponse({
+    description:
+      'Retrieves Quarterly Apportioned Emissions data per filter criteria aggregated by facility',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(QuarterlyApportionedEmissionsFacilityAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.quarterly.data.aggregation.facility
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @ApiQueryQuarterly()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsFacilityAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsFacilityAggregationDTO[]> {
+    return this.service.getEmissionsFacilityAggregation(req, params);
+  }
+
 }

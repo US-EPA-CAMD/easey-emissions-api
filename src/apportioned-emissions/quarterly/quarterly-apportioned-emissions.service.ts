@@ -1,4 +1,6 @@
 import { Request } from 'express';
+import { plainToClass } from 'class-transformer';
+import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from './../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
@@ -53,5 +55,36 @@ export class QuarterlyApportionedEmissionsService {
     );
 
     return entities;
+  }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsFacilityAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsFacilityAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.facility),
+    );
+
+    return query.map(item => {
+      return plainToClass(
+        QuarterlyApportionedEmissionsFacilityAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+    });
   }
 }
