@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(DayUnitDataView)
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
-
   async getEmissions(
     req: Request,
     columns: any[],
@@ -36,12 +35,12 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
   private buildQuery(
     columns: any[],
     params: DailyApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<DayUnitDataView> {
     let query = this.createQueryBuilder('dud').select(
       alias
         ? columns.map(col => `dud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `dud.${col.value}`)
+        : columns.map(col => `dud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -75,36 +74,34 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildFacilityAggregationQuery(params);
+
+    const selectColumns = [
+      'dud.stateCode',
+      'dud.facilityName',
+      'dud.facilityId',
+      'dud.date',
+    ];
+    const orderByColumns = ['dud.facilityId', 'dud.date'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
-  }
-
-  private buildFacilityAggregationQuery(
-    params: DailyApportionedEmissionsParamsDTO,
-  ): SelectQueryBuilder<DayUnitDataView> {
-    let query = this.createQueryBuilder('dud').select(
-      ['dud.stateCode', 'dud.facilityName', 'dud.facilityId', 'dud.date'].map(
-        col => {
-          return `${col} AS "${col.split('.')[1]}"`;
-        },
-      ),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query
-      .addGroupBy('dud.stateCode')
-      .addGroupBy('dud.facilityName')
-      .addGroupBy('dud.facilityId')
-      .addGroupBy('dud.date');
-
-    query.orderBy('dud.facilityId').addOrderBy('dud.date');
-
-    return query;
   }
 
   async getEmissionsStateAggregation(
@@ -114,30 +111,28 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildStateAggregationQuery(params);
+
+    const selectColumns = ['dud.stateCode', 'dud.date'];
+    const orderByColumns = ['dud.stateCode', 'dud.date'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
-  }
-
-  private buildStateAggregationQuery(
-    params: DailyApportionedEmissionsParamsDTO,
-  ): SelectQueryBuilder<DayUnitDataView> {
-    let query = this.createQueryBuilder('dud').select(
-      ['dud.stateCode', 'dud.date'].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query.addGroupBy('dud.stateCode').addGroupBy('dud.date');
-
-    query.orderBy('dud.stateCode').addOrderBy('dud.date');
-
-    return query;
   }
 
   async getEmissionsNationalAggregation(
@@ -147,39 +142,56 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     let totalCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildNationalAggregationQuery(params);
+
+    const selectColumns = ['dud.date'];
+    const orderByColumns = ['dud.date'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
+
     return results;
   }
 
-  private buildNationalAggregationQuery(
-    params: DailyApportionedEmissionsParamsDTO,
+  private buildAggregationQuery(
+    params,
+    selectColumns: string[],
+    orderByColumns: string[],
+    countQuery: boolean = false,
   ): SelectQueryBuilder<DayUnitDataView> {
-    let query = this.createQueryBuilder('dud').select(
-      ['dud.date'].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query.addGroupBy('dud.date');
-    query.addOrderBy('dud.date');
+    let query = null;
 
-    return query;
-  }
+    if (countQuery) {
+      query = this.createQueryBuilder('dud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('dud').select(
+        selectColumns.map(col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        }),
+      );
 
-  private buildAggregationQuery(query, params): SelectQueryBuilder<DayUnitDataView> {
-    query
-      .addSelect('SUM(dud.grossLoad)', 'grossLoad')
-      .addSelect('SUM(dud.steamLoad)', 'steamLoad')
-      .addSelect('SUM(dud.so2Mass)', 'so2Mass')
-      .addSelect('SUM(dud.co2Mass)', 'co2Mass')
-      .addSelect('SUM(dud.noxMass)', 'noxMass')
-      .addSelect('SUM(dud.heatInput)', 'heatInput');
+      query
+        .addSelect('SUM(dud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(dud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(dud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(dud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(dud.noxMass)', 'noxMass')
+        .addSelect('SUM(dud.heatInput)', 'heatInput');
+    }
 
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
@@ -196,6 +208,9 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
       ],
       'dud',
     );
+
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c));
 
     return query;
   }
