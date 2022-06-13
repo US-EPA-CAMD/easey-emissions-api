@@ -35,6 +35,7 @@ const mockQueryBuilder = () => ({
   andWhere: jest.fn(),
   getMany: jest.fn(),
   getRawMany: jest.fn(),
+  getRawOne: jest.fn(),
   getManyAndCount: jest.fn(),
   select: jest.fn(),
   addSelect: jest.fn(),
@@ -101,6 +102,7 @@ describe('HourUnitDataRepository', () => {
     queryBuilder.getCount.mockReturnValue('mockCount');
     queryBuilder.getMany.mockReturnValue('mockEmissions');
     queryBuilder.getRawMany.mockReturnValue('mockRawEmissions');
+    queryBuilder.getRawOne.mockReturnValue('mockRawEmissions');
     queryBuilder.getManyAndCount.mockReturnValue(['mockEmissions', 0]);
 
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
@@ -156,6 +158,7 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -165,6 +168,7 @@ describe('HourUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -195,6 +199,7 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -204,6 +209,7 @@ describe('HourUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -234,6 +240,8 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+
       expect(result).toEqual('mockRawEmissions');
     });
 
@@ -243,6 +251,8 @@ describe('HourUnitDataRepository', () => {
         filters,
       );
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
+
       expect(result).toEqual('mockRawEmissions');
     });
 
