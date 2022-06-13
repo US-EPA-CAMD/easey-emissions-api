@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(HourUnitDataView)
 export class HourUnitDataRepository extends Repository<HourUnitDataView> {
-
   async getEmissions(
     req: Request,
     columns: any[],
@@ -36,12 +35,12 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
   private buildQuery(
     columns: any[],
     params: HourlyApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<HourUnitDataView> {
     let query = this.createQueryBuilder('hud').select(
       alias
         ? columns.map(col => `hud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `hud.${col.value}`)
+        : columns.map(col => `hud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -77,44 +76,34 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildFacilityAggregationQuery(params);
+
+    const selectColumns = [
+      'hud.stateCode',
+      'hud.facilityName',
+      'hud.facilityId',
+      'hud.date',
+      'hud.hour',
+    ];
+    const orderByColumns = ['hud.facilityId', 'hud.date', 'hud.hour'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
-  }
-
-  private buildFacilityAggregationQuery(
-    params: HourlyApportionedEmissionsParamsDTO,
-  ): SelectQueryBuilder<HourUnitDataView> {
-    let query = this.createQueryBuilder('hud').select(
-      [
-        'hud.stateCode',
-        'hud.facilityName',
-        'hud.facilityId',
-        'hud.date',
-        'hud.hour',
-      ].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query
-      .addGroupBy('hud.stateCode')
-      .addGroupBy('hud.facilityName')
-      .addGroupBy('hud.facilityId')
-      .addGroupBy('hud.date')
-      .addGroupBy('hud.hour');
-
-    query
-      .orderBy('hud.facilityId')
-      .addOrderBy('hud.date')
-      .addOrderBy('hud.hour');
-
-    return query;
   }
 
   async getEmissionsStateAggregation(
@@ -124,36 +113,28 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildStateAggregationQuery(params);
+
+    const selectColumns = ['hud.stateCode', 'hud.date', 'hud.hour'];
+    const orderByColumns = ['hud.stateCode', 'hud.date', 'hud.hour'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
     return results;
-  }
-
-  private buildStateAggregationQuery(
-    params: HourlyApportionedEmissionsParamsDTO,
-  ): SelectQueryBuilder<HourUnitDataView> {
-    let query = this.createQueryBuilder('hud').select(
-      ['hud.stateCode', 'hud.date', 'hud.hour'].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query
-      .addGroupBy('hud.stateCode')
-      .addGroupBy('hud.date')
-      .addGroupBy('hud.hour');
-
-    query
-      .orderBy('hud.stateCode')
-      .addOrderBy('hud.date')
-      .addOrderBy('hud.hour');
-
-    return query;
   }
 
   async getEmissionsNationalAggregation(
@@ -163,39 +144,56 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     let totalCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
-    const query = this.buildNationalAggregationQuery(params);
+
+    const selectColumns = ['hud.date', 'hud.hour'];
+    const orderByColumns = ['hud.date', 'hud.hour'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
 
     results = await query.getRawMany();
     if (page && perPage) {
-      totalCount = await query.getCount();
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
     }
+
     return results;
   }
 
-  private buildNationalAggregationQuery(
-    params: HourlyApportionedEmissionsParamsDTO,
+  private buildAggregationQuery(
+    params,
+    selectColumns: string[],
+    orderByColumns: string[],
+    countQuery: boolean = false,
   ): SelectQueryBuilder<HourUnitDataView> {
-    let query = this.createQueryBuilder('hud').select(
-      ['hud.date', 'hud.hour'].map(col => {
-        return `${col} AS "${col.split('.')[1]}"`;
-      }),
-    );
-    query = this.buildAggregationQuery(query, params);
-    query.addGroupBy('hud.date').addGroupBy('hud.hour');
-    query.addOrderBy('hud.date').addOrderBy('hud.hour');
+    let query = null;
 
-    return query;
-  }
+    if (countQuery) {
+      query = this.createQueryBuilder('hud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('hud').select(
+        selectColumns.map(col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        }),
+      );
 
-  private buildAggregationQuery(query, params): SelectQueryBuilder<HourUnitDataView> {
-    query
-      .addSelect('SUM(hud.grossLoad)', 'grossLoad')
-      .addSelect('SUM(hud.steamLoad)', 'steamLoad')
-      .addSelect('SUM(hud.so2Mass)', 'so2Mass')
-      .addSelect('SUM(hud.co2Mass)', 'co2Mass')
-      .addSelect('SUM(hud.noxMass)', 'noxMass')
-      .addSelect('SUM(hud.heatInput)', 'heatInput');
+      query
+        .addSelect('SUM(hud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(hud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(hud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(hud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(hud.noxMass)', 'noxMass')
+        .addSelect('SUM(hud.heatInput)', 'heatInput');
+    }
 
     query = QueryBuilderHelper.createEmissionsQuery(
       query,
@@ -213,6 +211,9 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
       ],
       'hud',
     );
+
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c));
 
     return query;
   }
