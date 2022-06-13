@@ -124,7 +124,7 @@ describe('HourUnitDataRepository', () => {
       const result = await repository.getEmissions(
         req,
         fieldMappings.emissions.hourly.data.aggregation.unit,
-        filters
+        filters,
       );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
