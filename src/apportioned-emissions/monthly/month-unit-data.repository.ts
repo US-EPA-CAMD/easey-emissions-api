@@ -92,7 +92,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -123,7 +123,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -154,7 +154,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,

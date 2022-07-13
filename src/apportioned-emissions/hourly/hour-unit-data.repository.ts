@@ -93,7 +93,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -124,7 +124,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -155,7 +155,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,

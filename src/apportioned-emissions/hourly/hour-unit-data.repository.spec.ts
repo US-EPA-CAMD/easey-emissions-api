@@ -158,8 +158,20 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
-      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('does not run query to get count if initial query returns no result', async () => {
+      queryBuilder.getRawMany.mockReturnValue([])
+      const result = await repository.getEmissionsFacilityAggregation(
+        req,
+        new PaginatedHourlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
 
     it('calls createQueryBuilder and gets HourUnitData aggregated by facility from the repository with filters', async () => {
@@ -199,8 +211,20 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
-      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
       expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('does not run query to get count if initial query returns no result', async () => {
+      queryBuilder.getRawMany.mockReturnValue([])
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedHourlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
 
     it('calls createQueryBuilder and gets HourUnitData aggregated by state from the repository with filters', async () => {
@@ -240,9 +264,21 @@ describe('HourUnitDataRepository', () => {
       );
 
       expect(queryBuilder.getRawMany).toHaveBeenCalled();
-      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
 
       expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('does not run query to get count if initial query returns no result', async () => {
+      queryBuilder.getRawMany.mockReturnValue([])
+      const result = await repository.getEmissionsNationalAggregation(
+        req,
+        new PaginatedHourlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
 
     it('calls createQueryBuilder and gets HourUnitData aggregated nationally from the repository with filters', async () => {
