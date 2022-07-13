@@ -90,7 +90,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -122,7 +122,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
@@ -153,7 +153,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     );
 
     results = await query.getRawMany();
-    if (page && perPage) {
+    if (results && results.length > 0) {
       const countQuery = this.buildAggregationQuery(
         params,
         selectColumns,
