@@ -32,6 +32,7 @@ import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportione
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
+import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -110,4 +111,35 @@ export class QuarterlyApportionedEmissionsController {
     return this.service.getEmissionsFacilityAggregation(req, params);
   }
 
+  @Get('by-state')
+  @ApiOkResponse({
+    description:
+      'Retrieves Quarterly Apportioned Emissions data per filter criteria aggregated by state',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(QuarterlyApportionedEmissionsStateAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.quarterly.data.aggregation.state
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsStateAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsStateAggregationDTO[]> {
+    return this.service.getEmissionsStateAggregation(req, params);
+  }
 }

@@ -188,4 +188,58 @@ describe('QuarterUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls createQueryBuilder and gets all QuarterUnitData aggregated by state from the repository no filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedQuarterlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('does not run query to get count if initial query returns no result', async () => {
+      queryBuilder.getRawMany.mockReturnValue([])
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedQuarterlyApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it('calls createQueryBuilder and gets QuarterUnitData aggregated by state from the repository with filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all QuarterUnitData aggregated by state from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsStateAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
+    });
+  });
+
 });

@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { plainToClass } from 'class-transformer';
 import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from './../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
+import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
@@ -85,6 +86,35 @@ export class QuarterlyApportionedEmissionsService {
           enableImplicitConversion: true,
         },
       );
+    });
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsStateAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsStateAggregation(req, params);
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.state),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        QuarterlyApportionedEmissionsStateAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      return dto;
     });
   }
 }
