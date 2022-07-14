@@ -14,6 +14,7 @@ const monthlyStateAggregation = [];
 const monthlyNationalAggregation = [];
 const quarterly = [];
 const quarterlyFacilityAggregation = [];
+const quarterlyStateAggregation = [];
 const annual = [];
 const annualFacilityAggregation = [];
 const annualStateAggregation = [];
@@ -339,6 +340,7 @@ export const fieldMappings = {
         aggregation: {
           unit: quarterly,
           facility: quarterlyFacilityAggregation,
+          state: quarterlyStateAggregation,
         },
       },
       excludableColumns: excludableOtherEmissionsColumns,
