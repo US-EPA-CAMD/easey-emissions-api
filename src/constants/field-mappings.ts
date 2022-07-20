@@ -210,6 +210,11 @@ quarterlyFacilityAggregation.push(
   ...quarterlyAggregationData,
 );
 
+quarterlyStateAggregation.push(
+  { ...propertyMetadata.stateCode.fieldLabels },
+  ...quarterlyAggregationData,
+);
+
 annual.push(
   ...commonCharacteristics,
   { ...propertyMetadata.associatedStacks.fieldLabels },
