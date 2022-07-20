@@ -1,14 +1,12 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
-import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.daily_emission' })
 export class DailyEmission extends BaseEntity {
   @PrimaryColumn({
-    name: 'unit_id',
+    name: 'daily_emission_id',
     nullable: false,
-    transformer: new NumericColumnTransformer(),
   })
-  id: number;
+  dailyEmissionId: string;
 
   @Column({ name: 'rpt_period_id', nullable: false })
   rptPeriodId: number;

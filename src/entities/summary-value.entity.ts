@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'camdecmps.daily_emission' })
+@Entity({ name: 'camdecmps.summary_value' })
 export class SummaryValue extends BaseEntity {
   @PrimaryColumn({
     name: 'sum_value_id',
