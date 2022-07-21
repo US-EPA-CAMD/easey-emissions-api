@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { plainToClass } from 'class-transformer';
 import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from './../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
 import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
+import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto/quarterly-apportioned-emissions-national-aggregation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
@@ -107,14 +108,41 @@ export class QuarterlyApportionedEmissionsService {
     );
 
     return query.map(item => {
-      const dto = plainToClass(
+      return plainToClass(
         QuarterlyApportionedEmissionsStateAggregationDTO,
         item,
         {
           enableImplicitConversion: true,
         },
       );
-      return dto;
+    });
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsNationalAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(req, params);
+    } catch (e) {
+      this.logger.error(InternalServerErrorException, e.message);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      return plainToClass(
+        QuarterlyApportionedEmissionsNationalAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
     });
   }
 }
