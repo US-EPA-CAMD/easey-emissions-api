@@ -2,72 +2,72 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'camdecmps.hrly_op_data' })
 export class HourlyOpData extends BaseEntity {
-  @PrimaryColumn({ name: 'hour_id', nullable: false })
+  @PrimaryColumn({ name: 'hour_id' })
   hourId: string;
 
-  @Column({ name: 'rpt_period_id', nullable: false })
+  @Column({ name: 'rpt_period_id' })
   rptPeriodId: number;
 
-  @Column({ name: 'mon_loc_id', nullable: false })
+  @Column({ name: 'mon_loc_id' })
   monLocId: string;
 
-  @Column({ name: 'begin_date', nullable: false })
+  @Column({ name: 'begin_date' })
   beginDate: Date;
 
-  @Column({ name: 'begin_hour', nullable: false })
+  @Column({ name: 'begin_hour' })
   beginHour: number;
 
-  @Column({ name: 'op_time', nullable: true })
-  opTime: number;
+  @Column({ name: 'op_time' })
+  opTime: number | null;
 
-  @Column({ name: 'hr_load', nullable: true })
-  hrLoad: number;
+  @Column({ name: 'hr_load' })
+  hrLoad: number | null;
 
-  @Column({ name: 'load_range', nullable: true })
-  loadRange: number;
+  @Column({ name: 'load_range' })
+  loadRange: number | null;
 
-  @Column({ name: 'common_stack_load_range', nullable: true })
-  commonStackLoadRange: number;
+  @Column({ name: 'common_stack_load_range' })
+  commonStackLoadRange: number | null;
 
-  @Column({ name: 'fc_factor', nullable: true })
-  fcFactor: number;
+  @Column({ name: 'fc_factor' })
+  fcFactor: number | null;
 
-  @Column({ name: 'fd_factor', nullable: true })
-  fdFactor: number;
+  @Column({ name: 'fd_factor' })
+  fdFactor: number | null;
 
-  @Column({ name: 'fw_factor', nullable: true })
-  fwFactor: number;
+  @Column({ name: 'fw_factor' })
+  fwFactor: number | null;
 
-  @Column({ name: 'fuel_cd', nullable: true })
-  fuelCd: string;
+  @Column({ name: 'fuel_cd' })
+  fuelCd: string | null;
 
-  @Column({ name: 'multi_fuel_flg', nullable: true })
-  multiFuelFlg: string;
+  @Column({ name: 'multi_fuel_flg' })
+  multiFuelFlg: string | null;
 
-  @Column({ name: 'userid', nullable: true })
-  userId: string;
+  @Column({ name: 'userid' })
+  userId: string | null;
 
-  @Column({ name: 'add_date', nullable: true })
-  addDate: Date;
+  @Column({ name: 'add_date' })
+  addDate: Date | null;
 
-  @Column({ name: 'update_date', nullable: true })
-  updateDate: Date;
+  @Column({ name: 'update_date' })
+  updateDate: Date | null;
 
-  @Column({ name: 'load_uom_cd', nullable: true })
-  loadUomCd: string;
+  @Column({ name: 'load_uom_cd' })
+  loadUomCd: string | null;
 
-  @Column({ name: 'operating_condition_cd', nullable: true })
-  operatingConditionCd: string;
+  @Column({ name: 'operating_condition_cd' })
+  operatingConditionCd: string | null;
 
-  @Column({ name: 'fuel_cd_list', nullable: true })
-  fuelCdList: string;
+  @Column({ name: 'fuel_cd_list' })
+  fuelCdList: string | null;
 
-  @Column({ name: 'mhhi_indicator', nullable: true })
-  mhhiIndicator: number;
+  @Column({ name: 'mhhi_indicator' })
+  mhhiIndicator: number | null;
 
-  @Column({ name: 'mats_load', nullable: true })
-  matsLoad: number;
+  @Column({ name: 'mats_load' })
+  matsLoad: number | null;
 
-  @Column({ name: 'mats_startup_shutdown_flg', nullable: true })
-  matsStartupShutdownFlg: string;
+  @Column({ name: 'mats_startup_shutdown_flg' })
+  matsStartupShutdownFlg: string | null;
 }
