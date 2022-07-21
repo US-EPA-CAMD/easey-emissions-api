@@ -33,12 +33,15 @@ import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-em
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
 import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
+import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto/quarterly-apportioned-emissions-national-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Quarterly Emissions')
 @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsFacilityAggregationDTO)
+@ApiExtraModels(QuarterlyApportionedEmissionsStateAggregationDTO)
+@ApiExtraModels(QuarterlyApportionedEmissionsNationalAggregationDTO)
 export class QuarterlyApportionedEmissionsController {
 
   constructor(
@@ -141,5 +144,37 @@ export class QuarterlyApportionedEmissionsController {
     @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterlyApportionedEmissionsStateAggregationDTO[]> {
     return this.service.getEmissionsStateAggregation(req, params);
+  }
+
+  @Get('nationally')
+  @ApiOkResponse({
+    description:
+      'Retrieves Quarterly Apportioned Emissions data per filter criteria aggregated nationally',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(QuarterlyApportionedEmissionsNationalAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.quarterly.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterlyApportionedEmissionsNationalAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
   }
 }

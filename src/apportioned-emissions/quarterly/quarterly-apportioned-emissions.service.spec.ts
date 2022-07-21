@@ -12,6 +12,7 @@ const mockRepository = () => ({
   getEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -72,10 +73,20 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls QuarterUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = [{ quarter: 1 }]
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls QuarterUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ quarter: 1 }]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
       expect(result).toEqual(expected);
     });
   });

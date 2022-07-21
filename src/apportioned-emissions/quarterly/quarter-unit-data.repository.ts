@@ -137,6 +137,37 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     return results;
   }
 
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  ): Promise<QuarterUnitDataView[]> {
+    let totalCount: number;
+    let results: QuarterUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = ['qud.year', 'qud.quarter'];
+    const orderByColumns = ['qud.year', 'qud.quarter'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
+
+    results = await query.getRawMany();
+    if (results && results.length > 0) {
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
   private buildAggregationQuery(
     params,
     selectColumns: string[],
