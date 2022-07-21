@@ -4,7 +4,6 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 export class SummaryValue extends BaseEntity {
   @PrimaryColumn({
     name: 'sum_value_id',
-    nullable: false,
   })
   sumValueId: string;
 
