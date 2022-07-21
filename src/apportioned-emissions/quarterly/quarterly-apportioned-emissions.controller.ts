@@ -40,6 +40,8 @@ import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto
 @ApiTags('Apportioned Quarterly Emissions')
 @ApiExtraModels(QuarterlyApportionedEmissionsDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsFacilityAggregationDTO)
+@ApiExtraModels(QuarterlyApportionedEmissionsStateAggregationDTO)
+@ApiExtraModels(QuarterlyApportionedEmissionsNationalAggregationDTO)
 export class QuarterlyApportionedEmissionsController {
 
   constructor(
