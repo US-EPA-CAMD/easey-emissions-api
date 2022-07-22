@@ -38,7 +38,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   })
   calcPctMoisture: number;
 
-  @Column({ name: 'mon_loc_id' })
+  @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
 
   @Column({
