@@ -3,108 +3,120 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
-  @PrimaryColumn({ name: 'derv_id' })
+  @PrimaryColumn({ name: 'derv_id', nullable: false })
   dervId: string;
 
-  @Column({ name: 'hour_id' })
+  @Column({ name: 'hour_id', nullable: false })
   hourId: string;
 
-  @Column({ name: 'mon_sys_id' })
-  monSysId: string | null;
+  @Column({ name: 'mon_sys_id', nullable: true })
+  monSysId: string;
 
-  @Column({ name: 'mon_form_id' })
-  monFormId: string | null;
+  @Column({ name: 'mon_form_id', nullable: true })
+  monFormId: string;
 
-  @Column({ name: 'parameter_cd' })
+  @Column({ name: 'parameter_cd', nullable: false })
   parameterCd: string;
 
   @Column({
     name: 'unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  unadjustedHrlyValue: number | null;
+  unadjustedHrlyValue: number;
 
   @Column({
     name: 'applicable_bias_adj_factor',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  applicableBiasAdjFactor: number | null;
+  applicableBiasAdjFactor: number;
 
   @Column({
     name: 'calc_unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  calcUnadjustedHrlyValue: number | null;
+  calcUnadjustedHrlyValue: number;
 
   @Column({
     name: 'adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  adjustedHrlyValue: number | null;
+  adjustedHrlyValue: number;
 
   @Column({
     name: 'calc_adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  calcAdjustedHrlyValue: number | null;
+  calcAdjustedHrlyValue: number;
 
-  @Column({ name: 'modc_cd' })
-  modcCd: string | null;
+  @Column({ name: 'modc_cd', nullable: true })
+  modcCd: string;
 
-  @Column({ name: 'operating_condition_cd' })
-  operatingConditionCd: string | null;
+  @Column({ name: 'operating_condition_cd', nullable: true })
+  operatingConditionCd: string;
 
   @Column({
     name: 'pct_available',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  pctAvailable: number | null;
+  pctAvailable: number;
 
   @Column({
     name: 'diluent_cap_ind',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  diluentCapInd: number | null;
+  diluentCapInd: number;
 
-  @Column({ name: 'segment_num', transformer: new NumericColumnTransformer() })
-  segmentNum: number | null;
+  @Column({
+    name: 'segment_num',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
+  segmentNum: number;
 
-  @Column({ name: 'fuel_cd' })
-  fuelCd: string | null;
+  @Column({ name: 'fuel_cd', nullable: true })
+  fuelCd: string;
 
-  @Column({ name: 'userid' })
-  userId: string | null;
+  @Column({ name: 'userid', nullable: true })
+  userId: string;
 
-  @Column({ name: 'add_date' })
-  addDate: Date | null;
+  @Column({ name: 'add_date', nullable: true })
+  addDate: Date;
 
-  @Column({ name: 'update_date' })
-  updateDate: Date | null;
+  @Column({ name: 'update_date', nullable: true })
+  updateDate: Date;
 
-  @Column({ name: 'calc_pct_diluent' })
-  calcPctDiluent: string | null;
+  @Column({ name: 'calc_pct_diluent', nullable: true })
+  calcPctDiluent: string;
 
-  @Column({ name: 'calc_pct_moisture' })
-  calcPctMoisture: string | null;
+  @Column({ name: 'calc_pct_moisture', nullable: true })
+  calcPctMoisture: string;
 
-  @Column({ name: 'calc_rata_status' })
-  calcRataStatus: string | null;
+  @Column({ name: 'calc_rata_status', nullable: true })
+  calcRataStatus: string;
 
-  @Column({ name: 'calc_appe_status' })
-  calcAppeStatus: string | null;
+  @Column({ name: 'calc_appe_status', nullable: true })
+  calcAppeStatus: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({ name: 'rpt_period_id', nullable: false })
   rptPeriodId: number;
 
-  @Column({ name: 'mon_loc_id' })
+  @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
 
   @Column({
     name: 'calc_fuel_flow_total',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  calcFuelFlowTotal: number | null;
+  calcFuelFlowTotal: number;
 
-  @Column({ name: 'calc_hour_measure_cd' })
-  calcHourMeasureCd: string | null;
+  @Column({ name: 'calc_hour_measure_cd', nullable: true })
+  calcHourMeasureCd: string;
 }
