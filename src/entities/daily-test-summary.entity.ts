@@ -54,9 +54,9 @@ export class DailyTestSummary extends BaseEntity {
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
 
-  @Column({ nullable: false, name: 'span_scale_cd' })
+  @Column({ nullable: true, name: 'span_scale_cd' })
   spanScaleCd: string;
 
-  @Column({ nullable: false, name: 'mon_sys_id' })
+  @Column({ nullable: true, name: 'mon_sys_id' })
   monSysId: string;
 }
