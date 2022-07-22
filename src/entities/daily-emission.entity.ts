@@ -5,72 +5,81 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 export class DailyEmission extends BaseEntity {
   @PrimaryColumn({
     name: 'daily_emission_id',
+    nullable: false,
   })
   dailyEmissionId: string;
 
   @Column({
+    nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
   rptPeriodId: number;
 
-  @Column({ name: 'mon_loc_id' })
+  @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
 
-  @Column({ name: 'parameter_cd' })
+  @Column({ name: 'parameter_cd', nullable: false })
   parameterCd: string;
 
-  @Column({ name: 'begin_date' })
+  @Column({ name: 'begin_date', nullable: false })
   beginDate: Date;
 
   @Column({
+    nullable: true,
     name: 'total_daily_emission',
     transformer: new NumericColumnTransformer(),
   })
-  totalDailyEmission: number | null;
+  totalDailyEmission: number;
 
   @Column({
+    nullable: true,
     name: 'adjusted_daily_emission',
     transformer: new NumericColumnTransformer(),
   })
-  adjustedDailyEmission: number | null;
+  adjustedDailyEmission: number;
 
   @Column({
+    nullable: true,
     name: 'sorbent_mass_emission',
     transformer: new NumericColumnTransformer(),
   })
-  sorbentMassEmission: number | null;
+  sorbentMassEmission: number;
 
-  @Column({ name: 'userid' })
-  userId: string | null;
+  @Column({ name: 'userid', nullable: true })
+  userId: string;
 
-  @Column({ name: 'add_date' })
-  addDate: Date | null;
+  @Column({ name: 'add_date', nullable: true })
+  addDate: Date;
 
-  @Column({ name: 'update_date' })
-  updateDate: Date | null;
+  @Column({ name: 'update_date', nullable: true })
+  updateDate: Date;
 
   @Column({
     name: 'unadjusted_daily_emission',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  unadjustedDailyEmission: number | null;
+  unadjustedDailyEmission: number;
 
   @Column({
     name: 'total_carbon_burned',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  totalCarbonBurned: number | null;
+  totalCarbonBurned: number;
 
   @Column({
     name: 'calc_total_daily_emission',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  calcTotalDailyEmission: number | null;
+  calcTotalDailyEmission: number;
 
   @Column({
     name: 'calc_total_op_time',
     transformer: new NumericColumnTransformer(),
+    nullable: true,
   })
-  calcTotalOpTime: number | null;
+  calcTotalOpTime: number;
 }
