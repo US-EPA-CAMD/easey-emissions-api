@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
@@ -17,19 +18,34 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({ name: 'parameter_cd' })
   parameterCd: string;
 
-  @Column({ name: 'unadjusted_hrly_value' })
+  @Column({
+    name: 'unadjusted_hrly_value',
+    transformer: new NumericColumnTransformer(),
+  })
   unadjustedHrlyValue: number | null;
 
-  @Column({ name: 'applicable_bias_adj_factor' })
+  @Column({
+    name: 'applicable_bias_adj_factor',
+    transformer: new NumericColumnTransformer(),
+  })
   applicableBiasAdjFactor: number | null;
 
-  @Column({ name: 'calc_unadjusted_hrly_value' })
+  @Column({
+    name: 'calc_unadjusted_hrly_value',
+    transformer: new NumericColumnTransformer(),
+  })
   calcUnadjustedHrlyValue: number | null;
 
-  @Column({ name: 'adjusted_hrly_value' })
+  @Column({
+    name: 'adjusted_hrly_value',
+    transformer: new NumericColumnTransformer(),
+  })
   adjustedHrlyValue: number | null;
 
-  @Column({ name: 'calc_adjusted_hrly_value' })
+  @Column({
+    name: 'calc_adjusted_hrly_value',
+    transformer: new NumericColumnTransformer(),
+  })
   calcAdjustedHrlyValue: number | null;
 
   @Column({ name: 'modc_cd' })
@@ -38,13 +54,19 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({ name: 'operating_condition_cd' })
   operatingConditionCd: string | null;
 
-  @Column({ name: 'pct_available' })
+  @Column({
+    name: 'pct_available',
+    transformer: new NumericColumnTransformer(),
+  })
   pctAvailable: number | null;
 
-  @Column({ name: 'diluent_cap_ind' })
+  @Column({
+    name: 'diluent_cap_ind',
+    transformer: new NumericColumnTransformer(),
+  })
   diluentCapInd: number | null;
 
-  @Column({ name: 'segment_num' })
+  @Column({ name: 'segment_num', transformer: new NumericColumnTransformer() })
   segmentNum: number | null;
 
   @Column({ name: 'fuel_cd' })
@@ -77,7 +99,10 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({ name: 'mon_loc_id' })
   monLocId: string;
 
-  @Column({ name: 'calc_fuel_flow_total' })
+  @Column({
+    name: 'calc_fuel_flow_total',
+    transformer: new NumericColumnTransformer(),
+  })
   calcFuelFlowTotal: number | null;
 
   @Column({ name: 'calc_hour_measure_cd' })

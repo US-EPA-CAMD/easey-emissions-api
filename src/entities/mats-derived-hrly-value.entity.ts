@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.mats_derived_hrly_value' })
 export class MatsDerivedHrlyValue extends BaseEntity {
@@ -23,16 +24,25 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   @Column({ name: 'calc_unadjusted_hrly_value' })
   calcUnadjustedHrlyValue: string | null;
 
-  @Column({ name: 'calc_pct_diluent' })
+  @Column({
+    name: 'calc_pct_diluent',
+    transformer: new NumericColumnTransformer(),
+  })
   calcPctDiluent: number | null;
 
-  @Column({ name: 'calc_pct_moisture' })
+  @Column({
+    name: 'calc_pct_moisture',
+    transformer: new NumericColumnTransformer(),
+  })
   calcPctMoisture: number | null;
 
   @Column({ name: 'mon_loc_id' })
   monLocId: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'userid' })

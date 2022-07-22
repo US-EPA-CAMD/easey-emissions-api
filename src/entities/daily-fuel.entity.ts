@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.daily_fuel' })
 export class DailyFuel extends BaseEntity {
@@ -11,16 +12,28 @@ export class DailyFuel extends BaseEntity {
   @Column({ name: 'fuel_cd' })
   fuelCd: string;
 
-  @Column({ name: 'daily_fuel_feed' })
+  @Column({
+    name: 'daily_fuel_feed',
+    transformer: new NumericColumnTransformer(),
+  })
   dailyFuelFeed: number | null;
 
-  @Column({ name: 'carbon_content_used' })
+  @Column({
+    name: 'carbon_content_used',
+    transformer: new NumericColumnTransformer(),
+  })
   carbonContentUsed: number | null;
 
-  @Column({ name: 'fuel_carbon_burned' })
+  @Column({
+    name: 'fuel_carbon_burned',
+    transformer: new NumericColumnTransformer(),
+  })
   fuelCarbonBurned: number | null;
 
-  @Column({ name: 'calc_fuel_carbon_burned' })
+  @Column({
+    name: 'calc_fuel_carbon_burned',
+    transformer: new NumericColumnTransformer(),
+  })
   calcFuelCarbonBurned: number | null;
 
   @Column({ name: 'userid' })
@@ -32,7 +45,10 @@ export class DailyFuel extends BaseEntity {
   @Column({ name: 'update_date' })
   updateDate: Date | null;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id' })

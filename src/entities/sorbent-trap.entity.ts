@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.sorbent_trap' })
 export class SorbentTrap extends BaseEntity {
@@ -14,22 +15,28 @@ export class SorbentTrap extends BaseEntity {
   @Column({ name: 'begin_date' })
   beginDate: Date;
 
-  @Column({ name: 'begin_hour' })
+  @Column({ name: 'begin_hour', transformer: new NumericColumnTransformer() })
   beginHour: number;
 
   @Column({ name: 'end_date' })
   endDate: Date;
 
-  @Column({ name: 'end_hour' })
+  @Column({ name: 'end_hour', transformer: new NumericColumnTransformer() })
   endHour: number;
 
   @Column({ name: 'mon_sys_id' })
   monSysId: string;
 
-  @Column({ name: 'paired_trap_agreement' })
+  @Column({
+    name: 'paired_trap_agreement',
+    transformer: new NumericColumnTransformer(),
+  })
   pairedTrapAgreement: number | null;
 
-  @Column({ name: 'absolute_difference_ind' })
+  @Column({
+    name: 'absolute_difference_ind',
+    transformer: new NumericColumnTransformer(),
+  })
   absoluteDifferenceInd: number | null;
 
   @Column({ name: 'modc_cd' })
@@ -38,7 +45,10 @@ export class SorbentTrap extends BaseEntity {
   @Column({ name: 'hg_concentration' })
   hgConcentration: string | null;
 
-  @Column({ name: 'calc_paired_trap_agreement' })
+  @Column({
+    name: 'calc_paired_trap_agreement',
+    transformer: new NumericColumnTransformer(),
+  })
   calcPairedTrapAgreement: number | null;
 
   @Column({ name: 'calc_modc_cd' })

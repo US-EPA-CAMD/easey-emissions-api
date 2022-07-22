@@ -1,11 +1,15 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.weekly_test_summary' })
 export class WeeklyTestSummary extends BaseEntity {
   @PrimaryColumn({ name: 'weekly_test_sum_id' })
   weeklyTestSumId: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id' })
@@ -20,10 +24,10 @@ export class WeeklyTestSummary extends BaseEntity {
   @Column({ name: 'test_date' })
   testDate: Date;
 
-  @Column({ name: 'test_hour' })
+  @Column({ name: 'test_hour', transformer: new NumericColumnTransformer() })
   testHour: number;
 
-  @Column({ name: 'test_min' })
+  @Column({ name: 'test_min', transformer: new NumericColumnTransformer() })
   testMin: number | null;
 
   @Column({ name: 'test_type_cd' })

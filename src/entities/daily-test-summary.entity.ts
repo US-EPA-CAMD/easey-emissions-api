@@ -1,11 +1,15 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.daily_test_summary' })
 export class DailyTestSummary extends BaseEntity {
   @PrimaryColumn({ name: 'daily_test_sum_id' })
   dailyTestSumId: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id' })
@@ -17,10 +21,16 @@ export class DailyTestSummary extends BaseEntity {
   @Column({ name: 'daily_test_date' })
   dailyTestDate: Date;
 
-  @Column({ name: 'daily_test_hour' })
+  @Column({
+    name: 'daily_test_hour',
+    transformer: new NumericColumnTransformer(),
+  })
   dailyTestHour: number;
 
-  @Column({ name: 'daily_test_min' })
+  @Column({
+    name: 'daily_test_min',
+    transformer: new NumericColumnTransformer(),
+  })
   dailyTestMin: number | null;
 
   @Column({ name: 'test_type_cd' })
