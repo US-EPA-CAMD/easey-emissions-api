@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
@@ -8,7 +9,7 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({ name: 'emission_standard_cd' })
   emissionStandardCd: string | null;
 
-  @Column({ name: 'modus_value' })
+  @Column({ name: 'modus_value', transformer: new NumericColumnTransformer() })
   modusValue: number | null;
 
   @Column({ name: 'modus_uom_cd' })
@@ -17,7 +18,10 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({ name: 'electrical_load_cd' })
   electricalLoadCd: string | null;
 
-  @Column({ name: 'no_period_ended_ind' })
+  @Column({
+    name: 'no_period_ended_ind',
+    transformer: new NumericColumnTransformer(),
+  })
   noPeriodEndedInd: number | null;
 
   @Column({ name: 'no_period_ended_comment' })
@@ -26,7 +30,10 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({ name: 'mon_loc_id' })
   monLocId: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'userid' })

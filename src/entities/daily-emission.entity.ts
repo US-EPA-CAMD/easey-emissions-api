@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.daily_emission' })
 export class DailyEmission extends BaseEntity {
@@ -7,7 +8,10 @@ export class DailyEmission extends BaseEntity {
   })
   dailyEmissionId: string;
 
-  @Column({ name: 'rpt_period_id' })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+  })
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id' })
@@ -19,13 +23,22 @@ export class DailyEmission extends BaseEntity {
   @Column({ name: 'begin_date' })
   beginDate: Date;
 
-  @Column({ name: 'total_daily_emission' })
+  @Column({
+    name: 'total_daily_emission',
+    transformer: new NumericColumnTransformer(),
+  })
   totalDailyEmission: number | null;
 
-  @Column({ name: 'adjusted_daily_emission' })
+  @Column({
+    name: 'adjusted_daily_emission',
+    transformer: new NumericColumnTransformer(),
+  })
   adjustedDailyEmission: number | null;
 
-  @Column({ name: 'sorbent_mass_emission' })
+  @Column({
+    name: 'sorbent_mass_emission',
+    transformer: new NumericColumnTransformer(),
+  })
   sorbentMassEmission: number | null;
 
   @Column({ name: 'userid' })
@@ -37,15 +50,27 @@ export class DailyEmission extends BaseEntity {
   @Column({ name: 'update_date' })
   updateDate: Date | null;
 
-  @Column({ name: 'unadjusted_daily_emission' })
+  @Column({
+    name: 'unadjusted_daily_emission',
+    transformer: new NumericColumnTransformer(),
+  })
   unadjustedDailyEmission: number | null;
 
-  @Column({ name: 'total_carbon_burned' })
+  @Column({
+    name: 'total_carbon_burned',
+    transformer: new NumericColumnTransformer(),
+  })
   totalCarbonBurned: number | null;
 
-  @Column({ name: 'calc_total_daily_emission' })
+  @Column({
+    name: 'calc_total_daily_emission',
+    transformer: new NumericColumnTransformer(),
+  })
   calcTotalDailyEmission: number | null;
 
-  @Column({ name: 'calc_total_op_time' })
+  @Column({
+    name: 'calc_total_op_time',
+    transformer: new NumericColumnTransformer(),
+  })
   calcTotalOpTime: number | null;
 }
