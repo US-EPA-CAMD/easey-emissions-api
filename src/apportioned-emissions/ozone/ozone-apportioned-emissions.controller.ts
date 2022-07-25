@@ -37,6 +37,7 @@ import { OzoneApportionedEmissionsFacilityAggregationDTO } from './../../dto/ozo
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Ozone Emissions')
 @ApiExtraModels(OzoneApportionedEmissionsDTO)
+@ApiExtraModels(OzoneApportionedEmissionsFacilityAggregationDTO)
 export class OzoneApportionedEmissionsController {
   
   constructor(

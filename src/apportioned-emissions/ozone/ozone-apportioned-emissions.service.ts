@@ -1,6 +1,6 @@
-import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 
 import {
   Injectable,
