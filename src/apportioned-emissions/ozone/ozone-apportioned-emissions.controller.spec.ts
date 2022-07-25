@@ -49,4 +49,17 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
       );
     });
   });
+
+  describe('* getEmissionsFacilityAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: OzoneUnitDataView[] = [];
+      const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsFacilityAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsFacilityAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
 });

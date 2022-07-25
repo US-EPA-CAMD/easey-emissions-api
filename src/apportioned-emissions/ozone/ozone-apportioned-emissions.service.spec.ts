@@ -10,6 +10,7 @@ import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-app
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -57,4 +58,15 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls OzoneUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ year: 2019 }];
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
 });
