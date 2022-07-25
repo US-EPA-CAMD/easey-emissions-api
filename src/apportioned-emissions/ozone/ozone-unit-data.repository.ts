@@ -66,4 +66,87 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
 
     return query;
   }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneUnitDataView[]> {
+    let totalCount: number;
+    let results: OzoneUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = [
+      'oud.stateCode',
+      'oud.facilityName',
+      'oud.facilityId',
+      'oud.year',
+    ];
+    const orderByColumns = ['oud.facilityId', 'oud.year'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
+
+    results = await query.getRawMany();
+    if (results && results.length > 0) {
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  private buildAggregationQuery(
+    params,
+    selectColumns: string[],
+    orderByColumns: string[],
+    countQuery: boolean = false,
+  ): SelectQueryBuilder<OzoneUnitDataView> {
+    let query = null;
+
+    if (countQuery) {
+      query = this.createQueryBuilder('oud').select('COUNT(*) OVER() as count');
+    } else {
+      query = this.createQueryBuilder('oud').select(
+        selectColumns.map(col => {
+          return `${col} AS "${col.split('.')[1]}"`;
+        }),
+      );
+
+      query
+        .addSelect('SUM(oud.grossLoad)', 'grossLoad')
+        .addSelect('SUM(oud.steamLoad)', 'steamLoad')
+        .addSelect('SUM(oud.so2Mass)', 'so2Mass')
+        .addSelect('SUM(oud.co2Mass)', 'co2Mass')
+        .addSelect('SUM(oud.noxMass)', 'noxMass')
+        .addSelect('SUM(oud.heatInput)', 'heatInput');
+    }
+
+    query = QueryBuilderHelper.createEmissionsQuery(
+      query,
+      params,
+      [
+        'year',
+        'stateCode',
+        'facilityId',
+        'unitType',
+        'controlTechnologies',
+        'unitFuelType',
+        'programCodeInfo',
+      ],
+      'oud',
+    );
+
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c));
+
+    return query;
+  }
 }
