@@ -6,6 +6,7 @@ import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -21,10 +22,10 @@ import {
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class QuarterlyApportionedEmissionsService {
-  
   constructor(
     private readonly logger: Logger,
     @InjectRepository(QuarterUnitDataRepository)
@@ -41,10 +42,10 @@ export class QuarterlyApportionedEmissionsService {
       entities = await this.repository.getEmissions(
         req,
         fieldMappings.emissions.quarterly.data.aggregation.unit,
-        params
+        params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -71,12 +72,14 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.facility),
+      JSON.stringify(
+        fieldMappings.emissions.quarterly.data.aggregation.facility,
+      ),
     );
 
     return query.map(item => {
@@ -99,7 +102,7 @@ export class QuarterlyApportionedEmissionsService {
     try {
       query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -125,14 +128,19 @@ export class QuarterlyApportionedEmissionsService {
     let query;
 
     try {
-      query = await this.repository.getEmissionsNationalAggregation(req, params);
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
       fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.national),
+      JSON.stringify(
+        fieldMappings.emissions.quarterly.data.aggregation.national,
+      ),
     );
 
     return query.map(item => {

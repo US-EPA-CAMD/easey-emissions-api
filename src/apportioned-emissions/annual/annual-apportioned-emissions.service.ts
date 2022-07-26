@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -21,10 +22,10 @@ import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-a
 import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
-  
   constructor(
     private readonly logger: Logger,
     @InjectRepository(AnnualUnitDataRepository)
@@ -41,10 +42,10 @@ export class AnnualApportionedEmissionsService {
       entities = await this.repository.getEmissions(
         req,
         fieldMappings.emissions.annual.data.aggregation.unit,
-        params
+        params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -71,7 +72,7 @@ export class AnnualApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -99,7 +100,7 @@ export class AnnualApportionedEmissionsService {
     try {
       query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -108,13 +109,9 @@ export class AnnualApportionedEmissionsService {
     );
 
     return query.map(item => {
-      return plainToClass(
-        AnnualApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return plainToClass(AnnualApportionedEmissionsStateAggregationDTO, item, {
+        enableImplicitConversion: true,
+      });
     });
   }
 
@@ -130,7 +127,7 @@ export class AnnualApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
