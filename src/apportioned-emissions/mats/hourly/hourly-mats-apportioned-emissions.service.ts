@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -17,10 +18,10 @@ import {
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class HourlyMatsApportionedEmissionsService {
-
   constructor(
     private readonly logger: Logger,
     @InjectRepository(HourUnitMatsDataRepository)
@@ -36,7 +37,7 @@ export class HourlyMatsApportionedEmissionsService {
     try {
       entities = await this.repository.getEmissions(req, params);
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(

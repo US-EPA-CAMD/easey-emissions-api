@@ -37,7 +37,7 @@
     "@nestjs/platform-express": "^8.1.1",
     "@nestjs/swagger": "^5.1.2",
     "@nestjs/typeorm": "^8.0.2",
-    "@us-epa-camd/easey-common": "^5.3.0",
+    "@us-epa-camd/easey-common": "^6.0.0",
     "class-transformer": "0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
