@@ -22,6 +22,7 @@ import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-app
 import { OzoneApportionedEmissionsFacilityAggregationDTO } from '../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
+import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
 
 @Injectable()
 export class OzoneApportionedEmissionsService {
@@ -113,6 +114,37 @@ export class OzoneApportionedEmissionsService {
     return query.map(item => {
       return plainToClass(
         OzoneApportionedEmissionsStateAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+    });
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneApportionedEmissionsNationalAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.ozone.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      return plainToClass(
+        OzoneApportionedEmissionsNationalAggregationDTO,
         item,
         {
           enableImplicitConversion: true,

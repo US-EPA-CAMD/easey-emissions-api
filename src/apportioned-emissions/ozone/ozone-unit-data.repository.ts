@@ -133,6 +133,37 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     return results;
   }
 
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneUnitDataView[]> {
+    let totalCount: number;
+    let results: OzoneUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = ['oud.year'];
+    const orderByColumns = ['oud.year'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
+
+    results = await query.getRawMany();
+    if (results && results.length > 0) {
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
   private buildAggregationQuery(
     params,
     selectColumns: string[],
