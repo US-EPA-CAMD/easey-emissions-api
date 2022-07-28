@@ -8,6 +8,7 @@ import {
     OneToMany,
   } from 'typeorm';
 import { DailyEmission } from './daily-emission.entity';
+import { HrlyOpData } from './hrly-op-data.entity';
     
   @Entity({ name: 'camdecmps.monitor_location' })
   export class MonitorLocation extends BaseEntity {
@@ -54,6 +55,13 @@ import { DailyEmission } from './daily-emission.entity';
     )
     @JoinColumn({ name: 'mon_loc_id' })
     dailyEmissions: DailyEmission[];
+
+    @OneToMany(
+      () => DailyEmission,
+      c => c.location,
+    )
+    @JoinColumn({ name: 'mon_loc_id' })
+    hrlyOpData: HrlyOpData[];
 
     // @OneToOne(
     //   () => StackPipe,

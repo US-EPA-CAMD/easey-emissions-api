@@ -1,10 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.hrly_op_data' })
 export class HrlyOpData extends BaseEntity {
   @PrimaryColumn({ name: 'hour_id', nullable: false })
-  hourId: string;
+  id: string;
 
   @Column({
     name: 'rpt_period_id',
@@ -115,4 +124,18 @@ export class HrlyOpData extends BaseEntity {
 
   @Column({ name: 'mats_startup_shutdown_flg', nullable: true })
   matsStartupShutdownFlg: string;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.hrlyOpData,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.hrlyOpData,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
 }
