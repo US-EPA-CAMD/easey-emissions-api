@@ -229,7 +229,7 @@ describe('OzoneUnitDataRepository', () => {
   });
 
   describe('getEmissionsNationalAggregation', () => {
-    it('calls createQueryBuilder and gets all OzoneUnitData aggregated by national from the repository no filters', async () => {
+    it('calls createQueryBuilder and gets all OzoneUnitData aggregated nationally from the repository no filters', async () => {
       const result = await repository.getEmissionsNationalAggregation(
         req,
         new PaginatedOzoneApportionedEmissionsParamsDTO(),
@@ -239,7 +239,7 @@ describe('OzoneUnitDataRepository', () => {
       expect(result).toEqual('mockRawEmissions');
     });
 
-    it('calls createQueryBuilder and gets OzoneUnitData aggregated by national from the repository with filters', async () => {
+    it('calls createQueryBuilder and gets OzoneUnitData aggregated nationally from the repository with filters', async () => {
       const result = await repository.getEmissionsNationalAggregation(
         req,
         filters,
@@ -248,7 +248,7 @@ describe('OzoneUnitDataRepository', () => {
       expect(result).toEqual('mockRawEmissions');
     });
 
-    it('calls createQueryBuilder and gets all OzoneUnitData aggregated by national from the repository with pagination', async () => {
+    it('calls createQueryBuilder and gets all OzoneUnitData aggregated nationally from the repository with pagination', async () => {
       ResponseHeaders.setPagination = jest
         .fn()
         .mockReturnValue('paginated results');
