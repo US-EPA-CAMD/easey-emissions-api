@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.summary_value' })
 export class SummaryValue extends BaseEntity {
@@ -7,7 +9,7 @@ export class SummaryValue extends BaseEntity {
     name: 'sum_value_id',
     nullable: false,
   })
-  sumValueId: string;
+  id: string;
 
   @Column({
     name: 'rpt_period_id',
@@ -72,4 +74,19 @@ export class SummaryValue extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.summaryValues,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.summaryValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
 }

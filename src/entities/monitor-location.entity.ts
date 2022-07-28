@@ -9,6 +9,8 @@ import {
   } from 'typeorm';
 import { DailyEmission } from './daily-emission.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
+import { Nsps4tSummary } from './nsps4t-summary.entity';
+import { SummaryValue } from './summary-value.entity';
     
   @Entity({ name: 'camdecmps.monitor_location' })
   export class MonitorLocation extends BaseEntity {
@@ -63,41 +65,19 @@ import { HrlyOpData } from './hrly-op-data.entity';
     @JoinColumn({ name: 'mon_loc_id' })
     hrlyOpData: HrlyOpData[];
 
-    // @OneToOne(
-    //   () => StackPipe,
-    //   stackPipe => stackPipe.location,
-    //   { eager: true },
-    // )
-    // @JoinColumn({ name: 'stack_pipe_id' })
-    // stackPipe: StackPipe;
-  
-    // @OneToOne(
-    //   () => Unit,
-    //   unit => unit.location,
-    //   { eager: true },
-    // )
-    // @JoinColumn({ name: 'unit_id' })
-    // unit: Unit;
-  
-    // @OneToMany(
-    //   () => Component,
-    //   c => c.location,
-    // )
-    // @JoinColumn({ name: 'mon_loc_id' })
-    // components: Component[];
-  
-    // @OneToMany(
-    //   () => MonitorSystem,
-    //   ms => ms.location,
-    // )
-    // @JoinColumn({ name: 'mon_loc_id' })
-    // systems: MonitorSystem[];
-  
-    // @OneToMany(
-    //   () => TestSummary,
-    //   ts => ts.location,
-    // )
-    // @JoinColumn({ name: 'mon_loc_id' })
-    // testSummaries: TestSummary[];
+    @OneToMany(
+      () => Nsps4tSummary,
+      c => c.location,
+    )
+    @JoinColumn({ name: 'mon_loc_id' })
+    nsps4tSummaries: Nsps4tSummary[];
+
+    @OneToMany(
+      () => SummaryValue,
+      c => c.location,
+    )
+    @JoinColumn({ name: 'mon_loc_id' })
+    summaryValues: SummaryValue[];
+
   }
   

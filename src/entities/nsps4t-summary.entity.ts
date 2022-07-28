@@ -1,10 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
   @PrimaryColumn({ name: 'nsps4t_sum_id', nullable: false })
-  nsps4tSumId: string;
+  id: string;
 
   @Column({ name: 'emission_standard_cd', nullable: true })
   emissionStandardCd: string;
@@ -50,4 +52,21 @@ export class Nsps4tSummary extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.nsps4tSummaries,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+  
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.nsps4tSummaries,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
+
+
 }
