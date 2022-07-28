@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(OzoneUnitDataView)
 export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
-  
   async getEmissions(
     req: Request,
     columns: any[],
@@ -36,12 +35,12 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
   private buildQuery(
     columns: any[],
     params: OzoneApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<OzoneUnitDataView> {
     let query = this.createQueryBuilder('oud').select(
       alias
         ? columns.map(col => `oud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `oud.${col.value}`)
+        : columns.map(col => `oud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -82,6 +81,37 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
       'oud.year',
     ];
     const orderByColumns = ['oud.facilityId', 'oud.year'];
+
+    const query = this.buildAggregationQuery(
+      params,
+      selectColumns,
+      orderByColumns,
+    );
+
+    results = await query.getRawMany();
+    if (results && results.length > 0) {
+      const countQuery = this.buildAggregationQuery(
+        params,
+        selectColumns,
+        orderByColumns,
+        true,
+      );
+      totalCount = (await countQuery.getRawOne()).count;
+      ResponseHeaders.setPagination(req, page, perPage, totalCount);
+    }
+    return results;
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneUnitDataView[]> {
+    let totalCount: number;
+    let results: OzoneUnitDataView[];
+    const { page, perPage } = params;
+
+    const selectColumns = ['oud.stateCode', 'oud.year'];
+    const orderByColumns = ['oud.stateCode', 'oud.year'];
 
     const query = this.buildAggregationQuery(
       params,
