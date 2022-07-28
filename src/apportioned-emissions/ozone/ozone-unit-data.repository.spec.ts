@@ -187,4 +187,44 @@ describe('OzoneUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockRawEmissions');
     });
   });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls createQueryBuilder and gets all OzoneUnitData aggregated by state from the repository no filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        new PaginatedOzoneApportionedEmissionsParamsDTO(),
+      );
+
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets OzoneUnitData aggregated by state from the repository with filters', async () => {
+      const result = await repository.getEmissionsStateAggregation(
+        req,
+        filters,
+      );
+      expect(queryBuilder.getRawMany).toHaveBeenCalled();
+      expect(result).toEqual('mockRawEmissions');
+    });
+
+    it('calls createQueryBuilder and gets all OzoneUnitData aggregated by state from the repository with pagination', async () => {
+      ResponseHeaders.setPagination = jest
+        .fn()
+        .mockReturnValue('paginated results');
+
+      let paginatedFilters = filters;
+      paginatedFilters.page = 1;
+      paginatedFilters.perPage = 10;
+
+      const paginatedResult = await repository.getEmissionsStateAggregation(
+        req,
+        paginatedFilters,
+      );
+
+      expect(ResponseHeaders.setPagination).toHaveBeenCalled();
+      expect(queryBuilder.getRawOne).toHaveBeenCalled();
+      expect(paginatedResult).toEqual('mockRawEmissions');
+    });
+  });
 });
