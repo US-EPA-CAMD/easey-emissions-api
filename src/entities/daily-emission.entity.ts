@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { ReportingPeriod } from './reporting-period.entity';
+import { MonitorLocation } from './monitor-location.entity';
 
 @Entity({ name: 'camdecmps.daily_emission' })
 export class DailyEmission extends BaseEntity {
@@ -82,4 +84,19 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
   })
   calcTotalOpTime: number;
+
+  @ManyToOne(
+    ()=>ReportingPeriod,
+    o=> o.dailyEmissions
+  )
+  @JoinColumn({name: 'rpt_period_id'})
+  reportingPeriod: ReportingPeriod;
+
+  @ManyToOne(
+    ()=>MonitorLocation,
+    o=>o.dailyEmissions,
+  )
+  @JoinColumn({name: 'mon_loc_id'})
+  location: MonitorLocation;
+
 }
