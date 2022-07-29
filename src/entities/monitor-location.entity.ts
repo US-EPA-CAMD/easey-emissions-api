@@ -8,6 +8,7 @@ import {
     OneToMany,
   } from 'typeorm';
 import { DailyEmission } from './daily-emission.entity';
+import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SummaryValue } from './summary-value.entity';
@@ -78,6 +79,13 @@ import { SummaryValue } from './summary-value.entity';
     )
     @JoinColumn({ name: 'mon_loc_id' })
     summaryValues: SummaryValue[];
+
+    @OneToMany(
+      () => DailyTestSummary,
+      c => c.location,
+    )
+    @JoinColumn({ name: 'mon_loc_id' })
+    dailyTestSummaries: DailyTestSummary[];
 
   }
   

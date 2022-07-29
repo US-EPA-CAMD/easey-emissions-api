@@ -12,6 +12,7 @@ import { DailyEmission } from './daily-emission.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SummaryValue } from './summary-value.entity';
+import { DailyTestSummary } from './daily-test-summary.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -95,5 +96,11 @@ export class ReportingPeriod extends BaseEntity {
   @JoinColumn({ name: 'rpt_period_id' })
   summaryValues: SummaryValue[];
 
+  @OneToMany(
+    () => DailyTestSummary,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  dailyTestSummaries: DailyTestSummary[];
 
 }

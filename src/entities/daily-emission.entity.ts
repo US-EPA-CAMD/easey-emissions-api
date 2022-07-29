@@ -9,6 +9,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { ReportingPeriod } from './reporting-period.entity';
 import { MonitorLocation } from './monitor-location.entity';
+import { DailyFuel } from './daily-fuel.entity';
 
 @Entity({ name: 'camdecmps.daily_emission' })
 export class DailyEmission extends BaseEntity {
@@ -105,4 +106,11 @@ export class DailyEmission extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   location: MonitorLocation;
+
+  @ManyToOne(
+    () => DailyFuel,
+    o => o.dailyEmissions,
+  )
+  dailyFuel: DailyFuel;
+
 }

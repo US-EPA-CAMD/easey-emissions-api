@@ -1,10 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
+import { Component } from './component.entity';
+import { MonitorSystem } from './monitor-system.entity';
 
 @Entity({ name: 'camdecmps.daily_test_summary' })
 export class DailyTestSummary extends BaseEntity {
   @PrimaryColumn({ name: 'daily_test_sum_id', nullable: false })
-  dailyTestSumId: string;
+  id: string;
 
   @Column({
     nullable: false,
@@ -59,4 +63,34 @@ export class DailyTestSummary extends BaseEntity {
 
   @Column({ nullable: true, name: 'mon_sys_id' })
   monSysId: string;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.dailyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.dailyTestSummaries,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+  
+  @ManyToOne(
+    () => Component,
+    o => o.dailyTestSummaries,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.dailyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+
 }
