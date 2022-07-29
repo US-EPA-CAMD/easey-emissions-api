@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { MonitorFormula } from './monitor-formula.entity';
 
 @Entity({ name: 'camdecmps.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'derv_id', nullable: false })
-  dervId: string;
+  id: string;
 
   @Column({ name: 'hour_id', nullable: false })
   hourId: string;
@@ -119,4 +122,26 @@ export class DerivedHrlyValue extends BaseEntity {
 
   @Column({ name: 'calc_hour_measure_cd', nullable: true })
   calcHourMeasureCd: string;
+
+  @ManyToOne(
+    () => HrlyOpData,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  hrlyOpData: HrlyOpData;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => MonitorFormula,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  formula: MonitorFormula;
+
 }

@@ -1,6 +1,7 @@
 import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DailyTestSummary } from './daily-test-summary.entity';
+import { DerivedHrlyValue } from './derived-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -59,4 +60,12 @@ export class MonitorSystem extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_sys_id' })
   dailyTestSummaries: DailyTestSummary[];
+
+  @OneToMany(
+    () => DerivedHrlyValue,
+    c => c.system,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  derivedHrlyValues: DerivedHrlyValue[];
+
 }
