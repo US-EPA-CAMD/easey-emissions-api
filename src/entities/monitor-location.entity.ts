@@ -15,6 +15,7 @@ import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
+import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SummaryValue } from './summary-value.entity';
     
@@ -127,6 +128,12 @@ import { SummaryValue } from './summary-value.entity';
     @JoinColumn({ name: 'mon_loc_id' })
     nsps4tAnnuals: Nsps4tAnnual[];
 
+    @OneToMany(
+      () => Nsps4tCompliancePeriod,
+      c => c.location,
+    )
+    @JoinColumn({ name: 'mon_loc_id' })
+    nsps4tCompliancePeriods: Nsps4tCompliancePeriod[];
 
   }
   

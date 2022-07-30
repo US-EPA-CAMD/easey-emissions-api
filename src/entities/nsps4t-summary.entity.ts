@@ -3,6 +3,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
+import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 
 @Entity({ name: 'camdecmps.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
@@ -75,4 +76,13 @@ export class Nsps4tSummary extends BaseEntity {
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
   nsps4tAnnual: Nsps4tAnnual;
+
+  // @TODO: Verify this relationship type once there is data in nsps4t-compliance-period and nsps4t-summary tables
+  @OneToOne(
+    () => Nsps4tCompliancePeriod,
+    o => o.nsps4tSummary,
+  )
+  @JoinColumn({ name: 'nsps4t_sum_id' })
+  nsps4tCompliancePeriod: Nsps4tCompliancePeriod;
+  
 }
