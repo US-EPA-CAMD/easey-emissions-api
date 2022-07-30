@@ -1,8 +1,18 @@
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
+import { DailyTestSummary } from './daily-test-summary.entity';
+import { ProtocolGasVendor } from './protocol-gas-vendor.entity';
 
 @Entity({ name: 'camdecmps.daily_calibration' })
-export class DailyEmission extends BaseEntity {
+export class DailyCalibration extends BaseEntity {
   @PrimaryColumn({
     name: 'cal_inj_id',
     type: 'varchar',
@@ -221,7 +231,6 @@ export class DailyEmission extends BaseEntity {
   })
   upscaleReferenceValue: number;
 
-
   @Column({
     name: 'userid',
     type: 'varchar',
@@ -292,4 +301,18 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
   })
   injectionProtocolCode: string;
+
+  @ManyToOne(
+    () => ProtocolGasVendor,
+    o => o.dailyCalibrations,
+  )
+  @JoinColumn({ name: 'vendor_id' })
+  protocolGasVendor: ProtocolGasVendor;
+
+  @OneToOne(
+    ()=>DailyTestSummary,
+    o=> o.dailyCalibration,
+  )
+  @JoinColumn({name: 'daily_test_sum_id'})
+  dailyTestSummary: DailyTestSummary
 }

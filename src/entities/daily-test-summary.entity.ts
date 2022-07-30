@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
+import { DailyCalibration } from './daily-calibration.entity';
 
 @Entity({ name: 'camdecmps.daily_test_summary' })
 export class DailyTestSummary extends BaseEntity {
@@ -82,7 +83,13 @@ export class DailyTestSummary extends BaseEntity {
     () => Component,
     o => o.dailyTestSummaries,
   )
-  @JoinColumn({ name: 'component_id' })
+  @JoinColumn({ name: 'component_id' })  @OneToOne(
+    ()=>DailyTestSummary,
+    o=> o.dailyCalibration,
+  )
+  @JoinColumn({name: 'daily_test_sum_id'})
+  dailyTestSummary: DailyTestSummary
+
   component: Component;
 
   @ManyToOne(
@@ -92,5 +99,11 @@ export class DailyTestSummary extends BaseEntity {
   @JoinColumn({ name: 'mon_sys_id' })
   system: MonitorSystem;
 
+  @OneToOne(
+    ()=>DailyCalibration,
+    o=> o.dailyTestSummary,
+  )
+  @JoinColumn({name: 'daily_test_sum_id'})
+  dailyCalibration: DailyCalibration
 
 }

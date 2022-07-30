@@ -1,5 +1,6 @@
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { DailyCalibration } from './daily-calibration.entity';
 
 @Entity({ name: 'camdecmps.protocol_gas_vendor' })
 export class ProtocolGasVendor extends BaseEntity {
@@ -62,4 +63,12 @@ export class ProtocolGasVendor extends BaseEntity {
     nullable: true,
   })
   activationDate: Date;
+
+  @OneToMany(
+    () => DailyCalibration,
+    o => o.protocolGasVendor
+  )
+  @JoinColumn({ name: 'vendor_id' })
+  dailyCalibrations: DailyCalibration[];
+
 }
