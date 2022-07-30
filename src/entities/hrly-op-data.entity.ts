@@ -15,6 +15,7 @@ import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
+import { MonitorHrlyValue } from './monitor-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.hrly_op_data' })
 export class HrlyOpData extends BaseEntity {
@@ -180,4 +181,12 @@ export class HrlyOpData extends BaseEntity {
   @JoinColumn({ name: 'hour_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
+  @OneToMany(
+    () => MonitorHrlyValue,
+    c => c.hrlyOpData,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  monitorHrlyValues: MonitorHrlyValue[];
+
+  
 }
