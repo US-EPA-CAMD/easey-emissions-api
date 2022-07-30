@@ -11,6 +11,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
+import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 
 @Entity({ name: 'camdecmps.hrly_op_data' })
 export class HrlyOpData extends BaseEntity {
@@ -148,4 +149,10 @@ export class HrlyOpData extends BaseEntity {
   @JoinColumn({ name: 'hour_id' })
   derivedHrlyValues: DerivedHrlyValue[];
 
+  @OneToMany(
+    () => HrlyFuelFlow,
+    c => c.hrlyOpData,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  hrlyFuelFlows: HrlyFuelFlow[];
 }
