@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
+import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.component' })
 export class Component extends BaseEntity {
@@ -120,5 +121,11 @@ export class Component extends BaseEntity {
   @JoinColumn({ name: 'component_id' })
   hrlyGasFlowMeters: HrlyGasFlowMeter[];
 
+  @OneToMany(
+    () => MatsMonitorHrlyValue,
+    c => c.component,
+  )
+  @JoinColumn({ name: 'component_id' })
+  matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
 }

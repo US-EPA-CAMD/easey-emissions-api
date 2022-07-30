@@ -4,6 +4,7 @@ import { DailyTestSummary } from './daily-test-summary.entity';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
 import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
+import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -84,5 +85,11 @@ export class MonitorSystem extends BaseEntity {
   @JoinColumn({ name: 'mon_sys_id' })
   longTermFuelFlows: LongTermFuelFlow[];
 
+  @OneToMany(
+    () => MatsMonitorHrlyValue,
+    c => c.system,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
 }
