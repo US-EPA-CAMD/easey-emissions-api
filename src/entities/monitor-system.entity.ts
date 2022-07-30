@@ -6,6 +6,7 @@ import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
+import { SorbentTrap } from './sorbent-trap.entity';
 
 @Entity({ name: 'camdecmps.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -14,7 +15,7 @@ export class MonitorSystem extends BaseEntity {
 
   @Column({ type: 'varchar', length: 45, nullable: false, name: 'mon_loc_id' })
   locationId: string;
-
+  nsps4tCompliancePeriods
   @Column({ type: 'varchar', length: 7, nullable: true, name: 'sys_type_cd' })
   systemTypeCode: string;
 
@@ -100,5 +101,11 @@ export class MonitorSystem extends BaseEntity {
   @JoinColumn({ name: 'mon_sys_id' })
   monitorHrlyValues: MonitorHrlyValue[];
 
+  @OneToMany(
+    () => SorbentTrap,
+    c => c.system,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  sorbentTraps: SorbentTrap[];
 
 }
