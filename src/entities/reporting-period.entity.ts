@@ -20,6 +20,7 @@ import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
 import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
+import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -158,4 +159,11 @@ export class ReportingPeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   sorbentTraps: SorbentTrap[];
+
+  @OneToMany(
+    () => WeeklyTestSummary,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  weeklyTestSummaries: WeeklyTestSummary[];
 }

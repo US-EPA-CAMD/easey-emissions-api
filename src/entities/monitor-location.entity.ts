@@ -19,6 +19,7 @@ import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { SummaryValue } from './summary-value.entity';
+import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'camdecmps.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -142,4 +143,12 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   sorbentTraps: SorbentTrap[];
+
+  @OneToMany(
+    () => WeeklyTestSummary,
+    c => c.location,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  weeklyTestSummaries: WeeklyTestSummary[];
+
 }

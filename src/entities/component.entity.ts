@@ -12,6 +12,7 @@ import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
+import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'camdecmps.component' })
 export class Component extends BaseEntity {
@@ -136,5 +137,10 @@ export class Component extends BaseEntity {
   @JoinColumn({ name: 'component_id' })
   monitorHrlyValues: MonitorHrlyValue[];
 
-
+  @OneToMany(
+    () => WeeklyTestSummary,
+    c => c.component,
+  )
+  @JoinColumn({ name: 'component_id' })
+  weeklyTestSummaries: WeeklyTestSummary[];
 }

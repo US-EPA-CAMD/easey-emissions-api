@@ -7,6 +7,7 @@ import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
+import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'camdecmps.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -107,5 +108,12 @@ export class MonitorSystem extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_sys_id' })
   sorbentTraps: SorbentTrap[];
+  
+  @OneToMany(
+    () => WeeklyTestSummary,
+    c => c.system,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  weeklyTestSummaries: WeeklyTestSummary[];
 
 }

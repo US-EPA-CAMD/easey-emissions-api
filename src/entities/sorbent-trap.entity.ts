@@ -106,6 +106,4 @@ export class SorbentTrap extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
-
 }

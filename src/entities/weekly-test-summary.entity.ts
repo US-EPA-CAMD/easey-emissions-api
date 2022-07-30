@@ -1,10 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { ReportingPeriod } from './reporting-period.entity';
+import { Component } from './component.entity';
 
 @Entity({ name: 'camdecmps.weekly_test_summary' })
 export class WeeklyTestSummary extends BaseEntity {
   @PrimaryColumn({ name: 'weekly_test_sum_id', nullable: false })
-  weeklyTestSumId: string;
+  id: string;
 
   @Column({
     nullable: false,
@@ -59,4 +63,33 @@ export class WeeklyTestSummary extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+  
+  @ManyToOne(
+    () => Component,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
 }
