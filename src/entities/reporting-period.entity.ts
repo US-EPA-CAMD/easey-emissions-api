@@ -17,6 +17,7 @@ import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
+import { Nsps4tAnnual } from './nsps4t-annual.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -134,5 +135,13 @@ export class ReportingPeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
+
+  @OneToMany(
+    () => Nsps4tAnnual,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  nsps4tAnnuals: Nsps4tAnnual[];
+
 
 }

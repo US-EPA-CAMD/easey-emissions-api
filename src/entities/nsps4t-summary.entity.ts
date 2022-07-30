@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
+import { Nsps4tAnnual } from './nsps4t-annual.entity';
 
 @Entity({ name: 'camdecmps.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
@@ -66,7 +67,12 @@ export class Nsps4tSummary extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
-
-
+  
+  // @TODO: Verify this relationship type once there is data in nsps4t-annual and nsps4t-summary tables
+  @OneToOne(
+    () => Nsps4tAnnual,
+    o => o.nsps4tSummary,
+  )
+  @JoinColumn({ name: 'nsps4t_sum_id' })
+  nsps4tAnnual: Nsps4tAnnual;
 }
