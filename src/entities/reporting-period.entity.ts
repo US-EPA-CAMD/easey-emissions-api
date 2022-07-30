@@ -13,6 +13,7 @@ import { HrlyOpData } from './hrly-op-data.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SummaryValue } from './summary-value.entity';
 import { DailyTestSummary } from './daily-test-summary.entity';
+import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -103,4 +104,10 @@ export class ReportingPeriod extends BaseEntity {
   @JoinColumn({ name: 'rpt_period_id' })
   dailyTestSummaries: DailyTestSummary[];
 
+  @OneToMany(
+    () => HrlyGasFlowMeter,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  hrlyGasFlowMeters: HrlyGasFlowMeter[];
 }

@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
+import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 
 @Entity({ name: 'camdecmps.component' })
 export class Component extends BaseEntity {
@@ -111,5 +112,13 @@ export class Component extends BaseEntity {
   )
   @JoinColumn({ name: 'component_id' })
   dailyTestSummaries: DailyTestSummary[];
+
+  @OneToMany(
+    () => HrlyGasFlowMeter,
+    c => c.component,
+  )
+  @JoinColumn({ name: 'component_id' })
+  hrlyGasFlowMeters: HrlyGasFlowMeter[];
+
 
 }
