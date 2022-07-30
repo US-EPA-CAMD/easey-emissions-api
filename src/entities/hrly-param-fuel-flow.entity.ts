@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
+import { MonitorFormula } from './monitor-formula.entity';
+import { MonitorSystem } from './monitor-system.entity';
 
 @Entity({ name: 'camdecmps.hrly_param_fuel_flow' })
 export class HrlyParamFuelFlow extends BaseEntity {
   @PrimaryColumn({ name: 'hrly_param_ff_id', nullable: false })
-  hrlyParamFfId: string;
+  id: string;
 
   @Column({ name: 'hrly_fuel_flow_id', nullable: false })
   hrlyFuelFlowId: string;
@@ -69,4 +72,26 @@ export class HrlyParamFuelFlow extends BaseEntity {
 
   @Column({ name: 'mon_loc_id', nullable: false })
   mon_loc_id: string;
+
+  @ManyToOne(
+    () => HrlyFuelFlow,
+    o => o.hrlyParamFuelFlows,
+  )
+  @JoinColumn({ name: 'hrly_fuel_flow_id' })
+  hrlyFuelFlow: HrlyFuelFlow;
+
+  @ManyToOne(
+    () => MonitorFormula,
+    o => o.hrlyParamFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  formula: MonitorFormula;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.hrlyParamFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
 }

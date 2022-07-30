@@ -8,6 +8,7 @@ import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
+import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
 @Entity({ name: 'camdecmps.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -115,5 +116,12 @@ export class MonitorSystem extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_sys_id' })
   weeklyTestSummaries: WeeklyTestSummary[];
+
+  @OneToMany(
+    () => HrlyParamFuelFlow,
+    c => c.system,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  hrlyParamFuelFlows: HrlyParamFuelFlow[];
 
 }
