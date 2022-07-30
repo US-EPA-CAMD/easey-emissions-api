@@ -1,16 +1,20 @@
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
 
 import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes.dto';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class MatsApportionedEmissionsService {
-  
   constructor(
     private readonly logger: Logger,
     @InjectRepository(HourUnitMatsDataRepository)
@@ -54,7 +58,7 @@ export class MatsApportionedEmissionsService {
         'Got all applicable mats apportioned emissions attributes',
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message, true);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return entities.map(item => {

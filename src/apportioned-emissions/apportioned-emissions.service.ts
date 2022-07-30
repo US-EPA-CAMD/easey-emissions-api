@@ -1,8 +1,13 @@
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { ProgramYearDimRepository } from './program-year-dim.repository';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
@@ -10,7 +15,6 @@ import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-a
 
 @Injectable()
 export class ApportionedEmissionsService {
-  
   constructor(
     private readonly logger: Logger,
     @InjectRepository(ProgramYearDimRepository)
@@ -53,7 +57,7 @@ export class ApportionedEmissionsService {
       );
       this.logger.info('Got all applicable apportioned emissions attributes');
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message, true);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return query.map(item => {
       return plainToClass(ApplicableApportionedEmissionsAttributesDTO, item, {

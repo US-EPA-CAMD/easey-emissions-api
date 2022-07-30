@@ -19,6 +19,8 @@ const quarterlyNationalAggregation = [];
 const annual = [];
 const annualFacilityAggregation = [];
 const ozoneFacilityAggregation = [];
+const ozoneStateAggregation = [];
+const ozoneNationalAggregation = []; 
 const annualStateAggregation = [];
 const annualNationalAggregation = [];
 const hourlyMats = [];
@@ -249,6 +251,13 @@ ozoneFacilityAggregation.push(
   ...ozoneAggregationData,
 );
 
+ozoneStateAggregation.push(
+  { ...propertyMetadata.stateCode.fieldLabels },
+  ...ozoneAggregationData,
+);
+
+ozoneNationalAggregation.push(...ozoneAggregationData);
+
 hourlyMats.push(
   ...commonCharacteristics,
   ...hourlyCharacteristics,
@@ -381,6 +390,8 @@ export const fieldMappings = {
         aggregation: {
           unit: annual,
           facility: ozoneFacilityAggregation,
+          state: ozoneStateAggregation,
+          national: ozoneNationalAggregation
         },
       },
       excludableColumns: excludableOtherEmissionsColumns,

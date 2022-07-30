@@ -32,12 +32,16 @@ import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissi
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 import { OzoneApportionedEmissionsFacilityAggregationDTO } from './../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
+import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
+import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Ozone Emissions')
 @ApiExtraModels(OzoneApportionedEmissionsDTO)
 @ApiExtraModels(OzoneApportionedEmissionsFacilityAggregationDTO)
+@ApiExtraModels(OzoneApportionedEmissionsStateAggregationDTO)
+@ApiExtraModels(OzoneApportionedEmissionsNationalAggregationDTO)
 export class OzoneApportionedEmissionsController {
   
   constructor(
@@ -106,5 +110,69 @@ export class OzoneApportionedEmissionsController {
     @Query() params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneApportionedEmissionsFacilityAggregationDTO[]> {
     return this.service.getEmissionsFacilityAggregation(req, params);
+  }
+
+  @Get('by-state')
+  @ApiOkResponse({
+    description: 'Retrieves Ozone Apportioned Emissions per filter criteria aggregated by state',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(OzoneApportionedEmissionsStateAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.ozone.data.aggregation.state
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsStateAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneApportionedEmissionsStateAggregationDTO[]> {
+    return this.service.getEmissionsStateAggregation(req, params);
+  }
+
+  @Get('nationally')
+  @ApiOkResponse({
+    description: 'Retrieves Ozone Apportioned Emissions per filter criteria aggregated nationally',
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(OzoneApportionedEmissionsNationalAggregationDTO),
+        },
+      },
+      'text/csv': {
+        schema: {
+          type: 'string',
+          example: fieldMappings.emissions.ozone.data.aggregation.national
+            .map(i => i.label)
+            .join(','),
+        },
+      },
+    },
+  })
+  @BadRequestResponse()
+  @NotFoundResponse()
+  @ApiQueryMultiSelect()
+  @ApiQueryAnnually()
+  @ApiProgramQuery()
+  @UseInterceptors(Json2CsvInterceptor)
+  getEmissionsNationalAggregation(
+    @Req() req: Request,
+    @Query() params: PaginatedOzoneApportionedEmissionsParamsDTO,
+  ): Promise<OzoneApportionedEmissionsNationalAggregationDTO[]> {
+    return this.service.getEmissionsNationalAggregation(req, params);
   }
 }

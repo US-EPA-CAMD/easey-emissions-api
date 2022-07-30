@@ -18,6 +18,8 @@ if (host === 'localhost') {
 export default registerAs('app', () => ({
   name: 'emissions-api',
   title: process.env.EASEY_EMISSIONS_API_TITLE || 'Emissions Management',
+  description:
+    'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
   path,
   host,
   apiHost: process.env.EASEY_API_GATEWAY_HOST || 'api.epa.gov/easey/dev',
