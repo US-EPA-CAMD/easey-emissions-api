@@ -1,6 +1,7 @@
 import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
+import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.monitor_formula' })
 export class MonitorFormula extends BaseEntity {
@@ -66,4 +67,12 @@ export class MonitorFormula extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_form_id' })
   derivedHrlyValues: DerivedHrlyValue[];
+
+  @OneToMany(
+    () => MatsDerivedHrlyValue,
+    c => c.formula,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  matsDerivedHrlyValues: MatsDerivedHrlyValue[];
+
 }

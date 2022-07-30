@@ -1,10 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorFormula } from './monitor-formula.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.mats_derived_hrly_value' })
 export class MatsDerivedHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'mats_dhv_id', nullable: false })
-  matsDhvId: string;
+  id: string;
 
   @Column({ nullable: false, name: 'hour_id' })
   hourId: string;
@@ -56,4 +60,33 @@ export class MatsDerivedHrlyValue extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => HrlyOpData,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  hrlyOpData: HrlyOpData;
+  
+  @ManyToOne(
+    () => MonitorFormula,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  formula: MonitorFormula;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  reportingPeriod: ReportingPeriod;
+
 }

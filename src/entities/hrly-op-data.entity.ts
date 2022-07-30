@@ -13,6 +13,7 @@ import { ReportingPeriod } from './reporting-period.entity';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
 import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
+import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.hrly_op_data' })
 export class HrlyOpData extends BaseEntity {
@@ -163,4 +164,12 @@ export class HrlyOpData extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyGasFlowMeters: HrlyGasFlowMeter[];
+
+  @OneToMany(
+    () => MatsDerivedHrlyValue,
+    c => c.hrlyOpData,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  matsDerivedHrlyValues: MatsDerivedHrlyValue[];
+
 }
