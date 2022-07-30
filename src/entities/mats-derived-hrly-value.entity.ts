@@ -65,7 +65,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
     () => HrlyOpData,
     o => o.matsDerivedHrlyValues,
   )
-  @JoinColumn({ name: 'rpt_period_id' })
+  @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
   
   @ManyToOne(
@@ -79,14 +79,14 @@ export class MatsDerivedHrlyValue extends BaseEntity {
     () => MonitorLocation,
     o => o.matsDerivedHrlyValues,
   )
-  @JoinColumn({ name: 'mon_form_id' })
+  @JoinColumn({ name: 'mon_loc_id' })
   location: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
     o => o.matsDerivedHrlyValues,
   )
-  @JoinColumn({ name: 'mon_form_id' })
+  @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
 
 }

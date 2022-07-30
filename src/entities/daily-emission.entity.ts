@@ -17,7 +17,7 @@ export class DailyEmission extends BaseEntity {
     name: 'daily_emission_id',
     nullable: false,
   })
-  dailyEmissionId: string;
+  id: string;
 
   @Column({
     nullable: false,

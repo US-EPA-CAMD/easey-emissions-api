@@ -5,7 +5,6 @@ import {
   Column,
   PrimaryColumn,
   OneToMany,
-  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
