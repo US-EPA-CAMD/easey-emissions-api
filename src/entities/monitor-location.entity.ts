@@ -11,6 +11,7 @@ import { DailyEmission } from './daily-emission.entity';
 import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
+import { LongTermFuelFlow } from './long-term-fuel-flow.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
 import { SummaryValue } from './summary-value.entity';
     
@@ -89,10 +90,10 @@ import { SummaryValue } from './summary-value.entity';
     dailyTestSummaries: DailyTestSummary[];
 
     @OneToMany(
-      () => HrlyGasFlowMeter,
+      () => LongTermFuelFlow,
       c => c.location,
     )
     @JoinColumn({ name: 'mon_loc_id' })
-    hrlyGasFlowMeters: HrlyGasFlowMeter[];
+    longTermFuelFlows: LongTermFuelFlow[];
   }
   

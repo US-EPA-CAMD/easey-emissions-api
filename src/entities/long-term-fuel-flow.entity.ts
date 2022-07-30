@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.long_term_fuel_flow' })
 export class LongTermFuelFlow extends BaseEntity {
   @PrimaryColumn({ name: 'ltff_id', nullable: false })
-  ltffId: string;
+  id: string;
 
   @Column({
     name: 'rpt_period_id',
@@ -64,4 +67,26 @@ export class LongTermFuelFlow extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+  
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.longTermFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.longTermFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.longTermFuelFlows,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
 }
