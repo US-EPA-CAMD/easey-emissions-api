@@ -71,7 +71,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  mon_loc_id: string;
+  monLocId: string;
 
   @ManyToOne(
     () => HrlyFuelFlow,
