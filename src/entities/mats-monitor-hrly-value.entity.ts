@@ -1,10 +1,15 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { Component } from './component.entity';
+import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.mats_monitor_hrly_value' })
 export class MatsMonitorHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'mats_mhv_id', nullable: false })
-  matsMhvId: string;
+  id: string;
 
   @Column({ nullable: false, name: 'hour_id' })
   hourId: string;
@@ -20,7 +25,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   rptPeriodId: number;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
   monSysId: string;
@@ -32,7 +37,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   unadjustedHrlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({
     name: 'pct_available',
@@ -64,4 +69,41 @@ export class MatsMonitorHrlyValue extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => Component,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => HrlyOpData,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'hour_id' })matsDerivedHrlyValues
+  hrlyOpData: HrlyOpData;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
+
 }

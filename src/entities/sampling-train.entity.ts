@@ -1,10 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { Component } from './component.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
+import { SorbentTrap } from './sorbent-trap.entity';
 
 @Entity({ name: 'camdecmps.sampling_train' })
 export class SamplingTrain extends BaseEntity {
   @PrimaryColumn({ name: 'trap_train_id', nullable: false })
-  trapTrainId: string;
+  id: string;
 
   @Column({ name: 'trap_id', nullable: false })
   trapId: string;
@@ -69,13 +73,13 @@ export class SamplingTrain extends BaseEntity {
   percentSpikeRecovery: number;
 
   @Column({ name: 'sampling_ratio_test_result_cd', nullable: true })
-  samplingRatioTestResultCd: string;
+  samplingRatioTestResultCode: string;
 
   @Column({ name: 'post_leak_test_result_cd', nullable: true })
-  postLeakTestResultCd: string;
+  postLeakTestResultCode: string;
 
   @Column({ name: 'train_qa_status_cd', nullable: true })
-  trainQaStatusCd: string;
+  trainQaStatusCode: string;
 
   @Column({ name: 'sample_damage_explanation', nullable: true })
   sampleDamageExplanation: string;
@@ -105,4 +109,34 @@ export class SamplingTrain extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => Component,
+    o => o.samplingTrains,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.samplingTrains,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  location: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.samplingTrains,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
+
+  @ManyToOne(
+    () => SorbentTrap,
+    o => o.samplingTrains,
+  )
+  @JoinColumn({ name: 'trap_id' })
+  sorbentTrap: SorbentTrap;
+
+
 }

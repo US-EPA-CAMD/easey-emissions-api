@@ -1,16 +1,17 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { DailyEmission } from './daily-emission.entity';
 
 @Entity({ name: 'camdecmps.daily_fuel' })
 export class DailyFuel extends BaseEntity {
   @PrimaryColumn({ name: 'daily_fuel_id', nullable: false })
-  dailyFuelId: string;
+  id: string;
 
   @Column({ name: 'daily_emission_id', nullable: false })
   dailyEmissionId: string;
 
   @Column({ name: 'fuel_cd', nullable: false })
-  fuelCd: string;
+  fuelCode: string;
 
   @Column({
     name: 'daily_fuel_feed',
@@ -58,4 +59,12 @@ export class DailyFuel extends BaseEntity {
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
+
+  @OneToMany(
+    () => DailyEmission,
+    o => o.dailyFuel,
+  )
+  @JoinColumn({ name: 'daily_emission_id' })
+  dailyEmissions: DailyEmission[];
+
 }

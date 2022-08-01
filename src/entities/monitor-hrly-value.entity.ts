@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { Component } from './component.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { HrlyOpData } from './hrly-op-data.entity';
 
 @Entity({ name: 'camdecmps.monitor-hrly-value.entity' })
 export class MonitorHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'monitor_hrly_val_id', nullable: false })
-  monitorHrlyValId: string;
+  id: string;
 
   @Column({ name: 'hour_id', nullable: false })
   hourId: string;
@@ -16,7 +19,7 @@ export class MonitorHrlyValue extends BaseEntity {
   componentId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({
     name: 'applicable_bias_adj_factor',
@@ -47,7 +50,7 @@ export class MonitorHrlyValue extends BaseEntity {
   calcAdjustedHrlyValue: number;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({
     name: 'pct_available',
@@ -95,4 +98,26 @@ export class MonitorHrlyValue extends BaseEntity {
 
   @Column({ name: 'calc_f2l_status', nullable: true })
   calcF2lStatus: string;
+
+  @ManyToOne(
+    () => Component,
+    o => o.monitorHrlyValues,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+  
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.monitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => HrlyOpData,
+    o => o.monitorHrlyValues,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  hrlyOpData: HrlyOpData;
+
 }

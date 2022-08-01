@@ -1,16 +1,17 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'weekly_system_integrity' })
 export class WeeklySystemIntegrity extends BaseEntity {
-  @PrimaryColumn({ name: 'weekly_sys_integrity_id', nullable: false })
-  weeklySysIntegrityId: string;
+  @PrimaryColumn({ name: 'campdecmps.weekly_sys_integrity_id', nullable: false })
+  id: string;
 
   @Column({ name: 'weekly_test_sum_id', nullable: false })
   weeklyTestSumId: string;
 
   @Column({ name: 'gas_level_cd', nullable: true })
-  gasLevelCd: string;
+  gasLevelCode: string;
 
   @Column({
     name: 'ref_value',
@@ -72,4 +73,12 @@ export class WeeklySystemIntegrity extends BaseEntity {
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
+
+  @OneToOne(
+    () => WeeklyTestSummary,
+    o => o.weeklySystemIntegrity,
+  )
+  @JoinColumn({ name: 'weekly_test_sum_id' })
+  weeklyTestSummary: WeeklyTestSummary;
+
 }
