@@ -1,8 +1,9 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { MonitorSystem } from './monitor-system.entity';
+import { SamplingTrain } from './sampling-train.entity';
 
 @Entity({ name: 'camdecmps.sorbent_trap' })
 export class SorbentTrap extends BaseEntity {
@@ -106,4 +107,12 @@ export class SorbentTrap extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
+
+  @OneToMany(
+    () => SamplingTrain,
+    o => o.sorbentTrap,
+  )
+  @JoinColumn({ name: 'trap_id' })
+  samplingTrains: SamplingTrain[];
+
 }

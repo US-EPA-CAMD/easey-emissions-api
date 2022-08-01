@@ -17,6 +17,7 @@ import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
 import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
+import { SamplingTrain } from './sampling-train.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
@@ -151,4 +152,10 @@ export class MonitorLocation extends BaseEntity {
   @JoinColumn({ name: 'mon_loc_id' })
   weeklyTestSummaries: WeeklyTestSummary[];
 
+  @OneToMany(
+    () => SamplingTrain,
+    c => c.location,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  samplingTrains: SamplingTrain[];
 }
