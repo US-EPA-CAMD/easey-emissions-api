@@ -83,13 +83,7 @@ export class DailyTestSummary extends BaseEntity {
     () => Component,
     o => o.dailyTestSummaries,
   )
-  @JoinColumn({ name: 'component_id' })  @OneToOne(
-    ()=>DailyTestSummary,
-    o=> o.dailyCalibration,
-  )
-  @JoinColumn({name: 'daily_test_sum_id'})
-  dailyTestSummary: DailyTestSummary
-
+  @JoinColumn({ name: 'component_id' })
   component: Component;
 
   @ManyToOne(

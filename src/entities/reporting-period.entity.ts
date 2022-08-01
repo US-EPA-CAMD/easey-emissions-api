@@ -74,6 +74,7 @@ export class ReportingPeriod extends BaseEntity {
   @Column({
     name: 'archive_ind',
     nullable: false,
+    transformer: new NumericColumnTransformer()
   })
   archiveInd: number;
 

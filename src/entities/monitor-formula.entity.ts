@@ -1,4 +1,11 @@
-import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
@@ -21,7 +28,7 @@ export class MonitorFormula extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 3,
-    nullable: true,
+    nullable: false,
     name: 'formula_identifier',
   })
   formulaId: string;
@@ -50,10 +57,11 @@ export class MonitorFormula extends BaseEntity {
     type: 'varchar',
     length: 200,
     name: 'formula_equation',
+    nullable: true,
   })
   formulaText: string;
 
-  @Column({ type: 'varchar', length: 8, nullable: false, name: 'userid' })
+  @Column({ type: 'varchar', length: 25, nullable: false, name: 'userid' })
   userId: string;
 
   @Column({ type: 'date', nullable: true, name: 'add_date' })

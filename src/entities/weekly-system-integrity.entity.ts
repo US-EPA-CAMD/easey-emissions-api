@@ -4,7 +4,7 @@ import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
 @Entity({ name: 'weekly_system_integrity' })
 export class WeeklySystemIntegrity extends BaseEntity {
-  @PrimaryColumn({ name: 'weekly_sys_integrity_id', nullable: false })
+  @PrimaryColumn({ name: 'campdecmps.weekly_sys_integrity_id', nullable: false })
   id: string;
 
   @Column({ name: 'weekly_test_sum_id', nullable: false })
