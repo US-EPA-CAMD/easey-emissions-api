@@ -9,7 +9,7 @@ import { ReportingPeriod } from './reporting-period.entity';
 @Entity({ name: 'camdecmps.mats_monitor_hrly_value' })
 export class MatsMonitorHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'mats_mhv_id', nullable: false })
-  matsMhvId: string;
+  id: string;
 
   @Column({ nullable: false, name: 'hour_id' })
   hourId: string;
@@ -25,7 +25,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   rptPeriodId: number;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
   monSysId: string;

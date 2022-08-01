@@ -5,7 +5,7 @@ import { DailyEmission } from './daily-emission.entity';
 @Entity({ name: 'camdecmps.daily_fuel' })
 export class DailyFuel extends BaseEntity {
   @PrimaryColumn({ name: 'daily_fuel_id', nullable: false })
-  dailyFuelId: string;
+  id: string;
 
   @Column({ name: 'daily_emission_id', nullable: false })
   dailyEmissionId: string;

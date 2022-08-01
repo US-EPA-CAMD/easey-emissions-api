@@ -5,7 +5,7 @@ export class ControlCode extends BaseEntity {
   @PrimaryColumn({
     name: 'control_cd',
   })
-  controlCd: string;
+  controlCode: string;
 
   @Column({
     name: 'control_description',

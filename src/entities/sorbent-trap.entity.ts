@@ -8,7 +8,7 @@ import { SamplingTrain } from './sampling-train.entity';
 @Entity({ name: 'camdecmps.sorbent_trap' })
 export class SorbentTrap extends BaseEntity {
   @PrimaryColumn({ name: 'trap_id', nullable: false })
-  trapId: string;
+  id: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
   monLocId: string;
