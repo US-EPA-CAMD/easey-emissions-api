@@ -19,7 +19,7 @@ export class DerivedHrlyValue extends BaseEntity {
   monFormId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({
     name: 'unadjusted_hrly_value',
@@ -57,10 +57,10 @@ export class DerivedHrlyValue extends BaseEntity {
   calcAdjustedHrlyValue: number;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({ name: 'operating_condition_cd', nullable: true })
-  operatingConditionCd: string;
+  operatingConditionCode: string;
 
   @Column({
     name: 'pct_available',
@@ -84,7 +84,7 @@ export class DerivedHrlyValue extends BaseEntity {
   segmentNum: number;
 
   @Column({ name: 'fuel_cd', nullable: true })
-  fuelCd: string;
+  fuelCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -121,7 +121,7 @@ export class DerivedHrlyValue extends BaseEntity {
   calcFuelFlowTotal: number;
 
   @Column({ name: 'calc_hour_measure_cd', nullable: true })
-  calcHourMeasureCd: string;
+  calcHourMeasureCode: string;
 
   @ManyToOne(
     () => HrlyOpData,

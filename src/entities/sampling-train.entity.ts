@@ -73,13 +73,13 @@ export class SamplingTrain extends BaseEntity {
   percentSpikeRecovery: number;
 
   @Column({ name: 'sampling_ratio_test_result_cd', nullable: true })
-  samplingRatioTestResultCd: string;
+  samplingRatioTestResultCode: string;
 
   @Column({ name: 'post_leak_test_result_cd', nullable: true })
-  postLeakTestResultCd: string;
+  postLeakTestResultCode: string;
 
   @Column({ name: 'train_qa_status_cd', nullable: true })
-  trainQaStatusCd: string;
+  trainQaStatusCode: string;
 
   @Column({ name: 'sample_damage_explanation', nullable: true })
   sampleDamageExplanation: string;

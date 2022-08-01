@@ -11,7 +11,7 @@ export class Nsps4tSummary extends BaseEntity {
   id: string;
 
   @Column({ name: 'emission_standard_cd', nullable: true })
-  emissionStandardCd: string;
+  emissionStandardCode: string;
 
   @Column({
     name: 'modus_value',
@@ -21,10 +21,10 @@ export class Nsps4tSummary extends BaseEntity {
   modusValue: number;
 
   @Column({ name: 'modus_uom_cd', nullable: true })
-  modusUomCd: string;
+  modusUomCode: string;
 
   @Column({ name: 'electrical_load_cd', nullable: true })
-  electricalLoadCd: string;
+  electricalLoadCode: string;
 
   @Column({
     name: 'no_period_ended_ind',

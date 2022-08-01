@@ -11,7 +11,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
   weeklyTestSumId: string;
 
   @Column({ name: 'gas_level_cd', nullable: true })
-  gasLevelCd: string;
+  gasLevelCode: string;
 
   @Column({
     name: 'ref_value',

@@ -22,7 +22,7 @@ export class SummaryValue extends BaseEntity {
   monLocId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({
     name: 'current_rpt_period_total',

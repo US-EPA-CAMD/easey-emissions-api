@@ -48,7 +48,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   avgCo2EmissionRate: number;
 
   @Column({ name: 'co2_emission_rate_uom_cd', nullable: true })
-  co2EmissionRateUomCd: string;
+  co2EmissionRateUomCode: string;
 
   @Column({
     name: 'pct_valid_op_hours',

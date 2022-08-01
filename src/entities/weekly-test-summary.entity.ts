@@ -53,16 +53,16 @@ export class WeeklyTestSummary extends BaseEntity {
   testMin: number;
 
   @Column({ nullable: false, name: 'test_type_cd' })
-  testTypeCd: string;
+  testTypeCode: string;
 
   @Column({ nullable: false, name: 'test_result_cd' })
-  testResultCd: string;
+  testResultCode: string;
 
   @Column({ nullable: false, name: 'span_scale_cd' })
-  spanScaleCd: string;
+  spanScaleCode: string;
 
   @Column({ name: 'calc_test_result_cd', nullable: true })
-  calcTestResultCd: string;
+  calcTestResultCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;

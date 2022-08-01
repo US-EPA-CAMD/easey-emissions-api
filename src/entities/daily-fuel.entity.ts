@@ -11,7 +11,7 @@ export class DailyFuel extends BaseEntity {
   dailyEmissionId: string;
 
   @Column({ name: 'fuel_cd', nullable: false })
-  fuelCd: string;
+  fuelCode: string;
 
   @Column({
     name: 'daily_fuel_feed',

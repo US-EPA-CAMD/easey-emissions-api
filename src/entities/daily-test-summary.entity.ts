@@ -42,13 +42,13 @@ export class DailyTestSummary extends BaseEntity {
   dailyTestMin: number;
 
   @Column({ nullable: false, name: 'test_type_cd' })
-  testTypeCd: string;
+  testTypeCode: string;
 
   @Column({ nullable: false, name: 'test_result_cd' })
-  testResultCd: string;
+  testResultCode: string;
 
   @Column({ nullable: false, name: 'calc_test_result_cd' })
-  calcTestResultCd: string;
+  calcTestResultCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -60,7 +60,7 @@ export class DailyTestSummary extends BaseEntity {
   updateDate: Date;
 
   @Column({ nullable: true, name: 'span_scale_cd' })
-  spanScaleCd: string;
+  spanScaleCode: string;
 
   @Column({ nullable: true, name: 'mon_sys_id' })
   monSysId: string;

@@ -14,13 +14,13 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   hourId: string;
 
   @Column({ nullable: false, name: 'parameter_cd' })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({ name: 'unadjusted_hrly_value', nullable: true })
   unadjustedHrlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
   monFormId: string;

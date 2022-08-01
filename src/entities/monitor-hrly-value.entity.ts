@@ -19,7 +19,7 @@ export class MonitorHrlyValue extends BaseEntity {
   componentId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({
     name: 'applicable_bias_adj_factor',
@@ -50,7 +50,7 @@ export class MonitorHrlyValue extends BaseEntity {
   calcAdjustedHrlyValue: number;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({
     name: 'pct_available',

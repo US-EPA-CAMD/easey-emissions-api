@@ -7,7 +7,7 @@ import { Nsps4tSummary } from './nsps4t-summary.entity';
 @Entity({ name: 'camdecmps.nsps4t_annual' })
 export class Nsps4tAnnual extends BaseEntity {
   @PrimaryColumn({ name: 'nsps4t_ann_id', nullable: false })
-  nsps4tAnnId: string;
+  id: string;
 
   @Column({ name: 'nsps4t_sum_id', nullable: false })
   nsps4tSumId: string;
@@ -20,7 +20,7 @@ export class Nsps4tAnnual extends BaseEntity {
   annualEnergySold: number;
 
   @Column({ name: 'annual_energy_sold_type_cd', nullable: true })
-  annualEnergySoldTypeCd: string;
+  annualEnergySoldTypeCode: string;
 
   @Column({
     name: 'annual_potential_output',

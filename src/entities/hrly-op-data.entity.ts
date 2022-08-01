@@ -92,7 +92,7 @@ export class HrlyOpData extends BaseEntity {
   fwFactor: number;
 
   @Column({ name: 'fuel_cd', nullable: true })
-  fuelCd: string;
+  fuelCode: string;
 
   @Column({ name: 'multi_fuel_flg', nullable: true })
   multiFuelFlg: string;
@@ -107,10 +107,10 @@ export class HrlyOpData extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'load_uom_cd', nullable: true })
-  loadUomCd: string;
+  loadUomCode: string;
 
   @Column({ name: 'operating_condition_cd', nullable: true })
-  operatingConditionCd: string;
+  operatingConditionCode: string;
 
   @Column({ name: 'fuel_cd_list', nullable: true })
   fuelCdList: string;

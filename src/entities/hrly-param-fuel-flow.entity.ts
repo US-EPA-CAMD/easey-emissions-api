@@ -19,7 +19,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
   monFormId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
-  parameterCd: string;
+  parameterCode: string;
 
   @Column({
     name: 'param_val_fuel',
@@ -36,10 +36,10 @@ export class HrlyParamFuelFlow extends BaseEntity {
   calcParamValFuel: number;
 
   @Column({ name: 'sample_type_cd', nullable: true })
-  sampleTypeCd: string;
+  sampleTypeCode: string;
 
   @Column({ name: 'operating_condition_cd', nullable: true })
-  operatingConditionCd: string;
+  operatingConditionCode: string;
 
   @Column({
     name: 'segment_num',
@@ -58,7 +58,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'parameter_uom_cd', nullable: true })
-  parameterUomCd: string;
+  parameterUomCode: string;
 
   @Column({ name: 'calc_appe_status', nullable: true })
   calcAppeStatus: string;

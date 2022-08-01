@@ -37,7 +37,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   unadjustedHrlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCd: string;
+  modcCode: string;
 
   @Column({
     name: 'pct_available',
