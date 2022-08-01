@@ -61,7 +61,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
   @Column({ name: 'add_date', nullable: true })
   addDate: Date;
 
-  @Column({ name: 'updatesamplingTrains_date', nullable: true })
+  @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
 
   @Column({
