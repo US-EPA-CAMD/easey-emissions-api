@@ -51,6 +51,23 @@ export class DailyCalibrationRecordDTO extends DailyCalibrationBaseDTO {
 
     calcOnlineOfflineIndicator: number
     
-    
+    calcZeroApsIndicator: number
+
+    calcUpscaleApsIndicator: number
+
+    calcZeroCalibrationError: number
+
+    calcUpscaleCalibrationError: number
+
+    userId: string
+
+    addDate: Date
+
+    updateDate: Date
+
+    rptPeriodId: number
 }
  
+export class DailyCalibrationImportDTO extends DailyCalibrationBaseDTO { }
+
+export class DailyCalibrationDTO extends DailyCalibrationRecordDTO { }
