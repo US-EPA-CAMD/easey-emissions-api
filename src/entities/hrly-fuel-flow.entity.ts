@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorSystem } from './monitor-system.entity';
+import { HrlyOpData } from './hrly-op-data.entity';
+import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
 @Entity({ name: 'camdecmps.hrly_fuel_flow' })
 export class HrlyFuelFlow extends BaseEntity {
   @PrimaryColumn({ name: 'hrly_fuel_flow_id', nullable: false })
-  hrlyFuelFlowId: string;
+  id: string;
 
   @Column({ name: 'hour_id', nullable: false })
   hourId: string;
@@ -13,7 +16,7 @@ export class HrlyFuelFlow extends BaseEntity {
   monSysId: string;
 
   @Column({ name: 'fuel_cd', nullable: false })
-  fuelCd: string;
+  fuelCode: string;
 
   @Column({
     name: 'fuel_usage_time',
@@ -30,7 +33,7 @@ export class HrlyFuelFlow extends BaseEntity {
   volumetricFlowRate: number;
 
   @Column({ name: 'sod_volumetric_cd', nullable: true })
-  sodVolumetricCd: string;
+  sodVolumetricCode: string;
 
   @Column({
     name: 'mass_flow_rate',
@@ -47,7 +50,7 @@ export class HrlyFuelFlow extends BaseEntity {
   calcMassFlowRate: number;
 
   @Column({ name: 'sod_mass_cd', nullable: true })
-  sodMassCd: string;
+  sodMassCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -59,7 +62,7 @@ export class HrlyFuelFlow extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'volumetric_uom_cd', nullable: true })
-  volumetricUomCd: string;
+  volumetricUomCode: string;
 
   @Column({
     name: 'calc_volumetric_flow_rate',
@@ -76,4 +79,26 @@ export class HrlyFuelFlow extends BaseEntity {
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.hrlyFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  system: MonitorSystem;
+
+  @ManyToOne(
+    () => HrlyOpData,
+    o => o.hrlyFuelFlows,
+  )
+  @JoinColumn({ name: 'hour_id' })
+  hrlyOpData: HrlyOpData;
+
+  @OneToMany(
+    () => HrlyParamFuelFlow,
+    c => c.hrlyFuelFlow,
+  )
+  @JoinColumn({ name: 'hrly_fuel_flow_id' })
+  hrlyParamFuelFlows: HrlyParamFuelFlow[];
+
 }
