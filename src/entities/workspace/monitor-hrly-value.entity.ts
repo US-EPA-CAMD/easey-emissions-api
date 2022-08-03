@@ -31,7 +31,7 @@ export class MonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  applicableBiasAdjFactor: number;
+  biasAdjustmentFactor: number;
 
   @Column({
     name: 'unadjusted_hrly_value',
@@ -90,10 +90,10 @@ export class MonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'calc_leak_status', nullable: true })
   calcLeakStatus: string;
@@ -106,7 +106,7 @@ export class MonitorHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.monitorHourlyValueData,
+    o => o.monitorHourlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

@@ -18,14 +18,14 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   hourId: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -75,9 +75,8 @@ export class MatsMonitorHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.matsMonitorHourlyValueData,
+    o => o.matsMonitorHourlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
-  matsDerivedHrlyValues;
   hrlyOpData: HrlyOpData;
 }

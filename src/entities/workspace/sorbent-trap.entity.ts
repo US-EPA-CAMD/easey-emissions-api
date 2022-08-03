@@ -16,10 +16,10 @@ export class SorbentTrap extends BaseEntity {
   id: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ nullable: false, name: 'rpt_period_id' })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'begin_date' })
   beginDate: Date;
@@ -97,5 +97,5 @@ export class SorbentTrap extends BaseEntity {
     o => o.sorbentTrap,
   )
   @JoinColumn({ name: 'trap_id' })
-  samplingTrainData: SamplingTrain[];
+  samplingTrains: SamplingTrain[];
 }

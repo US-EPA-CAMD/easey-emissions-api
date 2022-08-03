@@ -24,30 +24,30 @@ export class DailyTestSummary extends BaseEntity {
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
   @Column({ nullable: false, name: 'daily_test_date' })
-  dailyTestDate: Date;
+  date: Date;
 
   @Column({
     nullable: false,
     name: 'daily_test_hour',
     transformer: new NumericColumnTransformer(),
   })
-  dailyTestHour: number;
+  hour: number;
 
   @Column({
     name: 'daily_test_min',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  dailyTestMin: number;
+  minute: number;
 
   @Column({ nullable: false, name: 'test_type_cd' })
   testTypeCode: string;
@@ -78,7 +78,7 @@ export class DailyTestSummary extends BaseEntity {
     o => o.dailyTestSummaries,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -99,7 +99,7 @@ export class DailyTestSummary extends BaseEntity {
     o => o.dailyTestSummaries,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @OneToOne(
     () => DailyCalibration,

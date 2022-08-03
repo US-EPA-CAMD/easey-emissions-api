@@ -35,17 +35,17 @@ export class Nsps4tAnnual extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  annualPotentialOutput: number;
+  annualPotentialElectricOutput: number;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'userid' })
   userId: string;
@@ -61,7 +61,7 @@ export class Nsps4tAnnual extends BaseEntity {
     o => o.nsps4tAnnuals,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,

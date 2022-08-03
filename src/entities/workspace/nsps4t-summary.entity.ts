@@ -49,7 +49,7 @@ export class Nsps4tSummary extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'userid', nullable: false })
   userId: string;

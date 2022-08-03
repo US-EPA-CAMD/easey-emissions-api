@@ -27,7 +27,7 @@ export class DailyCalibration extends BaseEntity {
     length: 45,
     nullable: false,
   })
-  dailyTestSumId: string;
+  dailyTestSummaryId: string;
 
   @Column({
     name: 'online_offline_ind',
@@ -261,7 +261,7 @@ export class DailyCalibration extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({
     name: 'upscale_gas_type_cd',

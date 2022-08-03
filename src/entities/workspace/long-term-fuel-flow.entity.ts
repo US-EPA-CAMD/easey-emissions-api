@@ -11,10 +11,10 @@ export class LongTermFuelFlow extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: true })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
   monitoringSystemId: string;

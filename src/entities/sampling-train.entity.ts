@@ -18,17 +18,17 @@ export class SamplingTrain extends BaseEntity {
   id: string;
 
   @Column({ name: 'trap_id', nullable: false })
-  trapId: string;
+  sorbentTrapId: string;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
@@ -129,7 +129,7 @@ export class SamplingTrain extends BaseEntity {
     o => o.samplingTrains,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -140,7 +140,7 @@ export class SamplingTrain extends BaseEntity {
 
   @ManyToOne(
     () => SorbentTrap,
-    o => o.samplingTrainData,
+    o => o.samplingTrains,
   )
   @JoinColumn({ name: 'trap_id' })
   sorbentTrap: SorbentTrap;

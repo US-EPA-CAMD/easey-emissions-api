@@ -79,14 +79,14 @@ export class WeeklySystemIntegrity extends BaseEntity {
     nullable: false,
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @OneToOne(
     () => WeeklyTestSummary,
-    o => o.weeklySystemIntegrityData,
+    o => o.weeklySystemIntegrity,
   )
   @JoinColumn({ name: 'weekly_test_sum_id' })
   weeklyTestSummary: WeeklyTestSummary;

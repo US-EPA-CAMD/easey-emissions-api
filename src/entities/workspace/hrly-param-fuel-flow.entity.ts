@@ -15,7 +15,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
   id: string;
 
   @Column({ name: 'hrly_fuel_flow_id', nullable: false })
-  hrlyFuelFlowId: string;
+  hourlyFuelFlowId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
   monitoringSystemId: string;
@@ -73,14 +73,14 @@ export class HrlyParamFuelFlow extends BaseEntity {
     nullable: false,
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @ManyToOne(
     () => HrlyFuelFlow,
-    o => o.hourlyParameterFuelFlowData,
+    o => o.hourlyParameterFuelFlow,
   )
   @JoinColumn({ name: 'hrly_fuel_flow_id' })
   hrlyFuelFlow: HrlyFuelFlow;

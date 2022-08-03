@@ -23,10 +23,10 @@ export class SummaryValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -87,7 +87,7 @@ export class SummaryValue extends BaseEntity {
     o => o.summaryValues,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,

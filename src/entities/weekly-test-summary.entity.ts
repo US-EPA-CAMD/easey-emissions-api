@@ -24,33 +24,33 @@ export class WeeklyTestSummary extends BaseEntity {
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
   @Column({ nullable: false, name: 'test_date' })
-  testDate: Date;
+  date: Date;
 
   @Column({
     nullable: false,
     name: 'test_hour',
     transformer: new NumericColumnTransformer(),
   })
-  testHour: number;
+  hour: number;
 
   @Column({
     name: 'test_min',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  testMin: number;
+  minute: number;
 
   @Column({ nullable: false, name: 'test_type_cd' })
   testTypeCode: string;
@@ -85,14 +85,14 @@ export class WeeklyTestSummary extends BaseEntity {
     o => o.weeklyTestSummaries,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => MonitorSystem,
     o => o.weeklyTestSummaries,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -106,5 +106,5 @@ export class WeeklyTestSummary extends BaseEntity {
     o => o.weeklyTestSumId,
   )
   @JoinColumn({ name: 'weekly_test_sum_id' })
-  weeklySystemIntegrityData: WeeklySystemIntegrity;
+  weeklySystemIntegrity: WeeklySystemIntegrity;
 }

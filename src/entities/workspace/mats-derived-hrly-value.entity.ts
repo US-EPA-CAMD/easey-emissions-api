@@ -47,14 +47,14 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   calcPctMoisture: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -67,7 +67,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.matsDerivedHourlyValueData,
+    o => o.matsDerivedHourlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

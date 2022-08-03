@@ -52,7 +52,7 @@ export class Nsps4tSummary extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'userid', nullable: false })
   userId: string;
@@ -68,7 +68,7 @@ export class Nsps4tSummary extends BaseEntity {
     o => o.nsps4tSummaries,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,

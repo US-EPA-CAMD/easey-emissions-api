@@ -18,14 +18,14 @@ export class HrlyGasFlowMeter extends BaseEntity {
   hourId: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'component_id' })
   componentId: string;
@@ -82,7 +82,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.hourlyGfmData,
+    o => o.hourlyGfms,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

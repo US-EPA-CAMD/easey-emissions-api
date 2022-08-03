@@ -21,10 +21,10 @@ export class LongTermFuelFlow extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: true })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
   monitoringSystemId: string;
@@ -80,14 +80,14 @@ export class LongTermFuelFlow extends BaseEntity {
     o => o.longTermFuelFlows,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => MonitorSystem,
     o => o.longTermFuelFlows,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => ReportingPeriod,

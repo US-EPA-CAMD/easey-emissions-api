@@ -27,10 +27,10 @@ export class HrlyOpData extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'begin_date', nullable: false })
   beginDate: Date;
@@ -137,7 +137,7 @@ export class HrlyOpData extends BaseEntity {
     o => o.hrlyOpData,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -151,40 +151,40 @@ export class HrlyOpData extends BaseEntity {
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  derivedHourlyValueData: DerivedHrlyValue[];
+  derivedHourlyValue: DerivedHrlyValue[];
 
   @OneToMany(
     () => HrlyFuelFlow,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  hourlyFuelFlowData: HrlyFuelFlow[];
+  hourlyFuelFlows: HrlyFuelFlow[];
 
   @OneToMany(
     () => HrlyGasFlowMeter,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  hourlyGfmData: HrlyGasFlowMeter[];
+  hourlyGfms: HrlyGasFlowMeter[];
 
   @OneToMany(
     () => MatsDerivedHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  matsDerivedHourlyValueData: MatsDerivedHrlyValue[];
+  matsDerivedHourlyValues: MatsDerivedHrlyValue[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  matsMonitorHourlyValueData: MatsMonitorHrlyValue[];
+  matsMonitorHourlyValues: MatsMonitorHrlyValue[];
 
   @OneToMany(
     () => MonitorHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  monitorHourlyValueData: MonitorHrlyValue[];
+  monitorHourlyValues: MonitorHrlyValue[];
 }

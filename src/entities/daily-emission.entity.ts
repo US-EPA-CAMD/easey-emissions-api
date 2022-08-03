@@ -24,10 +24,10 @@ export class DailyEmission extends BaseEntity {
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -54,7 +54,7 @@ export class DailyEmission extends BaseEntity {
     name: 'sorbent_mass_emission',
     transformer: new NumericColumnTransformer(),
   })
-  sorbentMassEmissions: number;
+  sorbentRelatedMassEmissions: number;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -105,7 +105,7 @@ export class DailyEmission extends BaseEntity {
     o => o.dailyEmissions,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => DailyFuel,

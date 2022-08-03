@@ -19,10 +19,10 @@ export class SorbentTrap extends BaseEntity {
   id: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ nullable: false, name: 'rpt_period_id' })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'begin_date' })
   beginDate: Date;
@@ -100,14 +100,14 @@ export class SorbentTrap extends BaseEntity {
     o => o.sorbentTraps,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => MonitorSystem,
     o => o.sorbentTraps,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -121,5 +121,5 @@ export class SorbentTrap extends BaseEntity {
     o => o.sorbentTrap,
   )
   @JoinColumn({ name: 'trap_id' })
-  samplingTrainData: SamplingTrain[];
+  samplingTrains: SamplingTrain[];
 }

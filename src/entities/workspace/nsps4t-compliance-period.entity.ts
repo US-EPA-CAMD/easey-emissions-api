@@ -74,14 +74,14 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   violationOfCo2StandardComment: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ nullable: false, name: 'userid' })
   userId: string;
