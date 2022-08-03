@@ -14,7 +14,7 @@ export class DerivedHourlyValueBaseDTO {
 export class DerivedHourlyValueRecordDTO extends DerivedHourlyValueBaseDTO {
   id: string;
   hourId: string;
-  applicableBiasAdjFactor: number;
+  biasAdjustmentFactor: number;
   calcUnadjustedHrlyValue: number;
   calcAdjustedHrlyValue: number;
   diluentCapInd: number;
@@ -25,8 +25,8 @@ export class DerivedHourlyValueRecordDTO extends DerivedHourlyValueBaseDTO {
   calcPctMoisture: string;
   calcRataStatus: string;
   calcAppeStatus: string;
-  rptPeriodId: number;
-  monLocId: string;
+  reportingPeriodId: number;
+  monitoringLocationId: string;
   calcFuelFlowTotal: number;
   calcHourMeasureCode: string;
 }
