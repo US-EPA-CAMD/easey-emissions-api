@@ -16,7 +16,7 @@ export class Nsps4tSummary extends BaseEntity {
   id: string;
 
   @Column({ name: 'emission_standard_cd', nullable: true })
-  emissionStandardCode: string;
+  co2EmissionStandardCode: string;
 
   @Column({
     name: 'modus_value',
@@ -36,10 +36,10 @@ export class Nsps4tSummary extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  noPeriodEndedInd: number;
+  noCompliancePeriodEndedIndicator: number;
 
   @Column({ name: 'no_period_ended_comment', nullable: true })
-  noPeriodEndedComment: string;
+  noCompliancePeriodEndedComment: string;
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monLocId: string;

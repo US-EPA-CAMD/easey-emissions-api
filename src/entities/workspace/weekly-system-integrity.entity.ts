@@ -28,7 +28,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  refValue: number;
+  referenceValue: number;
 
   @Column({
     name: 'measured_value',
@@ -49,7 +49,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  apsInd: number;
+  apsIndicator: number;
 
   @Column({
     name: 'calc_system_integrity_error',
@@ -86,7 +86,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
 
   @OneToOne(
     () => WeeklyTestSummary,
-    o => o.weeklySystemIntegrity,
+    o => o.weeklySystemIntegrityData,
   )
   @JoinColumn({ name: 'weekly_test_sum_id' })
   weeklyTestSummary: WeeklyTestSummary;

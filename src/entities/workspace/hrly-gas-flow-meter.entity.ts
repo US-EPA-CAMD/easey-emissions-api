@@ -31,21 +31,21 @@ export class HrlyGasFlowMeter extends BaseEntity {
   componentId: string;
 
   @Column({ name: 'begin_end_hour_flg', nullable: true })
-  beginEndHourFlg: string;
+  beginEndHourFlag: string;
 
   @Column({
     name: 'gfm_reading',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  gfmReading: number;
+  hourlyGfmReading: number;
 
   @Column({
     name: 'avg_sampling_rate',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  avgSamplingRate: number;
+  avgHourlySamplingRate: number;
 
   @Column({ name: 'sampling_rate_uom', nullable: true })
   samplingRateUom: string;
@@ -55,7 +55,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  flowToSamplingRatio: number;
+  hourlySfsrRatio: number;
 
   @Column({
     name: 'calc_flow_to_sampling_ratio',
@@ -82,7 +82,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.hrlyGasFlowMeters,
+    o => o.hourlyGfmData,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

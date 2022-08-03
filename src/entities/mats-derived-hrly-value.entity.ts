@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorFormula } from './monitor-formula.entity';
@@ -17,13 +24,13 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   parameterCode: string;
 
   @Column({ name: 'unadjusted_hrly_value', nullable: true })
-  unadjustedHrlyValue: string;
+  unadjustedHourlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  monFormId: string;
+  formulaIdentifier: string;
 
   @Column({ name: 'calc_unadjusted_hrly_value', nullable: true })
   calcUnadjustedHrlyValue: string;
@@ -63,11 +70,11 @@ export class MatsDerivedHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.matsDerivedHrlyValues,
+    o => o.matsDerivedHourlyValueData,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
-  
+
   @ManyToOne(
     () => MonitorFormula,
     o => o.matsDerivedHrlyValues,
@@ -88,5 +95,4 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
 }

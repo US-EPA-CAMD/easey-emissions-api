@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { MonitorLocation } from './monitor-location.entity';
@@ -27,33 +34,33 @@ export class SamplingTrain extends BaseEntity {
   componentId: string;
 
   @Column({ name: 'sorbent_trap_serial_number', nullable: false })
-  sorbentTrapSerialNumber: string;
+  sorbentTrapSn: string;
 
   @Column({ name: 'main_trap_hg', nullable: true })
   mainTrapHg: string;
 
   @Column({ name: 'breakthrough_trap_hg', nullable: true })
-  breakthroughTrapHg: string;
+  btTrapHg: string;
 
   @Column({ name: 'spike_trap_hg', nullable: true })
   spikeTrapHg: string;
 
   @Column({ name: 'spike_ref_value', nullable: true })
-  spikeRefValue: string;
+  spikeReferenceValue: string;
 
   @Column({
     name: 'total_sample_volume',
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  totalSampleVolume: number;
+  totalSampleVolumeDscm: number;
 
   @Column({
     name: 'ref_flow_to_sampling_ratio',
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  refFlowToSamplingRatio: number;
+  referenceSfsrRatio: number;
 
   @Column({ name: 'hg_concentration', nullable: true })
   hgConcentration: string;
@@ -73,10 +80,10 @@ export class SamplingTrain extends BaseEntity {
   percentSpikeRecovery: number;
 
   @Column({ name: 'sampling_ratio_test_result_cd', nullable: true })
-  samplingRatioTestResultCode: string;
+  samplingRatioCheckResultCode: string;
 
   @Column({ name: 'post_leak_test_result_cd', nullable: true })
-  postLeakTestResultCode: string;
+  postLeakCheckResultCode: string;
 
   @Column({ name: 'train_qa_status_cd', nullable: true })
   trainQaStatusCode: string;
@@ -133,10 +140,8 @@ export class SamplingTrain extends BaseEntity {
 
   @ManyToOne(
     () => SorbentTrap,
-    o => o.samplingTrains,
+    o => o.samplingTrainData,
   )
   @JoinColumn({ name: 'trap_id' })
   sorbentTrap: SorbentTrap;
-
-
 }

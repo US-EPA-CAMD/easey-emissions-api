@@ -17,7 +17,7 @@ export class LongTermFuelFlow extends BaseEntity {
   monLocId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'fuel_flow_period_cd', nullable: true })
   fuelFlowPeriodCode: string;
@@ -30,7 +30,7 @@ export class LongTermFuelFlow extends BaseEntity {
   longTermFuelFlowValue: number;
 
   @Column({ name: 'ltff_uom_cd', nullable: true })
-  ltffUomCode: string;
+  longTermFuelFlowUomcode: string;
 
   @Column({
     name: 'gross_calorific_value',
@@ -40,7 +40,7 @@ export class LongTermFuelFlow extends BaseEntity {
   grossCalorificValue: number;
 
   @Column({ name: 'gcv_uom_cd', nullable: true })
-  gcvUomCode: string;
+  gcvUnitsOfMeasureCode: string;
 
   @Column({
     name: 'total_heat_input',

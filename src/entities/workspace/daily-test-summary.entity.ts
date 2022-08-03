@@ -67,7 +67,7 @@ export class DailyTestSummary extends BaseEntity {
   spanScaleCode: string;
 
   @Column({ nullable: true, name: 'mon_sys_id' })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @OneToOne(
     () => DailyCalibration,

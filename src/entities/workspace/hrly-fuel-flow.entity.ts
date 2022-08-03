@@ -20,7 +20,7 @@ export class HrlyFuelFlow extends BaseEntity {
   hourId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'fuel_cd', nullable: false })
   fuelCode: string;
@@ -40,7 +40,7 @@ export class HrlyFuelFlow extends BaseEntity {
   volumetricFlowRate: number;
 
   @Column({ name: 'sod_volumetric_cd', nullable: true })
-  sodVolumetricCode: string;
+  sourceOfDataVolumetricCode: string;
 
   @Column({
     name: 'mass_flow_rate',
@@ -57,7 +57,7 @@ export class HrlyFuelFlow extends BaseEntity {
   calcMassFlowRate: number;
 
   @Column({ name: 'sod_mass_cd', nullable: true })
-  sodMassCode: string;
+  sourceOfDataMassCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -69,7 +69,7 @@ export class HrlyFuelFlow extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'volumetric_uom_cd', nullable: true })
-  volumetricUomCode: string;
+  volumetricUnitsOfMeasureCode: string;
 
   @Column({
     name: 'calc_volumetric_flow_rate',
@@ -89,7 +89,7 @@ export class HrlyFuelFlow extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.hrlyFuelFlows,
+    o => o.hourlyFuelFlowData,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
@@ -99,5 +99,5 @@ export class HrlyFuelFlow extends BaseEntity {
     c => c.hrlyFuelFlow,
   )
   @JoinColumn({ name: 'hrly_fuel_flow_id' })
-  hrlyParamFuelFlows: HrlyParamFuelFlow[];
+  hourlyParameterFuelFlowData: HrlyParamFuelFlow[];
 }

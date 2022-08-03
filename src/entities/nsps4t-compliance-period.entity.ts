@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
@@ -45,7 +53,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  avgCo2EmissionRate: number;
+  averageCo2EmissionRate: number;
 
   @Column({ name: 'co2_emission_rate_uom_cd', nullable: true })
   co2EmissionRateUomCode: string;
@@ -55,17 +63,17 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  pctValidOpHours: number;
+  percentValidOpHours: number;
 
   @Column({
     name: 'co2_violation_ind',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  co2ViolationInd: number;
+  violationOfCo2StandardIndicator: number;
 
   @Column({ name: 'co2_violation_comment', nullable: true })
-  co2ViolationComment: string;
+  violationOfCo2StandardComment: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
   monLocId: string;
@@ -99,7 +107,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-  
+
   // @TODO: Verify this relationship type once there is data in nsps4t-annual and nsps4t-summary tables
   @OneToOne(
     () => Nsps4tSummary,
@@ -107,5 +115,4 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
   nsps4tSummary: Nsps4tSummary;
-
 }

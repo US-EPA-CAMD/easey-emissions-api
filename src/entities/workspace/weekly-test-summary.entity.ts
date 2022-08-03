@@ -74,5 +74,5 @@ export class WeeklyTestSummary extends BaseEntity {
     o => o.weeklyTestSumId,
   )
   @JoinColumn({ name: 'weekly_test_sum_id' })
-  weeklySystemIntegrity: WeeklySystemIntegrity;
+  weeklySystemIntegrityData: WeeklySystemIntegrity;
 }

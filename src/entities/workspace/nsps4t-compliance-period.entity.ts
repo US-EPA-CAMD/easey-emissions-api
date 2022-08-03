@@ -51,7 +51,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  avgCo2EmissionRate: number;
+  averageCo2EmissionRate: number;
 
   @Column({ name: 'co2_emission_rate_uom_cd', nullable: true })
   co2EmissionRateUomCode: string;
@@ -61,17 +61,17 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  pctValidOpHours: number;
+  percentValidOpHours: number;
 
   @Column({
     name: 'co2_violation_ind',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  co2ViolationInd: number;
+  violationOfCo2StandardIndicator: number;
 
   @Column({ name: 'co2_violation_comment', nullable: true })
-  co2ViolationComment: string;
+  violationOfCo2StandardComment: string;
 
   @Column({ nullable: false, name: 'mon_loc_id' })
   monLocId: string;

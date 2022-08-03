@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { MonitorSystem } from './monitor-system.entity';
@@ -20,7 +27,7 @@ export class LongTermFuelFlow extends BaseEntity {
   monLocId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'fuel_flow_period_cd', nullable: true })
   fuelFlowPeriodCode: string;
@@ -33,7 +40,7 @@ export class LongTermFuelFlow extends BaseEntity {
   longTermFuelFlowValue: number;
 
   @Column({ name: 'ltff_uom_cd', nullable: true })
-  ltffUomCode: string;
+  longTermFuelFlowUomcode: string;
 
   @Column({
     name: 'gross_calorific_value',
@@ -43,7 +50,7 @@ export class LongTermFuelFlow extends BaseEntity {
   grossCalorificValue: number;
 
   @Column({ name: 'gcv_uom_cd', nullable: true })
-  gcvUomCode: string;
+  gcvUnitsOfMeasureCode: string;
 
   @Column({
     name: 'total_heat_input',
@@ -67,7 +74,7 @@ export class LongTermFuelFlow extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
-  
+
   @ManyToOne(
     () => MonitorLocation,
     o => o.longTermFuelFlows,
@@ -88,5 +95,4 @@ export class LongTermFuelFlow extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
 }

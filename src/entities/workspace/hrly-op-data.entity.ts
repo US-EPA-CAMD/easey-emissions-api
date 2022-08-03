@@ -44,14 +44,14 @@ export class HrlyOpData extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  opTime: number;
+  operatingTime: number;
 
   @Column({
     name: 'hr_load',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  hrLoad: number;
+  hourLoad: number;
 
   @Column({
     name: 'load_range',
@@ -104,7 +104,7 @@ export class HrlyOpData extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'load_uom_cd', nullable: true })
-  loadUomCode: string;
+  loadUnitsOfMeasureCode: string;
 
   @Column({ name: 'operating_condition_cd', nullable: true })
   operatingConditionCode: string;
@@ -124,50 +124,50 @@ export class HrlyOpData extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  matsLoad: number;
+  matsHourLoad: number;
 
   @Column({ name: 'mats_startup_shutdown_flg', nullable: true })
-  matsStartupShutdownFlg: string;
+  matsStartupShutdownFlag: string;
 
   @OneToMany(
     () => DerivedHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  derivedHrlyValues: DerivedHrlyValue[];
+  derivedHourlyValueData: DerivedHrlyValue[];
 
   @OneToMany(
     () => HrlyFuelFlow,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  hrlyFuelFlows: HrlyFuelFlow[];
+  hourlyFuelFlowData: HrlyFuelFlow[];
 
   @OneToMany(
     () => HrlyGasFlowMeter,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  hrlyGasFlowMeters: HrlyGasFlowMeter[];
+  hourlyGfmData: HrlyGasFlowMeter[];
 
   @OneToMany(
     () => MatsDerivedHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  matsDerivedHrlyValues: MatsDerivedHrlyValue[];
+  matsDerivedHourlyValueData: MatsDerivedHrlyValue[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  matsMonitorHrlyValues: MatsMonitorHrlyValue[];
+  matsMonitorHourlyValueData: MatsMonitorHrlyValue[];
 
   @OneToMany(
     () => MonitorHrlyValue,
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  monitorHrlyValues: MonitorHrlyValue[];
+  monitorHourlyValueData: MonitorHrlyValue[];
 }

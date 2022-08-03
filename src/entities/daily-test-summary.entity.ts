@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
@@ -63,7 +71,7 @@ export class DailyTestSummary extends BaseEntity {
   spanScaleCode: string;
 
   @Column({ nullable: true, name: 'mon_sys_id' })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @ManyToOne(
     () => MonitorLocation,
@@ -78,7 +86,7 @@ export class DailyTestSummary extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-  
+
   @ManyToOne(
     () => Component,
     o => o.dailyTestSummaries,
@@ -94,10 +102,9 @@ export class DailyTestSummary extends BaseEntity {
   system: MonitorSystem;
 
   @OneToOne(
-    ()=>DailyCalibration,
-    o=> o.dailyTestSummary,
+    () => DailyCalibration,
+    o => o.dailyTestSummary,
   )
-  @JoinColumn({name: 'daily_test_sum_id'})
-  dailyCalibration: DailyCalibration
-
+  @JoinColumn({ name: 'daily_test_sum_id' })
+  dailyCalibration: DailyCalibration;
 }

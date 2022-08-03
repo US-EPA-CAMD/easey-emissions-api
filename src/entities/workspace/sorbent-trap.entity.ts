@@ -42,7 +42,7 @@ export class SorbentTrap extends BaseEntity {
   endHour: number;
 
   @Column({ nullable: false, name: 'mon_sys_id' })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({
     name: 'paired_trap_agreement',
@@ -56,13 +56,13 @@ export class SorbentTrap extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  absoluteDifferenceInd: number;
+  absoluteDifferenceIndicator: number;
 
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
 
   @Column({ name: 'hg_concentration', nullable: true })
-  hgConcentration: string;
+  hgSystemConcentration: string;
 
   @Column({
     name: 'calc_paired_trap_agreement',
@@ -87,15 +87,15 @@ export class SorbentTrap extends BaseEntity {
   updateDate: Date;
 
   @Column({ name: 'sorbent_trap_aps_cd', nullable: true })
-  sorbentTrapApsCode: string;
+  apsCode: string;
 
   @Column({ name: 'rata_ind', nullable: true })
-  rataInd: number;
+  rataIndicator: number;
 
   @OneToMany(
     () => SamplingTrain,
     o => o.sorbentTrap,
   )
   @JoinColumn({ name: 'trap_id' })
-  samplingTrains: SamplingTrain[];
+  samplingTrainData: SamplingTrain[];
 }

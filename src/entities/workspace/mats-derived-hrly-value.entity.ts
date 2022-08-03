@@ -21,13 +21,13 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   parameterCode: string;
 
   @Column({ name: 'unadjusted_hrly_value', nullable: true })
-  unadjustedHrlyValue: string;
+  unadjustedHourlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  monFormId: string;
+  formulaIdentifier: string;
 
   @Column({ name: 'calc_unadjusted_hrly_value', nullable: true })
   calcUnadjustedHrlyValue: string;
@@ -67,7 +67,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.matsDerivedHrlyValues,
+    o => o.matsDerivedHourlyValueData,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

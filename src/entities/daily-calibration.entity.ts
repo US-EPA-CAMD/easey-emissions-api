@@ -37,7 +37,7 @@ export class DailyCalibration extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  onlineOfflineIndicator: number;
+  onLineOffLineIndicator: number;
 
   @Column({
     name: 'calc_online_offline_ind',
@@ -55,7 +55,7 @@ export class DailyCalibration extends BaseEntity {
     length: 7,
     nullable: true,
   })
-  upscaleGasLevelCode: string;
+  upscaleGasCode: string;
 
   @Column({
     name: 'zero_injection_date',
@@ -277,7 +277,7 @@ export class DailyCalibration extends BaseEntity {
     length: 8,
     nullable: true,
   })
-  vendorId: string;
+  vendorIdentifier: string;
 
   @Column({
     name: 'cylinder_identifier',
@@ -310,9 +310,9 @@ export class DailyCalibration extends BaseEntity {
   protocolGasVendor: ProtocolGasVendor;
 
   @OneToOne(
-    ()=>DailyTestSummary,
-    o=> o.dailyCalibration,
+    () => DailyTestSummary,
+    o => o.dailyCalibration,
   )
-  @JoinColumn({name: 'daily_test_sum_id'})
-  dailyTestSummary: DailyTestSummary
+  @JoinColumn({ name: 'daily_test_sum_id' })
+  dailyTestSummary: DailyTestSummary;
 }

@@ -18,10 +18,10 @@ export class DerivedHrlyValue extends BaseEntity {
   hourId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  monFormId: string;
+  formulaIdentifier: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -31,7 +31,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  unadjustedHrlyValue: number;
+  unadjustedHourlyValue: number;
 
   @Column({
     name: 'applicable_bias_adj_factor',
@@ -52,7 +52,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  adjustedHrlyValue: number;
+  adjustedHourlyValue: number;
 
   @Column({
     name: 'calc_adjusted_hrly_value',
@@ -72,7 +72,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  pctAvailable: number;
+  percentAvailable: number;
 
   @Column({
     name: 'diluent_cap_ind',
@@ -86,7 +86,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  segmentNum: number;
+  segmentNumber: number;
 
   @Column({ name: 'fuel_cd', nullable: true })
   fuelCode: string;
@@ -130,7 +130,7 @@ export class DerivedHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.derivedHrlyValues,
+    o => o.derivedHourlyValueData,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

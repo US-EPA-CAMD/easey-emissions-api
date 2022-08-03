@@ -40,21 +40,21 @@ export class DailyEmission extends BaseEntity {
     name: 'total_daily_emission',
     transformer: new NumericColumnTransformer(),
   })
-  totalDailyEmission: number;
+  totalDailyEmissions: number;
 
   @Column({
     nullable: true,
     name: 'adjusted_daily_emission',
     transformer: new NumericColumnTransformer(),
   })
-  adjustedDailyEmission: number;
+  adjustedDailyEmissions: number;
 
   @Column({
     nullable: true,
     name: 'sorbent_mass_emission',
     transformer: new NumericColumnTransformer(),
   })
-  sorbentMassEmission: number;
+  sorbentMassEmissions: number;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -70,7 +70,7 @@ export class DailyEmission extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  unadjustedDailyEmission: number;
+  unadjustedDailyEmissions: number;
 
   @Column({
     name: 'total_carbon_burned',
@@ -84,7 +84,7 @@ export class DailyEmission extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  calcTotalDailyEmission: number;
+  calcTotalDailyEmissions: number;
 
   @Column({
     name: 'calc_total_op_time',
@@ -112,5 +112,4 @@ export class DailyEmission extends BaseEntity {
     o => o.dailyEmissions,
   )
   dailyFuel: DailyFuel;
-
 }

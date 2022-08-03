@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
@@ -28,13 +35,13 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   parameterCode: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
   @Column({ name: 'unadjusted_hrly_value', nullable: true })
-  unadjustedHrlyValue: string;
+  unadjustedHourlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
@@ -44,7 +51,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  pctAvailable: number;
+  percentAvailable: number;
 
   @Column({ name: 'calc_unadjusted_hrly_value', nullable: true })
   calcUnadjustedHrlyValue: string;
@@ -79,9 +86,9 @@ export class MatsMonitorHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.matsMonitorHrlyValues,
+    o => o.matsMonitorHourlyValueData,
   )
-  @JoinColumn({ name: 'hour_id' })matsDerivedHrlyValues
+  @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
 
   @ManyToOne(
@@ -104,6 +111,4 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
-
 }
