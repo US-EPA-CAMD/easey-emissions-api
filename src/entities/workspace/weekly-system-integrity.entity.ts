@@ -9,7 +9,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
-@Entity({ name: 'campdecmps.weekly_system_integrity' })
+@Entity({ name: 'camdecmpswks.weekly_system_integrity' })
 export class WeeklySystemIntegrity extends BaseEntity {
   @PrimaryColumn({
     name: 'weekly_sys_integrity_id',
