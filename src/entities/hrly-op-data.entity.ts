@@ -151,7 +151,7 @@ export class HrlyOpData extends BaseEntity {
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  derivedHourlyValue: DerivedHrlyValue[];
+  derivedHrlyValues: DerivedHrlyValue[];
 
   @OneToMany(
     () => HrlyFuelFlow,

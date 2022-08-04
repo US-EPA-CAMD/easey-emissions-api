@@ -130,7 +130,7 @@ export class DerivedHrlyValue extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.derivedHourlyValues,
+    o => o.derivedHrlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

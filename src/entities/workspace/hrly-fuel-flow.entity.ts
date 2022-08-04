@@ -99,5 +99,5 @@ export class HrlyFuelFlow extends BaseEntity {
     c => c.hrlyFuelFlow,
   )
   @JoinColumn({ name: 'hrly_fuel_flow_id' })
-  hourlyParameterFuelFlow: HrlyParamFuelFlow[];
+  hrlyParamFuelFlows: HrlyParamFuelFlow[];
 }

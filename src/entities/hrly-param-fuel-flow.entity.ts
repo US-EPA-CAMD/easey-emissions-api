@@ -82,7 +82,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
 
   @ManyToOne(
     () => HrlyFuelFlow,
-    o => o.hourlyParameterFuelFlow,
+    o => o.hrlyParamFuelFlows,
   )
   @JoinColumn({ name: 'hrly_fuel_flow_id' })
   hrlyFuelFlow: HrlyFuelFlow;
