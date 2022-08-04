@@ -2,7 +2,7 @@ export class DerivedHourlyValueBaseDTO {
   parameterCode: string;
   unadjustedHourlyValue: number;
   adjustedHourlyValue: number;
-  modcCode: string;
+  modccode: string;
   monitoringSystemId: string;
   formulaIdentifier: string;
   percentAvailable: number;

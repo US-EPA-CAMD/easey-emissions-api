@@ -64,7 +64,7 @@ export class DerivedHrlyValue extends BaseEntity {
   calcAdjustedHrlyValue: number;
 
   @Column({ name: 'modc_cd', nullable: true })
-  modcCode: string;
+  modccode: string;
 
   @Column({ name: 'operating_condition_cd', nullable: true })
   operatingConditionCode: string;
