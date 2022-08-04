@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
@@ -13,7 +20,7 @@ export class MonitorHrlyValue extends BaseEntity {
   hourId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
@@ -26,21 +33,21 @@ export class MonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  applicableBiasAdjFactor: number;
+  biasAdjustmentFactor: number;
 
   @Column({
     name: 'unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  unadjustedHrlyValue: number;
+  unadjustedHourlyValue: number;
 
   @Column({
     name: 'adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  adjustedHrlyValue: number;
+  adjustedHourlyValue: number;
 
   @Column({
     name: 'calc_adjusted_hrly_value',
@@ -57,7 +64,7 @@ export class MonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  pctAvailable: number;
+  percentAvailable: number;
 
   @Column({ name: 'moisture_basis', nullable: true })
   moistureBasis: string;
@@ -85,10 +92,10 @@ export class MonitorHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'calc_leak_status', nullable: true })
   calcLeakStatus: string;
@@ -105,13 +112,13 @@ export class MonitorHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'component_id' })
   component: Component;
-  
+
   @ManyToOne(
     () => MonitorSystem,
     o => o.monitorHrlyValues,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => HrlyOpData,
@@ -119,5 +126,4 @@ export class MonitorHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
-
 }
