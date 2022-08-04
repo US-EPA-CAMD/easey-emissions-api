@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { MonitorFormula } from './monitor-formula.entity';
@@ -10,13 +17,13 @@ export class HrlyParamFuelFlow extends BaseEntity {
   id: string;
 
   @Column({ name: 'hrly_fuel_flow_id', nullable: false })
-  hrlyFuelFlowId: string;
+  hourlyFuelFlowId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  monFormId: string;
+  formulaIdentifier: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -26,7 +33,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  paramValFuel: number;
+  parameterValueForFuel: number;
 
   @Column({
     name: 'calc_param_val_fuel',
@@ -46,7 +53,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
-  segmentNum: number;
+  segmentNumber: number;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -68,10 +75,10 @@ export class HrlyParamFuelFlow extends BaseEntity {
     nullable: false,
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @ManyToOne(
     () => HrlyFuelFlow,
@@ -85,13 +92,12 @@ export class HrlyParamFuelFlow extends BaseEntity {
     o => o.hrlyParamFuelFlows,
   )
   @JoinColumn({ name: 'mon_form_id' })
-  formula: MonitorFormula;
+  monitorFormula: MonitorFormula;
 
   @ManyToOne(
     () => MonitorSystem,
     o => o.hrlyParamFuelFlows,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
-
+  monitorSystem: MonitorSystem;
 }
