@@ -72,7 +72,7 @@ export class MonitorFormula extends BaseEntity {
 
   @OneToMany(
     () => DerivedHrlyValue,
-    c => c.formula,
+    c => c.monitorFormula,
   )
   @JoinColumn({ name: 'mon_form_id' })
   derivedHrlyValues: DerivedHrlyValue[];
