@@ -165,7 +165,7 @@ export class HrlyOpData extends BaseEntity {
     c => c.hrlyOpData,
   )
   @JoinColumn({ name: 'hour_id' })
-  hourlyGfms: HrlyGasFlowMeter[];
+  hrlyGasFlowMeters: HrlyGasFlowMeter[];
 
   @OneToMany(
     () => MatsDerivedHrlyValue,

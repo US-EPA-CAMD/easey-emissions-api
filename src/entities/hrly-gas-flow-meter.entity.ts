@@ -92,7 +92,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.hourlyGfms,
+    o => o.hrlyGasFlowMeters,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
