@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { MonitorLocation } from './monitor-location.entity';
@@ -122,7 +129,7 @@ export class SamplingTrain extends BaseEntity {
     o => o.samplingTrains,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -137,6 +144,4 @@ export class SamplingTrain extends BaseEntity {
   )
   @JoinColumn({ name: 'trap_id' })
   sorbentTrap: SorbentTrap;
-
-
 }

@@ -63,98 +63,98 @@ export class MonitorLocation extends BaseEntity {
 
   @OneToMany(
     () => DailyEmission,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   dailyEmissions: DailyEmission[];
 
   @OneToMany(
     () => DailyEmission,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   hrlyOpData: HrlyOpData[];
 
   @OneToMany(
     () => Nsps4tSummary,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   nsps4tSummaries: Nsps4tSummary[];
 
   @OneToMany(
     () => SummaryValue,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   summaryValues: SummaryValue[];
 
   @OneToMany(
     () => DailyTestSummary,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   dailyTestSummaries: DailyTestSummary[];
 
   @OneToMany(
     () => LongTermFuelFlow,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   longTermFuelFlows: LongTermFuelFlow[];
 
   @OneToMany(
     () => HrlyGasFlowMeter,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   hrlyGasFlowMeters: HrlyGasFlowMeter[];
 
   @OneToMany(
     () => MatsDerivedHrlyValue,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   matsDerivedHrlyValues: MatsDerivedHrlyValue[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
   @OneToMany(
     () => Nsps4tAnnual,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   nsps4tAnnuals: Nsps4tAnnual[];
 
   @OneToMany(
     () => Nsps4tCompliancePeriod,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   nsps4tCompliancePeriods: Nsps4tCompliancePeriod[];
 
   @OneToMany(
     () => SorbentTrap,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   sorbentTraps: SorbentTrap[];
 
   @OneToMany(
     () => WeeklyTestSummary,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   weeklyTestSummaries: WeeklyTestSummary[];
 
   @OneToMany(
     () => SamplingTrain,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   samplingTrains: SamplingTrain[];

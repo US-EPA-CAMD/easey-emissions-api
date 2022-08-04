@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
@@ -16,30 +24,30 @@ export class DailyTestSummary extends BaseEntity {
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
   @Column({ nullable: false, name: 'daily_test_date' })
-  dailyTestDate: Date;
+  date: Date;
 
   @Column({
     nullable: false,
     name: 'daily_test_hour',
     transformer: new NumericColumnTransformer(),
   })
-  dailyTestHour: number;
+  hour: number;
 
   @Column({
     name: 'daily_test_min',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  dailyTestMin: number;
+  minute: number;
 
   @Column({ nullable: false, name: 'test_type_cd' })
   testTypeCode: string;
@@ -63,14 +71,14 @@ export class DailyTestSummary extends BaseEntity {
   spanScaleCode: string;
 
   @Column({ nullable: true, name: 'mon_sys_id' })
-  monSysId: string;
+  monitoringSystemId: string;
 
   @ManyToOne(
     () => MonitorLocation,
     o => o.dailyTestSummaries,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -78,7 +86,7 @@ export class DailyTestSummary extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-  
+
   @ManyToOne(
     () => Component,
     o => o.dailyTestSummaries,
@@ -91,13 +99,12 @@ export class DailyTestSummary extends BaseEntity {
     o => o.dailyTestSummaries,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @OneToOne(
-    ()=>DailyCalibration,
-    o=> o.dailyTestSummary,
+    () => DailyCalibration,
+    o => o.dailyTestSummary,
   )
-  @JoinColumn({name: 'daily_test_sum_id'})
-  dailyCalibration: DailyCalibration
-
+  @JoinColumn({ name: 'daily_test_sum_id' })
+  dailyCalibration: DailyCalibration;
 }

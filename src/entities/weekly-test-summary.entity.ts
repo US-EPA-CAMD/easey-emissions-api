@@ -85,14 +85,14 @@ export class WeeklyTestSummary extends BaseEntity {
     o => o.weeklyTestSummaries,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => MonitorSystem,
     o => o.weeklyTestSummaries,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => ReportingPeriod,

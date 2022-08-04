@@ -105,12 +105,11 @@ export class DailyEmission extends BaseEntity {
     o => o.dailyEmissions,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => DailyFuel,
     o => o.dailyEmissions,
   )
   dailyFuel: DailyFuel;
-
 }

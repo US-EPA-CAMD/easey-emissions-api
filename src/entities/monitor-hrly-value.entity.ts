@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
@@ -105,13 +112,13 @@ export class MonitorHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'component_id' })
   component: Component;
-  
+
   @ManyToOne(
     () => MonitorSystem,
     o => o.monitorHrlyValues,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => HrlyOpData,
@@ -119,5 +126,4 @@ export class MonitorHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
-
 }

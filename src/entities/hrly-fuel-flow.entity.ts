@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
@@ -85,7 +93,7 @@ export class HrlyFuelFlow extends BaseEntity {
     o => o.hrlyFuelFlows,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => HrlyOpData,
@@ -100,5 +108,4 @@ export class HrlyFuelFlow extends BaseEntity {
   )
   @JoinColumn({ name: 'hrly_fuel_flow_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
-
 }

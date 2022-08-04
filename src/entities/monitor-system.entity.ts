@@ -1,4 +1,11 @@
-import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DailyTestSummary } from './daily-test-summary.entity';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
@@ -17,7 +24,7 @@ export class MonitorSystem extends BaseEntity {
 
   @Column({ type: 'varchar', length: 45, nullable: false, name: 'mon_loc_id' })
   locationId: string;
-  nsps4tCompliancePeriods
+  nsps4tCompliancePeriods;
   @Column({ type: 'varchar', length: 7, nullable: true, name: 'sys_type_cd' })
   systemTypeCode: string;
 
@@ -49,7 +56,11 @@ export class MonitorSystem extends BaseEntity {
   @Column({ name: 'begin_hour', transformer: new NumericColumnTransformer() })
   beginHour: number;
 
-  @Column({ name: 'end_hour', nullable: true, transformer: new NumericColumnTransformer() })
+  @Column({
+    name: 'end_hour',
+    nullable: true,
+    transformer: new NumericColumnTransformer(),
+  })
   endHour: number;
 
   @Column({ type: 'varchar', nullable: true, length: 25, name: 'userid' })
@@ -63,65 +74,64 @@ export class MonitorSystem extends BaseEntity {
 
   @OneToMany(
     () => DailyTestSummary,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   dailyTestSummaries: DailyTestSummary[];
 
   @OneToMany(
     () => DerivedHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   derivedHrlyValues: DerivedHrlyValue[];
 
   @OneToMany(
     () => HrlyFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   hrlyFuelFlows: HrlyFuelFlow[];
 
   @OneToMany(
     () => LongTermFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   longTermFuelFlows: LongTermFuelFlow[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
   @OneToMany(
     () => MonitorHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   monitorHrlyValues: MonitorHrlyValue[];
 
   @OneToMany(
     () => SorbentTrap,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   sorbentTraps: SorbentTrap[];
-  
+
   @OneToMany(
     () => WeeklyTestSummary,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   weeklyTestSummaries: WeeklyTestSummary[];
 
   @OneToMany(
     () => HrlyParamFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
-
 }
