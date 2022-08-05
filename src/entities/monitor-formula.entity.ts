@@ -86,7 +86,7 @@ export class MonitorFormula extends BaseEntity {
 
   @OneToMany(
     () => HrlyParamFuelFlow,
-    c => c.formula,
+    c => c.monitorFormula,
   )
   @JoinColumn({ name: 'mon_form_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];

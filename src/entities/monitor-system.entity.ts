@@ -130,7 +130,7 @@ export class MonitorSystem extends BaseEntity {
 
   @OneToMany(
     () => HrlyParamFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
