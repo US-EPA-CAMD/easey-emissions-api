@@ -1,6 +1,6 @@
 import {
+  HrlyParamFuelFlowDTO,
   HrlyParamFuelFlowImportDTO,
-  HrlyParamFuelFlowRecordDTO,
 } from './hrly-param-fuel-flow.dto';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -37,6 +37,6 @@ export class HourlyFuelFlowImportDTO extends HrlyFuelFlowBaseDTO {
 
 export class HourlyFuelFlowDTO extends HrlyFuelFlowRecordDTO {
   @ValidateNested({ each: true })
-  @Type(() => HrlyParamFuelFlowRecordDTO)
-  hourlyParameterFuelFlowData: HrlyParamFuelFlowRecordDTO[];
+  @Type(() => HrlyParamFuelFlowDTO)
+  hourlyParameterFuelFlowData: HrlyParamFuelFlowDTO[];
 }
