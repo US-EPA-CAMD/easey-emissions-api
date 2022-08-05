@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorFormula } from './monitor-formula.entity';
@@ -17,13 +24,13 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   parameterCode: string;
 
   @Column({ name: 'unadjusted_hrly_value', nullable: true })
-  unadjustedHrlyValue: string;
+  unadjustedHourlyValue: string;
 
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  monFormId: string;
+  formulaIdentifier: string;
 
   @Column({ name: 'calc_unadjusted_hrly_value', nullable: true })
   calcUnadjustedHrlyValue: string;
@@ -43,14 +50,14 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   calcPctMoisture: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  rptPeriodId: number;
+  reportingPeriodId: number;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -67,20 +74,20 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
-  
+
   @ManyToOne(
     () => MonitorFormula,
     o => o.matsDerivedHrlyValues,
   )
   @JoinColumn({ name: 'mon_form_id' })
-  formula: MonitorFormula;
+  monitorFormula: MonitorFormula;
 
   @ManyToOne(
     () => MonitorLocation,
     o => o.matsDerivedHrlyValues,
   )
   @JoinColumn({ name: 'mon_loc_id' })
-  location: MonitorLocation;
+  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => ReportingPeriod,
@@ -88,5 +95,4 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
-
 }

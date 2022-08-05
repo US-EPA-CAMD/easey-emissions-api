@@ -1,4 +1,3 @@
-import { DataRowMessage } from 'pg-protocol/dist/messages';
 import {
   BaseEntity,
   Column,
@@ -112,14 +111,14 @@ export class MonitorLocation extends BaseEntity {
 
   @OneToMany(
     () => MatsDerivedHrlyValue,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   matsDerivedHrlyValues: MatsDerivedHrlyValue[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
-    c => c.location,
+    c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];

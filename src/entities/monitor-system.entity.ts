@@ -102,7 +102,7 @@ export class MonitorSystem extends BaseEntity {
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
