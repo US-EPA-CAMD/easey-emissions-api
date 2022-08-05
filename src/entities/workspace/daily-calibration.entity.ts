@@ -4,14 +4,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
-import { ProtocolGasVendor } from './protocol-gas-vendor.entity';
 
-@Entity({ name: 'camdecmps.daily_calibration' })
+@Entity({ name: 'camdecmpswks.daily_calibration' })
 export class DailyCalibration extends BaseEntity {
   @PrimaryColumn({
     name: 'cal_inj_id',
@@ -301,13 +299,6 @@ export class DailyCalibration extends BaseEntity {
     nullable: true,
   })
   injectionProtocolCode: string;
-
-  @ManyToOne(
-    () => ProtocolGasVendor,
-    o => o.dailyCalibrations,
-  )
-  @JoinColumn({ name: 'vendor_id' })
-  protocolGasVendor: ProtocolGasVendor;
 
   @OneToOne(
     () => DailyTestSummary,

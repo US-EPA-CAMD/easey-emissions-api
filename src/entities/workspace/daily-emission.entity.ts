@@ -1,17 +1,9 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { ReportingPeriod } from './reporting-period.entity';
-import { MonitorLocation } from './monitor-location.entity';
+
 import { DailyFuel } from './daily-fuel.entity';
 
-@Entity({ name: 'camdecmps.daily_emission' })
+@Entity({ name: 'camdecmpswks.daily_emission' })
 export class DailyEmission extends BaseEntity {
   @PrimaryColumn({
     name: 'daily_emission_id',
@@ -92,20 +84,6 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
   })
   calcTotalOpTime: number;
-
-  @ManyToOne(
-    () => ReportingPeriod,
-    o => o.dailyEmissions,
-  )
-  @JoinColumn({ name: 'rpt_period_id' })
-  reportingPeriod: ReportingPeriod;
-
-  @ManyToOne(
-    () => MonitorLocation,
-    o => o.dailyEmissions,
-  )
-  @JoinColumn({ name: 'mon_loc_id' })
-  monitorLocation: MonitorLocation;
 
   @ManyToOne(
     () => DailyFuel,

@@ -149,5 +149,5 @@ export class DerivedHrlyValue extends BaseEntity {
     o => o.derivedHrlyValues,
   )
   @JoinColumn({ name: 'mon_form_id' })
-  formula: MonitorFormula;
+  monitorFormula: MonitorFormula;
 }

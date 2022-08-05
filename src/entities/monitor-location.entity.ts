@@ -1,4 +1,3 @@
-import { DataRowMessage } from 'pg-protocol/dist/messages';
 import {
   BaseEntity,
   Column,

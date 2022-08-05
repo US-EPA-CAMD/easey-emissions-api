@@ -3,18 +3,14 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from './reporting-period.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
 import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 
-@Entity({ name: 'camdecmps.nsps4t_summary' })
+@Entity({ name: 'camdecmpswks.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
   @PrimaryColumn({ name: 'nsps4t_sum_id', nullable: false })
   id: string;
@@ -63,20 +59,6 @@ export class Nsps4tSummary extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
-
-  @ManyToOne(
-    () => MonitorLocation,
-    o => o.nsps4tSummaries,
-  )
-  @JoinColumn({ name: 'mon_loc_id' })
-  monitorLocation: MonitorLocation;
-
-  @ManyToOne(
-    () => ReportingPeriod,
-    o => o.nsps4tSummaries,
-  )
-  @JoinColumn({ name: 'rpt_period_id' })
-  reportingPeriod: ReportingPeriod;
 
   // @TODO: Verify this relationship type once there is data in nsps4t-annual and nsps4t-summary tables
   @OneToOne(

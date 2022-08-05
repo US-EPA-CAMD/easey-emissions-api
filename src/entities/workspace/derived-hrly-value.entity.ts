@@ -7,13 +7,11 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { Component } from './component.entity';
-import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 
-@Entity({ name: 'camdecmps.monitor-hrly-value.entity' })
-export class MonitorHrlyValue extends BaseEntity {
-  @PrimaryColumn({ name: 'monitor_hrly_val_id', nullable: false })
+@Entity({ name: 'camdecmpswks.derived_hrly_value' })
+export class DerivedHrlyValue extends BaseEntity {
+  @PrimaryColumn({ name: 'derv_id', nullable: false })
   id: string;
 
   @Column({ name: 'hour_id', nullable: false })
@@ -22,11 +20,18 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({ name: 'mon_sys_id', nullable: true })
   monitoringSystemId: string;
 
-  @Column({ name: 'component_id', nullable: true })
-  componentId: string;
+  @Column({ name: 'mon_form_id', nullable: true })
+  formulaIdentifier: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
+
+  @Column({
+    name: 'unadjusted_hrly_value',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
+  unadjustedHourlyValue: number;
 
   @Column({
     name: 'applicable_bias_adj_factor',
@@ -36,11 +41,11 @@ export class MonitorHrlyValue extends BaseEntity {
   biasAdjustmentFactor: number;
 
   @Column({
-    name: 'unadjusted_hrly_value',
+    name: 'calc_unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  unadjustedHourlyValue: number;
+  calcUnadjustedHrlyValue: number;
 
   @Column({
     name: 'adjusted_hrly_value',
@@ -59,6 +64,9 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({ name: 'modc_cd', nullable: true })
   modcCode: string;
 
+  @Column({ name: 'operating_condition_cd', nullable: true })
+  operatingConditionCode: string;
+
   @Column({
     name: 'pct_available',
     transformer: new NumericColumnTransformer(),
@@ -66,8 +74,22 @@ export class MonitorHrlyValue extends BaseEntity {
   })
   percentAvailable: number;
 
-  @Column({ name: 'moisture_basis', nullable: true })
-  moistureBasis: string;
+  @Column({
+    name: 'diluent_cap_ind',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
+  diluentCapInd: number;
+
+  @Column({
+    name: 'segment_num',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
+  segmentNumber: number;
+
+  @Column({ name: 'fuel_cd', nullable: true })
+  fuelCode: string;
 
   @Column({ name: 'userid', nullable: true })
   userId: string;
@@ -78,51 +100,37 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
 
-  @Column({ name: 'calc_line_status', nullable: true })
-  calcLineStatus: string;
+  @Column({ name: 'calc_pct_diluent', nullable: true })
+  calcPctDiluent: string;
+
+  @Column({ name: 'calc_pct_moisture', nullable: true })
+  calcPctMoisture: string;
 
   @Column({ name: 'calc_rata_status', nullable: true })
   calcRataStatus: string;
 
-  @Column({ name: 'calc_daycal_status', nullable: true })
-  calcDaycalStatus: string;
+  @Column({ name: 'calc_appe_status', nullable: true })
+  calcAppeStatus: string;
 
-  @Column({
-    name: 'rpt_period_id',
-    transformer: new NumericColumnTransformer(),
-    nullable: false,
-  })
+  @Column({ name: 'rpt_period_id', nullable: false })
   reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monitoringLocationId: string;
 
-  @Column({ name: 'calc_leak_status', nullable: true })
-  calcLeakStatus: string;
+  @Column({
+    name: 'calc_fuel_flow_total',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
+  calcFuelFlowTotal: number;
 
-  @Column({ name: 'calc_dayint_status', nullable: true })
-  calcDayintStatus: string;
-
-  @Column({ name: 'calc_f2l_status', nullable: true })
-  calcF2lStatus: string;
-
-  @ManyToOne(
-    () => Component,
-    o => o.monitorHrlyValues,
-  )
-  @JoinColumn({ name: 'component_id' })
-  component: Component;
-
-  @ManyToOne(
-    () => MonitorSystem,
-    o => o.monitorHrlyValues,
-  )
-  @JoinColumn({ name: 'mon_sys_id' })
-  monitorSystem: MonitorSystem;
+  @Column({ name: 'calc_hour_measure_cd', nullable: true })
+  calcHourMeasureCode: string;
 
   @ManyToOne(
     () => HrlyOpData,
-    o => o.monitorHourlyValues,
+    o => o.derivedHrlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;

@@ -3,17 +3,14 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from './reporting-period.entity';
-import { MonitorSystem } from './monitor-system.entity';
+
 import { SamplingTrain } from './sampling-train.entity';
 
-@Entity({ name: 'camdecmps.sorbent_trap' })
+@Entity({ name: 'camdecmpswks.sorbent_trap' })
 export class SorbentTrap extends BaseEntity {
   @PrimaryColumn({ name: 'trap_id', nullable: false })
   id: string;
@@ -94,27 +91,6 @@ export class SorbentTrap extends BaseEntity {
 
   @Column({ name: 'rata_ind', nullable: true })
   rataIndicator: number;
-
-  @ManyToOne(
-    () => MonitorLocation,
-    o => o.sorbentTraps,
-  )
-  @JoinColumn({ name: 'mon_loc_id' })
-  monitorLocation: MonitorLocation;
-
-  @ManyToOne(
-    () => MonitorSystem,
-    o => o.sorbentTraps,
-  )
-  @JoinColumn({ name: 'mon_sys_id' })
-  monitorSystem: MonitorSystem;
-
-  @ManyToOne(
-    () => ReportingPeriod,
-    o => o.sorbentTraps,
-  )
-  @JoinColumn({ name: 'rpt_period_id' })
-  reportingPeriod: ReportingPeriod;
 
   @OneToMany(
     () => SamplingTrain,

@@ -9,7 +9,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DailyEmission } from './daily-emission.entity';
 
-@Entity({ name: 'camdecmps.daily_fuel' })
+@Entity({ name: 'camdecmpswks.daily_fuel' })
 export class DailyFuel extends BaseEntity {
   @PrimaryColumn({ name: 'daily_fuel_id', nullable: false })
   id: string;
