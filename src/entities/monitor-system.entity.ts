@@ -74,7 +74,7 @@ export class MonitorSystem extends BaseEntity {
 
   @OneToMany(
     () => DailyTestSummary,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   dailyTestSummaries: DailyTestSummary[];
@@ -88,42 +88,42 @@ export class MonitorSystem extends BaseEntity {
 
   @OneToMany(
     () => HrlyFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   hrlyFuelFlows: HrlyFuelFlow[];
 
   @OneToMany(
     () => LongTermFuelFlow,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   longTermFuelFlows: LongTermFuelFlow[];
 
   @OneToMany(
     () => MatsMonitorHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   matsMonitorHrlyValues: MatsMonitorHrlyValue[];
 
   @OneToMany(
     () => MonitorHrlyValue,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   monitorHrlyValues: MonitorHrlyValue[];
 
   @OneToMany(
     () => SorbentTrap,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   sorbentTraps: SorbentTrap[];
 
   @OneToMany(
     () => WeeklyTestSummary,
-    c => c.system,
+    c => c.monitorSystem,
   )
   @JoinColumn({ name: 'mon_sys_id' })
   weeklyTestSummaries: WeeklyTestSummary[];

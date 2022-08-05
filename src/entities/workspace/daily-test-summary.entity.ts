@@ -3,18 +3,14 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from './reporting-period.entity';
-import { Component } from './component.entity';
-import { MonitorSystem } from './monitor-system.entity';
+
 import { DailyCalibration } from './daily-calibration.entity';
 
-@Entity({ name: 'camdecmps.daily_test_summary' })
+@Entity({ name: 'camdecmpswks.daily_test_summary' })
 export class DailyTestSummary extends BaseEntity {
   @PrimaryColumn({ name: 'daily_test_sum_id', nullable: false })
   id: string;
@@ -72,34 +68,6 @@ export class DailyTestSummary extends BaseEntity {
 
   @Column({ nullable: true, name: 'mon_sys_id' })
   monitoringSystemId: string;
-
-  @ManyToOne(
-    () => MonitorLocation,
-    o => o.dailyTestSummaries,
-  )
-  @JoinColumn({ name: 'mon_loc_id' })
-  monitorLocation: MonitorLocation;
-
-  @ManyToOne(
-    () => ReportingPeriod,
-    o => o.dailyTestSummaries,
-  )
-  @JoinColumn({ name: 'rpt_period_id' })
-  reportingPeriod: ReportingPeriod;
-
-  @ManyToOne(
-    () => Component,
-    o => o.dailyTestSummaries,
-  )
-  @JoinColumn({ name: 'component_id' })
-  component: Component;
-
-  @ManyToOne(
-    () => MonitorSystem,
-    o => o.dailyTestSummaries,
-  )
-  @JoinColumn({ name: 'mon_sys_id' })
-  monitorSystem: MonitorSystem;
 
   @OneToOne(
     () => DailyCalibration,
