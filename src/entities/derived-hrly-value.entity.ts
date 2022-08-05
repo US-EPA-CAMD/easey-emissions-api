@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorSystem } from './monitor-system.entity';
@@ -135,13 +142,12 @@ export class DerivedHrlyValue extends BaseEntity {
     o => o.derivedHrlyValues,
   )
   @JoinColumn({ name: 'mon_sys_id' })
-  system: MonitorSystem;
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => MonitorFormula,
     o => o.derivedHrlyValues,
   )
   @JoinColumn({ name: 'mon_form_id' })
-  formula: MonitorFormula;
-
+  monitorFormula: MonitorFormula;
 }
