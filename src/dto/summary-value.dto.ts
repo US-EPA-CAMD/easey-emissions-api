@@ -1,4 +1,6 @@
 export class SummaryValueBaseDTO {
+  stackPipeId?: string;
+  unitId?: string;
   parameterCode: string;
   currentReportingPeriodTotal?: number;
   ozoneSeasonToDateTotal?: number;
