@@ -22,6 +22,7 @@ import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { SamplingTrain } from './sampling-train.entity';
+import { EmissionEvaluation } from './emission-evaluation.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -74,7 +75,7 @@ export class ReportingPeriod extends BaseEntity {
   @Column({
     name: 'archive_ind',
     nullable: false,
-    transformer: new NumericColumnTransformer()
+    transformer: new NumericColumnTransformer(),
   })
   archiveInd: number;
 
@@ -176,4 +177,10 @@ export class ReportingPeriod extends BaseEntity {
   @JoinColumn({ name: 'rpt_period_id' })
   samplingTrains: SamplingTrain[];
 
+  @OneToMany(
+    () => EmissionEvaluation,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  emissionEvaluations: EmissionEvaluation[];
 }
