@@ -6,6 +6,8 @@ import {
 } from './weekly-system-integrity.dto';
 
 export class WeeklyTestSummaryBaseDTO {
+  stackPipeId?: string;
+  unitId?: string;
   date: Date;
   hour: number;
   minute?: number;
