@@ -3,8 +3,8 @@ import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
 
 export class SorbentTrapBaseDTO {
-  stackPipeId?: string;
-  unitId?: string;
+  stackPipeId: string;
+  unitId: string;
   beginDate: Date;
   beginHour: number;
   endDate: Date;

@@ -1,5 +1,5 @@
 export class SamplingTrainBaseDTO {
-  componentId?: string;
+  componentId: string;
   sorbentTrapSn: string;
   mainTrapHg?: string;
   btTrapHg?: string;
