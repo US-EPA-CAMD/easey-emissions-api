@@ -4,8 +4,14 @@ import {
   Entity,
   PrimaryColumn,
   JoinColumn,
+  OneToOne,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
+
+import { Unit } from './unit.entity';
+import { StackPipe } from './stack-pipe.entity';
+import { MonitorPlan } from './monitor-plan.entity';
 import { DailyEmission } from './daily-emission.entity';
 import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
@@ -59,6 +65,29 @@ export class MonitorLocation extends BaseEntity {
     type: 'date',
   })
   updateDate: Date;
+
+  @OneToOne(
+    () => StackPipe,
+    stackPipe => stackPipe.location,
+    { eager: true },
+  )
+  @JoinColumn({ name: 'stack_pipe_id' })
+  stackPipe: StackPipe;
+
+  @OneToOne(
+    () => Unit,
+    unit => unit.location,
+    { eager: true },
+  )
+  @JoinColumn({ name: 'unit_id' })
+  unit: Unit;
+
+  @ManyToMany(
+    () => MonitorPlan,
+    plan => plan.locations,
+    { eager: true },
+  )
+  plans: MonitorPlan[];
 
   @OneToMany(
     () => DailyEmission,

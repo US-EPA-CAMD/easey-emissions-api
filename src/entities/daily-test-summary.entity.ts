@@ -3,8 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   ManyToOne,
-  OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
@@ -101,10 +101,10 @@ export class DailyTestSummary extends BaseEntity {
   @JoinColumn({ name: 'mon_sys_id' })
   monitorSystem: MonitorSystem;
 
-  @OneToOne(
+  @OneToMany(
     () => DailyCalibration,
     o => o.dailyTestSummary,
   )
   @JoinColumn({ name: 'daily_test_sum_id' })
-  dailyCalibration: DailyCalibration;
+  dailyCalibrations: DailyCalibration[];
 }

@@ -11,6 +11,7 @@ import routes from './routes';
 import appConfig from './config/app.config';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { EmissionsModule } from './emissions/emissions.module';
+import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 
 @Module({
@@ -25,8 +26,9 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
     }),
     LoggerModule,
     CorsOptionsModule,
-    ApportionedEmissionsModule,
     EmissionsModule,
+    EmissionsWorkspaceModule,
+    ApportionedEmissionsModule,
   ],
 })
 export class AppModule {}
