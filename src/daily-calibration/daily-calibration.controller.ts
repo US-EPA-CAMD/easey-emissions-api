@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Param,
 } from '@nestjs/common';
 
 import {
@@ -25,7 +24,8 @@ export class DailyCalibrationController {
   @ApiOkResponse({
     description: '',
   })
-  async getDailyCalibrations(@Param('locId') monLocId: string) {
+  // This will be for the view and will be location based so need params DTO for monitor location, year(s), and quarter(s)
+  async getDailyCalibrations() {
     return;
   }
 }

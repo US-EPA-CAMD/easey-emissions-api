@@ -23,6 +23,7 @@ export class EmissionsController {
     description: 'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
   export(
+    // TODO change to params DTO and apply validations for year and quarter
     @Query('monitorPlanId') monPlanId: string,
     @Query('year') year: number,
     @Query('quarter') quarter: number,

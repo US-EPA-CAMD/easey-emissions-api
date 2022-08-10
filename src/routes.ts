@@ -20,7 +20,7 @@ const routes: Routes = [
     module: EmissionsModule,
     children: [
       {
-        path: ':locId/daily-calibrations',
+        path: '/daily-calibrations',
         module: DailyCalibrationModule,
       },
     ],
@@ -30,7 +30,7 @@ const routes: Routes = [
     module: EmissionsWorkspaceModule,
     children: [
       {
-        path: ':locId/daily-calibrations',
+        path: '/daily-calibrations',
         module: DailyCalibrationWorkspaceModule,
       },
     ],
