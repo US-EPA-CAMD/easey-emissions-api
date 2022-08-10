@@ -18,6 +18,7 @@ export class SamplingTrainBaseDTO {
 
 export class SamplingTrainRecordDTO extends SamplingTrainBaseDTO {
   id: string;
+  componentRecordId: string;
   sorbentTrapId: string;
   monitoringLocationId: string;
   reportingPeriodId: number;
