@@ -1,10 +1,10 @@
 export class LongTermFuelFlowBaseDTO {
-  stackPipeId?: string;
-  unitId?: string;
-  monitoringSystemId?: string;
+  stackPipeId: string;
+  unitId: string;
+  monitoringSystemId: string;
   fuelFlowPeriodCode?: string;
-  longTermFuelFlowValue?: number;
-  longTermFuelFlowUomCode?: string;
+  longTermFuelFlowValue: number;
+  longTermFuelFlowUomCode: string;
   grossCalorificValue?: number;
   gcvUnitsOfMeasureCode?: string;
   totalHeatInput?: number;
