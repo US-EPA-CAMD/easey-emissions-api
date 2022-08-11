@@ -1,5 +1,6 @@
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 
 export class DailyEmissionBaseDTO {
   stackPipeId: string;
@@ -26,12 +27,12 @@ export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
 
 export class DailyEmissionImportDTO extends DailyEmissionBaseDTO {
   @ValidateNested({ each: true })
-  @Type(() => DailyEmissionImportDTO)
-  dailyFuelData: DailyEmissionImportDTO[];
+  @Type(() => DailyFuelImportDTO)
+  dailyFuelData: DailyFuelImportDTO[];
 }
 
 export class DailyEmissionDTO extends DailyEmissionRecordDTO {
   @ValidateNested({ each: true })
-  @Type(() => DailyEmissionDTO)
-  dailyFuelData: DailyEmissionDTO[];
+  @Type(() => DailyFuelDTO)
+  dailyFuelData: DailyFuelDTO[];
 }
