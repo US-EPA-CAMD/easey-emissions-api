@@ -1,8 +1,3 @@
-import {
-  DailyFuelBaseDTO,
-  DailyFuelDTO,
-  DailyFuelImportDTO,
-} from './daily-fuel.dto';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -18,7 +13,7 @@ export class DailyEmissionBaseDTO {
   totalCarbonBurned?: number;
 }
 
-export class DailyEmissionRecordDTO extends DailyFuelBaseDTO {
+export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
   id: string;
   reportingPeriodId: number;
   monitoringLocationId: string;
@@ -29,14 +24,14 @@ export class DailyEmissionRecordDTO extends DailyFuelBaseDTO {
   calcTotalOpTime?: number;
 }
 
-export class DailyEmissionImportDTO extends DailyFuelBaseDTO {
+export class DailyEmissionImportDTO extends DailyEmissionBaseDTO {
   @ValidateNested({ each: true })
-  @Type(() => DailyFuelImportDTO)
-  dailyFuelData: DailyFuelImportDTO[];
+  @Type(() => DailyEmissionImportDTO)
+  dailyFuelData: DailyEmissionImportDTO[];
 }
 
 export class DailyEmissionDTO extends DailyEmissionRecordDTO {
   @ValidateNested({ each: true })
-  @Type(() => DailyFuelDTO)
-  dailyFuelData: DailyFuelDTO[];
+  @Type(() => DailyEmissionDTO)
+  dailyFuelData: DailyEmissionDTO[];
 }
