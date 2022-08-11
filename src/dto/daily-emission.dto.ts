@@ -7,6 +7,8 @@ import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DailyEmissionBaseDTO {
+  stackPipeId: string;
+  unitId: string;
   parameterCode: string;
   date: Date;
   totalDailyEmissions?: number;

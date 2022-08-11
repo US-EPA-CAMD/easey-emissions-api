@@ -1,7 +1,7 @@
 export class DailyFuelBaseDTO {
   fuelCode: string;
   dailyFuelFeed?: number;
-  carbonContentUsed?: number;
+  carbonContentUsed: number;
   fuelCarbonBurned?: number;
 }
 
