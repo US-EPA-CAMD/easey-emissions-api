@@ -30,7 +30,7 @@ export class LongTermFuelFlow extends BaseEntity {
   longTermFuelFlowValue: number;
 
   @Column({ name: 'ltff_uom_cd', nullable: true })
-  longTermFuelFlowUomcode: string;
+  longTermFuelFlowUomCode: string;
 
   @Column({
     name: 'gross_calorific_value',
