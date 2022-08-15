@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { In } from 'typeorm';
 
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
