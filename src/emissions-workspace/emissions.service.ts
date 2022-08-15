@@ -30,11 +30,12 @@ export class EmissionsWorkspaceService {
           emissions.monitorPlan?.locations?.map(s => s.id),
         ),
       );
-    }
 
-    const promiseResult = await Promise.all(promises);
-    const results = await this.map.one(emissions);
-    results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-    return results;
+      const promiseResult = await Promise.all(promises);
+      const results = await this.map.one(emissions);
+      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+      return results;
+    }
+    return new EmissionsDTO();
   }
 }

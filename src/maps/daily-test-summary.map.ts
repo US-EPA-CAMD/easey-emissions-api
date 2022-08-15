@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
-import { DailyCalibrationMap } from './daily-calibration.map';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { DailyTestSummary } from '../entities/daily-test-summary.entity';
 
@@ -10,10 +9,6 @@ export class DailyTestSummaryMap extends BaseMap<
   DailyTestSummary,
   DailyTestSummaryDTO
 > {
-  constructor(private readonly dailyCalibrationMap: DailyCalibrationMap) {
-    super();
-  }
-
   public async one(entity: DailyTestSummary): Promise<DailyTestSummaryDTO> {
     const unitId = entity.monitorLocation.unit
       ? entity.monitorLocation.unit.name

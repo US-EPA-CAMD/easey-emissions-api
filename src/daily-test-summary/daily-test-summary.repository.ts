@@ -5,7 +5,7 @@ import { Repository, EntityRepository } from 'typeorm';
 export class DailyTestSummaryRepository extends Repository<DailyTestSummary> {
   async export(monitoringLocationIds: string[]) {
     const query = this.createQueryBuilder('dts')
-      .leftJoinAndSelect('dts.monitorLocation', 'l')
+      .innerJoinAndSelect('dts.monitorLocation', 'l')
       .leftJoinAndSelect('l.unit', 'u')
       .leftJoinAndSelect('l.stackPipe', 'sp')
       .leftJoinAndSelect('dts.monitorSystem', 'ms')
