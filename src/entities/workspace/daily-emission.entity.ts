@@ -33,7 +33,7 @@ export class DailyEmission extends BaseEntity {
   parameterCode: string;
 
   @Column({ name: 'begin_date', nullable: false })
-  beginDate: Date;
+  date: Date;
 
   @Column({
     nullable: true,

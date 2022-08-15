@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -46,7 +45,7 @@ export class Nsps4tSummary extends BaseEntity {
   noCompliancePeriodEndedComment: string;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monitorLocationId: string;
+  monitoringLocationId: string;
 
   @Column({
     name: 'rpt_period_id',
