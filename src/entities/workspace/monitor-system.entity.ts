@@ -17,7 +17,7 @@ import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
-@Entity({ name: 'camdecmps.monitor_system' })
+@Entity({ name: 'camdecmpswks.monitor_system' })
 export class MonitorSystem extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 45, name: 'mon_sys_id' })
   id: string;

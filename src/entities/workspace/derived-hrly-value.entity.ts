@@ -11,7 +11,7 @@ import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { MonitorFormula } from './monitor-formula.entity';
 
-@Entity({ name: 'camdecmps.derived_hrly_value' })
+@Entity({ name: 'camdecmpswks.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'derv_id', nullable: false })
   id: string;

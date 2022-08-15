@@ -6,18 +6,15 @@ import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { DailyTestSummary } from '../entities/daily-test-summary.entity';
 
 @Injectable()
-export class DailyTestSummaryMap extends BaseMap<DailyTestSummary, DailyTestSummaryDTO> {
-
-  constructor(
-    private readonly dailyCalibrationMap: DailyCalibrationMap
-  ) {
+export class DailyTestSummaryMap extends BaseMap<
+  DailyTestSummary,
+  DailyTestSummaryDTO
+> {
+  constructor(private readonly dailyCalibrationMap: DailyCalibrationMap) {
     super();
   }
 
   public async one(entity: DailyTestSummary): Promise<DailyTestSummaryDTO> {
-
-    //console.log(entity);
-
     const unitId = entity.monitorLocation.unit
       ? entity.monitorLocation.unit.name
       : null;
@@ -26,29 +23,23 @@ export class DailyTestSummaryMap extends BaseMap<DailyTestSummary, DailyTestSumm
       ? entity.monitorLocation.stackPipe.name
       : null;
 
-    const componentId = entity.component
-      ? entity.component.componentID
-      : null;
+    const componentId = entity.component ? entity.component.componentId : null;
 
     const monitoringSystemId = entity.monitorSystem
       ? entity.monitorSystem.monitoringSystemId
-      : null;
-    
-    const dailyCalibrationData = entity.dailyCalibrations
-      ? await this.dailyCalibrationMap.many(entity.dailyCalibrations)
       : null;
 
     return {
       id: entity.id,
       monitoringLocationId: entity.monitoringLocationId,
-      stackPipeId,
-      unitId,
+      stackPipeId: stackPipeId,
+      unitId: unitId,
       reportingPeriodId: entity.reportingPeriodId,
       date: entity.date,
       hour: entity.hour,
       minute: entity.minute,
-      monitoringSystemId,
-      componentId,
+      monitoringSystemId: monitoringSystemId,
+      componentId: componentId,
       testTypeCode: entity.testTypeCode,
       testResultCode: entity.testResultCode,
       calcTestResultCode: entity.calcTestResultCode,
@@ -56,7 +47,7 @@ export class DailyTestSummaryMap extends BaseMap<DailyTestSummary, DailyTestSumm
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      dailyCalibrationData,
+      dailyCalibrationData: null,
     };
   }
 }

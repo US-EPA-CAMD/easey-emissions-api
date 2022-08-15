@@ -10,11 +10,11 @@ import {
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from './reporting-period.entity';
 import { Nsps4tAnnual } from './nsps4t-annual.entity';
 import { Nsps4tCompliancePeriod } from './nsps4t-compliance-period.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
 
-@Entity({ name: 'camdecmps.nsps4t_summary' })
+@Entity({ name: 'camdecmpswks.nsps4t_summary' })
 export class Nsps4tSummary extends BaseEntity {
   @PrimaryColumn({ name: 'nsps4t_sum_id', nullable: false })
   id: string;

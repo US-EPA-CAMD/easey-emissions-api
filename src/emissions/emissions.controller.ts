@@ -11,6 +11,7 @@ import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-pr
 import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.params.dto';
 import { EmissionsService } from './emissions.service';
 import { EmissionsDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 @Controller()
 @ApiTags('Emissions')
@@ -20,15 +21,11 @@ export class EmissionsController {
 
   @Get('export')
   @ApiOkResponse({
-    description: 'Exports emissions data for the specified Monitor Plan & Reporting Period',
+    description:
+      'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
-  export(
-    // TODO change to params DTO and apply validations for year and quarter
-    @Query('monitorPlanId') monPlanId: string,
-    @Query('year') year: number,
-    @Query('quarter') quarter: number,
-  ): Promise<EmissionsDTO> {
-    return this.service.export(monPlanId, year, quarter);
+  export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+    return this.service.export(params);
   }
 
   @Get('submission-progress')

@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'camdecmps.monitor_plan_location' })
+@Entity({ name: 'camdecmpswks.monitor_plan_location' })
 export class MonitorPlanLocation extends BaseEntity {
   @PrimaryColumn({
     name: 'monitor_plan_location_id',

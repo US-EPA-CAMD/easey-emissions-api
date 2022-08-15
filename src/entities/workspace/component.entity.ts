@@ -14,7 +14,7 @@ import { MonitorHrlyValue } from './monitor-hrly-value.entity';
 import { SamplingTrain } from './sampling-train.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
-@Entity({ name: 'camdecmps.component' })
+@Entity({ name: 'camdecmpswks.component' })
 export class Component extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 45, name: 'component_id' })
   id: string;

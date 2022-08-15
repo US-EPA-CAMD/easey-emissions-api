@@ -8,6 +8,8 @@ import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-pr
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsDTO } from '../dto/emissions.dto';
+import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 @Injectable()
 export class EmissionsService {
@@ -17,16 +19,31 @@ export class EmissionsService {
     private readonly submissionProgressMap: EmissionsSubmissionsProgressMap,
     private readonly submissionProgressRepo: EmissionsSubmissionsProgressRepository,
     private readonly configService: ConfigService,
+    private readonly dailyTestSummaryService: DailyTestSummaryService,
   ) {}
 
-  async export(
-    monPlanId: string,
-    year: number,
-    quarter: number
-  ): Promise<EmissionsDTO> {
-    const result = await this.repository.export(monPlanId, year, quarter);
-    //console.log(result);
-    return this.map.one(result);
+  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+    const promises = [];
+    const DAILY_TEST_SUMMARIES = 0;
+
+    let emissions = await this.repository.export(
+      params.monitorPlanId,
+      params.year,
+      params.quarter,
+    );
+
+    if (emissions) {
+      promises.push(
+        this.dailyTestSummaryService.export(
+          emissions.monitorPlan?.locations?.map(s => s.id),
+        ),
+      );
+    }
+
+    const promiseResult = await Promise.all(promises);
+    const results = await this.map.one(emissions);
+    results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+    return results;
   }
 
   async getSubmissionProgress(

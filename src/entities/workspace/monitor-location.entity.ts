@@ -9,8 +9,6 @@ import {
   ManyToMany,
 } from 'typeorm';
 
-import { Unit } from './unit.entity';
-import { StackPipe } from './stack-pipe.entity';
 import { MonitorPlan } from './monitor-plan.entity';
 import { DailyEmission } from './daily-emission.entity';
 import { DailyTestSummary } from './daily-test-summary.entity';
@@ -26,8 +24,10 @@ import { SamplingTrain } from './sampling-train.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
+import { StackPipe } from '../stack-pipe.entity';
+import { Unit } from '../unit.entity';
 
-@Entity({ name: 'camdecmps.monitor_location' })
+@Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
   @PrimaryColumn({
     name: 'mon_loc_id',

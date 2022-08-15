@@ -10,9 +10,9 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { MonitorPlan } from './monitor-plan.entity';
-import { ReportingPeriod } from './reporting-period.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
 
-@Entity({ name: 'camdecmps.emission_evaluation' })
+@Entity({ name: 'camdecmpswks.emission_evaluation' })
 export class EmissionEvaluation extends BaseEntity {
   @PrimaryColumn({ name: 'mon_plan_id', nullable: false })
   monitorPlanId: string;
@@ -45,6 +45,12 @@ export class EmissionEvaluation extends BaseEntity {
 
   @Column({ name: 'submission_availability_cd', nullable: true })
   submissionAvailabilityCd: string;
+
+  @Column({ name: 'eval_status_cd', nullable: true })
+  evalStatusCd: string;
+
+  @Column({ name: 'pending_status_cd', nullable: true })
+  pendingStatusCd: string;
 
   @ManyToOne(
     () => ReportingPeriod,

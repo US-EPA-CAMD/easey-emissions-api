@@ -5,15 +5,16 @@ import { DailyCalibrationDTO } from '../dto/daily-calibration.dto';
 import { DailyCalibration } from '../entities/daily-calibration.entity';
 
 @Injectable()
-export class DailyCalibrationMap extends BaseMap<DailyCalibration, DailyCalibrationDTO> {
-
+export class DailyCalibrationMap extends BaseMap<
+  DailyCalibration,
+  DailyCalibrationDTO
+> {
   public async one(entity: DailyCalibration): Promise<DailyCalibrationDTO> {
-
     return {
       id: entity.id,
       dailyTestSumId: entity.dailyTestSummaryId,
-      rptPeriodId: entity.reportingPeriodId,
-      onLineOffLineIndicator: null,//entity.onLineOffLineIndicator,
+      reportingPeriodId: entity.reportingPeriodId,
+      onLineOffLineIndicator: entity.onLineOffLineIndicator,
       calcOnlineOfflineIndicator: entity.calcOnlineOfflineIndicator,
       upscaleGasCode: entity.upscaleGasCode,
       zeroInjectionDate: entity.zeroInjectionDate,
@@ -24,9 +25,9 @@ export class DailyCalibrationMap extends BaseMap<DailyCalibration, DailyCalibrat
       upscaleInjectionMinute: entity.upscaleInjectionMinute,
       zeroMeasuredValue: entity.zeroMeasuredValue,
       upscaleMeasuredValue: entity.upscaleMeasuredValue,
-      zeroAPSIndicator: null,//entity.zeroApsIndicator,
+      zeroAPSIndicator: entity.zeroApsIndicator,
       calcZeroApsIndicator: entity.calcZeroApsIndicator,
-      upscaleAPSIndicator: null,//entity.upscaleApsIndicator,
+      upscaleAPSIndicator: entity.upscaleApsIndicator,
       calcUpscaleApsIndicator: entity.calcUpscaleApsIndicator,
       zeroCalibrationError: entity.zeroCalibrationError,
       calcZeroCalibrationError: entity.calcZeroCalibrationError,

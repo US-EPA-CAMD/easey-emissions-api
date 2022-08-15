@@ -10,12 +10,12 @@ import {
   JoinTable,
 } from 'typeorm';
 
-import { Plant } from './plant.entity';
 import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from './reporting-period.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
+import { Plant } from '../plant.entity';
 
-@Entity({ name: 'camdecmps.monitor_plan' })
+@Entity({ name: 'camdecmpswks.monitor_plan' })
 export class MonitorPlan extends BaseEntity {
   @PrimaryColumn({
     name: 'mon_plan_id',
@@ -52,7 +52,7 @@ export class MonitorPlan extends BaseEntity {
     location => location.monitorPlans,
   )
   @JoinTable({
-    name: 'camdecmps.monitor_plan_location',
+    name: 'camdecmpswks.monitor_plan_location',
     joinColumn: {
       name: 'mon_plan_id',
       referencedColumnName: 'id',
@@ -62,7 +62,7 @@ export class MonitorPlan extends BaseEntity {
       referencedColumnName: 'id',
     },
   })
-  locations: MonitorLocation[]; 
+  locations: MonitorLocation[];
 
   @OneToMany(
     () => EmissionEvaluation,

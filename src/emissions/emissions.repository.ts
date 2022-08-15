@@ -1,24 +1,21 @@
-import { Repository, EntityRepository } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
+import { Repository, EntityRepository } from 'typeorm';
 
 @EntityRepository(EmissionEvaluation)
 export class EmissionsRepository extends Repository<EmissionEvaluation> {
-  async export(monPlanId: string, year: number, quarter: number) {
+  async export(
+    monitorPlanId: string,
+    year: number,
+    quarter: number,
+  ): Promise<EmissionEvaluation> {
     const query = this.createQueryBuilder('e')
       .innerJoinAndSelect('e.reportingPeriod', 'rp')
-      .innerJoinAndSelect('e.plan', 'mp')
+      .innerJoinAndSelect('e.monitorPlan', 'mp')
       .innerJoinAndSelect('mp.plant', 'p')
       .innerJoinAndSelect('mp.locations', 'ml')
-      .leftJoinAndSelect('ml.dailyTestSummaries', 'dts')
-      .leftJoinAndSelect('dts.dailyCalibrations', 'd')
-      .leftJoinAndSelect('dts.monitorLocation', 'dtsml')
-      .leftJoinAndSelect('dtsml.unit', 'u')
-      .leftJoinAndSelect('dtsml.stackPipe', 'sp')      
-      .where('mp.id = :monPlanId', { monPlanId })
+      .where('mp.id = :monitorPlanId', { monitorPlanId })
       .andWhere('rp.year = :year', { year })
       .andWhere('rp.quarter = :quarter', { quarter });
-
-    //console.log(query.getQueryAndParameters());
     return query.getOne();
   }
 }

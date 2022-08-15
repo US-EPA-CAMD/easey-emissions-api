@@ -11,7 +11,7 @@ import { DerivedHrlyValue } from './derived-hrly-value.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
-@Entity({ name: 'camdecmps.monitor_formula' })
+@Entity({ name: 'camdecmpswks.monitor_formula' })
 export class MonitorFormula extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 45, name: 'mon_form_id' })
   id: string;

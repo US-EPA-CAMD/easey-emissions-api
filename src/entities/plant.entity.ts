@@ -53,5 +53,5 @@ export class Plant extends BaseEntity {
     () => MonitorPlan,
     plan => plan.plant,
   )
-  plans: MonitorPlan[];
+  monitorPlans: MonitorPlan[];
 }

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
 
-@Entity({ name: 'camdecmps.daily_calibration' })
+@Entity({ name: 'camdecmpswks.daily_calibration' })
 export class DailyCalibration extends BaseEntity {
   @PrimaryColumn({
     name: 'cal_inj_id',
