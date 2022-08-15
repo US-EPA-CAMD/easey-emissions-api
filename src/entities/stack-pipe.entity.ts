@@ -3,12 +3,9 @@ import {
   Entity,
   Column,
   PrimaryColumn,
-  ManyToOne,
-  JoinColumn,
   OneToOne,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { Plant } from './plant.entity';
 import { MonitorLocation } from './monitor-location.entity';
 
 @Entity({ name: 'camdecmps.stack_pipe' })

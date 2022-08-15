@@ -1,7 +1,5 @@
 import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-//import { Unit } from './unit.entity';
-//import { StackPipe } from './stack-pipe.entity';
 import { MonitorPlan } from './monitor-plan.entity';
 
 @Entity({ name: 'camd.plant' })
