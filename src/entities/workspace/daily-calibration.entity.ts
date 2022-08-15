@@ -4,7 +4,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
@@ -300,9 +300,9 @@ export class DailyCalibration extends BaseEntity {
   })
   injectionProtocolCode: string;
 
-  @OneToOne(
+  @ManyToOne(
     () => DailyTestSummary,
-    o => o.dailyCalibration,
+    o => o.dailyCalibrations,
   )
   @JoinColumn({ name: 'daily_test_sum_id' })
   dailyTestSummary: DailyTestSummary;

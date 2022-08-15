@@ -16,15 +16,15 @@ export class DailyTestSummaryBaseDTO {
 
   minute: number;
 
-  monitoringSystemId: string;
+  monitoringSystemId?: string;
 
-  componentId: string;
+  componentId?: string;
 
   testTypeCode: string;
 
   testResultCode: string;
 
-  spanScaleCode: string;
+  spanScaleCode?: string;
 }
 
 export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
@@ -36,11 +36,11 @@ export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
 
   calcTestResultCode: string;
 
-  userId: string;
+  userId?: string;
 
-  addDate: Date;
+  addDate?: Date;
 
-  updateDate: Date;
+  updateDate?: Date;
 }
 
 export class DailyTestSummaryImportDTO extends DailyTestSummaryBaseDTO {

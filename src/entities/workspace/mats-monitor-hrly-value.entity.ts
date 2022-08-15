@@ -7,7 +7,11 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { Component } from './component.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.mats_monitor_hrly_value' })
 export class MatsMonitorHrlyValue extends BaseEntity {
@@ -74,9 +78,37 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   updateDate: Date;
 
   @ManyToOne(
+    () => Component,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
     () => HrlyOpData,
     o => o.matsMonitorHourlyValues,
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  monitorSystem: MonitorSystem;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.matsMonitorHrlyValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
 }

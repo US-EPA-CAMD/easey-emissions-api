@@ -1,73 +1,71 @@
 export class DailyCalibrationBaseDTO {
-    
-    onLineOffLineIndicator: string
+  onLineOffLineIndicator?: number;
 
-    upscaleGasCode: string
+  upscaleGasCode?: string;
 
-    zeroInjectionDate: Date
+  zeroInjectionDate?: Date;
 
-    zeroInjectionHour: number
+  zeroInjectionHour?: number;
 
-    zeroInjectionMinute: number
+  zeroInjectionMinute?: number;
 
-    upscaleInjectionDate: Date
+  upscaleInjectionDate?: Date;
 
-    upscaleInjectionHour: number
+  upscaleInjectionHour?: number;
 
-    upscaleInjectionMinute: number
+  upscaleInjectionMinute?: number;
 
-    zeroMeasuredValue: number
+  zeroMeasuredValue?: number;
 
-    upscaleMeasuredValue: number
+  upscaleMeasuredValue?: number;
 
-    zeroAPSIndicator: string
+  zeroAPSIndicator?: number;
 
-    upscaleAPSIndicator: string
+  upscaleAPSIndicator?: number;
 
-    zeroCalibrationError: number
+  zeroCalibrationError?: number;
 
-    upscaleCalibrationError: number
+  upscaleCalibrationError?: number;
 
-    zeroReferenceValue: number
+  zeroReferenceValue?: number;
 
-    upscaleReferenceValue: number
+  upscaleReferenceValue?: number;
 
-    upscaleGasTypeCode: string
+  upscaleGasTypeCode?: string;
 
-    cylinderIdentifier: string
+  cylinderIdentifier?: string;
 
-    vendorIdentifier: string
+  vendorIdentifier?: string;
 
-    expirationDate: Date
+  expirationDate?: Date;
 
-    injectionProtocolCode: string
+  injectionProtocolCode?: string;
 }
 
 export class DailyCalibrationRecordDTO extends DailyCalibrationBaseDTO {
+  id: string;
 
-    id: string
+  dailyTestSumId: string;
 
-    dailyTestSumId: string
+  calcOnlineOfflineIndicator?: number;
 
-    calcOnlineOfflineIndicator: number
-    
-    calcZeroApsIndicator: number
+  calcZeroApsIndicator?: number;
 
-    calcUpscaleApsIndicator: number
+  calcUpscaleApsIndicator?: number;
 
-    calcZeroCalibrationError: number
+  calcZeroCalibrationError?: number;
 
-    calcUpscaleCalibrationError: number
+  calcUpscaleCalibrationError?: number;
 
-    userId: string
+  userId?: string;
 
-    addDate: Date
+  addDate?: Date;
 
-    updateDate: Date
+  updateDate?: Date;
 
-    rptPeriodId: number
+  reportingPeriodId?: number;
 }
- 
-export class DailyCalibrationImportDTO extends DailyCalibrationBaseDTO { }
 
-export class DailyCalibrationDTO extends DailyCalibrationRecordDTO { }
+export class DailyCalibrationImportDTO extends DailyCalibrationBaseDTO {}
+
+export class DailyCalibrationDTO extends DailyCalibrationRecordDTO {}

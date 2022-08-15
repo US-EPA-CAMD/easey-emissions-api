@@ -1,16 +1,21 @@
+import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { Repository, EntityRepository } from 'typeorm';
-import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
 
-@EntityRepository(EmissionSubmissionsProgress)
-export class EmissionsRepository extends Repository<
-  EmissionSubmissionsProgress
-> {
-  async getSubmissionProgress(periodDate: Date, submissionDays: number) {
-    return this.createQueryBuilder('submissions')
-      .where(
-        `'${periodDate}' BETWEEN submissions.end_date + interval '1' day AND
-        submissions.end_date + interval '${submissionDays}' day`,
-      )
-      .getOne();
+@EntityRepository(EmissionEvaluation)
+export class EmissionsRepository extends Repository<EmissionEvaluation> {
+  async export(
+    monitorPlanId: string,
+    year: number,
+    quarter: number,
+  ): Promise<EmissionEvaluation> {
+    const query = this.createQueryBuilder('e')
+      .innerJoinAndSelect('e.reportingPeriod', 'rp')
+      .innerJoinAndSelect('e.monitorPlan', 'mp')
+      .innerJoinAndSelect('mp.plant', 'p')
+      .innerJoinAndSelect('mp.locations', 'ml')
+      .where('mp.id = :monitorPlanId', { monitorPlanId })
+      .andWhere('rp.year = :year', { year })
+      .andWhere('rp.quarter = :quarter', { quarter });
+    return query.getOne();
   }
 }

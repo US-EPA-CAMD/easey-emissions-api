@@ -7,6 +7,8 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { Component } from './component.entity';
+import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 
 @Entity({ name: 'camdecmpswks.monitor-hrly-value.entity' })
@@ -103,6 +105,20 @@ export class MonitorHrlyValue extends BaseEntity {
 
   @Column({ name: 'calc_f2l_status', nullable: true })
   calcF2lStatus: string;
+
+  @ManyToOne(
+    () => Component,
+    o => o.monitorHrlyValues,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.monitorHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => HrlyOpData,

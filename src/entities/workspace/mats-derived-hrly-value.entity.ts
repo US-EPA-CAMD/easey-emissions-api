@@ -8,6 +8,9 @@ import {
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorFormula } from './monitor-formula.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.mats_derived_hrly_value' })
 export class MatsDerivedHrlyValue extends BaseEntity {
@@ -71,4 +74,25 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
+
+  @ManyToOne(
+    () => MonitorFormula,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  monitorFormula: MonitorFormula;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.matsDerivedHrlyValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
 }

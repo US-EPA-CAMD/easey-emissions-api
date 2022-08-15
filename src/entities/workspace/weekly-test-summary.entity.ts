@@ -3,12 +3,16 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-
+import { MonitorLocation } from './monitor-location.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { Component } from './component.entity';
 import { WeeklySystemIntegrity } from './weekly-system-integrity.entity';
+import { ReportingPeriod } from '../reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.weekly_test_summary' })
 export class WeeklyTestSummary extends BaseEntity {
@@ -68,6 +72,34 @@ export class WeeklyTestSummary extends BaseEntity {
 
   @Column({ name: 'update_date', nullable: true })
   updateDate: Date;
+
+  @ManyToOne(
+    () => Component,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'component_id' })
+  component: Component;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  monitorSystem: MonitorSystem;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.weeklyTestSummaries,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
 
   @OneToOne(
     () => WeeklySystemIntegrity,

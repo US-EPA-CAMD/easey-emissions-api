@@ -20,7 +20,7 @@ export class Component extends BaseEntity {
   id: string;
 
   @Column({ type: 'varchar', length: 45, nullable: false, name: 'mon_loc_id' })
-  monLocId: string;
+  monitoringLocationId: string;
 
   @Column({
     type: 'varchar',
@@ -28,7 +28,7 @@ export class Component extends BaseEntity {
     nullable: false,
     name: 'component_identifier',
   })
-  componentID: string;
+  componentId: string;
 
   @Column({
     type: 'varchar',

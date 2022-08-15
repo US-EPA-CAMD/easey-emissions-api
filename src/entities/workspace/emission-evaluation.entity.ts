@@ -6,13 +6,16 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
+
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+
+import { MonitorPlan } from './monitor-plan.entity';
 import { ReportingPeriod } from '../reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.emission_evaluation' })
 export class EmissionEvaluation extends BaseEntity {
   @PrimaryColumn({ name: 'mon_plan_id', nullable: false })
-  monPlanId: string;
+  monitorPlanId: string;
 
   @PrimaryColumn({
     name: 'rpt_period_id',
@@ -55,4 +58,11 @@ export class EmissionEvaluation extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
+
+  @ManyToOne(
+    () => MonitorPlan,
+    o => o.emissionsEvaluations,
+  )
+  @JoinColumn({ name: 'mon_plan_id' })
+  monitorPlan: MonitorPlan;
 }

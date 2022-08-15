@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
+import { MonitorSystem } from './monitor-system.entity';
+import { MonitorFormula } from './monitor-formula.entity';
 
 @Entity({ name: 'camdecmpswks.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
@@ -18,10 +20,10 @@ export class DerivedHrlyValue extends BaseEntity {
   hourId: string;
 
   @Column({ name: 'mon_sys_id', nullable: true })
-  monitoringSystemId: string;
+  monSysId: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  formulaIdentifier: string;
+  monFormId: string;
 
   @Column({ name: 'parameter_cd', nullable: false })
   parameterCode: string;
@@ -31,14 +33,14 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  unadjustedHourlyValue: number;
+  unadjustedHrlyValue: number;
 
   @Column({
     name: 'applicable_bias_adj_factor',
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  biasAdjustmentFactor: number;
+  applicableBiasAdjFactor: number;
 
   @Column({
     name: 'calc_unadjusted_hrly_value',
@@ -52,7 +54,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  adjustedHourlyValue: number;
+  adjustedHrlyValue: number;
 
   @Column({
     name: 'calc_adjusted_hrly_value',
@@ -72,7 +74,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  percentAvailable: number;
+  pctAvailable: number;
 
   @Column({
     name: 'diluent_cap_ind',
@@ -86,7 +88,7 @@ export class DerivedHrlyValue extends BaseEntity {
     transformer: new NumericColumnTransformer(),
     nullable: true,
   })
-  segmentNumber: number;
+  segmentNum: number;
 
   @Column({ name: 'fuel_cd', nullable: true })
   fuelCode: string;
@@ -113,10 +115,10 @@ export class DerivedHrlyValue extends BaseEntity {
   calcAppeStatus: string;
 
   @Column({ name: 'rpt_period_id', nullable: false })
-  reportingPeriodId: number;
+  rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monitoringLocationId: string;
+  monitorLocationId: string;
 
   @Column({
     name: 'calc_fuel_flow_total',
@@ -134,4 +136,18 @@ export class DerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'hour_id' })
   hrlyOpData: HrlyOpData;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  monitorSystem: MonitorSystem;
+
+  @ManyToOne(
+    () => MonitorFormula,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_form_id' })
+  monitorFormula: MonitorFormula;
 }

@@ -27,9 +27,9 @@ export class EmissionsBaseDTO {
 }
 
 export class EmissionsRecordDTO extends EmissionsBaseDTO {
-  monPlanId: string;
+  monitorPlanId: string;
   reportingPeriodId: number;
-  lastUpdate?: Date;
+  lastUpdated?: Date;
   updatedStatusFlg?: string;
   needsEvalFlag?: string;
   chkSessionId?: string;

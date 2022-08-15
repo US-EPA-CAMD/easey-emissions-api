@@ -118,7 +118,7 @@ export class DerivedHrlyValue extends BaseEntity {
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })
-  monLocId: string;
+  monitorLocationId: string;
 
   @Column({
     name: 'calc_fuel_flow_total',

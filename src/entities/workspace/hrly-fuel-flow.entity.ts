@@ -8,6 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
@@ -86,6 +87,13 @@ export class HrlyFuelFlow extends BaseEntity {
 
   @Column({ name: 'mon_loc_id', nullable: false })
   monitoringLocationId: string;
+
+  @ManyToOne(
+    () => MonitorSystem,
+    o => o.hrlyFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_sys_id' })
+  monitorSystem: MonitorSystem;
 
   @ManyToOne(
     () => HrlyOpData,

@@ -2,7 +2,7 @@ import { ViewEntity, ViewColumn, BaseEntity } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @ViewEntity({ name: 'camdecmpsmd.vw_emissions_submissions_progress' })
-export class EmissionSubmissionsProgress extends BaseEntity {
+export class EmissionsSubmissionsProgress extends BaseEntity {
   @ViewColumn({
     name: 'begin_date',
   })
