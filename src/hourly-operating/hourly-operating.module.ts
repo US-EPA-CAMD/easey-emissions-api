@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HourlyOperatingMap } from 'src/maps/hourly-operating.map';
+import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
 import { HourlyOperatingRepository } from './hourly-operating.repository';
 import { HourlyOperatingService } from './hourly-operating.service';

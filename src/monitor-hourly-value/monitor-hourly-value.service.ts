@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { In } from 'typeorm';
 import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository';
-import { MonitorHourlyValueDTO } from 'src/dto/monitor-hourly-value.dto';
+import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 
 @Injectable()
 export class MonitorHourlyValueService {

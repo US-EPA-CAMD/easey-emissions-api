@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MonitorHourlyValueMap } from 'src/maps/monitor-hourly-value.map';
+import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueService } from './monitor-hourly-value.service';
 

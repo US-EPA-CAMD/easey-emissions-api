@@ -9,17 +9,19 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
     DailyTestSummaryWorkspaceModule,
+    HourlyOperatingWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
     EmissionsMap,
     EmissionsWorkspaceService,
-    EmissionsSubmissionsProgressMap
+    EmissionsSubmissionsProgressMap,
   ],
 })
 export class EmissionsWorkspaceModule {}
