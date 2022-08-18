@@ -38,8 +38,6 @@ export class EmissionsWorkspaceController {
     @Body() payload: EmissionsImportDTO,
     //    @CurrentUser() userId: string,
   ) {
-    const userId = 'testUser';
-    //const locations = await this.checksService.runChecks(payload);
-    return; // this.service.import(locations, payload, userId);
+    return this.service.import(payload);
   }
 }
