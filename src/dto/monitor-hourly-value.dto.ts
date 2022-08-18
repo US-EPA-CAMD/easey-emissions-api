@@ -1,6 +1,4 @@
-import { BaseEntity } from 'typeorm';
-
-export class MonitorHourlyValueBaseDTO extends BaseEntity {
+export class MonitorHourlyValueBaseDTO {
   parameterCode: string;
   unadjustedHourlyValue?: number;
   adjustedHourlyValue?: number;
