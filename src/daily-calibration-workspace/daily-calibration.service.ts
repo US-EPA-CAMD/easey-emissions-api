@@ -7,7 +7,11 @@ import {
 } from '../dto/daily-calibration.dto';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceRepository } from './daily-calibration.repository';
-import { DailyCalibration } from '../entities/daily-calibration.entity';
+import { randomUUID } from 'crypto';
+
+export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
+  dailyTestSummaryId: string;
+};
 
 @Injectable()
 export class DailyCalibrationWorkspaceService {
@@ -36,15 +40,14 @@ export class DailyCalibrationWorkspaceService {
   }
 
   async import(
-    parameters: DailyCalibrationImportDTO,
+    parameters: DailyCalibrationCreate,
   ): Promise<DailyCalibrationDTO> {
-    const dailyCalibration = new DailyCalibration();
-
-    Object.keys(parameters).forEach(key => {
-      dailyCalibration[key] = parameters[key];
-    });
-
-    const result = await this.repository.save(dailyCalibration);
+    const result = await this.repository.save(
+      this.repository.create({
+        ...parameters,
+        id: randomUUID(),
+      }),
+    );
 
     return this.map.one(result);
   }

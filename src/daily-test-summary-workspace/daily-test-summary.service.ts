@@ -7,9 +7,14 @@ import {
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { DailyTestSummary } from '../entities/daily-test-summary.entity';
-import { DailyCalibrationDTO } from '../dto/daily-calibration.dto';
 import { DeleteResult } from 'typeorm';
+import { randomUUID } from 'crypto';
+import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
+
+export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
+  reportingPeriodId: number;
+  monitoringLocationId: string;
+};
 
 @Injectable()
 export class DailyTestSummaryWorkspaceService {
@@ -52,24 +57,35 @@ export class DailyTestSummaryWorkspaceService {
   }
 
   async import(
-    parameters: DailyTestSummaryImportDTO,
+    parameters: DailyTestSummaryCreate,
   ): Promise<DailyTestSummaryDTO> {
-    const dailyTestSummary = new DailyTestSummary();
+    const result = await this.repository.save(
+      this.repository.create({
+        ...parameters,
+        id: randomUUID(),
+      }),
+    );
 
-    const dailyCalibrationImports: Array<Promise<DailyCalibrationDTO>> = [];
-    parameters.dailyCalibrationData.forEach(dailyCalibrationDatum => {
-      dailyCalibrationImports.push(
-        this.dailyCalibrationService.import(dailyCalibrationDatum),
-      );
-    });
-    await Promise.all(dailyCalibrationImports);
-
-    Object.keys(parameters).forEach(key => {
-      dailyTestSummary[key] = parameters[key];
-    });
-
-    const result = await this.repository.save(dailyTestSummary);
+    await this.importDailyCalibrations(
+      parameters.dailyCalibrationData,
+      result.id,
+    );
 
     return this.map.one(result);
+  }
+
+  async importDailyCalibrations(
+    dailyCalibrations: Array<DailyCalibrationImportDTO>,
+    dailyTestSummaryId: string,
+  ) {
+    const dailyCalibrationImports = dailyCalibrations?.map(
+      dailyCalibrationDatum => {
+        return this.dailyCalibrationService.import({
+          ...dailyCalibrationDatum,
+          dailyTestSummaryId,
+        });
+      },
+    );
+    await Promise.all(dailyCalibrationImports);
   }
 }

@@ -10,11 +10,11 @@ export class DailyTestSummaryMap extends BaseMap<
   DailyTestSummaryDTO
 > {
   public async one(entity: DailyTestSummary): Promise<DailyTestSummaryDTO> {
-    const unitId = entity.monitorLocation.unit
+    const unitId = entity.monitorLocation?.unit
       ? entity.monitorLocation.unit.name
       : null;
 
-    const stackPipeId = entity.monitorLocation.stackPipe
+    const stackPipeId = entity.monitorLocation?.stackPipe
       ? entity.monitorLocation.stackPipe.name
       : null;
 

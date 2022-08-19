@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Plant } from '../entities/plant.entity';
 
-export type GetImportLocationProperties = {
+export type GetImportLocationsProperties = {
   orisCode: number;
   stackIds: string[];
   unitIds: string[];
@@ -9,11 +9,11 @@ export type GetImportLocationProperties = {
 
 @EntityRepository(Plant)
 export class PlantRepository extends Repository<Plant> {
-  async getImportLocation({
+  async getImportLocations({
     orisCode,
     stackIds,
     unitIds,
-  }: GetImportLocationProperties): Promise<Plant> {
+  }: GetImportLocationsProperties): Promise<Plant> {
     return this.createQueryBuilder('plant')
       .innerJoinAndSelect('plant.monitorPlans', 'monitorPlans')
       .innerJoinAndSelect('monitorPlans.locations', 'monitorLocation')
