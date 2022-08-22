@@ -9,7 +9,7 @@ export class WeeklyTestSummaryCheckService {
   constructor(private readonly logger: Logger) {}
 
   runChecks(payload: EmissionsImportDTO): string[] {
-    this.logger.info('Running Weekly Test Summary Checks')
+    this.logger.info('Running Weekly Test Summary Checks');
 
     const errorList: string[] = [];
 
@@ -20,7 +20,7 @@ export class WeeklyTestSummaryCheckService {
       errorList.push(error);
     });
 
-    this.logger.info('Completed Weekly Test Summary Checks')
+    this.logger.info('Completed Weekly Test Summary Checks');
 
     return errorList.filter(e => e !== null);
   }
@@ -29,11 +29,11 @@ export class WeeklyTestSummaryCheckService {
   inappropriateChildrenRecordsCheck(
     summary: WeeklyTestSummaryImportDTO,
   ): string {
-    if (
-      summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
-      summary?.weeklySystemIntegrityData?.length > 0
+    return (
+        summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
+        summary?.weeklySystemIntegrityData?.length > 0
     )
-      return `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`;
-    else return null;
+      ? `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`
+      : null;
   }
 }
