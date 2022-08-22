@@ -13,6 +13,7 @@ import { TypeOrmConfigService } from './config/typeorm.config';
 import { EmissionsModule } from './emissions/emissions.module';
 import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
+import { MatsDerivedHrlyValueModule } from './mats-derived-hrly-value-workspace/mats-derived-hrly-value.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
     EmissionsModule,
     EmissionsWorkspaceModule,
     ApportionedEmissionsModule,
+    MatsDerivedHrlyValueModule,
   ],
 })
 export class AppModule {}

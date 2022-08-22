@@ -18,6 +18,7 @@ import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
+import { MatsDerivedHrlyValueDTO } from './mats-derived-hrly-value.dto';
 
 export class EmissionsBaseDTO {
   orisCode: number;
@@ -57,4 +58,5 @@ export class EmissionsDTO extends EmissionsRecordDTO {
   longTermFuelFlowData: LongTermFuelFlowDTO[];
   sorbentTrapData: SorbentTrapDTO[];
   nsps4tSummaryData: Nsps4tSummaryDTO[];
+  matsDerivedHrlyValue: MatsDerivedHrlyValueDTO[];
 }
