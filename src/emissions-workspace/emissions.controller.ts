@@ -10,12 +10,13 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
+import { EmissionsChecksService } from './emissions-checks.service';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 export class EmissionsWorkspaceController {
-  constructor(private readonly service: EmissionsWorkspaceService) {}
+  constructor(private readonly service: EmissionsWorkspaceService, private readonly checksService: EmissionsChecksService) {}
 
   @Get('export')
   @ApiOkResponse({
@@ -39,7 +40,7 @@ export class EmissionsWorkspaceController {
     //    @CurrentUser() userId: string,
   ) {
     const userId = 'testUser';
-    //const locations = await this.checksService.runChecks(payload);
+    this.checksService.runChecks(payload);
     return; // this.service.import(locations, payload, userId);
   }
 }
