@@ -16,13 +16,17 @@ export class EmissionsChecksService {
     }
   }
 
-  runChecks(payload: EmissionsImportDTO) {
+  runChecks(payload: EmissionsImportDTO)  {
+    this.logger.info('Running Emissions Import Checks');
 
     const errorList: string[] = [];
-    const errors = this.weeklyTestSummaryCheckService.runChecks(payload);
+    const weeklyTestSummaryCheckErrors = this.weeklyTestSummaryCheckService.runChecks(payload);
 
-    errorList.push(...errors);
+    errorList.push(...weeklyTestSummaryCheckErrors);
 
     this.throwIfErrors(errorList);
+    this.logger.info('Completed Emissions Import Checks');
+
+    return errorList;
   }
 }
