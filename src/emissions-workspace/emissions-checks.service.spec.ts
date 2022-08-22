@@ -69,14 +69,14 @@ describe('Emissions Checks Service Tests', () => {
       payload.weeklyTestSummaryData[0].date = new Date();
 
       expect(service.invalidDatesCheck(payload)).toEqual([
-        IMPORT_CHECK_ERROR.IMPORT_23,
+        IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A(),
       ]);
 
       // Payload date is less than lowest date in data
       payload.year = today.getFullYear() - 3;
 
       expect(service.invalidDatesCheck(payload)).toEqual([
-        IMPORT_CHECK_ERROR.IMPORT_23,
+        IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A(),
       ]);
 
       payload.year;

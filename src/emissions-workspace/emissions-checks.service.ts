@@ -36,8 +36,8 @@ export class EmissionsChecksService {
 
   // IMPORT-23
   invalidDatesCheck(payload: EmissionsImportDTO): string[] {
-    let earliestDate: number = undefined;
-    let latestDate: number = undefined;
+    let earliestDate: number;
+    let latestDate: number;
 
     const dateCheck = (date: Date) => {
       const year = date.getFullYear();
@@ -69,13 +69,17 @@ export class EmissionsChecksService {
       dateCheck(datum.beginDate);
     });
 
+    payload.sorbentTrapData?.forEach(datum => {
+      dateCheck(datum.endDate);
+    });
+
     payload.weeklyTestSummaryData?.forEach(datum => {
       dateCheck(datum.date);
     });
 
     const payloadCombo = Number(`${payload.year}${payload.quarter}`);
     if (payloadCombo < earliestDate || payloadCombo > latestDate) {
-      return [IMPORT_CHECK_ERROR.IMPORT_23];
+      return [IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A()];
     }
 
     return [];
