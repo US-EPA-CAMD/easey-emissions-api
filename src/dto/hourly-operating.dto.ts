@@ -100,7 +100,6 @@ export class HourlyOperatingDTO extends HourlyOperatingRecordDTO {
 
   @ValidateNested({ each: true })
   @Type(() => HourlyFuelFlowDTO)
-  hourlyFuelFlow: HourlyFuelFlowDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => HourlyGasFlowMeterDTO)
