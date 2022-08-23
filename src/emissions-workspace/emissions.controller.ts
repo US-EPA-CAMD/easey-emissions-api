@@ -16,7 +16,10 @@ import { EmissionsChecksService } from './emissions-checks.service';
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 export class EmissionsWorkspaceController {
-  constructor(private readonly service: EmissionsWorkspaceService, private readonly checksService: EmissionsChecksService) {}
+  constructor(
+    private readonly service: EmissionsWorkspaceService,
+    private readonly checksService: EmissionsChecksService,
+  ) {}
 
   @Get('export')
   @ApiOkResponse({
