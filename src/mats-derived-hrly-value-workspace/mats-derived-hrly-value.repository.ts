@@ -1,6 +1,7 @@
-import { Repository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { MatsDerivedHrlyValue } from '../entities/mats-derived-hrly-value.entity';
 
+@EntityRepository(MatsDerivedHrlyValue)
 export class MatsDerivedHrlyValueRepository extends Repository<
   MatsDerivedHrlyValue
 > {
