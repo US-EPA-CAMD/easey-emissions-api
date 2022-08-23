@@ -9,6 +9,8 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { EmissionsChecksService } from './emissions-checks.service';
+import { WeeklyTestSummaryCheckService } from 'src/weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { PlantRepository } from '../plant/plant.repository';
 
 @Module({
@@ -22,6 +24,8 @@ import { PlantRepository } from '../plant/plant.repository';
     EmissionsMap,
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
+    EmissionsChecksService,
+    WeeklyTestSummaryCheckService,
   ],
 })
 export class EmissionsWorkspaceModule {}
