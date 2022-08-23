@@ -12,6 +12,7 @@ export class DailyTestSummaryService {
     private readonly repository: DailyTestSummaryRepository,
     private readonly dailyCalibrationService: DailyCalibrationService,
   ) {}
+
   async getDailyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
   ): Promise<DailyTestSummaryDTO[]> {
