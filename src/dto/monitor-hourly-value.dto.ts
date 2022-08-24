@@ -12,6 +12,8 @@ export class MonitorHourlyValueBaseDTO {
 export class MonitorHourlyValueRecordDTO extends MonitorHourlyValueBaseDTO {
   id: string;
   hourId: string;
+  monitoringSystemRecordId?: string;
+  componentRecordId?: string;
   biasAdjustmentFactor?: number;
   calcAdjustedHrlyValue?: number;
   userId?: string;

@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+
 import {
   MonitorHourlyValueImportDTO,
   MonitorHourlyValueDTO,
@@ -28,8 +29,8 @@ import {
 export class HourlyOperatingBaseDTO {
   stackPipeId: string;
   unitId: string;
-  beginDate: Date;
-  beginHour: number;
+  date: Date;
+  hour: number;
   operatingTime?: number;
   hourLoad?: number;
   loadUnitsOfMeasureCode?: string;
@@ -100,6 +101,7 @@ export class HourlyOperatingDTO extends HourlyOperatingRecordDTO {
 
   @ValidateNested({ each: true })
   @Type(() => HourlyFuelFlowDTO)
+  hourlyFuelFlow: HourlyFuelFlowDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => HourlyGasFlowMeterDTO)

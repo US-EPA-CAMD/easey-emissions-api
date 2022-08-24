@@ -1,8 +1,11 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { MonitorHrlyValue } from '../entities/monitor-hrly-value.entity';
+
+import { MonitorHrlyValue } from '../entities/workspace/monitor-hrly-value.entity';
 
 @EntityRepository(MonitorHrlyValue)
-export class MonitorHourlyValueRepository extends Repository<MonitorHrlyValue> {
+export class MonitorHourlyValueWorkspaceRepository extends Repository<
+  MonitorHrlyValue
+> {
   async export(hourIds: string[]) {
     const query = this.createQueryBuilder('mhv')
       .leftJoinAndSelect('mhv.monitorSystem', 'ms')

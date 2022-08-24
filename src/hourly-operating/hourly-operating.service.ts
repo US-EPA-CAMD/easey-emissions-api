@@ -14,27 +14,38 @@ export class HourlyOperatingService {
     private readonly monitorHourlyValueService: MonitorHourlyValueService,
   ) {}
   async getHourlyOpDataByLocationIds(
-    monitoringLocationIds: string[], params: EmissionsParamsDTO
+    monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
-    const results = await this.repository.export(monitoringLocationIds, params.year, params.quarter);
+    const results = await this.repository.export(
+      monitoringLocationIds,
+      params.year,
+      params.quarter,
+    );
 
     return this.map.many(results);
   }
 
-  async export(monitoringLocationIds: string[], params: EmissionsParamsDTO): Promise<HourlyOperatingDTO[]> {
+  async export(
+    monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
+  ): Promise<HourlyOperatingDTO[]> {
     const hourlyOperating = await this.getHourlyOpDataByLocationIds(
-      monitoringLocationIds, params
+      monitoringLocationIds,
+      params,
     );
 
-    const monitorHourlyValue = await this.monitorHourlyValueService.export(
-      hourlyOperating?.map(i => i.id),
-    );
-
-    hourlyOperating.forEach(hourlyOp => {
-      hourlyOp.monitorHourlyValue = monitorHourlyValue.filter(
-        i => i.hourId === hourlyOp.id,
+    if (hourlyOperating) {
+      const monitorHourlyValue = await this.monitorHourlyValueService.export(
+        hourlyOperating.map(i => i.id),
       );
-    });
+
+      hourlyOperating.forEach(hourlyOp => {
+        hourlyOp.monitorHourlyValue = monitorHourlyValue.filter(
+          i => i.hourId === hourlyOp.id,
+        );
+      });
+    }
 
     return hourlyOperating;
   }

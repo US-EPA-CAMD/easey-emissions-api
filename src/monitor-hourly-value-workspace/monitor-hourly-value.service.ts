@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
-import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository';
+import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 
 @Injectable()
-export class MonitorHourlyValueService {
+export class MonitorHourlyValueWorkspaceService {
   constructor(
     private readonly map: MonitorHourlyValueMap,
-    private readonly repository: MonitorHourlyValueRepository,
+    private readonly repository: MonitorHourlyValueWorkspaceRepository,
   ) {}
 
   async export(hourIds: string[]): Promise<MonitorHourlyValueDTO[]> {
