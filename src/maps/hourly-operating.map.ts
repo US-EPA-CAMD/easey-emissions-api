@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
+import { HrlyOpData } from '../entities/hrly-op-data.entity';
 
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 
 @Injectable()
