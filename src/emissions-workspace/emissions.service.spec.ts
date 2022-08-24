@@ -9,6 +9,8 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
 import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
 import { PlantRepository } from '../plant/plant.repository';
+import { MatsMonitorHrlyValueService } from '../mats-monitor-hrly-value-workspace/mats-monitor-hrly-value.service';
+import { MatsMonitorHrlyValueRepository } from '../mats-monitor-hrly-value-workspace/mats-monitor-hrly-value.repository';
 
 const emissionsWorkspaceRepositoryMock = {
   delete: jest.fn().mockResolvedValue(undefined),
@@ -27,6 +29,7 @@ describe('Emissions Workspace Service', () => {
         EmissionsMap,
         DailyTestSummaryMap,
         DailyCalibrationMap,
+        MatsMonitorHrlyValueService,
         {
           provide: PlantRepository,
           useValue: jest.mock('../plant/plant.repository'),
@@ -46,6 +49,10 @@ describe('Emissions Workspace Service', () => {
           useValue: jest.mock(
             '../daily-calibration-workspace/daily-calibration.repository',
           ),
+        },
+        {
+          provide: MatsMonitorHrlyValueRepository,
+          useValue: () => jest,
         },
       ],
     }).compile();

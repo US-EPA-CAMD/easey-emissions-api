@@ -14,6 +14,7 @@ import { EmissionsModule } from './emissions/emissions.module';
 import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 import { PlantModule } from './plant/plant.module';
+import { MatsMonitorHrlyValueModule } from './mats-monitor-hrly-value-workspace/mats-monitor-hrly-value.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PlantModule } from './plant/plant.module';
     EmissionsWorkspaceModule,
     ApportionedEmissionsModule,
     PlantModule,
+    MatsMonitorHrlyValueModule,
   ],
 })
 export class AppModule {}
