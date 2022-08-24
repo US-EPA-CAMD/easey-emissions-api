@@ -7,9 +7,10 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 
-import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes.dto';
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
+import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
+
 import {
   BadRequestResponse,
   NotFoundResponse,
@@ -18,7 +19,7 @@ import {
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned MATS Emissions')
-@ApiExtraModels(ApplicableMatsApportionedEmissionsAttributesDTO)
+@ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)
 export class MatsApportionedEmissionsController {
   
   constructor(
@@ -26,7 +27,7 @@ export class MatsApportionedEmissionsController {
   ) {}
 
   @Get('attributes/applicable')
-  @ApiExtraModels(ApplicableMatsApportionedEmissionsAttributesDTO)
+  @ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)
   @ApiOkResponse({
     description:
       'Retrieved All Applicable MATS Apportioned Emissions Attributes',
@@ -35,8 +36,8 @@ export class MatsApportionedEmissionsController {
   @NotFoundResponse()
   getApplicableEmissions(
     @Query()
-    params: ApplicableMatsApportionedEmissionsAttributesParamsDTO,
-  ): Promise<ApplicableMatsApportionedEmissionsAttributesDTO[]> {
-    return this.service.getApplicableEmissions(params);
+    params: ApplicableApportionedEmissionsAttributesParamsDTO,
+  ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
+    return this.service.getApplicableApportionedEmissionsAttributes(params);
   }
 }
