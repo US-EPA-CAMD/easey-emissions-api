@@ -28,7 +28,6 @@ export class EmissionsMap extends BaseMap<EmissionEvaluation, EmissionsDTO> {
       longTermFuelFlowData: null,
       sorbentTrapData: null,
       nsps4tSummaryData: null,
-      derivedHourlyValueData: null,
     };
   }
 }
