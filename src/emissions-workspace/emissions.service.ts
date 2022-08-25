@@ -9,6 +9,7 @@ import { PlantRepository } from '../plant/plant.repository';
 import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
+import { DerivedHourlyValueService } from '../derived-hourly-value-workspace/derived-hourly-value.service';
 import { isUndefinedOrNull } from '../utils/utils';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class EmissionsWorkspaceService {
     private readonly map: EmissionsMap,
     private readonly repository: EmissionsWorkspaceRepository,
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
+    private readonly derivedHourlyValueService: DerivedHourlyValueService,
     private readonly plantRepository: PlantRepository,
   ) {}
 
@@ -29,6 +31,7 @@ export class EmissionsWorkspaceService {
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
+    const DERIVED_HOURLY_VALUES = 1;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -37,15 +40,21 @@ export class EmissionsWorkspaceService {
     );
 
     if (emissions) {
+      const monitorLocationIds = emissions.monitorPlan?.locations?.map(
+        location => {
+          return location.id;
+        },
+      );
+
       promises.push(
-        this.dailyTestSummaryService.export(
-          emissions.monitorPlan?.locations?.map(s => s.id),
-        ),
+        this.dailyTestSummaryService.export(monitorLocationIds),
+        this.derivedHourlyValueService.export(monitorLocationIds),
       );
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+      results.derivedHourlyValueData = promiseResult[DERIVED_HOURLY_VALUES];
       return results;
     }
     return new EmissionsDTO();
@@ -73,20 +82,9 @@ export class EmissionsWorkspaceService {
       );
     });
 
-    const monitorPlanId = filteredMonitorPlans?.[0]?.id;
-    const monitoringLocationId = filteredMonitorPlans?.[0]?.locations?.[0].id;
-    const reportingPeriodId = filteredMonitorPlans?.[0]?.beginRptPeriod.id;
-
-    if (
-      isUndefinedOrNull([
-        filteredMonitorPlans,
-        monitorPlanId,
-        monitoringLocationId,
-        reportingPeriodId,
-      ])
-    ) {
-      throw new NotFoundException('Monitor Plan not found.');
-    }
+    const monitorPlanId = filteredMonitorPlans[0].id;
+    const monitoringLocationId = filteredMonitorPlans[0].locations[0].id;
+    const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
 
     const evaluationDeletes: Array<Promise<DeleteResult>> = [];
     for (const monitorPlan of filteredMonitorPlans) {
