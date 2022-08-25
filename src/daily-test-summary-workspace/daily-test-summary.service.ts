@@ -66,10 +66,12 @@ export class DailyTestSummaryWorkspaceService {
       }),
     );
 
-    await this.importDailyCalibrations(
-      parameters.dailyCalibrationData,
-      result.id,
-    );
+    if (Array.isArray(parameters.dailyCalibrationData)) {
+      await this.importDailyCalibrations(
+        parameters.dailyCalibrationData,
+        result.id,
+      );
+    }
 
     return this.map.one(result);
   }
