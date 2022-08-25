@@ -9,6 +9,8 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
 import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
 import { PlantRepository } from '../plant/plant.repository';
+import { DerivedHourlyValueService } from '../derived-hourly-value-workspace/derived-hourly-value.service';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value-workspace/derived-hourly-value.repository';
 
 const emissionsWorkspaceRepositoryMock = {
   delete: jest.fn().mockResolvedValue(undefined),
@@ -22,6 +24,7 @@ describe('Emissions Workspace Service', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmissionsWorkspaceService,
+        DerivedHourlyValueService,
         DailyTestSummaryWorkspaceService,
         DailyCalibrationWorkspaceService,
         EmissionsMap,
@@ -34,6 +37,10 @@ describe('Emissions Workspace Service', () => {
         {
           provide: EmissionsWorkspaceRepository,
           useValue: emissionsWorkspaceRepositoryMock,
+        },
+        {
+          provide: DerivedHourlyValueRepository,
+          useValue: () => jest,
         },
         {
           provide: DailyTestSummaryWorkspaceRepository,

@@ -12,10 +12,13 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
 import { EmissionsChecksService } from './emissions-checks.service';
 import { WeeklyTestSummaryCheckService } from 'src/weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { PlantRepository } from '../plant/plant.repository';
+import { DerivedHourlyValueService } from '../derived-hourly-value-workspace/derived-hourly-value.service';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value-workspace/derived-hourly-value.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
+    TypeOrmModule.forFeature([DerivedHourlyValueRepository]),
     TypeOrmModule.forFeature([PlantRepository]),
     DailyTestSummaryWorkspaceModule,
   ],
@@ -25,6 +28,7 @@ import { PlantRepository } from '../plant/plant.repository';
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
+    DerivedHourlyValueService,
     WeeklyTestSummaryCheckService,
   ],
 })
