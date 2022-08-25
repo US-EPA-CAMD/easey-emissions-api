@@ -7,12 +7,12 @@ export const IMPORT_CHECK_ERROR = {
   },
   IMPORT_29: {
     RESULT_A() {
-      return 'You have reported a Daily Calibration record linked to a test for which the Test Summary TestTypeCode is not "DAYCAL". It is not appropriate to report a Daily Calibration record for a TestTypeCode other than "DAYCAL." This test was not imported.';
+      return '[IMPORT-29] You have reported a Daily Calibration record linked to a test for which the Test Summary TestTypeCode is not "DAYCAL". It is not appropriate to report a Daily Calibration record for a TestTypeCode other than "DAYCAL." This test was not imported.';
     },
   },
   IMPORT_38:{
     RESULT_A(testTypeCode){
-      return `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${testTypeCode}]. This File was not imported.`
+      return `[IMPORT-38] You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${testTypeCode}]. This File was not imported.`
     }
   }
 };
