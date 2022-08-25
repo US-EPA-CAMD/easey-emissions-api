@@ -131,6 +131,7 @@ export class HourUnitMatsDataRepository extends Repository<
     isArchived: boolean,
     isUnion: boolean,
   ): Promise<any[]> {
+    let query;
     const entityManager = getManager();
     const { beginDate, endDate } = params;
 
@@ -148,17 +149,17 @@ export class HourUnitMatsDataRepository extends Repository<
         true,
       );
 
-      return entityManager.query(
-        `${curr.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2) UNION ${arch.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2)`,
-        [beginDate, endDate],
-      );
+      query = `${curr.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2) UNION ${arch.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2)`;
+      console.log(query);
+      return entityManager.query(query, [beginDate, endDate]);
     } else {
-      const query = await this.applicableQueryBuilderHelper(
+      query = await this.applicableQueryBuilderHelper(
         isArchived,
         beginDate,
         endDate,
         false,
       );
+      console.log(query.getQueryAndParameters());
       return query.getRawMany();
     }
   }
@@ -215,6 +216,8 @@ export class HourUnitMatsDataRepository extends Repository<
         endDate,
       });
     }
+
+    console.log(query.getQueryAndParameters()); 
 
     return query;
   }

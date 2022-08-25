@@ -10,6 +10,7 @@ import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
+import { isUndefinedOrNull } from '../utils/utils';
 
 @Injectable()
 export class EmissionsWorkspaceService {
@@ -67,11 +68,11 @@ export class EmissionsWorkspaceService {
   async import(params: EmissionsImportDTO): Promise<{ message: string }> {
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
-      stackIds: params.dailyTestSummaryData.map(data => data.stackPipeId),
-      unitIds: params.dailyTestSummaryData.map(data => data.unitId),
+      stackIds: params.dailyTestSummaryData?.map(data => data.stackPipeId),
+      unitIds: params.dailyTestSummaryData?.map(data => data.unitId),
     });
 
-    if (typeof plantLocation === 'undefined' || plantLocation === null) {
+    if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }
 
@@ -121,15 +122,18 @@ export class EmissionsWorkspaceService {
     monitoringLocationId: string,
   ) {
     const dailyTestSummaryImports: Array<Promise<DailyTestSummaryDTO>> = [];
-    for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-      dailyTestSummaryImports.push(
-        this.dailyTestSummaryService.import({
-          ...dailyTestSummaryDatum,
-          reportingPeriodId,
-          monitoringLocationId,
-        }),
-      );
+
+    if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
+      for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
+        dailyTestSummaryImports.push(
+          this.dailyTestSummaryService.import({
+            ...dailyTestSummaryDatum,
+            reportingPeriodId,
+            monitoringLocationId,
+          }),
+        );
+      }
+      await Promise.all(dailyTestSummaryImports);
     }
-    await Promise.all(dailyTestSummaryImports);
   }
 }
