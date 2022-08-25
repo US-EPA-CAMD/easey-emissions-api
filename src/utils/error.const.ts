@@ -7,7 +7,7 @@ export const IMPORT_CHECK_ERROR = {
   },
   IMPORT_25:{
     RESULT_A(orisCode){
-      return `The database does not contain any Facility with oris Code ${orisCode}`;
+      return `[IMPORT-25] The database does not contain any Facility with oris Code ${orisCode}`;
     }
   }
 };
