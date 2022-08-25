@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
@@ -24,36 +23,13 @@ export class ApportionedEmissionsService {
   async getApplicableApportionedEmissionsAttributes(
     applicableApportionedEmissionsParamsDTO: ApplicableApportionedEmissionsAttributesParamsDTO,
   ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
-    let isUnion = false;
-    let isArchived = false;
-
-    const archivedYear = await this.programYearRepository.lastArchivedYear();
-    const archivedYears = applicableApportionedEmissionsParamsDTO.year.map(
-      el => Number(el) <= archivedYear,
-    );
-
-    isArchived = archivedYears.includes(true);
-    this.logger.info(
-      `Query params ${
-        isArchived ? 'contains' : 'do not contain'
-      } archived years`,
-    );
-    isUnion = isArchived && archivedYears.includes(false);
-    this.logger.info(
-      `Query params ${
-        isUnion ? 'contains' : 'do not contain'
-      } archived & non-archived years`,
-    );
-
     let query;
     try {
       this.logger.info(
         'Getting all applicable apportioned emissions attributes',
       );
       query = await this.programYearRepository.getApplicableApportionedEmissionsAttributes(
-        applicableApportionedEmissionsParamsDTO,
-        isArchived,
-        isUnion,
+        applicableApportionedEmissionsParamsDTO.year
       );
       this.logger.info('Got all applicable apportioned emissions attributes');
     } catch (e) {
