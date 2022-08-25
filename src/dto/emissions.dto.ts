@@ -1,3 +1,7 @@
+import { FindOneOptions } from 'typeorm';
+import { Plant } from '../entities/plant.entity';
+import { ValidationArguments, ValidateNested } from 'class-validator';
+import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
 import {
   DailyTestSummaryDTO,
@@ -18,8 +22,20 @@ import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
+import { IMPORT_CHECK_ERROR } from 'src/utils/error.const';
 
 export class EmissionsBaseDTO {
+  @DbLookup(
+    Plant,
+    (args: ValidationArguments): FindOneOptions<Plant> => {
+      return { where: { orisCode: args.value } };
+    },
+    {
+      message: (args: ValidationArguments) => {
+        return IMPORT_CHECK_ERROR.IMPORT_25.RESULT_A(args.value);
+      },
+    },
+  )
   orisCode: number;
   year: number;
   quarter: number;
