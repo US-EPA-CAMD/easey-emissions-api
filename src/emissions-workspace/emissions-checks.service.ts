@@ -40,8 +40,8 @@ export class EmissionsChecksService {
     let latestDate: number;
 
     const dateCheck = (date: Date) => {
-      const year = date.getFullYear();
-      const quarter = Math.floor(date.getMonth() / 3 + 1);
+      const year = new Date(date).getFullYear();
+      const quarter = Math.floor(new Date(date).getMonth() / 3 + 1);
       const combo = Number(`${year}${quarter}`);
 
       if (typeof earliestDate === 'undefined' || combo < earliestDate) {
