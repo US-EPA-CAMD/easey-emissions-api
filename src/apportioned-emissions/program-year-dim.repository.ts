@@ -1,42 +1,25 @@
-import { Repository, EntityRepository, getManager } from 'typeorm';
+import { Repository, EntityRepository } from 'typeorm';
 
-import { ProgramYearDim } from '../entities/program-year-dim.entity';
-import { AnnualUnitData } from '../entities/annual-unit-data.entity';
 import { UnitFact } from '../entities/unit-fact.entity';
-import { UnitTypeYearDim } from '../entities/unit-type-year-dim.entity';
 import { FuelYearDim } from '../entities/fuel-year-dim.entity';
 import { ControlYearDim } from '../entities/control-year-dim.entity';
-import { AnnualUnitDataArch } from '../entities/annual-unit-data-a.entity';
-import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { ProgramYearDim } from '../entities/program-year-dim.entity';
+import { UnitTypeYearDim } from '../entities/unit-type-year-dim.entity';
 
 @EntityRepository(ProgramYearDim)
 export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
   async getApplicableApportionedEmissionsAttributes(
-    applicableApportionedEmissionsParamsDTO: ApplicableApportionedEmissionsAttributesParamsDTO,
-    isArchived: boolean,
-    isUnion: boolean,
+    yearArray: number[],
+    matsDataOnly: boolean = false,
   ): Promise<ProgramYearDim[]> {
-    const entityManager = getManager();
-    const yearArray = applicableApportionedEmissionsParamsDTO.year;
-
-    if (isUnion) {
-      const curr = await this.queryBuilderHelper(false, yearArray, true);
-      const arch = await this.queryBuilderHelper(true, yearArray, true);
-
-      return entityManager.query(
-        `${curr.getQuery()} WHERE "pyd"."op_year" = ANY($1) UNION ${arch.getQuery()} WHERE "pyd"."op_year" = ANY($1)`,
-        [yearArray],
-      );
-    } else {
-      const query = await this.queryBuilderHelper(isArchived, yearArray, false);
-      return query.getRawMany();
-    }
+    const query = await this.queryBuilderHelper(yearArray, matsDataOnly);
+    console.log(query.getQueryAndParameters());
+    return query.getRawMany();
   }
 
   async queryBuilderHelper(
-    isArchived: boolean,
     yearArray: number[],
-    isUnion: boolean,
+    matsDataOnly: boolean = false,
   ): Promise<any> {
     const query = this.createQueryBuilder('pyd')
       .select(
@@ -53,11 +36,8 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
         }),
       )
       .innerJoin(
-        isArchived ? AnnualUnitDataArch : AnnualUnitData,
-        'aud',
-        'pyd.year = aud.year AND pyd.id = aud.id',
-      )
-      .innerJoin(UnitFact, 'uf', 'aud.year = uf.year AND aud.id = uf.id')
+        UnitFact, 
+        'uf', 'pyd.year = uf.year AND pyd.id = uf.id')
       .innerJoin(
         UnitTypeYearDim,
         'utyd',
@@ -83,11 +63,16 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
         'cyd.control_code',
       ]);
 
-    if (!isUnion) {
-      query.andWhere(`pyd.year IN (:...years)`, {
-        years: yearArray,
-      });
+    if (matsDataOnly) {
+      query.where(`pyd.programCode = 'MATS'`);
+    } else {
+      query.where(`pyd.programCode <> 'MATS'`);
     }
+
+    query.andWhere(`pyd.year IN (:...years)`, {
+        years: yearArray,
+    });
+
     return query;
   }
   
