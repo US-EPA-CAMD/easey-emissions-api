@@ -11,7 +11,7 @@ export class DerivedHourlyValueWorkspaceMap extends BaseMap<
   async one(entity: DerivedHrlyValue): Promise<DerivedHourlyValueDTO> {
     return {
       id: entity.id,
-      monitoringSystemId: entity.monSysId,
+      monitoringSystemId: entity.monitorSystem.monitoringSystemId,
       reportingPeriodId: entity.rptPeriodId,
       parameterCode: entity.parameterCode,
       unadjustedHourlyValue: entity.unadjustedHrlyValue,
