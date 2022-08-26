@@ -1,9 +1,96 @@
-// import { ConfigService } from '@nestjs/config';
-// import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+import { EmissionsRepository } from './emissions.repository';
+import { EmissionsService } from './emissions.service';
+import { EmissionsMap } from '../maps/emissions.map';
+import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { DailyCalibrationMap } from '../maps/daily-calibration.map';
+import { PlantRepository } from '../plant/plant.repository';
+import { HourlyOperatingMap } from '../maps/hourly-operating.map';
+import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
+import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
+import { DailyCalibrationService } from '../daily-calibration/daily-calibration.service';
+import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
+import { MonitorHourlyValueService } from '../monitor-hourly-value/monitor-hourly-value.service';
+import { DailyTestSummaryRepository } from '../daily-test-summary/daily-test-summary.repository';
+import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
+import { HourlyOperatingRepository } from '../hourly-operating/hourly-operating.repository';
+import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
 // import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-// import { EmissionSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
-// import { EmissionsRepository } from './emissions.repository';
-// import { EmissionService } from './emissions.service';
+
+const emissionsRepositoryMock = {
+  export: jest.fn(),
+};
+
+describe('Emissions Workspace Service', () => {
+  let emissionsService: EmissionsService;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        EmissionsService,
+        DailyTestSummaryService,
+        DailyCalibrationService,
+        EmissionsMap,
+        DailyTestSummaryMap,
+        DailyCalibrationMap,
+        HourlyOperatingMap,
+        MonitorHourlyValueMap,
+        HourlyOperatingService,
+        MonitorHourlyValueService,
+        EmissionsSubmissionsProgressMap,
+        EmissionsSubmissionsProgressRepository,
+        ConfigService,
+        {
+          provide: PlantRepository,
+          useValue: jest.mock('../plant/plant.repository'),
+        },
+        {
+          provide: EmissionsRepository,
+          useValue: emissionsRepositoryMock,
+        },
+        {
+          provide: DailyTestSummaryRepository,
+          useValue: jest.mock(
+            '../daily-test-summary/daily-test-summary.repository',
+          ),
+        },
+        {
+          provide: DailyCalibrationRepository,
+          useValue: jest.mock(
+            '../daily-calibration/daily-calibration.repository',
+          ),
+        },
+        {
+          provide: HourlyOperatingRepository,
+          useValue: jest.mock(
+            '../hourly-operating/hourly-operating.repository',
+          ),
+        },
+        {
+          provide: MonitorHourlyValueRepository,
+          useValue: jest.mock(
+            '../monitor-hourly-value/monitor-hourly-value.repository',
+          ),
+        },
+      ],
+    }).compile();
+
+    emissionsService = module.get(EmissionsService);
+  });
+
+  it('should have a emissions service', function() {
+    expect(emissionsService).toBeDefined();
+  });
+
+  it('should export a record', async () => {
+    let filters = new EmissionsParamsDTO();
+    await expect(emissionsService.export(filters)).resolves.toEqual({});
+  });
+});
 
 // let mockResolvedEmissionsRepository = undefined;
 

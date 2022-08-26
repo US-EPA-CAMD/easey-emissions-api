@@ -1,4 +1,4 @@
-export class MatsMonitorHrlyValueBaseDTO {
+export class MatsMonitorHourlyValueBaseDTO {
   parameterCode: string;
   unadjustedHourlyValue?: string;
   modcCode?: string;
@@ -7,7 +7,7 @@ export class MatsMonitorHrlyValueBaseDTO {
   percentAvailable?: number;
 }
 
-export class MatsMonitorHrlyValueRecordDTO extends MatsMonitorHrlyValueBaseDTO {
+export class MatsMonitorHourlyValueRecordDTO extends MatsMonitorHourlyValueBaseDTO {
   id: string;
   hourId: string;
   monitoringLocationId?: string;
@@ -22,6 +22,6 @@ export class MatsMonitorHrlyValueRecordDTO extends MatsMonitorHrlyValueBaseDTO {
   updateDate?: Date;
 }
 
-export class MatsMonitorHrlyValueImportDTO extends MatsMonitorHrlyValueBaseDTO {}
+export class MatsMonitorHourlyValueImportDTO extends MatsMonitorHourlyValueBaseDTO {}
 
-export class MatsMonitorHrlyValueDTO extends MatsMonitorHrlyValueRecordDTO {}
+export class MatsMonitorHourlyValueDTO extends MatsMonitorHourlyValueRecordDTO {}

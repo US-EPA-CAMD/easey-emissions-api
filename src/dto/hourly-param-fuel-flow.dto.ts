@@ -1,4 +1,4 @@
-export class HrlyParamFuelFlowBaseDTO {
+export class HourlyParamFuelFlowBaseDTO {
   parameterCode: string;
   parameterValueForFuel?: number;
   formulaIdentifier?: string;
@@ -9,7 +9,7 @@ export class HrlyParamFuelFlowBaseDTO {
   parameterUomCode?: string;
 }
 
-export class HrlyParamFuelFlowRecordDTO extends HrlyParamFuelFlowBaseDTO {
+export class HourlyParamFuelFlowRecordDTO extends HourlyParamFuelFlowBaseDTO {
   id: string;
   hourlyFuelFlowId: string;
   calcParamValFuel?: number;
@@ -21,6 +21,6 @@ export class HrlyParamFuelFlowRecordDTO extends HrlyParamFuelFlowBaseDTO {
   monitoringLocationId: string;
 }
 
-export class HrlyParamFuelFlowImportDTO extends HrlyParamFuelFlowBaseDTO {}
+export class HourlyParamFuelFlowImportDTO extends HourlyParamFuelFlowBaseDTO {}
 
-export class HrlyParamFuelFlowDTO extends HrlyParamFuelFlowRecordDTO {}
+export class HourlyParamFuelFlowDTO extends HourlyParamFuelFlowRecordDTO {}
