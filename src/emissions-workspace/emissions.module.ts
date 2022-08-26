@@ -16,6 +16,7 @@ import { HourlyOperatingDataWorkspaceService } from '../hourly-operating-data-wo
 import { HourlyOperatingDataWorkspaceRepository } from '../hourly-operating-data-workspace/hourly-operating-data-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
+import { DerivedHourlyValueWorkspaceMap } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.map';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-w
   controllers: [EmissionsWorkspaceController],
   providers: [
     HourlyOperatingDataWorkspaceService,
+    DerivedHourlyValueWorkspaceMap,
     DerivedHourlyValueWorkspaceService,
     EmissionsMap,
     EmissionsWorkspaceService,

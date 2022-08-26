@@ -14,6 +14,7 @@ import { HourlyOperatingDataService } from '../hourly-operating-data/hourly-oper
 import { HourlyOperatingDataRepository } from '../hourly-operating-data/hourly-operating-data.repository';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
+import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-value.map';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-ho
   ],
   controllers: [EmissionsController],
   providers: [
+    DerivedHourlyValueMap,
     DerivedHourlyValueService,
     EmissionsMap,
     EmissionsService,

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HourlyOperatingDataRepository } from './hourly-operating-data.repository';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
+import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-value.map';
 
 @Module({
   imports: [
@@ -12,6 +13,10 @@ import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-ho
       HourlyOperatingDataRepository,
     ]),
   ],
-  providers: [DerivedHourlyValueService, HourlyOperatingDataService],
+  providers: [
+    DerivedHourlyValueService,
+    HourlyOperatingDataService,
+    DerivedHourlyValueMap,
+  ],
 })
 export class HourlyOperatingDataModule {}

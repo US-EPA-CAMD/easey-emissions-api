@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HourlyOperatingDataWorkspaceRepository } from './hourly-operating-data-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
+import { DerivedHourlyValueWorkspaceMap } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.map';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-w
   ],
   providers: [
     DerivedHourlyValueWorkspaceService,
+    DerivedHourlyValueWorkspaceMap,
     HourlyOperatingDataWorkspaceService,
   ],
 })
