@@ -2,7 +2,12 @@
 export const IMPORT_CHECK_ERROR = {
   IMPORT_23: {
     RESULT_A() {
-      return 'You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
+      return '[IMPORT-23] You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
     },
   },
+  IMPORT_25:{
+    RESULT_A(orisCode){
+      return `[IMPORT-25] The database does not contain ORIS Code [${orisCode}]. This file was not imported.`;
+    }
+  }
 };

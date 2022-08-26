@@ -13,7 +13,7 @@ export class WeeklyTestSummaryCheckService {
 
     const errorList: string[] = [];
 
-    payload.weeklyTestSummaryData.forEach(wts => {
+    payload.weeklyTestSummaryData?.forEach(wts => {
       // import-38
       let error = this.inappropriateChildrenRecordsCheck(wts);
 
