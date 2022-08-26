@@ -1,11 +1,11 @@
 import {
-  HrlyParamFuelFlowDTO,
-  HrlyParamFuelFlowImportDTO,
-} from './hrly-param-fuel-flow.dto';
+  HourlyParamFuelFlowDTO,
+  HourlyParamFuelFlowImportDTO,
+} from './hourly-param-fuel-flow.dto';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class HrlyFuelFlowBaseDTO {
+export class HourlyFuelFlowBaseDTO {
   fuelCode: string;
   fuelUsageTime?: number;
   volumetricFlowRate?: number;
@@ -16,7 +16,7 @@ export class HrlyFuelFlowBaseDTO {
   monitoringSystemId?: string;
 }
 
-export class HrlyFuelFlowRecordDTO extends HrlyFuelFlowBaseDTO {
+export class HourlyFuelFlowRecordDTO extends HourlyFuelFlowBaseDTO {
   id: string;
   hourId: string;
   calcMassFlowRate?: number;
@@ -29,14 +29,14 @@ export class HrlyFuelFlowRecordDTO extends HrlyFuelFlowBaseDTO {
   monitoringLocationId: string;
 }
 
-export class HourlyFuelFlowImportDTO extends HrlyFuelFlowBaseDTO {
+export class HourlyFuelFlowImportDTO extends HourlyFuelFlowBaseDTO {
   @ValidateNested({ each: true })
-  @Type(() => HrlyParamFuelFlowImportDTO)
-  hourlyParameterFuelFlowData: HrlyParamFuelFlowImportDTO[];
+  @Type(() => HourlyParamFuelFlowImportDTO)
+  hourlyParameterFuelFlowData: HourlyParamFuelFlowImportDTO[];
 }
 
-export class HourlyFuelFlowDTO extends HrlyFuelFlowRecordDTO {
+export class HourlyFuelFlowDTO extends HourlyFuelFlowRecordDTO {
   @ValidateNested({ each: true })
-  @Type(() => HrlyParamFuelFlowDTO)
-  hourlyParameterFuelFlowData: HrlyParamFuelFlowDTO[];
+  @Type(() => HourlyParamFuelFlowDTO)
+  hourlyParameterFuelFlowData: HourlyParamFuelFlowDTO[];
 }

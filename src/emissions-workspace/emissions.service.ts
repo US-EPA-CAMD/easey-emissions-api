@@ -9,8 +9,8 @@ import { PlantRepository } from '../plant/plant.repository';
 import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
+import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import { isUndefinedOrNull } from '../utils/utils';
-import { HourlyOperatingDataWorkspaceService } from '../hourly-operating-data-workspace/hourly-operating-data-workspace.service';
 
 @Injectable()
 export class EmissionsWorkspaceService {
@@ -19,7 +19,7 @@ export class EmissionsWorkspaceService {
     private readonly repository: EmissionsWorkspaceRepository,
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
     private readonly plantRepository: PlantRepository,
-    private readonly hourlyOperatingService: HourlyOperatingDataWorkspaceService,
+    private readonly hourlyOperatingService: HourlyOperatingWorkspaceService,
   ) {}
 
   async delete(
@@ -31,7 +31,7 @@ export class EmissionsWorkspaceService {
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
-    const HOURLY_OPERATING_DATA = 1;
+    const HOURLY_OPERATING = 1;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -40,20 +40,23 @@ export class EmissionsWorkspaceService {
     );
 
     if (emissions) {
-      const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
+      promises.push(
+        this.dailyTestSummaryService.export(
+          emissions.monitorPlan?.locations?.map(s => s.id),
+        ),
+      );
+      promises.push(
+        this.hourlyOperatingService.export(
+          emissions.monitorPlan?.locations?.map(s => s.id), params
+        ),
+      );
 
-      if (!isUndefinedOrNull(locationIds)) {
-        promises.push(
-          this.dailyTestSummaryService.export(locationIds),
-          this.hourlyOperatingService.export(locationIds),
-        );
+      const promiseResult = await Promise.all(promises);
+      const results = await this.map.one(emissions);
+      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
 
-        const promiseResult = await Promise.all(promises);
-        const results = await this.map.one(emissions);
-        results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-        results.hourlyOperatingData = promiseResult[HOURLY_OPERATING_DATA];
-        return results;
-      }
+      return results;
     }
     return new EmissionsDTO();
   }

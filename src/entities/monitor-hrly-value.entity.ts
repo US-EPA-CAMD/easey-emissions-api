@@ -11,7 +11,7 @@ import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 
-@Entity({ name: 'camdecmps.monitor-hrly-value.entity' })
+@Entity({ name: 'camdecmps.monitor_hrly_value' })
 export class MonitorHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'monitor_hrly_val_id', nullable: false })
   id: string;

@@ -10,29 +10,19 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsChecksService } from './emissions-checks.service';
-import { WeeklyTestSummaryCheckService } from 'src/weekly-test-summary-workspace/weekly-test-summary-check.service';
+import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { PlantRepository } from '../plant/plant.repository';
-import { HourlyOperatingDataWorkspaceService } from '../hourly-operating-data-workspace/hourly-operating-data-workspace.service';
-import { HourlyOperatingDataWorkspaceRepository } from '../hourly-operating-data-workspace/hourly-operating-data-workspace.repository';
-import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
-import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
-import { DerivedHourlyValueWorkspaceMap } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.map';
+import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      HourlyOperatingDataWorkspaceRepository,
-      DerivedHourlyValueWorkspaceRepository,
-      EmissionsWorkspaceRepository,
-      PlantRepository,
-    ]),
+    TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
+    TypeOrmModule.forFeature([PlantRepository]),
     DailyTestSummaryWorkspaceModule,
+    HourlyOperatingWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
-    HourlyOperatingDataWorkspaceService,
-    DerivedHourlyValueWorkspaceMap,
-    DerivedHourlyValueWorkspaceService,
     EmissionsMap,
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,

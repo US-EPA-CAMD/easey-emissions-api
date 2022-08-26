@@ -1,5 +1,6 @@
-import { EmissionsWorkspaceService } from './emissions.service';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { EmissionsWorkspaceService } from './emissions.service';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { EmissionsMap } from '../maps/emissions.map';
@@ -9,10 +10,18 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
 import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
 import { PlantRepository } from '../plant/plant.repository';
+import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
+import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { HourlyOperatingWorkspaceRepository } from '../hourly-operating-workspace/hourly-operating.repository';
+import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
+import { HourlyOperatingMap } from '../maps/hourly-operating.map';
+import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 const emissionsWorkspaceRepositoryMock = {
   delete: jest.fn().mockResolvedValue(undefined),
   save: jest.fn().mockResolvedValue(undefined),
+  export: jest.fn(),
 };
 
 describe('Emissions Workspace Service', () => {
@@ -27,6 +36,10 @@ describe('Emissions Workspace Service', () => {
         EmissionsMap,
         DailyTestSummaryMap,
         DailyCalibrationMap,
+        HourlyOperatingMap,
+        MonitorHourlyValueMap,
+        HourlyOperatingWorkspaceService,
+        MonitorHourlyValueWorkspaceService,
         {
           provide: PlantRepository,
           useValue: jest.mock('../plant/plant.repository'),
@@ -45,6 +58,18 @@ describe('Emissions Workspace Service', () => {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: jest.mock(
             '../daily-calibration-workspace/daily-calibration.repository',
+          ),
+        },
+        {
+          provide: HourlyOperatingWorkspaceRepository,
+          useValue: jest.mock(
+            '../hourly-operating-workspace/hourly-operating.repository',
+          ),
+        },
+        {
+          provide: MonitorHourlyValueWorkspaceRepository,
+          useValue: jest.mock(
+            '../monitor-hourly-value-workspace/monitor-hourly-value.repository',
           ),
         },
       ],
@@ -81,5 +106,9 @@ describe('Emissions Workspace Service', () => {
         nsps4tSummaryData: [],
       }),
     ).resolves.toEqual(undefined);
+  });
+  it('should export a record', async () => {
+    let filters = new EmissionsParamsDTO();
+    await expect(emissionsService.export(filters)).resolves.toEqual({});
   });
 });
