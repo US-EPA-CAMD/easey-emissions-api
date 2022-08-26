@@ -29,23 +29,17 @@ export class EmissionsService {
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
 
-    let emissions = await this.repository.export(
+    const emissions = await this.repository.export(
       params.monitorPlanId,
       params.year,
       params.quarter,
     );
 
     if (emissions) {
-      promises.push(
-        this.dailyTestSummaryService.export(
-          emissions.monitorPlan?.locations?.map(s => s.id),
-        ),
-      );
-      promises.push(
-        this.hourlyOperatingService.export(
-          emissions.monitorPlan?.locations?.map(s => s.id), params
-        ),
-      );
+      const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
+
+      promises.push(this.dailyTestSummaryService.export(locationIds));
+      promises.push(this.hourlyOperatingService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);

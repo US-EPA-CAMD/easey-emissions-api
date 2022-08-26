@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
 import { DerivedHourlyValueMap } from './derived-hourly-value.map';
-import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
 
 @Injectable()
 export class DerivedHourlyValueService {
@@ -19,6 +18,6 @@ export class DerivedHourlyValueService {
       return this.map.one(data);
     });
 
-    return (Promise.all(promises) as unknown) as Promise<DerivedHrlyValue[]>;
+    return Promise.all(promises);
   }
 }

@@ -5,6 +5,7 @@ import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 
 @Injectable()
 export class HourlyOperatingWorkspaceService {
@@ -12,6 +13,7 @@ export class HourlyOperatingWorkspaceService {
     private readonly map: HourlyOperatingMap,
     private readonly repository: HourlyOperatingWorkspaceRepository,
     private readonly monitorHourlyValueService: MonitorHourlyValueWorkspaceService,
+    private readonly derivedHourlyValueService: DerivedHourlyValueWorkspaceService,
   ) {}
   async getHourlyOpDataByLocationIds(
     monitoringLocationIds: string[],
@@ -36,14 +38,16 @@ export class HourlyOperatingWorkspaceService {
     );
 
     if (hourlyOperating) {
-      const monitorHourlyValue = await this.monitorHourlyValueService.export(
-        hourlyOperating.map(i => i.id),
-      );
+      const values = await Promise.all([
+        this.monitorHourlyValueService.export(hourlyOperating.map(i => i.id)),
+        this.derivedHourlyValueService.export(monitoringLocationIds),
+      ]);
 
       hourlyOperating.forEach(hourlyOp => {
-        hourlyOp.monitorHourlyValue = monitorHourlyValue.filter(
+        hourlyOp.monitorHourlyValue = values[0].filter(
           i => i.hourId === hourlyOp.id,
         );
+        hourlyOp.derivedHourlyValue = values[1];
       });
     }
 
