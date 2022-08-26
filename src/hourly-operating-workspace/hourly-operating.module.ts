@@ -8,6 +8,7 @@ import { MonitorHourlyValueWorkspaceModule } from '../monitor-hourly-value-works
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueWorkspaceMap } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.map';
+import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DerivedHourlyValueWorkspaceMap } from '../derived-hourly-value-workspac
       HourlyOperatingWorkspaceRepository,
     ]),
     MonitorHourlyValueWorkspaceModule,
+    MatsMonitorHourlyValueWorkspaceModule,
   ],
   controllers: [],
   providers: [

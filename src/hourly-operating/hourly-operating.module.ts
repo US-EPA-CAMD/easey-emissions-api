@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MatsMonitorHourlyValueModule } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.module';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
@@ -16,6 +17,7 @@ import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-va
       HourlyOperatingRepository,
     ]),
     MonitorHourlyValueModule,
+    MatsMonitorHourlyValueModule,
   ],
   controllers: [],
   providers: [

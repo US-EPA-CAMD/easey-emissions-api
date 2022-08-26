@@ -12,6 +12,8 @@ export class MatsMonitorHourlyValueRecordDTO extends MatsMonitorHourlyValueBaseD
   hourId: string;
   monitoringLocationId?: string;
   reportingPeriodId: number;
+  monitoringSystemRecordId?: string;
+  componentRecordId?: string;
   calcUnadjustedHrlyValue?: string;
   calcDailyCalStatus?: string;
   calcHgLineStatus?: string;
