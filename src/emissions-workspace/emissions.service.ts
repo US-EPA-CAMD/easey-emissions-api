@@ -62,6 +62,7 @@ export class EmissionsWorkspaceService {
       unitIds: params.dailyTestSummaryData?.map(data => data.unitId),
     });
 
+    console.log(plantLocation)
     if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }
