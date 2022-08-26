@@ -10,10 +10,16 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { HourlyOperatingDataService } from '../hourly-operating-data/hourly-operating-data.service';
+import { HourlyOperatingDataRepository } from '../hourly-operating-data/hourly-operating-data.repository';
+import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      HourlyOperatingDataRepository,
+      DerivedHourlyValueRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
     ]),
@@ -21,9 +27,11 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
   ],
   controllers: [EmissionsController],
   providers: [
+    DerivedHourlyValueService,
     EmissionsMap,
     EmissionsService,
     EmissionsSubmissionsProgressMap,
+    HourlyOperatingDataService,
   ],
 })
 export class EmissionsModule {}

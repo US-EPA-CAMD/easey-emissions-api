@@ -10,6 +10,7 @@ import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { isUndefinedOrNull } from '../utils/utils';
+import { HourlyOperatingDataWorkspaceService } from '../hourly-operating-data-workspace/hourly-operating-data-workspace.service';
 
 @Injectable()
 export class EmissionsWorkspaceService {
@@ -18,6 +19,7 @@ export class EmissionsWorkspaceService {
     private readonly repository: EmissionsWorkspaceRepository,
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
     private readonly plantRepository: PlantRepository,
+    private readonly hourlyOperatingService: HourlyOperatingDataWorkspaceService,
   ) {}
 
   async delete(
@@ -29,6 +31,7 @@ export class EmissionsWorkspaceService {
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
+    const HOURLY_OPERATING_DATA = 1;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -37,16 +40,20 @@ export class EmissionsWorkspaceService {
     );
 
     if (emissions) {
-      promises.push(
-        this.dailyTestSummaryService.export(
-          emissions.monitorPlan?.locations?.map(s => s.id),
-        ),
-      );
+      const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
 
-      const promiseResult = await Promise.all(promises);
-      const results = await this.map.one(emissions);
-      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-      return results;
+      if (!isUndefinedOrNull(locationIds)) {
+        promises.push(
+          this.dailyTestSummaryService.export(locationIds),
+          this.hourlyOperatingService.export(locationIds),
+        );
+
+        const promiseResult = await Promise.all(promises);
+        const results = await this.map.one(emissions);
+        results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+        results.hourlyOperatingData = promiseResult[HOURLY_OPERATING_DATA];
+        return results;
+      }
     }
     return new EmissionsDTO();
   }

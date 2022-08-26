@@ -14,6 +14,10 @@ import { EmissionsModule } from './emissions/emissions.module';
 import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 import { PlantModule } from './plant/plant.module';
+import { DerivedHourlyValueModule } from './derived-hourly-value/derived-hourly-value.module';
+import { HourlyOperatingDataModule } from './hourly-operating-data/hourly-operating-data.module';
+import { HourlyOperatingDataWorkspaceModule } from './hourly-operating-data-workspace/hourly-operating-data-workspace.module';
+import { DerivedHourlyValueWorkspaceModule } from './derived-hourly-value-workspace/derived-hourly-value-workspace.module';
 
 @Module({
   imports: [
@@ -31,6 +35,10 @@ import { PlantModule } from './plant/plant.module';
     EmissionsWorkspaceModule,
     ApportionedEmissionsModule,
     PlantModule,
+    DerivedHourlyValueModule,
+    HourlyOperatingDataModule,
+    HourlyOperatingDataWorkspaceModule,
+    DerivedHourlyValueWorkspaceModule,
   ],
 })
 export class AppModule {}

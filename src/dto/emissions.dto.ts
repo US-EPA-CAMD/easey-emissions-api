@@ -22,7 +22,7 @@ import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
-import { IMPORT_CHECK_ERROR } from 'src/utils/error.const';
+import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 
 export class EmissionsBaseDTO {
   @DbLookup(
