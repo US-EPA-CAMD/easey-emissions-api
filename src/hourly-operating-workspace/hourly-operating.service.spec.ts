@@ -7,6 +7,9 @@ import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
+import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
+import { MatsMonitorHourlyValueWorkspaceRepository } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.repository';
+import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
 
 const mockRepository = {
   export: () => null,
@@ -28,6 +31,9 @@ describe('HourlyOperatingWorskpaceService', () => {
         MonitorHourlyValueWorkspaceService,
         MonitorHourlyValueWorkspaceRepository,
         MonitorHourlyValueMap,
+        MatsMonitorHourlyValueWorkspaceService,
+        MatsMonitorHourlyValueWorkspaceRepository,
+        MatsMonitorHourlyValueMap,
         {
           provide: HourlyOperatingMap,
           useValue: mockMap,

@@ -19,6 +19,9 @@ import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-ho
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
+import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.service';
+import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository';
 // import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 const emissionsRepositoryMock = {
@@ -44,6 +47,8 @@ describe('Emissions Workspace Service', () => {
         EmissionsSubmissionsProgressMap,
         EmissionsSubmissionsProgressRepository,
         ConfigService,
+        MatsMonitorHourlyValueMap,
+        MatsMonitorHourlyValueService,
         {
           provide: PlantRepository,
           useValue: jest.mock('../plant/plant.repository'),
@@ -74,6 +79,12 @@ describe('Emissions Workspace Service', () => {
           provide: MonitorHourlyValueRepository,
           useValue: jest.mock(
             '../monitor-hourly-value/monitor-hourly-value.repository',
+          ),
+        },
+        {
+          provide: MatsMonitorHourlyValueRepository,
+          useValue: jest.mock(
+            '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository',
           ),
         },
       ],
