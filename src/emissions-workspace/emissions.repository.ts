@@ -1,4 +1,4 @@
-import { EmissionEvaluation } from 'src/entities/emission-evaluation.entity';
+import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { Repository, EntityRepository } from 'typeorm';
 
 @EntityRepository(EmissionEvaluation)
