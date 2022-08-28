@@ -1,4 +1,4 @@
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { HrlyOpData } from 'src/entities/hrly-op-data.entity';
 import { Repository, EntityRepository } from 'typeorm';
 
 @EntityRepository(HrlyOpData)

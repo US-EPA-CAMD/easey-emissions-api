@@ -6,12 +6,14 @@ import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repositor
 import { HourlyOperatingWorkspaceService } from './hourly-operating.service';
 import { MonitorHourlyValueWorkspaceModule } from '../monitor-hourly-value-workspace/monitor-hourly-value.module';
 import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.module';
+import { MatsDerivedHourlyValueWorkspaceModule } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([HourlyOperatingWorkspaceRepository]),
     MonitorHourlyValueWorkspaceModule,
     MatsMonitorHourlyValueWorkspaceModule,
+    MatsDerivedHourlyValueWorkspaceModule,
   ],
   controllers: [],
   providers: [HourlyOperatingMap, HourlyOperatingWorkspaceService],
