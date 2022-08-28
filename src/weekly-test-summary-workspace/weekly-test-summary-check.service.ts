@@ -1,3 +1,4 @@
+import { CheckCatalogService } from './../check-catalog/check-catalog.service';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -29,11 +30,23 @@ export class WeeklyTestSummaryCheckService {
   inappropriateChildrenRecordsCheck(
     summary: WeeklyTestSummaryImportDTO,
   ): string {
-    return (
-        summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
-        summary?.weeklySystemIntegrityData?.length > 0
-    )
-      ? `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`
-      : null;
+    if (summary) {
+      if (
+        summary.testTypeCode !== TestTypeCodes.HGSI1 &&
+        summary.weeklySystemIntegrityData && 
+        summary.weeklySystemIntegrityData.length > 0
+      ) {
+        return CheckCatalogService.formatResultMessage('IMPORT-38-A', { testTypeCode: summary.testTypeCode })
+      }
+    }
+
+    // return (
+    //     summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
+    //     summary?.weeklySystemIntegrityData?.length > 0
+    // )
+    //   ? `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`
+    //   : null;
+  
+    return null;
   }
 }
