@@ -1,9 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { CheckCatalogService } from 'src/check-catalog/check-catalog.service';
-import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 

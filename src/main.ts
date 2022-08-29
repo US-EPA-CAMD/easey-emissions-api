@@ -1,14 +1,17 @@
 import { NestFactory } from "@nestjs/core";
 import { ConfigService } from "@nestjs/config";
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { applySwagger, applyMiddleware } from "@us-epa-camd/easey-common/nestjs";
 
 import { AppModule } from './app.module';
-import { CheckCatalogService } from './check-catalog/check-catalog.service';
 
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  CheckCatalogService.load();
+  CheckCatalogService.load(
+    'camdecmpsmd.vw_emissions_api_check_catalog_results'
+  );
+
   applyMiddleware(AppModule, app);
   applySwagger(app);
 

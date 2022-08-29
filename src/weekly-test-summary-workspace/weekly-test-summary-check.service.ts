@@ -1,4 +1,4 @@
-import { CheckCatalogService } from './../check-catalog/check-catalog.service';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EmissionsImportDTO } from '../dto/emissions.dto';

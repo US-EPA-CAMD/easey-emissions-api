@@ -22,7 +22,7 @@ import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
-import { CheckCatalogService } from '../check-catalog/check-catalog.service';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 export class EmissionsBaseDTO {
   @DbLookup(
