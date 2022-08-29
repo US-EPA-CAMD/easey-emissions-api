@@ -33,7 +33,7 @@ describe("Weekly Test Summary Checks Service Tests", ()=>{
             testObj.weeklySystemIntegrityData = [new WeeklySystemIntegrityImportDTO()]
             const result = service.inappropriateChildrenRecordsCheck(testObj);
 
-            expect(result).toEqual(`You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${testObj.testTypeCode}]. This File was not imported.`);
+            expect(result).toEqual(`[IMPORT-38] You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${testObj.testTypeCode}]. This File was not imported.`);
         })
 
         it( 'should return null when weeklySystemIntegrityData is empty', ()=>{

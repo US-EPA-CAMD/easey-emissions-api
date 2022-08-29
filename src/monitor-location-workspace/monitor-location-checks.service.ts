@@ -7,7 +7,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
-import { MonitorLocation } from '../entities/monitor-location.entity';
+import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
@@ -34,7 +34,7 @@ export class MonitorLocationChecksService {
 
       if (location) {
         if ("monitorHourlyValueData" in i)
-          i.monitorHourlyValueData.forEach(d =>{
+          (i as HourlyOperatingImportDTO).monitorHourlyValueData.forEach(d =>{
             location.componentIds.add(d.componentId)
           })
         

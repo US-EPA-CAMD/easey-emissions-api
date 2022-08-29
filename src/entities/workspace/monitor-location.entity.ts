@@ -26,6 +26,7 @@ import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { StackPipe } from '../stack-pipe.entity';
 import { Unit } from '../unit.entity';
+import { Component } from './component.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -186,4 +187,12 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   samplingTrains: SamplingTrain[];
+
+  @OneToMany(
+    () => Component,
+    c => c.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  components: Component[];
+
 }
