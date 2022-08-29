@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
-import { DerivedHourlyValueMap } from './derived-hourly-value.map';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 @Injectable()
 export class DerivedHourlyValueService {

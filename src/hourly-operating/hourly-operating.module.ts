@@ -9,7 +9,7 @@ import { HourlyOperatingService } from './hourly-operating.service';
 import { MatsDerivedHourlyValueModule } from '../mats-derived-hourly-value/mats-derived-hourly-value.module';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
-import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-value.map';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 @Module({
   imports: [

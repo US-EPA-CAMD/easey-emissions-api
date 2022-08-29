@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { DerivedHourlyValueWorkspaceRepository } from './derived-hourly-value-workspace.repository';
-import { DerivedHourlyValueWorkspaceMap } from './derived-hourly-value-workspace.map';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 @Injectable()
 export class DerivedHourlyValueWorkspaceService {
   constructor(
     private readonly repository: DerivedHourlyValueWorkspaceRepository,
-    private readonly map: DerivedHourlyValueWorkspaceMap,
+    private readonly map: DerivedHourlyValueMap,
   ) {}
 
   async export(hourIds: string[]) {
