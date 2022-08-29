@@ -30,10 +30,9 @@ export class DailyTestSummaryCheckService {
   inappropriateChildrenRecordsCheck(
     summary: DailyTestSummaryImportDTO,
   ): string {
-    return (
-        summary?.testTypeCode !== TestTypeCodes.DAYCAL &&
-        summary?.dailyCalibrationData?.length > 0
-    )
-      ? IMPORT_CHECK_ERROR.IMPORT_29.RESULT_A(): null;
+    return summary?.testTypeCode !== TestTypeCodes.DAYCAL &&
+      summary?.dailyCalibrationData?.length > 0
+      ? IMPORT_CHECK_ERROR.IMPORT_29.RESULT_A()
+      : null;
   }
 }
