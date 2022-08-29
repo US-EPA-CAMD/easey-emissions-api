@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { TestTypeCodes } from '../enums/test-type-code.enum';
@@ -13,7 +14,7 @@ export class WeeklyTestSummaryCheckService {
 
     const errorList: string[] = [];
 
-    payload.weeklyTestSummaryData?.forEach(wts => {
+    payload?.weeklyTestSummaryData.forEach(wts => {
       // import-38
       let error = this.inappropriateChildrenRecordsCheck(wts);
 
@@ -33,7 +34,7 @@ export class WeeklyTestSummaryCheckService {
         summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
         summary?.weeklySystemIntegrityData?.length > 0
     )
-      ? `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`
+      ? IMPORT_CHECK_ERROR.IMPORT_38.RESULT_A(summary.testTypeCode)
       : null;
   }
 }

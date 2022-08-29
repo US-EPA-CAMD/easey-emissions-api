@@ -6,6 +6,7 @@ import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
 import { HourlyOperatingRepository } from './hourly-operating.repository';
 import { HourlyOperatingService } from './hourly-operating.service';
+import { MatsDerivedHourlyValueModule } from '../mats-derived-hourly-value/mats-derived-hourly-value.module';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
 import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-value.map';
@@ -18,6 +19,7 @@ import { DerivedHourlyValueMap } from '../derived-hourly-value/derived-hourly-va
     ]),
     MonitorHourlyValueModule,
     MatsMonitorHourlyValueModule,
+    MatsDerivedHourlyValueModule,
   ],
   controllers: [],
   providers: [
