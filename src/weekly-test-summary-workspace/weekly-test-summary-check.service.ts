@@ -40,21 +40,6 @@ export class WeeklyTestSummaryCheckService {
       }
     }
 
-    // return (
-    //     summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
-    //     summary?.weeklySystemIntegrityData?.length > 0
-    // )
-    //   ? `You have reported WeeklySystemIntegrity records for a Weekly Test Summary Record with a Test Type Code of [${summary.testTypeCode}]. This File was not imported.`
-    //   : null;
-  
     return null;
-// =======
-//     return (
-//         summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
-//         summary?.weeklySystemIntegrityData?.length > 0
-//     )
-//       ? IMPORT_CHECK_ERROR.IMPORT_38.RESULT_A(summary.testTypeCode)
-//       : null;
-// >>>>>>> 7da98b21514a03ba40fe747dbdaa3dd533608aa5
   }
 }
