@@ -10,6 +10,7 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { HourlyOperatingModule } from '../hourly-operating/hourly-operating.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
       EmissionsSubmissionsProgressRepository,
     ]),
     DailyTestSummaryModule,
+    HourlyOperatingModule
   ],
   controllers: [EmissionsController],
   providers: [

@@ -1,4 +1,4 @@
-export class HrlyGasFlowMeterBaseDTO {
+export class HourlyGasFlowMeterBaseDTO {
   componentId: string;
   beginEndHourFlag?: string;
   hourlyGfmReading?: number;
@@ -7,7 +7,7 @@ export class HrlyGasFlowMeterBaseDTO {
   hourlySfsrRatio?: number;
 }
 
-export class HrlyGasFlowMeterRecordDTO extends HrlyGasFlowMeterBaseDTO {
+export class HourlyGasFlowMeterRecordDTO extends HourlyGasFlowMeterBaseDTO {
   id: string;
   hourId: string;
   monitoringLocationId: string;
@@ -19,6 +19,6 @@ export class HrlyGasFlowMeterRecordDTO extends HrlyGasFlowMeterBaseDTO {
   updateDate?: Date;
 }
 
-export class HrlyGasFlowMeterImportDTO extends HrlyGasFlowMeterBaseDTO {}
+export class HourlyGasFlowMeterImportDTO extends HourlyGasFlowMeterBaseDTO {}
 
-export class HrlyGasFlowMeterDTO extends HrlyGasFlowMeterRecordDTO {}
+export class HourlyGasFlowMeterDTO extends HourlyGasFlowMeterRecordDTO {}

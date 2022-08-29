@@ -28,15 +28,17 @@ export class DailyTestSummaryService {
       monitoringLocationIds,
     );
 
-    const dailyCalibrations = await this.dailyCalibrationService.export(
-      summaries?.map(i => i.id),
-    );
-
-    summaries.forEach(s => {
-      s.dailyCalibrationData = dailyCalibrations.filter(
-        i => i.dailyTestSumId === s.id,
+    if (summaries) {
+      const dailyCalibrations = await this.dailyCalibrationService.export(
+        summaries?.map(i => i.id),
       );
-    });
+
+      summaries.forEach(s => {
+        s.dailyCalibrationData = dailyCalibrations.filter(
+          i => i.dailyTestSumId === s.id,
+        );
+      });
+    }
 
     return summaries;
   }

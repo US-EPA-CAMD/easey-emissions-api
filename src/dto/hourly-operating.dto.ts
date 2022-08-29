@@ -1,11 +1,30 @@
-import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { MonitorHourlyValueDTO } from './monitor-hourly-value.dto';
-import { MatsMonitorHrlyValueDTO } from './mats-monitor-hrly-value.dto';
-import { DerivedHourlyValueDTO } from './derived-hourly-value.dto';
-import { MatsDerivedHrlyValueDTO } from './mats-derived-hrly-value.dto';
-import { HourlyFuelFlowDTO } from './hrly-fuel-flow.dto';
-import { HrlyGasFlowMeterDTO } from './hrly-gas-flow-meter.dto';
+import { ValidateNested } from 'class-validator';
+
+import {
+  MonitorHourlyValueImportDTO,
+  MonitorHourlyValueDTO,
+} from './monitor-hourly-value.dto';
+import {
+  MatsMonitorHourlyValueDTO,
+  MatsMonitorHourlyValueImportDTO,
+} from './mats-monitor-hourly-value.dto';
+import {
+  DerivedHourlyValueDTO,
+  DerivedHourlyValueImportDTO,
+} from './derived-hourly-value.dto';
+import {
+  HourlyFuelFlowDTO,
+  HourlyFuelFlowImportDTO,
+} from './hourly-fuel-flow.dto';
+import {
+  HourlyGasFlowMeterDTO,
+  HourlyGasFlowMeterImportDTO,
+} from './hourly-gas-flow-meter.dto';
+import {
+  MatsDerivedHourlyValueDTO,
+  MatsDerivedHourlyValueImportDTO,
+} from './mats-derived-hourly-value.dto';
 
 export class HourlyOperatingBaseDTO {
   stackPipeId: string;
@@ -32,60 +51,59 @@ export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   userId?: string;
   addDate?: Date;
   updateDate?: Date;
-  operatingConditionCd?: string;
+  operatingConditionCode?: string;
   fuelCdList?: string;
   mhhiIndicator?: number;
-  matsLoad?: number;
 }
 
 export class HourlyOperatingImportDTO extends HourlyOperatingBaseDTO {
   @ValidateNested({ each: true })
-  @Type(() => MonitorHourlyValueDTO)
-  monitorHourlyValueData: MonitorHourlyValueDTO[];
+  @Type(() => MonitorHourlyValueImportDTO)
+  monitorHourlyValue: MonitorHourlyValueImportDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => MatsMonitorHrlyValueDTO)
-  matsMonitorHourlyValueData: MatsMonitorHrlyValueDTO[];
+  @Type(() => MatsMonitorHourlyValueImportDTO)
+  matsMonitorHourlyValue: MatsMonitorHourlyValueImportDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => DerivedHourlyValueDTO)
-  derivedHourlyValueData: DerivedHourlyValueDTO[];
+  @Type(() => DerivedHourlyValueImportDTO)
+  derivedHourlyValue: DerivedHourlyValueImportDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => MatsDerivedHrlyValueDTO)
-  matsDerivedHourlyValueData: MatsDerivedHrlyValueDTO[];
+  @Type(() => MatsDerivedHourlyValueImportDTO)
+  matsDerivedHourlyValue: MatsDerivedHourlyValueImportDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => HourlyFuelFlowDTO)
-  hourlyFuelFlowData: HourlyFuelFlowDTO[];
+  @Type(() => HourlyFuelFlowImportDTO)
+  hourlyFuelFlow: HourlyFuelFlowImportDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => HrlyGasFlowMeterDTO)
-  hourlyGFMData: HrlyGasFlowMeterDTO[];
+  @Type(() => HourlyGasFlowMeterImportDTO)
+  hourlyGasFlowMeter: HourlyGasFlowMeterImportDTO[];
 }
 
 export class HourlyOperatingDTO extends HourlyOperatingRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => MonitorHourlyValueDTO)
-  monitorHourlyValueData: MonitorHourlyValueDTO[];
+  monitorHourlyValue: MonitorHourlyValueDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => MatsMonitorHrlyValueDTO)
-  matsMonitorHourlyValueData: MatsMonitorHrlyValueDTO[];
+  @Type(() => MatsMonitorHourlyValueDTO)
+  matsMonitorHourlyValue: MatsMonitorHourlyValueDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => DerivedHourlyValueDTO)
-  derivedHourlyValueData: DerivedHourlyValueDTO[];
+  derivedHourlyValue: DerivedHourlyValueDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => MatsDerivedHrlyValueDTO)
-  matsDerivedHourlyValueData: MatsDerivedHrlyValueDTO[];
+  @Type(() => MatsDerivedHourlyValueDTO)
+  matsDerivedHourlyValue: MatsDerivedHourlyValueDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => HourlyFuelFlowDTO)
-  hourlyFuelFlowData: HourlyFuelFlowDTO[];
+  hourlyFuelFlow: HourlyFuelFlowDTO[];
 
   @ValidateNested({ each: true })
-  @Type(() => HrlyGasFlowMeterDTO)
-  hourlyGFMData: HrlyGasFlowMeterDTO[];
+  @Type(() => HourlyGasFlowMeterDTO)
+  hourlyGasFlowMeter: HourlyGasFlowMeterDTO[];
 }

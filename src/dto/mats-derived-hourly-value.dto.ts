@@ -1,11 +1,11 @@
-export class MatsDerivedHrlyValueBaseDTO {
+export class MatsDerivedHourlyValueBaseDTO {
   parameterCode: string;
   unadjustedHourlyValue?: string;
   modcCode?: string;
   formulaIdentifier?: string;
 }
 
-export class MatsDerivedHrlyValueRecordDTO extends MatsDerivedHrlyValueBaseDTO {
+export class MatsDerivedHourlyValueRecordDTO extends MatsDerivedHourlyValueBaseDTO {
   id: string;
   hourId: string;
   calcUnadjustedHrlyValue?: string;
@@ -18,6 +18,6 @@ export class MatsDerivedHrlyValueRecordDTO extends MatsDerivedHrlyValueBaseDTO {
   updateDate?: Date;
 }
 
-export class MatsDerivedHrlyValueImportDTO extends MatsDerivedHrlyValueBaseDTO {}
+export class MatsDerivedHourlyValueImportDTO extends MatsDerivedHourlyValueBaseDTO {}
 
-export class MatsDerivedHrlyValueDTO extends MatsDerivedHrlyValueRecordDTO {}
+export class MatsDerivedHourlyValueDTO extends MatsDerivedHourlyValueRecordDTO {}

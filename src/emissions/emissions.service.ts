@@ -10,6 +10,7 @@ import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsDTO } from '../dto/emissions.dto';
 import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
 
 @Injectable()
 export class EmissionsService {
@@ -20,11 +21,13 @@ export class EmissionsService {
     private readonly submissionProgressRepo: EmissionsSubmissionsProgressRepository,
     private readonly configService: ConfigService,
     private readonly dailyTestSummaryService: DailyTestSummaryService,
+    private readonly hourlyOperatingService: HourlyOperatingService,
   ) {}
 
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
+    const HOURLY_OPERATING = 1;
 
     let emissions = await this.repository.export(
       params.monitorPlanId,
@@ -38,10 +41,17 @@ export class EmissionsService {
           emissions.monitorPlan?.locations?.map(s => s.id),
         ),
       );
+      promises.push(
+        this.hourlyOperatingService.export(
+          emissions.monitorPlan?.locations?.map(s => s.id), params
+        ),
+      );
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
+      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
+
       return results;
     }
     return new EmissionsDTO();
