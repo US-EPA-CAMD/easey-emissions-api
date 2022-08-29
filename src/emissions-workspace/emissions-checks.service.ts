@@ -3,8 +3,8 @@ import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
+import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 
 @Injectable()
 export class EmissionsChecksService {
