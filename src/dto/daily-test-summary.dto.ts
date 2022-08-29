@@ -6,9 +6,9 @@ import {
 } from './daily-calibration.dto';
 
 export class DailyTestSummaryBaseDTO {
-  stackPipeId: string;
+  stackPipeId?: string;
 
-  unitId: string;
+  unitId?: string;
 
   date: Date;
 

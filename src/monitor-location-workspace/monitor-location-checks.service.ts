@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
@@ -87,7 +88,7 @@ export class MonitorLocationChecksService {
 
         // for WeeklyTestSummaryImportDTO and DailyTestSummaryImportDTO
         if ("componentId" in i)
-          location.componentIds.add(i.componentId)
+          componentIds.add(i.componentId)
 
         locations.push({
           unitId: i.unitId,
@@ -153,7 +154,7 @@ export class MonitorLocationChecksService {
           if (!dbComponentIds.includes(componentId)) {
             // IMPORT-27 All QA Components Present in the Production Database (Result A)
             errorList.push(
-              `[IMPORT-27] The database does not contain Component [${componentId}] for ${unitStack} and Facility [${orisCode}]`,
+              IMPORT_CHECK_ERROR.IMPORT_27.RESULT_A(componentId, unitStack, orisCode)
             );
           }
         });

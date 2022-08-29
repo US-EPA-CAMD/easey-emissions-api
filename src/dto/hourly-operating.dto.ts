@@ -27,8 +27,8 @@ import {
 } from './mats-derived-hourly-value.dto';
 
 export class HourlyOperatingBaseDTO {
-  stackPipeId: string;
-  unitId: string;
+  stackPipeId?: string;
+  unitId?: string;
   date: Date;
   hour: number;
   operatingTime?: number;
