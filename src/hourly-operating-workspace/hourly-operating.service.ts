@@ -44,7 +44,11 @@ export class HourlyOperatingWorkspaceService {
     if (hourlyOperating) {
       const values = await Promise.all([
         this.monitorHourlyValueService.export(hourlyOperating.map(i => i.id)),
-        this.derivedHourlyValueService.export(monitoringLocationIds),
+        this.derivedHourlyValueService.export(
+          hourlyOperating.map(hourlyOperatingDatum => {
+            return hourlyOperatingDatum.id;
+          }),
+        ),
         this.matsMonitorHourlyValueService.export(
           hourlyOperating?.map(i => i.id),
         ),
@@ -54,7 +58,9 @@ export class HourlyOperatingWorkspaceService {
         hourlyOp.monitorHourlyValue = values[0].filter(
           i => i.hourId === hourlyOp.id,
         );
-        hourlyOp.derivedHourlyValue = values[1];
+        hourlyOp.derivedHourlyValue = values[1].filter(derivedHourlyDatum => {
+          return derivedHourlyDatum.hourId === hourlyOp.id;
+        });
         hourlyOp.matsMonitorHourlyValue = values[2].filter(
           i => i.hourId === hourlyOp.id,
         );

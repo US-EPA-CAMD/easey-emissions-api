@@ -9,12 +9,10 @@ export class DerivedHourlyValueWorkspaceService {
     private readonly map: DerivedHourlyValueWorkspaceMap,
   ) {}
 
-  async export(monitoringLocationIds: string[]) {
-    const derivedHourlyValueData = await this.repository.export(
-      monitoringLocationIds,
-    );
+  async export(hourIds: string[]) {
+    const derivedHourlyValueData = await this.repository.export(hourIds);
 
-    const promises = derivedHourlyValueData.map(data => {
+    const promises = derivedHourlyValueData?.map(data => {
       return this.map.one(data);
     });
 
