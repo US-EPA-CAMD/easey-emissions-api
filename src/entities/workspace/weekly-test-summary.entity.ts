@@ -12,7 +12,7 @@ import { MonitorLocation } from './monitor-location.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { Component } from './component.entity';
 import { WeeklySystemIntegrity } from './weekly-system-integrity.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.weekly_test_summary' })
 export class WeeklyTestSummary extends BaseEntity {

@@ -5,6 +5,7 @@ import {
   PrimaryColumn,
   OneToMany,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DailyTestSummary } from './daily-test-summary.entity';
@@ -16,6 +17,7 @@ import { MonitorHrlyValue } from './monitor-hrly-value.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
+import { MonitorLocation } from './monitor-location.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_system' })
 export class MonitorSystem extends BaseEntity {
@@ -134,4 +136,12 @@ export class MonitorSystem extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_sys_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.monitorSystems,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
 }

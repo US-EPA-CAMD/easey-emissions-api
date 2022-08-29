@@ -10,7 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorFormula } from './monitor-formula.entity';
 import { MonitorLocation } from './monitor-location.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.mats_derived_hrly_value' })
 export class MatsDerivedHrlyValue extends BaseEntity {

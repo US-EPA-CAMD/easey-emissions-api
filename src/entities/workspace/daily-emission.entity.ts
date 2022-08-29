@@ -9,7 +9,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { DailyFuel } from './daily-fuel.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.daily_emission' })
 export class DailyEmission extends BaseEntity {

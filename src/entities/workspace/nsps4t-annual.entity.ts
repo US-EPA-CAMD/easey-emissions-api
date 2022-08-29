@@ -10,7 +10,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { Nsps4tSummary } from './nsps4t-summary.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.nsps4t_annual' })
 export class Nsps4tAnnual extends BaseEntity {

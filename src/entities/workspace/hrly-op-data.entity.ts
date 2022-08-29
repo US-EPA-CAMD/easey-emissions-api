@@ -15,7 +15,7 @@ import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.hrly_op_data' })
 export class HrlyOpData extends BaseEntity {

@@ -77,7 +77,7 @@ export class MonitorLocation extends BaseEntity {
 
   @OneToOne(
     () => Unit,
-    unit => unit.location,
+    unit => unit.monitorLocation,
     { eager: true },
   )
   @JoinColumn({ name: 'unit_id' })
