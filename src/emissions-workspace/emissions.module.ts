@@ -10,7 +10,6 @@ import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsChecksService } from './emissions-checks.service';
-import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { PlantRepository } from '../plant/plant.repository';
 import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
 import { MonitorLocationWorkspaceModule } from '../monitor-location-workspace/monitor-location.module';
@@ -31,7 +30,6 @@ import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspa
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
-    // WeeklyTestSummaryCheckService,
   ],
 })
 export class EmissionsWorkspaceModule {}

@@ -35,7 +35,7 @@ export class MonitorLocationChecksService {
 
       if (location) {
         if ("monitorHourlyValueData" in i)
-          (i as HourlyOperatingImportDTO).monitorHourlyValueData.forEach(d =>{
+          i.monitorHourlyValueData.forEach(d =>{
             location.componentIds.add(d.componentId)
           })
         
