@@ -43,7 +43,7 @@ export class EmissionsWorkspaceController {
     //    @CurrentUser() userId: string,
   ) {
     const userId = 'testUser';
-    this.checksService.runChecks(payload);
+    await this.checksService.runChecks(payload);
     return this.service.import(payload);
   }
 }

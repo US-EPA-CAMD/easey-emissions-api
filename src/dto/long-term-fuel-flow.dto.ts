@@ -1,6 +1,6 @@
 export class LongTermFuelFlowBaseDTO {
-  stackPipeId: string;
-  unitId: string;
+  stackPipeId?: string;
+  unitId?: string;
   monitoringSystemId: string;
   fuelFlowPeriodCode?: string;
   longTermFuelFlowValue: number;

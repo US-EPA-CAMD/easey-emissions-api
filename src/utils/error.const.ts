@@ -10,6 +10,11 @@ export const IMPORT_CHECK_ERROR = {
       return `[IMPORT-25] The database does not contain ORIS Code [${orisCode}]. This file was not imported.`;
     },
   },
+  IMPORT_27: {
+    RESULT_A(componentId, unitStack, orisCode) {
+      return `[IMPORT-27] The database does not contain Component [${componentId}] for ${unitStack} and Facility [${orisCode}]. This file was not imported.`;
+    },
+  },
   IMPORT_29: {
     RESULT_A() {
       return '[IMPORT-29] You have reported a Daily Calibration record linked to a test for which the Test Summary TestTypeCode is not "DAYCAL". It is not appropriate to report a Daily Calibration record for a TestTypeCode other than "DAYCAL." This test was not imported.';

@@ -150,7 +150,6 @@ export class HourUnitMatsDataRepository extends Repository<
       );
 
       query = `${curr.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2) UNION ${arch.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2)`;
-      console.log(query);
       return entityManager.query(query, [beginDate, endDate]);
     } else {
       query = await this.applicableQueryBuilderHelper(
@@ -159,7 +158,6 @@ export class HourUnitMatsDataRepository extends Repository<
         endDate,
         false,
       );
-      console.log(query.getQueryAndParameters());
       return query.getRawMany();
     }
   }
@@ -216,8 +214,6 @@ export class HourUnitMatsDataRepository extends Repository<
         endDate,
       });
     }
-
-    console.log(query.getQueryAndParameters()); 
 
     return query;
   }
