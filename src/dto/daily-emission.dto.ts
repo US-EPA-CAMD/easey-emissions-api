@@ -3,8 +3,8 @@ import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 
 export class DailyEmissionBaseDTO {
-  stackPipeId: string;
-  unitId: string;
+  stackPipeId?: string;
+  unitId?: string;
   parameterCode: string;
   date: Date;
   totalDailyEmissions?: number;
