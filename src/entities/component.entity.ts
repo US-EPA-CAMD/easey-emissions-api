@@ -6,11 +6,13 @@ import {
   PrimaryColumn,
   OneToMany,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { DailyTestSummary } from './daily-test-summary.entity';
 import { HrlyGasFlowMeter } from './hrly-gas-flow-meter.entity';
 import { MatsMonitorHrlyValue } from './mats-monitor-hrly-value.entity';
 import { MonitorHrlyValue } from './monitor-hrly-value.entity';
+import { MonitorLocation } from './monitor-location.entity';
 import { SamplingTrain } from './sampling-train.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 
@@ -150,4 +152,12 @@ export class Component extends BaseEntity {
   )
   @JoinColumn({ name: 'component_id' })
   samplingTrains: SamplingTrain[];
+
+  @ManyToOne(
+    () => MonitorLocation,
+    ml => ml.components,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
 }
