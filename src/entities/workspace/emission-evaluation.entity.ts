@@ -10,7 +10,7 @@ import {
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { MonitorPlan } from './monitor-plan.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.emission_evaluation' })
 export class EmissionEvaluation extends BaseEntity {

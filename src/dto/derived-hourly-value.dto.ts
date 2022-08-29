@@ -13,6 +13,7 @@ export class DerivedHourlyValueBaseDTO {
 
 export class DerivedHourlyValueRecordDTO extends DerivedHourlyValueBaseDTO {
   id: string;
+  monitoringSystemRecordId: string;
   hourId: string;
   biasAdjustmentFactor: number;
   calcUnadjustedHrlyValue: number;

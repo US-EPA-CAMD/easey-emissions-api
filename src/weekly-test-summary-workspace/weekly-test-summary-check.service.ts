@@ -14,7 +14,7 @@ export class WeeklyTestSummaryCheckService {
 
     const errorList: string[] = [];
 
-    payload.weeklyTestSummaryData?.forEach(wts => {
+    payload?.weeklyTestSummaryData.forEach(wts => {
       // import-38
       let error = this.inappropriateChildrenRecordsCheck(wts);
 
@@ -48,5 +48,13 @@ export class WeeklyTestSummaryCheckService {
     //   : null;
   
     return null;
+// =======
+//     return (
+//         summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
+//         summary?.weeklySystemIntegrityData?.length > 0
+//     )
+//       ? IMPORT_CHECK_ERROR.IMPORT_38.RESULT_A(summary.testTypeCode)
+//       : null;
+// >>>>>>> 7da98b21514a03ba40fe747dbdaa3dd533608aa5
   }
 }

@@ -26,6 +26,7 @@ import { SamplingTrain } from './sampling-train.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
+import { Component } from './component.entity';
 
 @Entity({ name: 'camdecmps.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -76,7 +77,7 @@ export class MonitorLocation extends BaseEntity {
 
   @OneToOne(
     () => Unit,
-    unit => unit.location,
+    unit => unit.monitorLocation,
     { eager: true },
   )
   @JoinColumn({ name: 'unit_id' })
@@ -186,4 +187,12 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   samplingTrains: SamplingTrain[];
+
+  @OneToMany(
+    () => Component,
+    c => c.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  components: Component[];
+
 }

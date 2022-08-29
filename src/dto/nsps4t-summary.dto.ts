@@ -7,8 +7,8 @@ import {
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
 
 export class Nsps4tSummaryBaseDTO {
-  stackPipeId: string;
-  unitId: string;
+  stackPipeId?: string;
+  unitId?: string;
   co2EmissionStandardCode?: string;
   modusValue?: number;
   modusUomCode?: string;

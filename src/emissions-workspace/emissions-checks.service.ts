@@ -2,14 +2,18 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { CheckCatalogService } from 'src/check-catalog/check-catalog.service';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 
 @Injectable()
 export class EmissionsChecksService {
   constructor(
     private readonly logger: Logger,
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
+    private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
+    private readonly monitorLocationCheckService: MonitorLocationChecksService,
   ) {}
   private throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
@@ -17,16 +21,24 @@ export class EmissionsChecksService {
     }
   }
 
-  runChecks(payload: EmissionsImportDTO): string[] {
+  async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
     this.logger.info('Running Emissions Import Checks');
 
     const errorList: string[] = [];
+
+    // IMPORT-29: Inappropriate Children Records for Daily Test Summary 
+    const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(payload);
+
     const weeklyTestSummaryCheckErrors = this.weeklyTestSummaryCheckService.runChecks(
       payload,
     );
+
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
-    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors);
+    // IMPORT-27: All EM Components Present in the Production Database 
+    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(payload);
+
+    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors, ...locationErrors, ...dailyTestSummaryCheckErrors);
 
     this.throwIfErrors(errorList);
     this.logger.info('Completed Emissions Import Checks');
@@ -34,7 +46,7 @@ export class EmissionsChecksService {
     return errorList;
   }
 
-  // IMPORT-23
+  // IMPORT-23: Emission File Dates Valid
   invalidDatesCheck(payload: EmissionsImportDTO): string[] {
     let earliestDate: number;
     let latestDate: number;

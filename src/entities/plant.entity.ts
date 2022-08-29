@@ -1,6 +1,8 @@
 import { BaseEntity, Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorPlan } from './monitor-plan.entity';
+import { StackPipe } from './stack-pipe.entity';
+import { Unit } from './unit.entity';
 
 @Entity({ name: 'camd.plant' })
 export class Plant extends BaseEntity {
@@ -35,17 +37,17 @@ export class Plant extends BaseEntity {
   })
   region: number;
 
-  // @OneToMany(
-  //   () => Unit,
-  //   unit => unit.plant,
-  // )
-  // units: Unit[];
+  @OneToMany(
+    () => Unit,
+    unit => unit.plant,
+  )
+  units: Unit[];
 
-  // @OneToMany(
-  //   () => StackPipe,
-  //   stackPipe => stackPipe.plant,
-  // )
-  // stackPipes: StackPipe[];
+  @OneToMany(
+    () => StackPipe,
+    stackPipe => stackPipe.plant,
+  )
+  stackPipes: StackPipe[];
 
   @OneToMany(
     () => MonitorPlan,

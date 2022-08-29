@@ -12,7 +12,7 @@ const mockMap = {
   many: () => null,
 };
 
-describe('MonitorHourlyValueService', () => {
+describe('DailyCalibrationService', () => {
   let service: DailyCalibrationService;
   let repository: any;
   let map;

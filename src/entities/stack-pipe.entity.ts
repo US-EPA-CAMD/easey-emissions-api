@@ -4,9 +4,12 @@ import {
   Column,
   PrimaryColumn,
   OneToOne,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
+import { Plant } from './plant.entity';
 
 @Entity({ name: 'camdecmps.stack_pipe' })
 export class StackPipe extends BaseEntity {
@@ -43,4 +46,12 @@ export class StackPipe extends BaseEntity {
     location => location.stackPipe,
   )
   location: MonitorLocation;
+
+  @ManyToOne(
+    () => Plant,
+    o => o.stackPipes,
+  )
+  @JoinColumn({ name: 'fac_id' })
+  plant: Plant;
+
 }

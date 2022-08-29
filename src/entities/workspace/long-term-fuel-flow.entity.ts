@@ -10,7 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { MonitorLocation } from './monitor-location.entity';
 import { MonitorSystem } from './monitor-system.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.long_term_fuel_flow' })
 export class LongTermFuelFlow extends BaseEntity {

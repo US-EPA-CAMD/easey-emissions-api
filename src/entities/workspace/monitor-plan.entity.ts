@@ -12,8 +12,8 @@ import {
 
 import { MonitorLocation } from './monitor-location.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
-import { Plant } from '../plant.entity';
+import { ReportingPeriod } from './reporting-period.entity';
+import { Plant } from './plant.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_plan' })
 export class MonitorPlan extends BaseEntity {

@@ -12,7 +12,7 @@ import { MonitorLocation } from './monitor-location.entity';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { DailyCalibration } from './daily-calibration.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.daily_test_summary' })
 export class DailyTestSummary extends BaseEntity {

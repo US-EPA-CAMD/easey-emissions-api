@@ -13,7 +13,6 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
     matsDataOnly: boolean = false,
   ): Promise<ProgramYearDim[]> {
     const query = await this.queryBuilderHelper(yearArray, matsDataOnly);
-    console.log(query.getQueryAndParameters());
     return query.getRawMany();
   }
 

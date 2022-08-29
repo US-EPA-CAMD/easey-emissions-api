@@ -11,7 +11,7 @@ import { Component } from './component.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorLocation } from './monitor-location.entity';
 import { MonitorSystem } from './monitor-system.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.mats_monitor_hrly_value' })
 export class MatsMonitorHrlyValue extends BaseEntity {

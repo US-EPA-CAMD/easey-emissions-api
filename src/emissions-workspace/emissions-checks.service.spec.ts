@@ -5,6 +5,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { IMPORT_CHECK_ERROR } from '../utils/error.const';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -19,6 +20,12 @@ describe('Emissions Checks Service Tests', () => {
           provide: WeeklyTestSummaryCheckService,
           useFactory: () => ({
             runChecks: jest.fn().mockReturnValue([]),
+          }),
+        },
+        {
+          provide: MonitorLocationChecksService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockResolvedValue([[], []]),
           }),
         },
       ],
