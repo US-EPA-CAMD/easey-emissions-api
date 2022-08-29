@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
@@ -10,6 +11,7 @@ export class EmissionsChecksService {
   constructor(
     private readonly logger: Logger,
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
+    private readonly monitorLocationCheckService: MonitorLocationChecksService,
   ) {}
   private throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
@@ -17,7 +19,7 @@ export class EmissionsChecksService {
     }
   }
 
-  runChecks(payload: EmissionsImportDTO): string[] {
+  async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
     this.logger.info('Running Emissions Import Checks');
 
     const errorList: string[] = [];
@@ -25,8 +27,10 @@ export class EmissionsChecksService {
       payload,
     );
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
+    // IMPORT-27
+    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(payload);
 
-    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors);
+    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors, ...locationErrors);
 
     this.throwIfErrors(errorList);
     this.logger.info('Completed Emissions Import Checks');

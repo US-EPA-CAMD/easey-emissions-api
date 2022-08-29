@@ -152,7 +152,7 @@ export class MonitorLocationChecksService {
 
         location.componentIds.forEach(componentId => {
           if (!dbComponentIds.includes(componentId)) {
-            // IMPORT-27 All QA Components Present in the Production Database (Result A)
+            // IMPORT-27 All EM Components Present in the Database (Result A)
             errorList.push(
               IMPORT_CHECK_ERROR.IMPORT_27.RESULT_A(componentId, unitStack, orisCode)
             );

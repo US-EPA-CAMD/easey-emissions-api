@@ -68,7 +68,7 @@ describe('location checks service tests', () => {
 
       it('should produce the expected LocationIdentifiers array', ()=>{
         const locations: LocationIdentifiers[] = service.processLocations(payload)
-        console.log(locations)
+
         expect(locations.length).toEqual(2);
         expect(locations.filter(e=>e.unitId==="u1").length).toEqual(1);
         expect(locations.filter(e=>e.stackPipeId==="sp1").length).toEqual(1);
@@ -107,7 +107,6 @@ describe('location checks service tests', () => {
         repository.getLocationsByUnitStackPipeIds.mockResolvedValue([ml]);
 
         const [, errorList] = await service.runChecks(payload);
-        console.log(errorList)
         expect(errorList.length).toEqual(1);
       })
     })

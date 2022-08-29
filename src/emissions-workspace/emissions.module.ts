@@ -13,6 +13,8 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { PlantRepository } from '../plant/plant.repository';
 import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
+import { MonitorLocationWorkspaceModule } from '../monitor-location-workspace/monitor-location.module';
+import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspace/weekly-test-summary.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/ho
     TypeOrmModule.forFeature([PlantRepository]),
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
+    MonitorLocationWorkspaceModule,
+    WeeklyTestSummaryWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
@@ -27,7 +31,7 @@ import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/ho
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
-    WeeklyTestSummaryCheckService,
+    // WeeklyTestSummaryCheckService,
   ],
 })
 export class EmissionsWorkspaceModule {}
