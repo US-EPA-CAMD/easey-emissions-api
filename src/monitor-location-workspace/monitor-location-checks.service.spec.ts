@@ -10,7 +10,7 @@ import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { Component } from '../entities/workspace/component.entity';
-import { Unit } from '../entities/unit.entity';
+import { Unit } from '../entities/workspace/unit.entity';
 
 
 describe('location checks service tests', () => {

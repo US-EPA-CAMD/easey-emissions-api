@@ -41,7 +41,7 @@ export class MonitorLocationWorkspaceRepository extends Repository<
     }
 
     const query = this.createQueryBuilder('ml')
-      .innerJoinAndSelect('ml.systems', 'ms')
+      .innerJoinAndSelect('ml.monitorSystems', 'ms')
       .innerJoinAndSelect('ml.components', 'c')
       .leftJoinAndSelect('ml.unit', 'u')
       .leftJoin('u.plant', 'up')

@@ -7,11 +7,12 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { HrlyOpData } from './hrly-op-data.entity';
 
-@Entity({ name: 'camdecmps.monitor_hrly_value' })
+@Entity({ name: 'camdecmpswks.monitor_hrly_value' })
 export class MonitorHrlyValue extends BaseEntity {
   @PrimaryColumn({ name: 'monitor_hrly_val_id', nullable: false })
   id: string;

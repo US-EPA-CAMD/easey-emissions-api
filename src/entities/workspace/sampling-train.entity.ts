@@ -10,7 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { Component } from './component.entity';
 import { MonitorLocation } from './monitor-location.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
-import { ReportingPeriod } from '../reporting-period.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.sampling_train' })
 export class SamplingTrain extends BaseEntity {

@@ -24,9 +24,10 @@ import { SamplingTrain } from './sampling-train.entity';
 import { SorbentTrap } from './sorbent-trap.entity';
 import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
-import { StackPipe } from '../stack-pipe.entity';
-import { Unit } from '../unit.entity';
+import { StackPipe } from './stack-pipe.entity';
+import { Unit } from './unit.entity';
 import { Component } from './component.entity';
+import { MonitorSystem } from './monitor-system.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -77,7 +78,7 @@ export class MonitorLocation extends BaseEntity {
 
   @OneToOne(
     () => Unit,
-    unit => unit.location,
+    unit => unit.monitorLocation,
     { eager: true },
   )
   @JoinColumn({ name: 'unit_id' })
@@ -194,5 +195,12 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   components: Component[];
+
+  @OneToMany(
+    () => MonitorSystem,
+    o => o.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorSystems: MonitorSystem[];
 
 }

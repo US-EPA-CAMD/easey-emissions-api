@@ -7,11 +7,13 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
-import { MonitorLocation } from './monitor-location.entity';
-import { Plant } from './plant.entity';
 
-@Entity({ name: 'camdecmps.stack_pipe' })
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+
+import { Plant } from './plant.entity';
+import { MonitorLocation } from './monitor-location.entity';
+
+@Entity({ name: 'camdecmpswks.stack_pipe' })
 export class StackPipe extends BaseEntity {
   @PrimaryColumn({
     name: 'stack_pipe_id',
@@ -41,12 +43,6 @@ export class StackPipe extends BaseEntity {
   })
   facId: number;
 
-  @OneToOne(
-    () => MonitorLocation,
-    location => location.stackPipe,
-  )
-  location: MonitorLocation;
-
   @ManyToOne(
     () => Plant,
     o => o.stackPipes,
@@ -54,4 +50,10 @@ export class StackPipe extends BaseEntity {
   @JoinColumn({ name: 'fac_id' })
   plant: Plant;
 
+  @OneToOne(
+    () => MonitorLocation,
+    o => o.stackPipe,
+  )
+  @JoinColumn({ name: 'stack_pipe_id' })
+  location: MonitorLocation;
 }
