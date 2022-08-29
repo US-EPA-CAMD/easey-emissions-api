@@ -1,8 +1,7 @@
 import { Test } from '@nestjs/testing';
-
-import { DailyCalibrationService } from './daily-calibration.service';
-import { DailyCalibrationMap } from '../maps/daily-calibration.map';
-import { DailyCalibrationRepository } from './daily-calibration.repository';
+import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
+import { MatsDerivedHourlyValueService } from './mats-derived-hourly-value.service';
+import { MatsDerivedHourlyValueRepository } from './mats-derived-hourly-value.repository';
 
 const mockRepository = {
   export: () => null,
@@ -12,29 +11,29 @@ const mockMap = {
   many: () => null,
 };
 
-describe('DailyCalibrationService', () => {
-  let service: DailyCalibrationService;
+describe('MatsDerivedHourlyValueService', () => {
+  let service: MatsDerivedHourlyValueService;
   let repository: any;
   let map;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        DailyCalibrationService,
+        MatsDerivedHourlyValueService,
         {
-          provide: DailyCalibrationMap,
+          provide: MatsDerivedHourlyValueMap,
           useValue: mockMap,
         },
         {
-          provide: DailyCalibrationRepository,
+          provide: MatsDerivedHourlyValueRepository,
           useValue: mockRepository,
         },
       ],
     }).compile();
 
-    service = module.get(DailyCalibrationService);
-    repository = module.get(DailyCalibrationRepository);
-    map = module.get(DailyCalibrationMap);
+    service = module.get(MatsDerivedHourlyValueService);
+    repository = module.get(MatsDerivedHourlyValueRepository);
+    map = module.get(MatsDerivedHourlyValueMap);
   });
 
   describe('export', () => {
