@@ -11,6 +11,7 @@ export class DerivedHourlyValueMap extends BaseMap<
   async one(entity: DerivedHrlyValue): Promise<DerivedHourlyValueDTO> {
     return {
       id: entity.id,
+      hourId: entity.hourId,
       monitoringSystemRecordId: entity.monSysId,
       monitoringSystemId: entity.monitorSystem.monitoringSystemId,
       reportingPeriodId: entity.rptPeriodId,
@@ -23,7 +24,6 @@ export class DerivedHourlyValueMap extends BaseMap<
       operatingConditionCode: entity.operatingConditionCode,
       segmentNumber: entity.segmentNum,
       fuelCode: entity.fuelCode,
-      hourId: entity.hourId,
       biasAdjustmentFactor: entity.applicableBiasAdjFactor,
       calcUnadjustedHrlyValue: entity.calcUnadjustedHrlyValue,
       calcAdjustedHrlyValue: entity.calcAdjustedHrlyValue,
