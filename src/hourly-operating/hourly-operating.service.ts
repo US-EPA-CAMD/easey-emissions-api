@@ -52,6 +52,9 @@ export class HourlyOperatingService {
         this.matsMonitorHourlyValueService.export(
           hourlyOperating?.map(i => i.id),
         ),
+        this.matsDerivedHourlyValueService.export(
+          hourlyOperating?.map(i => i.id),
+        ),
       ]);
 
       hourlyOperating?.forEach(hourlyOp => {
@@ -64,14 +67,10 @@ export class HourlyOperatingService {
         hourlyOp.matsMonitorHourlyValue = values[2].filter(
           i => i.hourId === hourlyOp.id,
         );
-      });
-
-      const matsDerivedHourlyValue = await this.matsDerivedHourlyValueService.export(
-        hourlyOperating?.map(i => i.id),
-      );
-
-      hourlyOperating?.forEach(hourlyOp => {
-        hourlyOp.matsDerivedHourlyValue = matsDerivedHourlyValue.filter(
+        hourlyOp.matsMonitorHourlyValue = values[2].filter(
+          i => i.hourId === hourlyOp.id,
+        );
+        hourlyOp.matsDerivedHourlyValue = values[3].filter(
           i => i.hourId === hourlyOp.id,
         );
       });

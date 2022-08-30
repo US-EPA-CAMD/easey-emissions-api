@@ -52,6 +52,9 @@ export class HourlyOperatingWorkspaceService {
         this.matsMonitorHourlyValueService.export(
           hourlyOperating?.map(i => i.id),
         ),
+        this.matsDerivedHourlyValueService.export(
+          hourlyOperating?.map(i => i.id),
+        ),
       ]);
 
       hourlyOperating?.forEach(hourlyOp => {
@@ -62,6 +65,9 @@ export class HourlyOperatingWorkspaceService {
           return derivedHourlyDatum.hourId === hourlyOp.id;
         });
         hourlyOp.matsMonitorHourlyValue = values[2].filter(
+          i => i.hourId === hourlyOp.id,
+        );
+        hourlyOp.matsDerivedHourlyValue = values[3].filter(
           i => i.hourId === hourlyOp.id,
         );
       });
