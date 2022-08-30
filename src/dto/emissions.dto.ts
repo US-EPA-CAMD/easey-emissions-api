@@ -22,7 +22,7 @@ import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -32,7 +32,7 @@ export class EmissionsBaseDTO {
     },
     {
       message: (args: ValidationArguments) => {
-        return IMPORT_CHECK_ERROR.IMPORT_25.RESULT_A(args.value);
+        return CheckCatalogService.formatResultMessage('IMPORT-25-A', { orisCode: args.value });
       },
     },
   )
