@@ -1,9 +1,6 @@
 import { Routes } from 'nest-router';
 
 import { EmissionsModule } from './emissions/emissions.module';
-import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
-import { DailyCalibrationModule } from './daily-calibration/daily-calibration.module';
-import { DailyCalibrationWorkspaceModule } from './daily-calibration-workspace/daily-calibration.module';
 import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-emissions.module';
 import { HourlyApportionedEmissionsModule } from './apportioned-emissions/hourly/hourly-apportioned-emissions.module';
 import { DailyApportionedEmissionsModule } from './apportioned-emissions/daily/daily-apportioned-emissions.module';
@@ -18,22 +15,6 @@ const routes: Routes = [
   {
     path: '/emissions',
     module: EmissionsModule,
-    children: [
-      {
-        path: '/daily-calibrations',
-        module: DailyCalibrationModule,
-      },
-    ],
-  },
-  {
-    path: '/workspace/emissions',
-    module: EmissionsWorkspaceModule,
-    children: [
-      {
-        path: '/daily-calibrations',
-        module: DailyCalibrationWorkspaceModule,
-      },
-    ],
   },
   {
     path: 'emissions/apportioned',

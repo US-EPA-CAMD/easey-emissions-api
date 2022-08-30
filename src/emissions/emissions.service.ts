@@ -5,51 +5,14 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
-import { EmissionsRepository } from './emissions.repository';
-import { EmissionsMap } from '../maps/emissions.map';
-import { EmissionsDTO } from '../dto/emissions.dto';
-import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
 
 @Injectable()
 export class EmissionsService {
   constructor(
-    private readonly map: EmissionsMap,
-    private readonly repository: EmissionsRepository,
     private readonly submissionProgressMap: EmissionsSubmissionsProgressMap,
     private readonly submissionProgressRepo: EmissionsSubmissionsProgressRepository,
     private readonly configService: ConfigService,
-    private readonly dailyTestSummaryService: DailyTestSummaryService,
-    private readonly hourlyOperatingService: HourlyOperatingService,
   ) {}
-
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
-    const promises = [];
-    const DAILY_TEST_SUMMARIES = 0;
-    const HOURLY_OPERATING = 1;
-
-    const emissions = await this.repository.export(
-      params.monitorPlanId,
-      params.year,
-      params.quarter,
-    );
-
-    if (emissions) {
-      const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
-
-      promises.push(this.dailyTestSummaryService.export(locationIds));
-      promises.push(this.hourlyOperatingService.export(locationIds, params));
-
-      const promiseResult = await Promise.all(promises);
-      const results = await this.map.one(emissions);
-      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
-
-      return results;
-    }
-    return new EmissionsDTO();
-  }
 
   async getSubmissionProgress(
     periodDate: Date,
