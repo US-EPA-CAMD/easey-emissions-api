@@ -14,9 +14,9 @@ export class DailyTestSummaryCheckService {
 
     const errorList: string[] = [];
 
-    payload?.dailyTestSummaryData.forEach(dts => {
+    payload?.dailyTestSummaryData?.forEach(dts => {
       // import-29
-      let error = this.inappropriateChildrenRecordsCheck(dts);
+      const error = this.inappropriateChildrenRecordsCheck(dts);
 
       errorList.push(error);
     });
