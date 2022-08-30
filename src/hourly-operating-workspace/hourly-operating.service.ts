@@ -71,16 +71,6 @@ export class HourlyOperatingWorkspaceService {
           i => i.hourId === hourlyOp.id,
         );
       });
-
-      const matsDerivedHourlyValue = await this.matsDerivedHourlyValueService.export(
-        hourlyOperating?.map(i => i.id),
-      );
-
-      hourlyOperating?.forEach(hourlyOp => {
-        hourlyOp.matsDerivedHourlyValue = matsDerivedHourlyValue.filter(
-          i => i.hourId === hourlyOp.id,
-        );
-      });
     }
 
     return hourlyOperating;
