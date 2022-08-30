@@ -67,9 +67,6 @@ export class HourlyOperatingService {
         hourlyOp.matsMonitorHourlyValue = values[2].filter(
           i => i.hourId === hourlyOp.id,
         );
-        hourlyOp.matsMonitorHourlyValue = values[2].filter(
-          i => i.hourId === hourlyOp.id,
-        );
         hourlyOp.matsDerivedHourlyValue = values[3].filter(
           i => i.hourId === hourlyOp.id,
         );
