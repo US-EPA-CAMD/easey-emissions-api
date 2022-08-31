@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DerivedHourlyValueService } from './derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
-import { genDerivedHrlyValues } from '../tests/object-generators/derived-hourly-value';
+import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-import { mockDerivedHourlyValueRepository } from '../tests/mocks/mock-derived-hourly-value-repository';
+import { mockDerivedHourlyValueRepository } from '../../test/mocks/mock-derived-hourly-value-repository';
+import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
 
 describe('DerivedHourlyValueService', () => {
   let map: DerivedHourlyValueMap;
@@ -32,7 +33,7 @@ describe('DerivedHourlyValueService', () => {
   });
 
   it('should export derived hourly values from service', async function() {
-    const mockedValues = genDerivedHrlyValues(5, {
+    const mockedValues = genDerivedHrlyValues<DerivedHrlyValue>(3, {
       include: ['monitorSystem'],
     });
     const promises = [];
