@@ -6,6 +6,7 @@ import { DailyCalibrationService } from '../daily-calibration/daily-calibration.
 import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 const mockRepository = {
   export: () => null,
@@ -49,7 +50,8 @@ describe('HourlyOperatingService', () => {
     });
 
     it('should export a record', async () => {
-      const result = await service.export(['123']);
+      const filters = new EmissionsParamsDTO();
+      const result = await service.export(['123'], filters);
       expect(result).toEqual(null);
     });
   });
