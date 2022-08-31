@@ -3,9 +3,10 @@ import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 import { HourUnitMatsDataArch } from '../../entities/hour-unit-mats-data-arch.entity';
+import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { ProgramYearDimRepository } from '../program-year-dim.repository';
 
 const mockRepository = () => ({
   getApplicableEmissions: jest.fn(),
@@ -19,6 +20,10 @@ const mockRequest = () => {
       setHeader: jest.fn(),
     },
   };
+};
+
+const programYearRepositoryMock = {
+  getApplicableApportionedEmissionsAttributes: () => jest,
 };
 
 describe('-- MATS Apportioned Emissions Service --', () => {
@@ -35,6 +40,10 @@ describe('-- MATS Apportioned Emissions Service --', () => {
           provide: HourUnitMatsDataRepository,
           useFactory: mockRepository,
         },
+        {
+          provide: ProgramYearDimRepository,
+          useValue: programYearRepositoryMock,
+        },
       ],
     }).compile();
 
@@ -48,9 +57,19 @@ describe('-- MATS Apportioned Emissions Service --', () => {
     it('calls HourUnitDataRepository.getApplicableEmissions() and gets all applicable emissions attributes from the repository', async () => {
       const expected: HourUnitMatsDataArch[] = [];
       repository.getApplicableEmissions.mockResolvedValue(expected);
-      repository.lastArchivedDate.mockResolvedValue('2019-01-01')
-      let filters = new ApplicableMatsApportionedEmissionsAttributesParamsDTO();
-      let result = await service.getApplicableEmissions(filters);
+      repository.lastArchivedDate.mockResolvedValue('2019-01-01');
+      const filters = new ApplicableApportionedEmissionsAttributesParamsDTO();
+
+      jest
+        .spyOn(
+          programYearRepositoryMock,
+          'getApplicableApportionedEmissionsAttributes',
+        )
+        // @ts-expect-error Allow empty array
+        .mockResolvedValue([]);
+      const result = await service.getApplicableApportionedEmissionsAttributes(
+        filters,
+      );
       expect(result).toEqual(expected);
     });
   });

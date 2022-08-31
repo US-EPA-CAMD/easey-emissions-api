@@ -13,6 +13,9 @@ import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map
 import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
+import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 const mockRepository = {
   export: () => null,
@@ -29,6 +32,8 @@ describe('HourlyOperatingService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        DerivedHourlyValueMap,
+        DerivedHourlyValueService,
         HourlyOperatingService,
         MonitorHourlyValueService,
         MonitorHourlyValueRepository,
@@ -39,6 +44,10 @@ describe('HourlyOperatingService', () => {
         MatsDerivedHourlyValueService,
         MatsDerivedHourlyValueRepository,
         MatsDerivedHourlyValueMap,
+        {
+          provide: DerivedHourlyValueRepository,
+          useValue: jest,
+        },
         {
           provide: HourlyOperatingMap,
           useValue: mockMap,

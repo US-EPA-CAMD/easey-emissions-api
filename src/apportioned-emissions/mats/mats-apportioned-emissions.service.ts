@@ -1,9 +1,6 @@
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
@@ -17,7 +14,7 @@ export class MatsApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
     @InjectRepository(ProgramYearDimRepository)
-    private readonly programYearRepository: ProgramYearDimRepository
+    private readonly programYearRepository: ProgramYearDimRepository,
   ) {}
 
   async getApplicableApportionedEmissionsAttributes(
@@ -29,7 +26,8 @@ export class MatsApportionedEmissionsService {
         'Getting all applicable apportioned emissions attributes',
       );
       query = await this.programYearRepository.getApplicableApportionedEmissionsAttributes(
-        applicableApportionedEmissionsParamsDTO.year, true
+        applicableApportionedEmissionsParamsDTO.year,
+        true,
       );
       this.logger.info('Got all applicable apportioned emissions attributes');
     } catch (e) {

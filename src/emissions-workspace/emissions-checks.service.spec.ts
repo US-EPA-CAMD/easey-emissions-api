@@ -6,16 +6,36 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
+import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
+import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
+import { DailyCalibrationMap } from '../maps/daily-calibration.map';
+import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
-  let wtsChecksService: WeeklyTestSummaryCheckService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        DailyCalibrationMap,
+        DailyCalibrationWorkspaceService,
+        DailyTestSummaryMap,
+        DailyTestSummaryCheckService,
+        DailyTestSummaryWorkspaceService,
         EmissionsChecksService,
+        {
+          provide: DailyCalibrationWorkspaceRepository,
+          useValue: () => jest,
+        },
+        {
+          provide: DailyTestSummaryWorkspaceRepository,
+          useValue: () => jest,
+        },
         {
           provide: WeeklyTestSummaryCheckService,
           useFactory: () => ({
@@ -75,6 +95,8 @@ describe('Emissions Checks Service Tests', () => {
       payload.weeklyTestSummaryData = weeklyTestSummaryData;
       payload.weeklyTestSummaryData[0].date = new Date();
 
+      CheckCatalogService.formatResultMessage = () =>
+        '[IMPORT-23] You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
       expect(service.invalidDatesCheck(payload)).toEqual([
         IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A(),
       ]);

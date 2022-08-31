@@ -13,6 +13,9 @@ import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceRepository } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository';
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
+import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
+import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 const mockRepository = {
   export: () => null,
@@ -29,6 +32,8 @@ describe('HourlyOperatingWorskpaceService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        DerivedHourlyValueMap,
+        DerivedHourlyValueWorkspaceService,
         HourlyOperatingWorkspaceService,
         HourlyOperatingMap,
         MonitorHourlyValueWorkspaceService,
@@ -40,6 +45,10 @@ describe('HourlyOperatingWorskpaceService', () => {
         MatsDerivedHourlyValueWorkspaceService,
         MatsDerivedHourlyValueWorkspaceRepository,
         MatsDerivedHourlyValueMap,
+        {
+          provide: DerivedHourlyValueWorkspaceRepository,
+          useValue: jest,
+        },
         {
           provide: HourlyOperatingMap,
           useValue: mockMap,
