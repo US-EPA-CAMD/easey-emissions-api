@@ -1,6 +1,6 @@
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { TestTypeCodes } from '../enums/test-type-code.enum';
@@ -30,11 +30,16 @@ export class WeeklyTestSummaryCheckService {
   inappropriateChildrenRecordsCheck(
     summary: WeeklyTestSummaryImportDTO,
   ): string {
-    return (
-        summary?.testTypeCode !== TestTypeCodes.HGSI1 &&
-        summary?.weeklySystemIntegrityData?.length > 0
-    )
-      ? IMPORT_CHECK_ERROR.IMPORT_38.RESULT_A(summary.testTypeCode)
-      : null;
+    if (summary) {
+      if (
+        summary.testTypeCode !== TestTypeCodes.HGSI1 &&
+        summary.weeklySystemIntegrityData && 
+        summary.weeklySystemIntegrityData.length > 0
+      ) {
+        return CheckCatalogService.formatResultMessage('IMPORT-38-A', { testTypeCode: summary.testTypeCode })
+      }
+    }
+
+    return null;
   }
 }

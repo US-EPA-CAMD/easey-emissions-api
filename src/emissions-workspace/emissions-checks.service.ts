@@ -1,11 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -91,7 +92,7 @@ export class EmissionsChecksService {
 
     const payloadCombo = Number(`${payload.year}${payload.quarter}`);
     if (payloadCombo < earliestDate || payloadCombo > latestDate) {
-      return [IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A()];
+      return [CheckCatalogService.formatResultMessage('IMPORT-23-A')];
     }
 
     return [];
