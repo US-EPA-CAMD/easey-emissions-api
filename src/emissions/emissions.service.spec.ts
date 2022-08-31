@@ -26,6 +26,9 @@ import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/m
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
 import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
+import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
+import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 
 const emissionsRepositoryMock = {
   export: jest.fn(),
@@ -37,6 +40,8 @@ describe('Emissions Workspace Service', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        DerivedHourlyValueMap,
+        DerivedHourlyValueService,
         EmissionsService,
         DailyTestSummaryService,
         DailyCalibrationService,
@@ -54,6 +59,10 @@ describe('Emissions Workspace Service', () => {
         MatsMonitorHourlyValueService,
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueService,
+        {
+          provide: DerivedHourlyValueRepository,
+          useValue: jest,
+        },
         {
           provide: PlantRepository,
           useValue: jest.mock('../plant/plant.repository'),
@@ -109,7 +118,7 @@ describe('Emissions Workspace Service', () => {
   });
 
   it('should export a record', async () => {
-    let filters = new EmissionsParamsDTO();
+    const filters = new EmissionsParamsDTO();
     await expect(emissionsService.export(filters)).resolves.toEqual({});
   });
 });

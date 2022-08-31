@@ -16,7 +16,7 @@ export class WeeklyTestSummaryCheckService {
 
     payload?.weeklyTestSummaryData.forEach(wts => {
       // import-38
-      let error = this.inappropriateChildrenRecordsCheck(wts);
+      const error = this.inappropriateChildrenRecordsCheck(wts);
 
       errorList.push(error);
     });
@@ -33,10 +33,12 @@ export class WeeklyTestSummaryCheckService {
     if (summary) {
       if (
         summary.testTypeCode !== TestTypeCodes.HGSI1 &&
-        summary.weeklySystemIntegrityData && 
+        summary.weeklySystemIntegrityData &&
         summary.weeklySystemIntegrityData.length > 0
       ) {
-        return CheckCatalogService.formatResultMessage('IMPORT-38-A', { testTypeCode: summary.testTypeCode })
+        return CheckCatalogService.formatResultMessage('IMPORT-38-A', {
+          testTypeCode: summary.testTypeCode,
+        });
       }
     }
 
