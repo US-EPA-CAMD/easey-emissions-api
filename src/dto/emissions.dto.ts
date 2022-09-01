@@ -32,7 +32,9 @@ export class EmissionsBaseDTO {
     },
     {
       message: (args: ValidationArguments) => {
-        return CheckCatalogService.formatResultMessage('IMPORT-25-A', { orisCode: args.value });
+        return CheckCatalogService.formatResultMessage('IMPORT-25-A', {
+          orisCode: args.value,
+        });
       },
     },
   )
