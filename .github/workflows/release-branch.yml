@@ -1,7 +1,6 @@
 name: Release Branch Workflow
 
 on:
-  workflow_dispatch:
   push:
     branches: [ release/* ]
     paths-ignore:
@@ -196,4 +195,3 @@ jobs:
         run: devops/scripts/cf-app-init.sh
       - name: Deploy
         run: devops/scripts/deploy.sh
-
