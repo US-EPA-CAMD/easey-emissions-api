@@ -6,20 +6,18 @@ import { DailyCalibrationService } from '../daily-calibration/daily-calibration.
 import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
-
-const mockRepository = {
-  export: () => null,
-};
-const mockMap = {
-  many: () => null,
-};
+import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
+import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
+import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
+import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
 
 describe('HourlyOperatingService', () => {
   let service: DailyTestSummaryService;
-  let repository: any;
-  let map;
+  let repository: DailyTestSummaryRepository;
+  let map: DailyTestSummaryMap;
+  let dailyCalibrationRepository: DailyCalibrationRepository;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
         DailyTestSummaryService,
@@ -28,12 +26,12 @@ describe('HourlyOperatingService', () => {
         DailyCalibrationRepository,
         DailyCalibrationMap,
         {
-          provide: DailyTestSummaryMap,
-          useValue: mockMap,
+          provide: DailyTestSummaryRepository,
+          useValue: mockDailyTestSummaryRepository,
         },
         {
-          provide: DailyTestSummaryRepository,
-          useValue: mockRepository,
+          provide: DailyCalibrationRepository,
+          useValue: mockDailyCalibrationRepository,
         },
       ],
     }).compile();
@@ -41,16 +39,41 @@ describe('HourlyOperatingService', () => {
     service = module.get(DailyTestSummaryService);
     repository = module.get(DailyTestSummaryRepository);
     map = module.get(DailyTestSummaryMap);
+    dailyCalibrationRepository = module.get(DailyCalibrationRepository);
   });
 
-  describe('export', () => {
-    it('service should be defined', () => {
-      expect(service).toBeDefined();
-    });
+  it('should have a defined service', function() {
+    expect(service).toBeDefined();
+  });
 
-    it('should export a record', async () => {
-      const result = await service.export(['123']);
-      expect(result).toEqual(null);
+  it('should get daily test summaries by location ids', async function() {
+    const mockedValues = genDailyTestSummary<DailyTestSummary>(3, {
+      include: ['monitorLocation'],
     });
+    const promises = [];
+    mockedValues.forEach(value => {
+      promises.push(map.one(value));
+    });
+    const mappedValues = await Promise.all(promises);
+
+    jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
+
+    await expect(
+      service.getDailyTestSummariesByLocationIds(
+        mockedValues.map(value => {
+          return value.monitorLocation.id;
+        }),
+      ),
+    ).resolves.toEqual(mappedValues);
+  });
+
+  it('should export mapped data', async function() {
+    const dailyTestSummaryMocks = genDailyTestSummary<DailyTestSummary>(3);
+    const mappedValues = await map.many(dailyTestSummaryMocks);
+
+    jest.spyOn(repository, 'export').mockResolvedValue(dailyTestSummaryMocks);
+    jest.spyOn(dailyCalibrationRepository, 'find').mockResolvedValue(null);
+
+    await expect(service.export([])).resolves.toEqual(mappedValues);
   });
 });

@@ -202,5 +202,4 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorSystems: MonitorSystem[];
-
 }
