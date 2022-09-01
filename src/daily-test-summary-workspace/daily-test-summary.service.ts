@@ -10,6 +10,7 @@ import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.reposi
 import { DeleteResult } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -26,8 +27,13 @@ export class DailyTestSummaryWorkspaceService {
 
   async getDailyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
-    const results = await this.repository.export(monitoringLocationIds);
+    const results = await this.repository.export(
+      monitoringLocationIds,
+      params.year,
+      params.quarter,
+    );
 
     return this.map.many(results);
   }
@@ -38,9 +44,11 @@ export class DailyTestSummaryWorkspaceService {
 
   async export(
     monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
     const summaries = await this.getDailyTestSummariesByLocationIds(
       monitoringLocationIds,
+      params,
     );
 
     const dailyCalibrations = await this.dailyCalibrationService.export(

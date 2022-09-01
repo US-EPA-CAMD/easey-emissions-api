@@ -43,27 +43,29 @@ export class HourlyOperatingWorkspaceService {
 
     if (hourlyOperating) {
       const hourlyOperatingIds = hourlyOperating.map(i => i.id);
-      const values = await Promise.all([
-        this.monitorHourlyValueService.export(hourlyOperatingIds),
-        this.derivedHourlyValueService.export(hourlyOperatingIds),
-        this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
-        this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
-      ]);
+      if (hourlyOperatingIds?.length > 0) {
+        const values = await Promise.all([
+          this.monitorHourlyValueService.export(hourlyOperatingIds),
+          this.derivedHourlyValueService.export(hourlyOperatingIds),
+          this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
+          this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
+        ]);
 
-      hourlyOperating?.forEach(hourlyOp => {
-        hourlyOp.monitorHourlyValue = values[0].filter(
-          i => i.hourId === hourlyOp.id,
-        );
-        hourlyOp.derivedHourlyValue = values[1].filter(derivedHourlyDatum => {
-          return derivedHourlyDatum.hourId === hourlyOp.id;
+        hourlyOperating?.forEach(hourlyOp => {
+          hourlyOp.monitorHourlyValue = values[0].filter(
+            i => i.hourId === hourlyOp.id,
+          );
+          hourlyOp.derivedHourlyValue = values[1].filter(derivedHourlyDatum => {
+            return derivedHourlyDatum.hourId === hourlyOp.id;
+          });
+          hourlyOp.matsMonitorHourlyValue = values[2].filter(
+            i => i.hourId === hourlyOp.id,
+          );
+          hourlyOp.matsDerivedHourlyValue = values[3].filter(
+            i => i.hourId === hourlyOp.id,
+          );
         });
-        hourlyOp.matsMonitorHourlyValue = values[2].filter(
-          i => i.hourId === hourlyOp.id,
-        );
-        hourlyOp.matsDerivedHourlyValue = values[3].filter(
-          i => i.hourId === hourlyOp.id,
-        );
-      });
+      }
     }
 
     return hourlyOperating;

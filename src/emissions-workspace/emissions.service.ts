@@ -42,7 +42,7 @@ export class EmissionsWorkspaceService {
     if (emissions) {
       const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
 
-      promises.push(this.dailyTestSummaryService.export(locationIds));
+      promises.push(this.dailyTestSummaryService.export(locationIds,params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
