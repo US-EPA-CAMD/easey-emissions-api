@@ -28,7 +28,8 @@
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
-    "minimist": "^1.2.6"
+    "minimist": "^1.2.6",
+    "shelljs": "^0.8.5"
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.3",
