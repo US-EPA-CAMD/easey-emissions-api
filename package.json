@@ -27,7 +27,9 @@
     "up": "yarn && yarn start:dev"
   },
   "resolutions": {
-    "ansi-regex": "^5.0.1"
+    "ansi-regex": "^5.0.1",
+    "minimist": "^1.2.6",
+    "shelljs": "^0.8.5"
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.3",
