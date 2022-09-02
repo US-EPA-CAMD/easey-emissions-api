@@ -3,6 +3,7 @@ import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { DailyTestSummary } from '../entities/daily-test-summary.entity';
+import { DailyCalibrationMap } from './daily-calibration.map';
 
 @Injectable()
 export class DailyTestSummaryMap extends BaseMap<
@@ -11,18 +12,23 @@ export class DailyTestSummaryMap extends BaseMap<
 > {
   public async one(entity: DailyTestSummary): Promise<DailyTestSummaryDTO> {
     const unitId = entity.monitorLocation?.unit
-      ? entity.monitorLocation.unit.name
+      ? entity?.monitorLocation?.unit?.name
       : null;
 
     const stackPipeId = entity.monitorLocation?.stackPipe
-      ? entity.monitorLocation.stackPipe.name
+      ? entity?.monitorLocation?.stackPipe?.name
       : null;
 
-    const componentId = entity.component ? entity.component.componentId : null;
+    const componentId = entity.component?.componentId ?? null;
 
-    const monitoringSystemId = entity.monitorSystem
-      ? entity.monitorSystem.monitoringSystemId
-      : null;
+    const monitoringSystemId = entity.monitorSystem?.monitoringSystemId ?? null;
+
+    let dailyCalibrationData = null;
+    if (Array.isArray(entity.dailyCalibrations)) {
+      dailyCalibrationData = await new DailyCalibrationMap().many(
+        entity.dailyCalibrations,
+      );
+    }
 
     return {
       id: entity.id,
@@ -42,7 +48,7 @@ export class DailyTestSummaryMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      dailyCalibrationData: null,
+      dailyCalibrationData,
     };
   }
 }
