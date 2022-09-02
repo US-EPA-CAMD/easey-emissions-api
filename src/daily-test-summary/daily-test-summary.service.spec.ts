@@ -8,8 +8,9 @@ import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
 import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
-import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
+import { DailyTestSummary } from '../entities/daily-test-summary.entity';
 import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
+import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
 
 describe('HourlyOperatingService', () => {
   let service: DailyTestSummaryService;
@@ -56,13 +57,16 @@ describe('HourlyOperatingService', () => {
     });
     const mappedValues = await Promise.all(promises);
 
-    jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
+    jest
+      .spyOn(repository, 'export')
+      .mockResolvedValue(mockedValues as DailyTestSummary[]);
 
     await expect(
       service.getDailyTestSummariesByLocationIds(
         mockedValues.map(value => {
           return value.monitorLocation.id;
         }),
+        genEmissionsParamsDto()[0],
       ),
     ).resolves.toEqual(mappedValues);
   });
@@ -74,6 +78,8 @@ describe('HourlyOperatingService', () => {
     jest.spyOn(repository, 'export').mockResolvedValue(dailyTestSummaryMocks);
     jest.spyOn(dailyCalibrationRepository, 'find').mockResolvedValue(null);
 
-    await expect(service.export([])).resolves.toEqual(mappedValues);
+    await expect(
+      service.export([], genEmissionsParamsDto()[0]),
+    ).resolves.toEqual(mappedValues);
   });
 });

@@ -8,6 +8,7 @@ import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-work
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
+import { isUndefinedOrNull } from '../utils/utils';
 
 @Injectable()
 export class HourlyOperatingWorkspaceService {
@@ -36,6 +37,10 @@ export class HourlyOperatingWorkspaceService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
+    if (isUndefinedOrNull(monitoringLocationIds)) {
+      return null;
+    }
+
     const hourlyOperating = await this.getHourlyOpDataByLocationIds(
       monitoringLocationIds,
       params,

@@ -12,6 +12,7 @@ import { mockDailyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-d
 import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
 import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 import { mockDailyCalibrationWorkspaceRepository } from '../../test/mocks/mock-daily-calibration-workspace-repository';
+import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
 
 describe('Daily Summary Workspace Service', () => {
   let dailyCalibrationWorkspaceRepository: DailyCalibrationWorkspaceRepository;
@@ -66,6 +67,7 @@ describe('Daily Summary Workspace Service', () => {
         mockedValues.map(value => {
           return value.monitorLocation.id;
         }),
+        genEmissionsParamsDto()[0],
       ),
     ).resolves.toEqual(mappedValues);
   });
@@ -85,9 +87,9 @@ describe('Daily Summary Workspace Service', () => {
       .spyOn(dailyCalibrationWorkspaceRepository, 'find')
       .mockResolvedValue(null);
 
-    await expect(dailyTestSummaryService.export([])).resolves.toEqual(
-      mappedValues,
-    );
+    await expect(
+      dailyTestSummaryService.export([], genEmissionsParamsDto()[0]),
+    ).resolves.toEqual(mappedValues);
   });
 
   it('should successfully import', async function() {
