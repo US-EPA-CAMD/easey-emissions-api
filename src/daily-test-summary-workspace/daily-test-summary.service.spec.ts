@@ -1,19 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
-import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
+import {
+  DailyTestSummaryCreate,
+  DailyTestSummaryWorkspaceService,
+} from './daily-test-summary.service';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
-import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
-
-const dailyTestSummaryWorkspaceRepositoryMock = {
-  delete: jest.fn().mockResolvedValue(undefined),
-  save: jest.fn().mockResolvedValue(undefined),
-};
+import { mockDailyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-daily-test-summary-workspace-repository';
+import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
+import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
+import { mockDailyCalibrationWorkspaceRepository } from '../../test/mocks/mock-daily-calibration-workspace-repository';
 
 describe('Daily Summary Workspace Service', () => {
+  let dailyCalibrationWorkspaceRepository: DailyCalibrationWorkspaceRepository;
   let dailyTestSummaryService: DailyTestSummaryWorkspaceService;
+  let map: DailyTestSummaryMap;
+  let repository: DailyTestSummaryWorkspaceRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,22 +28,46 @@ describe('Daily Summary Workspace Service', () => {
         DailyCalibrationMap,
         {
           provide: DailyTestSummaryWorkspaceRepository,
-          useValue: dailyTestSummaryWorkspaceRepositoryMock,
+          useValue: mockDailyTestSummaryWorkspaceRepository,
         },
         {
           provide: DailyCalibrationWorkspaceRepository,
-          useValue: jest.mock(
-            '../daily-calibration-workspace/daily-calibration.repository',
-          ),
+          useValue: mockDailyCalibrationWorkspaceRepository,
         },
       ],
     }).compile();
 
     dailyTestSummaryService = module.get(DailyTestSummaryWorkspaceService);
+    map = module.get(DailyTestSummaryMap);
+    repository = module.get(DailyTestSummaryWorkspaceRepository);
+    dailyCalibrationWorkspaceRepository = module.get(
+      DailyCalibrationWorkspaceRepository,
+    );
   });
 
   it('should have a daily test summary service', function() {
     expect(dailyTestSummaryService).toBeDefined();
+  });
+
+  it('should get daily test summaries by location ids', async function() {
+    const mockedValues = genDailyTestSummary<DailyTestSummary>(3, {
+      include: ['monitorLocation'],
+    });
+    const promises = [];
+    mockedValues.forEach(value => {
+      promises.push(map.one(value));
+    });
+    const mappedValues = await Promise.all(promises);
+
+    jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
+
+    await expect(
+      dailyTestSummaryService.getDailyTestSummariesByLocationIds(
+        mockedValues.map(value => {
+          return value.monitorLocation.id;
+        }),
+      ),
+    ).resolves.toEqual(mappedValues);
   });
 
   it('should delete a record', async function() {
@@ -48,26 +76,34 @@ describe('Daily Summary Workspace Service', () => {
     );
   });
 
-  it('should successfully import', async function() {
-    const importData: DailyTestSummaryImportDTO = {
-      stackPipeId: '123',
-      unitId: '234',
-      date: new Date(),
-      hour: 1,
-      minute: 0,
-      testTypeCode: 'code',
-      testResultCode: 'code',
-      dailyCalibrationData: [],
-    };
+  it('should export mapped data', async function() {
+    const dailyTestSummaryMocks = genDailyTestSummary<DailyTestSummary>(3);
+    const mappedValues = await map.many(dailyTestSummaryMocks);
 
-    jest.spyOn(dailyTestSummaryService, 'import').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'export').mockResolvedValue(dailyTestSummaryMocks);
+    jest
+      .spyOn(dailyCalibrationWorkspaceRepository, 'find')
+      .mockResolvedValue(null);
+
+    await expect(dailyTestSummaryService.export([])).resolves.toEqual(
+      mappedValues,
+    );
+  });
+
+  it('should successfully import', async function() {
+    const importMock = genDailyTestSummary<DailyTestSummary>(1);
+    importMock[0]['dailyCalibrationData'] = [];
+
+    const mappedMock = await map.one(
+      (importMock[0] as unknown) as DailyTestSummary,
+    );
+
+    jest.spyOn(repository, 'save').mockResolvedValue(importMock[0]);
 
     await expect(
-      dailyTestSummaryService.import({
-        ...importData,
-        reportingPeriodId: 3,
-        monitoringLocationId: '123',
-      }),
-    ).resolves.toEqual(undefined);
+      dailyTestSummaryService.import(
+        (importMock[0] as unknown) as DailyTestSummaryCreate,
+      ),
+    ).resolves.toEqual(mappedMock);
   });
 });

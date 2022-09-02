@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { HrlyOpData } from '../../src/entities/hrly-op-data.entity';
 import { MonitorSystem } from '../../src/entities/monitor-system.entity';
 import { MonitorFormula } from '../../src/entities/monitor-formula.entity';
+import { optionalValue } from './util';
 
 type GenDerivedHrlyValueConfig = {
   include?: Array<'hrlyOpData' | 'monitorSystem' | 'monitorFormula'>;
@@ -17,30 +18,42 @@ export const genDerivedHrlyValues = <RepoType>(
     hourlyValues.push(({
       id: faker.datatype.string(45),
       hourId: faker.datatype.string(45),
-      monSysId: faker.datatype.string(45),
-      monFormId: faker.datatype.string(45),
+      monSysId: optionalValue(faker.datatype.string(45)),
+      monFormId: optionalValue(faker.datatype.string(45)),
       parameterCode: faker.datatype.string(7),
-      unadjustedHrlyValue: faker.datatype.float({ precision: 0.001 }),
-      applicableBiasAdjFactor: faker.datatype.float({ precision: 0.001 }),
-      calcUnadjustedHrlyValue: faker.datatype.float({ precision: 0.001 }),
-      adjustedHrlyValue: faker.datatype.float({ precision: 0.0001 }),
-      calcAdjustedHrlyValue: faker.datatype.float({ precision: 0.0001 }),
-      operatingConditionCode: faker.datatype.string(7),
-      pctAvailable: faker.datatype.float({ precision: 0.0001 }),
-      diluentCapInd: faker.datatype.number(),
-      segmentNum: faker.datatype.number(),
-      fuelCode: faker.datatype.string(7),
-      userId: faker.datatype.string(25),
-      addDate: faker.datatype.datetime(),
-      updateDate: faker.datatype.datetime(),
-      calcPctDiluent: faker.datatype.string(10),
-      calcPctMoisture: faker.datatype.string(10),
-      calcRataStatus: faker.datatype.string(75),
-      calcAppeStatus: faker.datatype.string(75),
+      unadjustedHrlyValue: optionalValue(
+        faker.datatype.float({ precision: 0.001 }),
+      ),
+      applicableBiasAdjFactor: optionalValue(
+        faker.datatype.float({ precision: 0.001 }),
+      ),
+      calcUnadjustedHrlyValue: optionalValue(
+        faker.datatype.float({ precision: 0.001 }),
+      ),
+      adjustedHrlyValue: optionalValue(
+        faker.datatype.float({ precision: 0.0001 }),
+      ),
+      calcAdjustedHrlyValue: optionalValue(
+        faker.datatype.float({ precision: 0.0001 }),
+      ),
+      operatingConditionCode: optionalValue(faker.datatype.string(7)),
+      pctAvailable: optionalValue(faker.datatype.float({ precision: 0.0001 })),
+      diluentCapInd: optionalValue(faker.datatype.number()),
+      segmentNum: optionalValue(faker.datatype.number()),
+      fuelCode: optionalValue(faker.datatype.string(7)),
+      userId: optionalValue(faker.datatype.string(25)),
+      addDate: optionalValue(faker.datatype.datetime()),
+      updateDate: optionalValue(faker.datatype.datetime()),
+      calcPctDiluent: optionalValue(faker.datatype.string(10)),
+      calcPctMoisture: optionalValue(faker.datatype.string(10)),
+      calcRataStatus: optionalValue(faker.datatype.string(75)),
+      calcAppeStatus: optionalValue(faker.datatype.string(75)),
       rptPeriodId: faker.datatype.number(),
       monitorLocationId: faker.datatype.string(45),
-      calcFuelFlowTotal: faker.datatype.float({ precision: 0.0001 }),
-      calcHourMeasureCode: faker.datatype.string(7),
+      calcFuelFlowTotal: optionalValue(
+        faker.datatype.float({ precision: 0.0001 }),
+      ),
+      calcHourMeasureCode: optionalValue(faker.datatype.string(7)),
       // Replace new Model() with genModel(1) as created/needed
       hrlyOpData:
         config?.include?.includes('hrlyOpData') === true

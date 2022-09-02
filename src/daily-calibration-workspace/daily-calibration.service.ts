@@ -26,6 +26,11 @@ export class DailyCalibrationWorkspaceService {
     const results = await this.repository.find({
       where: { dailyTestSummaryId: In(dailyTestSummaryIds) },
     });
+
+    if (!results) {
+      return null;
+    }
+
     return this.map.many(results);
   }
 

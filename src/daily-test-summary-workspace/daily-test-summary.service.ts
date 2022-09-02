@@ -55,10 +55,9 @@ export class DailyTestSummaryWorkspaceService {
       summaries?.map(i => i.id),
     );
 
-    summaries.forEach(s => {
-      s.dailyCalibrationData = dailyCalibrations.filter(
-        i => i.dailyTestSumId === s.id,
-      );
+    summaries?.forEach(s => {
+      s.dailyCalibrationData =
+        dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? null;
     });
 
     return summaries;
