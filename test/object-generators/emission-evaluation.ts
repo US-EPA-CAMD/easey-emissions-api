@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ReportingPeriod } from '../../src/entities/reporting-period.entity';
 import { genMonitorPlan, GenMonitorPlanConfig } from './monitor-plan';
+import { optionalValue } from './util';
 
 type GenEmissionEvaluationConfig = {
   include?: Array<'reportingPeriod' | 'monitorPlan'>;
@@ -17,12 +18,12 @@ export const genEmissionEvaluation = <RepoType>(
     emissions.push(({
       monitorPlanId: faker.datatype.string(),
       reportingPeriodId: faker.datatype.number(),
-      lastUpdated: faker.datatype.datetime(),
-      updatedStatusFlg: faker.datatype.string(),
-      needsEvalFlag: faker.datatype.string(),
-      chkSessionId: faker.datatype.string(),
-      submissionId: faker.datatype.number(),
-      submissionAvailabilityCd: faker.datatype.string(),
+      lastUpdated: optionalValue(faker.datatype.datetime()),
+      updatedStatusFlg: optionalValue(faker.datatype.string()),
+      needsEvalFlag: optionalValue(faker.datatype.string()),
+      chkSessionId: optionalValue(faker.datatype.string()),
+      submissionId: optionalValue(faker.datatype.number()),
+      submissionAvailabilityCd: optionalValue(faker.datatype.string()),
       reportingPeriod:
         config?.include?.includes('reportingPeriod') === true
           ? new ReportingPeriod()

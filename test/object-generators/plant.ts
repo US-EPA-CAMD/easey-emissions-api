@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { Unit } from '../../src/entities/unit.entity';
 import { StackPipe } from '../../src/entities/stack-pipe.entity';
 import { genMonitorPlan, GenMonitorPlanConfig } from './monitor-plan';
+import { optionalValue } from './util';
 
 type GenPlantConfig = {
   include?: Array<'units' | 'stackPipes' | 'monitorPlans'>;
@@ -18,11 +19,11 @@ export const genPlant = <RepoType>(
   for (let plant = 0; plant < amount; plant++) {
     plants.push(({
       id: faker.datatype.number(),
-      orisCode: faker.datatype.number(),
+      orisCode: optionalValue(faker.datatype.number()),
       name: faker.datatype.string(),
       state: faker.address.stateAbbr(),
-      countyCode: faker.datatype.string(),
-      region: faker.datatype.number(),
+      countyCode: optionalValue(faker.datatype.string()),
+      region: optionalValue(faker.datatype.number()),
       units: config?.include?.includes('units') ? [new Unit()] : undefined,
       stackPipes: config?.include?.includes('stackPipes')
         ? [new StackPipe()]
