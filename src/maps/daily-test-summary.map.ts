@@ -3,14 +3,17 @@ import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { DailyTestSummary } from '../entities/daily-test-summary.entity';
+import { DailyTestSummary as DailyTestSummaryWorkspace } from '../entities/workspace/daily-test-summary.entity';
 import { DailyCalibrationMap } from './daily-calibration.map';
 
 @Injectable()
 export class DailyTestSummaryMap extends BaseMap<
-  DailyTestSummary,
+  DailyTestSummary | DailyTestSummaryWorkspace,
   DailyTestSummaryDTO
 > {
-  public async one(entity: DailyTestSummary): Promise<DailyTestSummaryDTO> {
+  public async one(
+    entity: DailyTestSummary | DailyTestSummaryWorkspace,
+  ): Promise<DailyTestSummaryDTO> {
     const unitId = entity.monitorLocation?.unit
       ? entity?.monitorLocation?.unit?.name
       : null;

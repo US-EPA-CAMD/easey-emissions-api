@@ -7,6 +7,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { isUndefinedOrNull } from '../utils/utils';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -62,6 +63,10 @@ export class EmissionsChecksService {
     let latestDate: number;
 
     const dateCheck = (date: Date) => {
+      if (isUndefinedOrNull(date)) {
+        return;
+      }
+
       const year = new Date(date).getFullYear();
       const quarter = Math.floor(new Date(date).getMonth() / 3 + 1);
       const combo = Number(`${year}${quarter}`);
@@ -89,9 +94,6 @@ export class EmissionsChecksService {
 
     payload.sorbentTrapData?.forEach(datum => {
       dateCheck(datum.beginDate);
-    });
-
-    payload.sorbentTrapData?.forEach(datum => {
       dateCheck(datum.endDate);
     });
 

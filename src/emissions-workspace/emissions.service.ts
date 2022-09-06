@@ -42,7 +42,7 @@ export class EmissionsWorkspaceService {
     if (emissions) {
       const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
 
-      promises.push(this.dailyTestSummaryService.export(locationIds,params));
+      promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
@@ -78,7 +78,7 @@ export class EmissionsWorkspaceService {
     });
 
     const monitorPlanId = filteredMonitorPlans[0].id;
-    const monitoringLocationId = filteredMonitorPlans[0].locations[0].id;
+    const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
     const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
 
     const evaluationDeletes: Array<Promise<DeleteResult>> = [];
