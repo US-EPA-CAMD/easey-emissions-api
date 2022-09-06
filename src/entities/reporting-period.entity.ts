@@ -91,7 +91,7 @@ export class ReportingPeriod extends BaseEntity {
     o => o.reportingPeriod,
   )
   @JoinColumn({ name: 'rpt_period_id' })
-  hrlyOpData: DailyEmission[];
+  hrlyOpData: HrlyOpData[];
 
   @OneToMany(
     () => Nsps4tSummary,

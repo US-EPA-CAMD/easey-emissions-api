@@ -3,13 +3,16 @@ import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
 import { DailyCalibrationDTO } from '../dto/daily-calibration.dto';
 import { DailyCalibration } from '../entities/daily-calibration.entity';
+import { DailyCalibration as DailyCalibrationWorkspace } from '../entities/workspace/daily-calibration.entity';
 
 @Injectable()
 export class DailyCalibrationMap extends BaseMap<
-  DailyCalibration,
+  DailyCalibration | DailyCalibrationWorkspace,
   DailyCalibrationDTO
 > {
-  public async one(entity: DailyCalibration): Promise<DailyCalibrationDTO> {
+  public async one(
+    entity: DailyCalibration | DailyCalibrationWorkspace,
+  ): Promise<DailyCalibrationDTO> {
     return {
       id: entity.id,
       dailyTestSumId: entity.dailyTestSummaryId,

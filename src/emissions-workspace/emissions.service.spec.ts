@@ -16,7 +16,6 @@ import { HourlyOperatingWorkspaceRepository } from '../hourly-operating-workspac
 import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
 import { MatsMonitorHourlyValueWorkspaceRepository } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.repository';
@@ -26,15 +25,26 @@ import { MatsDerivedHourlyValueWorkspaceRepository } from '../mats-derived-hourl
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-
-const emissionsWorkspaceRepositoryMock = {
-  delete: jest.fn().mockResolvedValue(undefined),
-  save: jest.fn().mockResolvedValue(undefined),
-  export: jest.fn(),
-};
+import { mockEmissionsWorkspaceRepository } from '../../test/mocks/emissions-workspace-repository';
+import { genEmissionEvaluation } from '../../test/object-generators/emission-evaluation';
+import {
+  genEmissionsImportDto,
+  genEmissionsRecordDto,
+} from '../../test/object-generators/emissions-dto';
+import { mockDailyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-daily-test-summary-workspace-repository';
+import { mockHourlyOperatingWorkspaceRepository } from '../../test/mocks/hourly-operating-workspace-repository';
+import { mockPlantRepository } from '../../test/mocks/plant-repository';
+import { genPlant } from '../../test/object-generators/plant';
+import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
+import { Plant } from '../entities/plant.entity';
+import { faker } from '@faker-js/faker';
 
 describe('Emissions Workspace Service', () => {
+  let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
+  let emissionsRepository: EmissionsWorkspaceRepository;
   let emissionsService: EmissionsWorkspaceService;
+  let emissionsMap: EmissionsMap;
+  let plantRepository: PlantRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -61,17 +71,15 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: PlantRepository,
-          useValue: jest.mock('../plant/plant.repository'),
+          useValue: mockPlantRepository,
         },
         {
           provide: EmissionsWorkspaceRepository,
-          useValue: emissionsWorkspaceRepositoryMock,
+          useValue: mockEmissionsWorkspaceRepository,
         },
         {
           provide: DailyTestSummaryWorkspaceRepository,
-          useValue: jest.mock(
-            '../daily-test-summary-workspace/daily-test-summary.repository',
-          ),
+          useValue: mockDailyTestSummaryWorkspaceRepository,
         },
         {
           provide: DailyCalibrationWorkspaceRepository,
@@ -81,9 +89,7 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: HourlyOperatingWorkspaceRepository,
-          useValue: jest.mock(
-            '../hourly-operating-workspace/hourly-operating.repository',
-          ),
+          useValue: mockHourlyOperatingWorkspaceRepository,
         },
         {
           provide: MonitorHourlyValueWorkspaceRepository,
@@ -106,7 +112,11 @@ describe('Emissions Workspace Service', () => {
       ],
     }).compile();
 
+    dailyTestsummaryService = module.get(DailyTestSummaryWorkspaceService);
+    emissionsRepository = module.get(EmissionsWorkspaceRepository);
     emissionsService = module.get(EmissionsWorkspaceService);
+    emissionsMap = module.get(EmissionsMap);
+    plantRepository = module.get(PlantRepository);
   });
 
   it('should have a emissions service', function() {
@@ -119,27 +129,71 @@ describe('Emissions Workspace Service', () => {
     ).resolves.toEqual(undefined);
   });
 
-  it('should sucessfully import', async function() {
-    jest.spyOn(emissionsService, 'import').mockResolvedValue(undefined);
+  it('should successfully export emissions data', async function() {
+    const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>();
+    const dtoMocks = genEmissionsRecordDto();
+    const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
+
+    jest
+      .spyOn(emissionsRepository, 'export')
+      .mockResolvedValue(emissionsMocks[0]);
+
+    await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
+      mappedEmissions,
+    );
+  });
+
+  it('should find one record from the repository', async function() {
+    await expect(emissionsService.findOne()).resolves.toEqual(undefined);
+  });
+
+  it('should successfully import', async function() {
+    const emissionsDtoMock = genEmissionsImportDto();
+    const plantMock = genPlant<Plant>(1, {
+      include: ['monitorPlans'],
+      monitorPlanAmount: 3,
+      monitorPlanConfig: {
+        include: ['beginRptPeriod'],
+      },
+    });
+    plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
+    plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
+      emissionsDtoMock[0].quarter;
+
+    jest
+      .spyOn(plantRepository, 'getImportLocations')
+      .mockResolvedValue(plantMock[0]);
+
+    await expect(emissionsService.import(emissionsDtoMock[0])).resolves.toEqual(
+      {
+        message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${emissionsDtoMock[0].orisCode}]`,
+      },
+    );
+  });
+
+  it('should import daily test summaries', async function() {
+    const emissionsDtoMock = genEmissionsImportDto();
+    const dtoMockWithDailyTest = genEmissionsImportDto(1, {
+      include: ['dailyTestSummaryData'],
+      dailyTestSummaryAmount: 3,
+    });
+
+    jest.spyOn(dailyTestsummaryService, 'import').mockReturnValue(undefined);
 
     await expect(
-      emissionsService.import({
-        orisCode: 3,
-        year: 2030,
-        quarter: 1,
-        dailyEmissionData: [],
-        weeklyTestSummaryData: [],
-        summaryValueData: [],
-        dailyTestSummaryData: [],
-        hourlyOperatingData: [],
-        longTermFuelFlowData: [],
-        sorbentTrapData: [],
-        nsps4tSummaryData: [],
-      }),
-    ).resolves.toEqual(undefined);
-  });
-  it('should export a record', async () => {
-    const filters = new EmissionsParamsDTO();
-    await expect(emissionsService.export(filters)).resolves.toEqual({});
+      emissionsService.importDailyTestSummaries(
+        emissionsDtoMock[0],
+        faker.datatype.number(),
+        faker.datatype.string(),
+      ),
+    ).resolves.toBeUndefined();
+
+    await expect(
+      emissionsService.importDailyTestSummaries(
+        dtoMockWithDailyTest[0],
+        faker.datatype.number(),
+        faker.datatype.string(),
+      ),
+    ).resolves.toBeUndefined();
   });
 });
