@@ -11,6 +11,7 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { Component } from '../entities/workspace/component.entity';
 import { Unit } from '../entities/workspace/unit.entity';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 describe('location checks service tests', () => {
   let service: MonitorLocationChecksService;
@@ -96,8 +97,13 @@ describe('location checks service tests', () => {
   });
 
   describe('location service runCheck() tests', () => {
+    beforeAll(() => {
+      CheckCatalogService.formatResultMessage = () => undefined;
+    });
+
     it('should return an empty errorList', async () => {
       repository.getLocationsByUnitStackPipeIds.mockResolvedValue([]);
+
       const [, errorList] = await service.runChecks(payload);
       expect(errorList.length).toEqual(0);
     });

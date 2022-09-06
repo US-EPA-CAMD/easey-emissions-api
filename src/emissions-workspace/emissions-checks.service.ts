@@ -27,8 +27,10 @@ export class EmissionsChecksService {
 
     const errorList: string[] = [];
 
-    // IMPORT-29: Inappropriate Children Records for Daily Test Summary 
-    const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(payload);
+    // IMPORT-29: Inappropriate Children Records for Daily Test Summary
+    const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(
+      payload,
+    );
 
     const weeklyTestSummaryCheckErrors = this.weeklyTestSummaryCheckService.runChecks(
       payload,
@@ -36,10 +38,17 @@ export class EmissionsChecksService {
 
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
-    // IMPORT-27: All EM Components Present in the Production Database 
-    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(payload);
+    // IMPORT-27: All EM Components Present in the Production Database
+    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(
+      payload,
+    );
 
-    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors, ...locationErrors, ...dailyTestSummaryCheckErrors);
+    errorList.push(
+      ...weeklyTestSummaryCheckErrors,
+      ...invalidDatesCheckErrors,
+      ...locationErrors,
+      ...dailyTestSummaryCheckErrors,
+    );
 
     this.throwIfErrors(errorList);
     this.logger.info('Completed Emissions Import Checks');
