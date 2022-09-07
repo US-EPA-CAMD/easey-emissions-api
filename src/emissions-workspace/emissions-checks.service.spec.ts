@@ -4,7 +4,6 @@ import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
@@ -109,18 +108,15 @@ describe('Emissions Checks Service Tests', () => {
       payload.sorbentTrapData[0].endDate = new Date();
       payload.weeklyTestSummaryData[0].date = new Date();
 
-      CheckCatalogService.formatResultMessage = () =>
+      const message =
         '[IMPORT-23] You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
-      expect(service.invalidDatesCheck(payload)).toEqual([
-        IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A(),
-      ]);
+      CheckCatalogService.formatResultMessage = () => message;
+      expect(service.invalidDatesCheck(payload)).toEqual([message]);
 
       // Payload date is less than lowest date in data
       payload.year = today.getFullYear() - 3;
 
-      expect(service.invalidDatesCheck(payload)).toEqual([
-        IMPORT_CHECK_ERROR.IMPORT_23.RESULT_A(),
-      ]);
+      expect(service.invalidDatesCheck(payload)).toEqual([message]);
 
       payload.year;
     });
