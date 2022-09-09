@@ -143,7 +143,7 @@ export class MonitorLocationChecksService {
             // IMPORT-27 All EM Components Present in the Database (Result A)
             errorList.push(
               CheckCatalogService.formatResultMessage('IMPORT-27-A', {
-                componentId,
+                componentID: componentId,
               }),
             );
           }
