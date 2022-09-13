@@ -5,12 +5,15 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
   ApiSecurity,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { EmissionsViewDTO } from '../dto/emissions-view.dto';
+import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 
 @Controller()
 @ApiTags('Emissions')
@@ -20,6 +23,27 @@ export class EmissionsWorkspaceController {
     private readonly service: EmissionsWorkspaceService,
     private readonly checksService: EmissionsChecksService,
   ) {}
+
+  @Get()
+  @ApiOkResponse({
+    description:
+      'Retrieves the specified view of Emissions data for the provided Monitor Plan & Reporting Period',
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'unitIds',
+    required: false,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'stackPipeIds',
+    required: false,
+    explode: false,
+  })
+  getView(@Query() params: EmissionsViewParamsDTO): Promise<EmissionsViewDTO> {
+    return this.service.getView(params);
+  }
 
   @Get('export')
   @ApiOkResponse({
