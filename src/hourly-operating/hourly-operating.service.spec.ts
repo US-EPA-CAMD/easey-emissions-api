@@ -15,13 +15,47 @@ import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
-import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
+import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
+import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
+import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
+import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
+import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
+
+const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
+  include: [
+    'monitorLocation',
+    'derivedHrlyValues',
+    'matsMonitorHourlyValues',
+    'matsDerivedHourlyValues',
+  ],
+});
 
 const mockRepository = {
-  export: () => null,
+  export: () => Promise.resolve(generatedHrlyOpValues),
 };
-const mockMap = {
-  many: () => null,
+
+const mockMonitorHourlyValueService = {
+  export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
+};
+
+const mockDerivedHourlyValueService = () => {
+  const generatedDerivedHrlyValues = genDerivedHrlyValues<DerivedHrlyValue>(1);
+  generatedDerivedHrlyValues.forEach(d => {
+    d.hourId = generatedHrlyOpValues[0].id;
+  });
+  return {
+    export: () => Promise.resolve(generatedDerivedHrlyValues),
+  };
+};
+
+const mockMatsMonitorHourlyValueService = {
+  export: () => Promise.resolve([new MatsMonitorHourlyValueDTO()]),
+};
+
+const mockMatsDerivedHourlyValueService = {
+  export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
 };
 
 describe('HourlyOperatingService', () => {
@@ -32,25 +66,35 @@ describe('HourlyOperatingService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        DerivedHourlyValueMap,
-        DerivedHourlyValueService,
         HourlyOperatingService,
-        MonitorHourlyValueService,
         MonitorHourlyValueRepository,
         MonitorHourlyValueMap,
-        MatsMonitorHourlyValueService,
         MatsMonitorHourlyValueRepository,
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueService,
         MatsDerivedHourlyValueRepository,
         MatsDerivedHourlyValueMap,
+        HourlyOperatingMap,
+        HourlyOperatingRepository,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
         },
         {
-          provide: HourlyOperatingMap,
-          useValue: mockMap,
+          provide: MonitorHourlyValueService,
+          useValue: mockMonitorHourlyValueService,
+        },
+        {
+          provide: DerivedHourlyValueService,
+          useFactory: mockDerivedHourlyValueService,
+        },
+        {
+          provide: MatsMonitorHourlyValueService,
+          useValue: mockMatsMonitorHourlyValueService,
+        },
+        {
+          provide: MatsDerivedHourlyValueService,
+          useValue: mockMatsDerivedHourlyValueService,
         },
         {
           provide: HourlyOperatingRepository,
@@ -64,15 +108,16 @@ describe('HourlyOperatingService', () => {
     map = module.get(HourlyOperatingMap);
   });
 
-  describe('export', () => {
+  describe('hourly operating service export', () => {
     it('service should be defined', () => {
       expect(service).toBeDefined();
     });
 
-    it('should export a record', async () => {
+    it('should export Hourly OP Data', async () => {
       const filters = new EmissionsParamsDTO();
       const result = await service.export(['123'], filters);
-      expect(result).toEqual(null);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0].derivedHourlyValue.length).toBeGreaterThan(0);
     });
   });
 });

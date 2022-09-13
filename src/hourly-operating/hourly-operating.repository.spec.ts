@@ -4,14 +4,7 @@ import { SelectQueryBuilder } from 'typeorm';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingRepository } from './hourly-operating.repository';
 import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
-
-const mockQueryBuilder = () => ({
-  innerJoinAndSelect: jest.fn(),
-  leftJoinAndSelect: jest.fn(),
-  where: jest.fn(),
-  andWhere: jest.fn(),
-  getMany: jest.fn(),
-});
+import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
 
 let filters = new EmissionsParamsDTO();
 
@@ -22,7 +15,7 @@ describe('-- HourlyOperatingRepository --', () => {
     const module = await Test.createTestingModule({
       providers: [
         HourlyOperatingRepository,
-        { provide: SelectQueryBuilder, useFactory: mockQueryBuilder },
+        { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],
     }).compile();
 
