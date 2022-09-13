@@ -22,6 +22,7 @@ export class SorbentTrapRecordDTO extends SorbentTrapBaseDTO {
   id: string;
   monitoringLocationId: string;
   reportingPeriodId: number;
+  monitoringSystemRecordId: string;
   calcPairedTrapAgreement?: number;
   calcModcCode?: string;
   calcHgConcentration?: string;
