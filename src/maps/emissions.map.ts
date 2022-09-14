@@ -3,10 +3,16 @@ import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
 import { EmissionsDTO } from '../dto/emissions.dto';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
+import { EmissionEvaluation as EmissionEvaluationWorkspace } from '../entities/workspace/emission-evaluation.entity';
 
 @Injectable()
-export class EmissionsMap extends BaseMap<EmissionEvaluation, EmissionsDTO> {
-  public async one(entity: EmissionEvaluation): Promise<EmissionsDTO> {
+export class EmissionsMap extends BaseMap<
+  EmissionEvaluation | EmissionEvaluationWorkspace,
+  EmissionsDTO
+> {
+  public async one(
+    entity: EmissionEvaluation | EmissionEvaluationWorkspace,
+  ): Promise<EmissionsDTO> {
     return {
       orisCode: entity.monitorPlan?.plant?.orisCode,
       monitorPlanId: entity.monitorPlanId,

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { IMPORT_CHECK_ERROR } from '../utils/error.const';
 import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
@@ -12,9 +11,14 @@ import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
-type ForLocationType = HourlyOperatingImportDTO  | DailyTestSummaryImportDTO | WeeklyTestSummaryImportDTO | SorbentTrapImportDTO
+type ForLocationType =
+  | HourlyOperatingImportDTO
+  | DailyTestSummaryImportDTO
+  | WeeklyTestSummaryImportDTO
+  | SorbentTrapImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -28,67 +32,62 @@ export class MonitorLocationChecksService {
     const locations: LocationIdentifiers[] = [];
 
     const addLocation = (i: ForLocationType) => {
-
       const location = locations.find(
         l => l?.unitId === i?.unitId || l?.stackPipeId === i?.stackPipeId,
       );
 
       if (location) {
-        if ("monitorHourlyValueData" in i)
-          i.monitorHourlyValueData.forEach(d =>{
-            location.componentIds.add(d.componentId)
-          })
-        
-        if ("matsMonitorHourlyValueData" in i)
-          i.matsMonitorHourlyValueData.forEach(d =>{
-            location.componentIds.add(d.componentId)
-          })
-        
-        if ("hourlyGFMData" in i)
-        i.hourlyGFMData.forEach(d =>{
-          location.componentIds.add(d.componentId)
-        })
+        if ('monitorHourlyValueData' in i)
+          i.monitorHourlyValueData.forEach(d => {
+            location.componentIds.add(d.componentId);
+          });
 
-        if ("samplingTrainData" in i)
-        i.samplingTrainData.forEach(d =>{
-          location.componentIds.add(d.componentId)
-        })
+        if ('matsMonitorHourlyValueData' in i)
+          i.matsMonitorHourlyValueData.forEach(d => {
+            location.componentIds.add(d.componentId);
+          });
+
+        if ('hourlyGFMData' in i)
+          i.hourlyGFMData.forEach(d => {
+            location.componentIds.add(d.componentId);
+          });
+
+        if ('samplingTrainData' in i)
+          i.samplingTrainData.forEach(d => {
+            location.componentIds.add(d.componentId);
+          });
 
         // for WeeklyTestSummaryImportDTO and DailyTestSummaryImportDTO
-        if ("componentId" in i)
-          location.componentIds.add(i.componentId)
-      } 
-      else {
-
+        if ('componentId' in i) location.componentIds.add(i.componentId);
+      } else {
         const componentIds = new Set<string>();
 
-        if ("monitorHourlyValueData" in i){
-          i.monitorHourlyValueData.forEach(d =>{
-            componentIds.add(d.componentId)
-          })
+        if ('monitorHourlyValueData' in i) {
+          i.monitorHourlyValueData.forEach(d => {
+            componentIds.add(d.componentId);
+          });
         }
 
-        if ("matsMonitorHourlyValueData" in i){
-          i.matsMonitorHourlyValueData.forEach(d =>{
-            componentIds.add(d.componentId)
-          })
+        if ('matsMonitorHourlyValueData' in i) {
+          i.matsMonitorHourlyValueData.forEach(d => {
+            componentIds.add(d.componentId);
+          });
         }
 
-        if ("hourlyGFMData" in i){
-          i.hourlyGFMData.forEach(d =>{
-            componentIds.add(d.componentId)
-          })
+        if ('hourlyGFMData' in i) {
+          i.hourlyGFMData.forEach(d => {
+            componentIds.add(d.componentId);
+          });
         }
 
-        if ("samplingTrainData" in i){
-          i.samplingTrainData.forEach(d =>{
-            componentIds.add(d.componentId)
-          })
+        if ('samplingTrainData' in i) {
+          i.samplingTrainData.forEach(d => {
+            componentIds.add(d.componentId);
+          });
         }
 
         // for WeeklyTestSummaryImportDTO and DailyTestSummaryImportDTO
-        if ("componentId" in i)
-          componentIds.add(i.componentId)
+        if ('componentId' in i) componentIds.add(i.componentId);
 
         locations.push({
           unitId: i.unitId,
@@ -99,10 +98,10 @@ export class MonitorLocationChecksService {
       }
     };
 
-      payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
-      payload?.hourlyOperatingData?.forEach(i => addLocation(i));
-      payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
-      payload?.sorbentTrapData?.forEach(i => addLocation(i));
+    payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
+    payload?.hourlyOperatingData?.forEach(i => addLocation(i));
+    payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
+    payload?.sorbentTrapData?.forEach(i => addLocation(i));
 
     return locations;
   }
@@ -112,16 +111,14 @@ export class MonitorLocationChecksService {
   ): Promise<[LocationIdentifiers[], string[]]> {
     this.logger.info('Running Unit/Stack Location Checks');
 
-    let errorList = [];
+    const errorList = [];
     const orisCode = payload.orisCode;
 
     const locations: LocationIdentifiers[] = this.processLocations(payload);
 
     // This could be an import check in which case the below message would have to be updated
     if (locations.length === 0) {
-      errorList.push(
-        'No location identifiers found in import file',
-      );
+      errorList.push('No location identifiers found in import file');
     }
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(
@@ -131,20 +128,11 @@ export class MonitorLocationChecksService {
     );
 
     locations.forEach(location => {
-      let unitStack = '';
       const dbLocation = dbLocations.find(
         i =>
           i?.unit?.name === location?.unitId ||
           i?.stackPipe?.name === location?.stackPipeId,
       );
-      
-      if( location.unitId ){
-        unitStack = `Unit [${location.unitId}]`;
-      }
-
-      if( location.stackPipeId ){
-        unitStack = `Stack/Pipe [${location.stackPipeId}]`;
-      }
 
       if (dbLocation) {
         location.locationId = dbLocation.id;
@@ -154,7 +142,9 @@ export class MonitorLocationChecksService {
           if (!dbComponentIds.includes(componentId)) {
             // IMPORT-27 All EM Components Present in the Database (Result A)
             errorList.push(
-              IMPORT_CHECK_ERROR.IMPORT_27.RESULT_A(componentId, unitStack, orisCode)
+              CheckCatalogService.formatResultMessage('IMPORT-27-A', {
+                componentID: componentId,
+              }),
             );
           }
         });

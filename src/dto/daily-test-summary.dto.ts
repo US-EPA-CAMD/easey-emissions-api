@@ -34,6 +34,10 @@ export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
 
   monitoringLocationId: string;
 
+  monitoringSystemRecordId?: string;
+
+  componentRecordId?: string;
+
   calcTestResultCode: string;
 
   userId?: string;

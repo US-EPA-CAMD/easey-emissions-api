@@ -62,7 +62,7 @@ export class MonitorPlan extends BaseEntity {
       referencedColumnName: 'id',
     },
   })
-  locations: MonitorLocation[]; 
+  locations: MonitorLocation[];
 
   @OneToMany(
     () => EmissionEvaluation,

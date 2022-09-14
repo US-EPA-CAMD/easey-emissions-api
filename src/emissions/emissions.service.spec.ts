@@ -16,7 +16,6 @@ import { DailyTestSummaryRepository } from '../daily-test-summary/daily-test-sum
 import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
 import { HourlyOperatingRepository } from '../hourly-operating/hourly-operating.repository';
 import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
@@ -29,13 +28,30 @@ import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/m
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-
-const emissionsRepositoryMock = {
-  export: jest.fn(),
-};
+import { mockPlantRepository } from '../../test/mocks/plant-repository';
+import { mockEmissionsRepository } from '../../test/mocks/emissions-repository';
+import { genEmissionEvaluation } from '../../test/object-generators/emission-evaluation';
+import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
+import {
+  genEmissionsParamsDto,
+  genEmissionsRecordDto,
+} from '../../test/object-generators/emissions-dto';
+import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
+import { mockEmissionsSubmissionsProgressRepository } from '../../test/mocks/emissions-submissions-progress-repository';
+import { genEmissionsSubmissionsProgress } from '../../test/object-generators/emissions-submissions-progress';
+import { faker } from '@faker-js/faker';
+import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
+import { mockHourlyOperatingRepository } from '../../test/mocks/hourly-operating-repository';
 
 describe('Emissions Workspace Service', () => {
+  let configService: ConfigService;
+  let emissionsMap: EmissionsMap;
+  let emissionsRepository: EmissionsRepository;
   let emissionsService: EmissionsService;
+  let submissionProgressRepository: EmissionsSubmissionsProgressRepository;
+  let submissionProgressMap: EmissionsSubmissionsProgressMap;
+  let dailyTestSummaryService: DailyTestSummaryService;
+  let hourlyOperatingService: HourlyOperatingService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -52,8 +68,8 @@ describe('Emissions Workspace Service', () => {
         MonitorHourlyValueMap,
         HourlyOperatingService,
         MonitorHourlyValueService,
+        EmissionsSubmissionsProgress,
         EmissionsSubmissionsProgressMap,
-        EmissionsSubmissionsProgressRepository,
         ConfigService,
         MatsMonitorHourlyValueMap,
         MatsMonitorHourlyValueService,
@@ -65,17 +81,15 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: PlantRepository,
-          useValue: jest.mock('../plant/plant.repository'),
+          useValue: mockPlantRepository,
         },
         {
           provide: EmissionsRepository,
-          useValue: emissionsRepositoryMock,
+          useValue: mockEmissionsRepository,
         },
         {
           provide: DailyTestSummaryRepository,
-          useValue: jest.mock(
-            '../daily-test-summary/daily-test-summary.repository',
-          ),
+          useValue: mockDailyTestSummaryRepository,
         },
         {
           provide: DailyCalibrationRepository,
@@ -85,9 +99,7 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: HourlyOperatingRepository,
-          useValue: jest.mock(
-            '../hourly-operating/hourly-operating.repository',
-          ),
+          useValue: mockHourlyOperatingRepository,
         },
         {
           provide: MonitorHourlyValueRepository,
@@ -107,125 +119,88 @@ describe('Emissions Workspace Service', () => {
             '../mats-derived-hourly-value/mats-derived-hourly-value.repository',
           ),
         },
+        {
+          provide: EmissionsSubmissionsProgressRepository,
+          useValue: mockEmissionsSubmissionsProgressRepository,
+        },
       ],
     }).compile();
 
+    configService = module.get(ConfigService);
+    emissionsRepository = module.get(EmissionsRepository);
     emissionsService = module.get(EmissionsService);
+    emissionsMap = module.get(EmissionsMap);
+    submissionProgressRepository = module.get(
+      EmissionsSubmissionsProgressRepository,
+    );
+    submissionProgressMap = module.get(EmissionsSubmissionsProgressMap);
+    dailyTestSummaryService = module.get(DailyTestSummaryService);
+    hourlyOperatingService = module.get(HourlyOperatingService);
   });
 
   it('should have a emissions service', function() {
     expect(emissionsService).toBeDefined();
   });
 
-  it('should export a record', async () => {
-    const filters = new EmissionsParamsDTO();
-    await expect(emissionsService.export(filters)).resolves.toEqual({});
+  describe('export', () => {
+    it('should export a record', async () => {
+      const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>(1, {
+        include: ['monitorPlan'],
+        monitorPlanConfig: {
+          include: ['locations'],
+          monitorLocationAmount: 3,
+        },
+      });
+
+      const dtoMocks = genEmissionsRecordDto();
+      const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
+      mappedEmissions.dailyTestSummaryData = null;
+      mappedEmissions.hourlyOperatingData = null;
+
+      jest
+        .spyOn(emissionsRepository, 'export')
+        .mockResolvedValue(emissionsMocks[0]);
+      jest.spyOn(dailyTestSummaryService, 'export').mockResolvedValue(null);
+      jest.spyOn(hourlyOperatingService, 'export').mockResolvedValue(null);
+
+      await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
+        mappedEmissions,
+      );
+    });
+
+    it('should return an empty object is no emissions data is found', async function() {
+      const dtoMock = genEmissionsParamsDto();
+
+      jest.spyOn(emissionsRepository, 'export').mockResolvedValue(undefined);
+
+      await expect(emissionsService.export(dtoMock[0])).resolves.toEqual({});
+    });
+  });
+
+  describe('get submission progress', () => {
+    it('should get submission progress', async function() {
+      const mockedProgress = genEmissionsSubmissionsProgress<
+        EmissionsSubmissionsProgress
+      >();
+      jest
+        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
+        .mockResolvedValue(mockedProgress[0]);
+
+      const mapped = await submissionProgressMap.one(mockedProgress[0]);
+
+      await expect(
+        emissionsService.getSubmissionProgress(faker.date.soon()),
+      ).resolves.toEqual(mapped);
+    });
+
+    it('should return undefined if not query result is found', async function() {
+      jest
+        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
+        .mockResolvedValue(undefined);
+
+      await expect(
+        emissionsService.getSubmissionProgress(faker.date.soon()),
+      ).resolves.toEqual(undefined);
+    });
   });
 });
-
-// let mockResolvedEmissionsRepository = undefined;
-
-// let configVals = {
-//   ['app.env']: 'development',
-// };
-
-// let repoVals = {};
-
-// describe('Emissions Service', () => {
-//   let service: EmissionService;
-
-//   beforeAll(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       imports: [LoggerModule],
-//       providers: [
-//         EmissionService,
-//         EmissionSubmissionsProgressMap,
-//         {
-//           provide: ConfigService,
-//           useValue: {
-//             get: jest.fn((key: string) => {
-//               return configVals[key];
-//             }),
-//           },
-//         },
-//         {
-//           provide: EmissionsRepository,
-//           useValue: {
-//             getSubmissionProgress: jest.fn(() => {
-//               return repoVals;
-//             }),
-//           },
-//         },
-//       ],
-//     }).compile();
-
-//     service = module.get(EmissionService);
-//   });
-
-//   it('should be defined', () => {
-//     expect(EmissionService).toBeDefined();
-//   });
-
-//   describe('getSubmissionProgress', () => {
-//     it('Given an undefined repo result, and a valid reporting month in quarter 4, return previous year and Fourth quarter', async () => {
-//       repoVals = undefined;
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-01-01'),
-//       );
-
-//       expect(result.year).toEqual(2019);
-//       expect(result.quarterName).toEqual('Fourth');
-//     });
-
-//     it('Given an undefined repo result, and a valid reporting month in quarter 1, return First quarter', async () => {
-//       repoVals = undefined;
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-04-01'),
-//       );
-
-//       expect(result.quarterName).toEqual('First');
-//     });
-
-//     it('Given an undefined repo result, and a valid reporting month in quarter 2, return Second quarter', async () => {
-//       repoVals = undefined;
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-07-01'),
-//       );
-
-//       expect(result.quarterName).toEqual('Second');
-//     });
-
-//     it('Given an undefined repo result, and a valid reporting month in quarter 3, return Third quarter', async () => {
-//       repoVals = undefined;
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-10-01'),
-//       );
-
-//       expect(result.quarterName).toEqual('Third');
-//     });
-
-//     it('Given an undefined repo result, and a non valid reporting month, return undefined', async () => {
-//       repoVals = undefined;
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-09-01'),
-//       );
-
-//       expect(result).toEqual(undefined);
-//     });
-
-//     it('Given an defined repo result, return the percentage', async () => {
-//       repoVals = { percentage: 100, quarter: 1, calendarYear: 2020 };
-
-//       const result = await service.getSubmissionProgress(
-//         new Date('2020-09-01'),
-//       );
-
-//       expect(result.quarterName).toEqual('First');
-//     });
-//   });
-// });

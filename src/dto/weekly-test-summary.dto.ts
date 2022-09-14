@@ -21,7 +21,8 @@ export class WeeklyTestSummaryRecordDTO extends WeeklyTestSummaryBaseDTO {
   id: string;
   reportingPeriodId: number;
   monitoringLocationId: string;
-  monitoringSystemId?: string;
+  monitoringSystemRecordId?: string;
+  componentRecordId?: string;
   calcTestResultCode?: string;
   userId?: string;
   addDate?: Date;

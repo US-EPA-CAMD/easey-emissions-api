@@ -11,6 +11,7 @@ import { DeleteResult } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { isUndefinedOrNull } from '../utils/utils';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -46,6 +47,10 @@ export class DailyTestSummaryWorkspaceService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
+    if (isUndefinedOrNull(monitoringLocationIds)) {
+      return null;
+    }
+
     const summaries = await this.getDailyTestSummariesByLocationIds(
       monitoringLocationIds,
       params,

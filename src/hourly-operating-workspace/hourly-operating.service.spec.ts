@@ -16,12 +16,47 @@ import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
+import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
+import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
+import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
+import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
+import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
+import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+
+const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
+  include: [
+    'monitorLocation',
+    'derivedHrlyValues',
+    'matsMonitorHourlyValues',
+    'matsDerivedHourlyValues',
+  ],
+});
 
 const mockRepository = {
-  export: () => null,
+  export: () => Promise.resolve(generatedHrlyOpValues),
 };
-const mockMap = {
-  many: () => null,
+
+const mockMonitorHourlyValueService = {
+  export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
+};
+
+const mockDerivedHourlyValueService = () => {
+  const generatedDerivedHrlyValues = genDerivedHrlyValues<DerivedHrlyValue>(1);
+  generatedDerivedHrlyValues.forEach(d => {
+    d.hourId = generatedHrlyOpValues[0].id;
+  });
+  return {
+    export: () => Promise.resolve(generatedDerivedHrlyValues),
+  };
+};
+
+const mockMatsMonitorHourlyValueService = {
+  export: () => Promise.resolve([new MatsMonitorHourlyValueDTO()]),
+};
+
+const mockMatsDerivedHourlyValueService = {
+  export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
 };
 
 describe('HourlyOperatingWorskpaceService', () => {
@@ -33,16 +68,12 @@ describe('HourlyOperatingWorskpaceService', () => {
     const module = await Test.createTestingModule({
       providers: [
         DerivedHourlyValueMap,
-        DerivedHourlyValueWorkspaceService,
         HourlyOperatingWorkspaceService,
         HourlyOperatingMap,
-        MonitorHourlyValueWorkspaceService,
         MonitorHourlyValueWorkspaceRepository,
         MonitorHourlyValueMap,
-        MatsMonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueWorkspaceRepository,
         MatsMonitorHourlyValueMap,
-        MatsDerivedHourlyValueWorkspaceService,
         MatsDerivedHourlyValueWorkspaceRepository,
         MatsDerivedHourlyValueMap,
         {
@@ -50,8 +81,20 @@ describe('HourlyOperatingWorskpaceService', () => {
           useValue: jest,
         },
         {
-          provide: HourlyOperatingMap,
-          useValue: mockMap,
+          provide: MonitorHourlyValueWorkspaceService,
+          useValue: mockMonitorHourlyValueService,
+        },
+        {
+          provide: DerivedHourlyValueWorkspaceService,
+          useFactory: mockDerivedHourlyValueService,
+        },
+        {
+          provide: MatsMonitorHourlyValueWorkspaceService,
+          useValue: mockMatsMonitorHourlyValueService,
+        },
+        {
+          provide: MatsDerivedHourlyValueWorkspaceService,
+          useValue: mockMatsDerivedHourlyValueService,
         },
         {
           provide: HourlyOperatingWorkspaceRepository,
@@ -70,10 +113,11 @@ describe('HourlyOperatingWorskpaceService', () => {
       expect(service).toBeDefined();
     });
 
-    it('should export a record', async () => {
+    it('should export Hourly OP workspace Data', async () => {
       const filters = new EmissionsParamsDTO();
       const result = await service.export(['123'], filters);
-      expect(result).toEqual(null);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0].derivedHourlyValue.length).toBeGreaterThan(0);
     });
   });
 });

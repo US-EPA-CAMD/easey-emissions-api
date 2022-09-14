@@ -35,7 +35,7 @@ export class EmissionsService {
       params.quarter,
     );
 
-    if (emissions) {
+    if (emissions && Array.isArray(emissions.monitorPlan?.locations)) {
       const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
 
       promises.push(this.dailyTestSummaryService.export(locationIds, params));

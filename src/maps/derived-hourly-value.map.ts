@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
+import { DerivedHrlyValue as DerivedHrlyValueWorkspace } from '../entities/workspace/derived-hrly-value.entity';
 import { DerivedHourlyValueDTO } from '../dto/derived-hourly-value.dto';
 
 @Injectable()
 export class DerivedHourlyValueMap extends BaseMap<
-  DerivedHrlyValue,
+  DerivedHrlyValue | DerivedHrlyValueWorkspace,
   DerivedHourlyValueDTO
 > {
-  async one(entity: DerivedHrlyValue): Promise<DerivedHourlyValueDTO> {
+  async one(
+    entity: DerivedHrlyValue | DerivedHrlyValueWorkspace,
+  ): Promise<DerivedHourlyValueDTO> {
     return {
       id: entity.id,
       hourId: entity.hourId,

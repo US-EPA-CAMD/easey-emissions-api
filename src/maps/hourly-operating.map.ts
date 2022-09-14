@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 import { HrlyOpData } from '../entities/hrly-op-data.entity';
+import { HrlyOpData as HrlyOpDataWorkspace } from '../entities/workspace/hrly-op-data.entity';
 
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 
 @Injectable()
 export class HourlyOperatingMap extends BaseMap<
-  HrlyOpData,
+  HrlyOpData | HrlyOpDataWorkspace,
   HourlyOperatingDTO
 > {
-  public async one(entity: HrlyOpData): Promise<HourlyOperatingDTO> {
+  public async one(
+    entity: HrlyOpData | HrlyOpDataWorkspace,
+  ): Promise<HourlyOperatingDTO> {
     const unitId = entity.monitorLocation.unit
       ? entity.monitorLocation.unit.name
       : null;

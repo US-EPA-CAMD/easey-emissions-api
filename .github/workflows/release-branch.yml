@@ -82,6 +82,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
+      - name: Configure Env Vars (secrets)
+        run: |
+          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        env:
+          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -119,6 +124,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
+      - name: Configure Env Vars (secrets)
+        run: |
+          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        env:
+          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -156,6 +166,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
+      - name: Configure Env Vars (secrets)
+        run: |
+          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        env:
+          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -193,5 +208,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_STORAGE_SECRET_ACCESS_KEY }}
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
+      - name: Configure Env Vars (secrets)
+        run: |
+          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        env:
+          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh

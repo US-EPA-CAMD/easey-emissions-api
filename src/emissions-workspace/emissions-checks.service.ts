@@ -7,6 +7,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { isUndefinedOrNull } from '../utils/utils';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -27,8 +28,10 @@ export class EmissionsChecksService {
 
     const errorList: string[] = [];
 
-    // IMPORT-29: Inappropriate Children Records for Daily Test Summary 
-    const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(payload);
+    // IMPORT-29: Inappropriate Children Records for Daily Test Summary
+    const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(
+      payload,
+    );
 
     const weeklyTestSummaryCheckErrors = this.weeklyTestSummaryCheckService.runChecks(
       payload,
@@ -36,10 +39,17 @@ export class EmissionsChecksService {
 
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
-    // IMPORT-27: All EM Components Present in the Production Database 
-    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(payload);
+    // IMPORT-27: All EM Components Present in the Production Database
+    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(
+      payload,
+    );
 
-    errorList.push(...weeklyTestSummaryCheckErrors, ...invalidDatesCheckErrors, ...locationErrors, ...dailyTestSummaryCheckErrors);
+    errorList.push(
+      ...weeklyTestSummaryCheckErrors,
+      ...invalidDatesCheckErrors,
+      ...locationErrors,
+      ...dailyTestSummaryCheckErrors,
+    );
 
     this.throwIfErrors(errorList);
     this.logger.info('Completed Emissions Import Checks');
@@ -53,6 +63,10 @@ export class EmissionsChecksService {
     let latestDate: number;
 
     const dateCheck = (date: Date) => {
+      if (isUndefinedOrNull(date)) {
+        return;
+      }
+
       const year = new Date(date).getFullYear();
       const quarter = Math.floor(new Date(date).getMonth() / 3 + 1);
       const combo = Number(`${year}${quarter}`);
@@ -80,9 +94,6 @@ export class EmissionsChecksService {
 
     payload.sorbentTrapData?.forEach(datum => {
       dateCheck(datum.beginDate);
-    });
-
-    payload.sorbentTrapData?.forEach(datum => {
       dateCheck(datum.endDate);
     });
 
