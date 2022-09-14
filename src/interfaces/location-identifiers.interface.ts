@@ -3,4 +3,5 @@ export interface LocationIdentifiers {
   locationId: string;
   stackPipeId: string;
   componentIds: Set<string>;
+  monitoringSystemIds: Set<string>;
 }
