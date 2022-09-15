@@ -22,7 +22,7 @@ export class PlantRepository extends Repository<Plant> {
       .leftJoin('monitorLocation.stackPipe', 'locationStack')
       .where('plant.oris_code = :orisCode', { orisCode })
       .andWhere('locationUnit.unit_id IN(:...unitIds)', { unitIds })
-      .orWhere('locationStack.stack_pipe_id IN(:...stackIds)', { stackIds })
+      .orWhere('locationStack.stack_name IN(:...stackIds)', { stackIds })
       .getOne();
   }
 }

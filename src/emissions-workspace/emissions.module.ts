@@ -14,18 +14,24 @@ import { PlantRepository } from '../plant/plant.repository';
 import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
 import { MonitorLocationWorkspaceModule } from '../monitor-location-workspace/monitor-location.module';
 import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspace/weekly-test-summary.module';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
     TypeOrmModule.forFeature([PlantRepository]),
+    TypeOrmModule.forFeature([MonitorFormulaRepository]),
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
+    Logger,
     MonitorLocationWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
+    DailyTestSummaryCheckService,
     EmissionsMap,
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
