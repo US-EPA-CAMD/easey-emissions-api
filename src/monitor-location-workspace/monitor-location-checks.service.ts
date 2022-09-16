@@ -12,7 +12,6 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
-import { DerivedHourlyValueImportDTO } from 'src/dto/derived-hourly-value.dto';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -44,6 +43,7 @@ export class MonitorLocationChecksService {
           stackPipeId: i.stackPipeId,
           componentIds: new Set<string>(),
           monitoringSystemIds: new Set<string>(),
+          ltffMonitoringSystemIds: new Set<string>(),
         };
 
         locations.push(location);
@@ -125,7 +125,7 @@ export class MonitorLocationChecksService {
       locations.filter(i => i.unitId !== null).map(i => i.unitId),
       locations.filter(i => i.stackPipeId !== null).map(i => i.stackPipeId),
     );
-
+    
     locations.forEach(location => {
       const dbLocation = dbLocations.find(
         i =>
@@ -135,8 +135,11 @@ export class MonitorLocationChecksService {
 
       if (dbLocation) {
         location.locationId = dbLocation.id;
-        const dbComponentIds = dbLocation.components.map(i => i.componentId);
-        const dbMonitoringSystemIds = dbLocation.monitorSystems.map(i=> i.monitoringSystemId)
+        
+        // @TODO change i.id to i.componentId once import for dailyTestSummary is fixed
+        const dbComponentIds = dbLocation.components.map(i => i.id);
+        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is fixed
+        const dbMonitoringSystemIds = dbLocation.monitorSystems.map(i=> i.id)
 
         location.componentIds.forEach(componentId => {
           if (!dbComponentIds.includes(componentId)) {
@@ -158,7 +161,7 @@ export class MonitorLocationChecksService {
           }
           else{
             const validLtffSystemCodes = ["LTOL", "LTGS"]
-            const monitoringSystem = dbLocation.monitorSystems.find(ms => ms.monitoringSystemId === monitoringSystemId)
+            const monitoringSystem = dbLocation.monitorSystems.find(ms => ms.id === monitoringSystemId)
             if( !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode) )
               errorList.push(CheckCatalogService.formatResultMessage('IMPORT-26-B', {
                 key: monitoringSystemId

@@ -4,4 +4,5 @@ export interface LocationIdentifiers {
   stackPipeId: string;
   componentIds: Set<string>;
   monitoringSystemIds: Set<string>;
+  ltffMonitoringSystemIds: Set<string>;
 }
