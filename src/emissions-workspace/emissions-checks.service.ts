@@ -63,32 +63,31 @@ export class EmissionsChecksService {
     payload: EmissionsImportDTO,
     monitoringLocationId: string,
   ): Promise<void> {
-    const formulaIdentifiers: string[] = [];
-    let errorMessage;
+    const formulaIdentifiers = new Set<string>();
 
     payload?.hourlyOperatingData?.forEach(hourlyOp => {
       hourlyOp?.derivedHourlyValueData?.forEach(derived => {
         if (!isUndefinedOrNull(derived.formulaIdentifier)) {
-          formulaIdentifiers.push(derived.formulaIdentifier);
+          formulaIdentifiers.add(derived.formulaIdentifier);
         }
       });
 
       hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
         if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
-          formulaIdentifiers.push(matsDerived.formulaIdentifier);
+          formulaIdentifiers.add(matsDerived.formulaIdentifier);
         }
       });
 
       hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
         fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
           if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
-            formulaIdentifiers.push(paramFuelFlow.formulaIdentifier);
+            formulaIdentifiers.add(paramFuelFlow.formulaIdentifier);
           }
         });
       });
     });
 
-    if (formulaIdentifiers.length === 0) {
+    if (formulaIdentifiers.size === 0) {
       return;
     }
 
@@ -101,18 +100,15 @@ export class EmissionsChecksService {
       );
 
       if (isUndefinedOrNull(monitorFormula)) {
-        errorMessage = CheckCatalogService.formatResultMessage('IMPORT-28-A', {
-          formulaID: formulaIdentifier,
-        });
-        break;
-      }
-    }
+        const errorMessage = CheckCatalogService.formatResultMessage(
+          'IMPORT-28-A',
+          {
+            formulaID: formulaIdentifier,
+          },
+        );
 
-    if (typeof errorMessage !== 'undefined') {
-      throw new LoggingException(
-        errorMessage.toString(),
-        HttpStatus.BAD_REQUEST,
-      );
+        throw new LoggingException(errorMessage, HttpStatus.BAD_REQUEST);
+      }
     }
   }
 
