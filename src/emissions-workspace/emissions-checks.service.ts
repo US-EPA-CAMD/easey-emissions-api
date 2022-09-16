@@ -8,6 +8,7 @@ import { MonitorLocationChecksService } from '../monitor-location-workspace/moni
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { isUndefinedOrNull } from '../utils/utils';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -16,6 +17,7 @@ export class EmissionsChecksService {
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
+    private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
   private throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
@@ -55,6 +57,59 @@ export class EmissionsChecksService {
     this.logger.info('Completed Emissions Import Checks');
 
     return errorList;
+  }
+
+  async invalidFormulasCheck(
+    payload: EmissionsImportDTO,
+    monitoringLocationId: string,
+  ): Promise<void> {
+    const formulaIdentifiers = new Set<string>();
+
+    payload?.hourlyOperatingData?.forEach(hourlyOp => {
+      hourlyOp?.derivedHourlyValueData?.forEach(derived => {
+        if (!isUndefinedOrNull(derived.formulaIdentifier)) {
+          formulaIdentifiers.add(derived.formulaIdentifier);
+        }
+      });
+
+      hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
+        if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
+          formulaIdentifiers.add(matsDerived.formulaIdentifier);
+        }
+      });
+
+      hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
+        fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
+          if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
+            formulaIdentifiers.add(paramFuelFlow.formulaIdentifier);
+          }
+        });
+      });
+    });
+
+    if (formulaIdentifiers.size === 0) {
+      return;
+    }
+
+    for (const formulaIdentifier of formulaIdentifiers) {
+      const monitorFormula = await this.monitorFormulaRepository.getOneFormulaIdsMonLocId(
+        {
+          formulaIdentifier,
+          monitoringLocationId,
+        },
+      );
+
+      if (isUndefinedOrNull(monitorFormula)) {
+        const errorMessage = CheckCatalogService.formatResultMessage(
+          'IMPORT-28-A',
+          {
+            formulaID: formulaIdentifier,
+          },
+        );
+
+        throw new LoggingException(errorMessage, HttpStatus.BAD_REQUEST);
+      }
+    }
   }
 
   // IMPORT-23: Emission File Dates Valid
