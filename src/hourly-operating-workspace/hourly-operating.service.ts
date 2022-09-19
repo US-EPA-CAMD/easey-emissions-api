@@ -9,6 +9,7 @@ import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-work
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { isUndefinedOrNull } from '../utils/utils';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 
 @Injectable()
 export class HourlyOperatingWorkspaceService {
@@ -19,6 +20,7 @@ export class HourlyOperatingWorkspaceService {
     private readonly derivedHourlyValueService: DerivedHourlyValueWorkspaceService,
     private readonly matsMonitorHourlyValueService: MatsMonitorHourlyValueWorkspaceService,
     private readonly matsDerivedHourlyValueService: MatsDerivedHourlyValueWorkspaceService,
+    private readonly hourlyFuelFlowService: HourlyFuelFlowWorkspaceService,
   ) {}
   async getHourlyOpDataByLocationIds(
     monitoringLocationIds: string[],
@@ -54,6 +56,7 @@ export class HourlyOperatingWorkspaceService {
           this.derivedHourlyValueService.export(hourlyOperatingIds),
           this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
           this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
+          this.hourlyFuelFlowService.export(hourlyOperatingIds),
         ]);
 
         hourlyOperating?.forEach(hourlyOp => {

@@ -23,6 +23,12 @@ import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
 import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
 import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
 
 const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   include: [
@@ -76,6 +82,12 @@ describe('HourlyOperatingWorskpaceService', () => {
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceRepository,
         MatsDerivedHourlyValueMap,
+        HourlyFuelFlowWorkspaceService,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyParameterFuelFlowMap,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowWorkspaceService,
+        HourlyParameterFuelFlowWorkspaceRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,

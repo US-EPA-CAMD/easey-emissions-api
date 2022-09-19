@@ -42,8 +42,14 @@ import { genEmissionsSubmissionsProgress } from '../../test/object-generators/em
 import { faker } from '@faker-js/faker';
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
 import { mockHourlyOperatingRepository } from '../../test/mocks/hourly-operating-repository';
+import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
+import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
 
-describe('Emissions Workspace Service', () => {
+describe('Emissions Service', () => {
   let configService: ConfigService;
   let emissionsMap: EmissionsMap;
   let emissionsRepository: EmissionsRepository;
@@ -75,6 +81,12 @@ describe('Emissions Workspace Service', () => {
         MatsMonitorHourlyValueService,
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueService,
+        HourlyFuelFlowService,
+        HourlyFuelFlowRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowService,
+        HourlyParameterFuelFlowMap,
+        HourlyParameterFuelFlowRepository,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,

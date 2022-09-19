@@ -17,6 +17,7 @@ import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspa
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Logger } from '@us-epa-camd/easey-common/logger';
     Logger,
     MonitorLocationWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
+    HourlyFuelFlowWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

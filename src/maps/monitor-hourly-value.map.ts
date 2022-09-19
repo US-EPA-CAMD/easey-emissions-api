@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 
 import { MonitorHrlyValue } from '../entities/monitor-hrly-value.entity';
+import { MonitorHrlyValue as MonitorHrlyValueWorkspace } from '../entities/workspace/monitor-hrly-value.entity';
 import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 
 @Injectable()
 export class MonitorHourlyValueMap extends BaseMap<
-  MonitorHrlyValue,
+  MonitorHrlyValue | MonitorHrlyValueWorkspace,
   MonitorHourlyValueDTO
 > {
   public async one(entity: any): Promise<MonitorHourlyValueDTO> {

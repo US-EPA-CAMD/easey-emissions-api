@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
 import { MatsMonitorHrlyValue } from '../entities/mats-monitor-hrly-value.entity';
+import { MatsMonitorHrlyValue as MatsMonitorHrlyValueWorkspace } from '../entities/workspace/mats-monitor-hrly-value.entity';
 
 @Injectable()
 export class MatsMonitorHourlyValueMap extends BaseMap<
-  MatsMonitorHrlyValue,
+  MatsMonitorHrlyValue | MatsMonitorHrlyValueWorkspace,
   MatsMonitorHourlyValueDTO
 > {
   public async one(

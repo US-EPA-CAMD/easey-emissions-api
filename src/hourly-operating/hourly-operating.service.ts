@@ -8,6 +8,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
 import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.service';
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
+import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
 
 @Injectable()
 export class HourlyOperatingService {
@@ -18,6 +19,7 @@ export class HourlyOperatingService {
     private readonly derivedHourlyValueService: DerivedHourlyValueService,
     private readonly matsMonitorHourlyValueService: MatsMonitorHourlyValueService,
     private readonly matsDerivedHourlyValueService: MatsDerivedHourlyValueService,
+    private readonly hourlyFuelFlowService: HourlyFuelFlowService,
   ) {}
   async getHourlyOpDataByLocationIds(
     monitoringLocationIds: string[],
@@ -43,12 +45,14 @@ export class HourlyOperatingService {
 
     if (hourlyOperating) {
       const hourlyOperatingIds = hourlyOperating.map(i => i.id);
+
       if (hourlyOperatingIds?.length > 0) {
         const values = await Promise.all([
           this.monitorHourlyValueService.export(hourlyOperatingIds),
           this.derivedHourlyValueService.export(hourlyOperatingIds),
           this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
           this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
+          this.hourlyFuelFlowService.export(hourlyOperatingIds),
         ]);
 
         hourlyOperating?.forEach(hourlyOp => {
@@ -62,6 +66,9 @@ export class HourlyOperatingService {
             i => i.hourId === hourlyOp.id,
           );
           hourlyOp.matsDerivedHourlyValue = values[3].filter(
+            i => i.hourId === hourlyOp.id,
+          );
+          hourlyOp.hourlyFuelFlow = values[4].filter(
             i => i.hourId === hourlyOp.id,
           );
         });

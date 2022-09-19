@@ -45,6 +45,12 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -79,6 +85,12 @@ describe('Emissions Workspace Service', () => {
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceService,
         WeeklyTestSummaryCheckService,
+        HourlyFuelFlowWorkspaceService,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowWorkspaceRepository,
+        HourlyParameterFuelFlowWorkspaceService,
+        HourlyParameterFuelFlowMap,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
