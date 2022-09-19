@@ -38,6 +38,10 @@ import { genPlant } from '../../test/object-generators/plant';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { Plant } from '../entities/plant.entity';
 import { faker } from '@faker-js/faker';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -65,6 +69,8 @@ describe('Emissions Workspace Service', () => {
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceService,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceService,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -108,6 +114,10 @@ describe('Emissions Workspace Service', () => {
           useValue: jest.mock(
             '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository',
           ),
+        },
+        {
+          provide: HourlyGasFlowMeterWorkspaceRepository,
+          useValue: mockHourlyGasFlowMeterWorkspaceRepository,
         },
       ],
     }).compile();
