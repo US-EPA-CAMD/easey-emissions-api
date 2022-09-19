@@ -19,10 +19,6 @@ import {
 } from '../../src/dto/summary-value.dto';
 import { DailyTestSummaryDTO } from '../../src/dto/daily-test-summary.dto';
 import {
-  HourlyOperatingDTO,
-  HourlyOperatingImportDTO,
-} from '../../src/dto/hourly-operating.dto';
-import {
   LongTermFuelFlowDTO,
   LongTermFuelFlowImportDTO,
 } from '../../src/dto/long-term-fuel-flow.dto';
@@ -36,6 +32,11 @@ import {
 } from '../../src/dto/nsps4t-summary.dto';
 import { EmissionsParamsDTO } from '../../src/dto/emissions.params.dto';
 import { genDailyTestSummary } from './daily-test-summary';
+import {
+  genHourlyOperatingImportDto,
+  HourlyOperatingImportDtoConfig,
+} from './hourly-operating-dto';
+import { genHourlyOpValues } from './hourly-op-data-values';
 
 type GenEmissionsDtoConfig = {
   include?: Array<
@@ -49,6 +50,8 @@ type GenEmissionsDtoConfig = {
     | 'nsps4tSummaryData'
   >;
   dailyTestSummaryAmount?: number;
+  hourlyOperatingAmount?: number;
+  hourlyOperatingImportConfig?: HourlyOperatingImportDtoConfig;
 };
 
 export const genEmissionsParamsDto = (amount = 1) => {
@@ -103,7 +106,10 @@ export const genEmissionsImportDto = (
         ? genDailyTestSummary(config?.dailyTestSummaryAmount)
         : undefined,
       hourlyOperatingData: config?.include?.includes('hourlyOperatingData')
-        ? [new HourlyOperatingImportDTO()]
+        ? genHourlyOperatingImportDto(
+            config?.hourlyOperatingAmount,
+            config?.hourlyOperatingImportConfig,
+          )
         : undefined,
       longTermFuelFlowData: config?.include?.includes('longTermFuelFlowData')
         ? [new LongTermFuelFlowImportDTO()]
@@ -150,7 +156,7 @@ export const genEmissionsRecordDto = (
         ? [new DailyTestSummaryDTO()]
         : undefined,
       hourlyOperatingData: config?.include?.includes('hourlyOperatingData')
-        ? [new HourlyOperatingDTO()]
+        ? genHourlyOpValues(config?.hourlyOperatingAmount)
         : undefined,
       longTermFuelFlowData: config?.include?.includes('longTermFuelFlowData')
         ? [new LongTermFuelFlowDTO()]

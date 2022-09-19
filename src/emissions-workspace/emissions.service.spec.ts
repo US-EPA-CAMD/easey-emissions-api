@@ -38,6 +38,13 @@ import { genPlant } from '../../test/object-generators/plant';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { Plant } from '../entities/plant.entity';
 import { faker } from '@faker-js/faker';
+import { EmissionsChecksService } from './emissions-checks.service';
+import { Logger } from '@us-epa-camd/easey-common/logger';
+import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
 import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
@@ -56,19 +63,26 @@ describe('Emissions Workspace Service', () => {
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
         EmissionsWorkspaceService,
+        DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         DailyCalibrationWorkspaceService,
         EmissionsMap,
+        EmissionsChecksService,
+        Logger,
         DailyTestSummaryMap,
         DailyCalibrationMap,
         HourlyOperatingMap,
         MonitorHourlyValueMap,
+        MonitorLocationChecksService,
         HourlyOperatingWorkspaceService,
+        MonitorFormulaRepository,
+        MonitorLocationWorkspaceRepository,
         MonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceService,
+        WeeklyTestSummaryCheckService,
         HourlyGasFlowMeterMap,
         HourlyGasFlowMeterWorkspaceService,
         {

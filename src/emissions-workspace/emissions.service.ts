@@ -11,11 +11,13 @@ import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import { isUndefinedOrNull } from '../utils/utils';
+import { EmissionsChecksService } from './emissions-checks.service';
 
 @Injectable()
 export class EmissionsWorkspaceService {
   constructor(
     private readonly map: EmissionsMap,
+    private readonly checksService: EmissionsChecksService,
     private readonly repository: EmissionsWorkspaceRepository,
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
     private readonly plantRepository: PlantRepository,
@@ -60,10 +62,20 @@ export class EmissionsWorkspaceService {
   }
 
   async import(params: EmissionsImportDTO): Promise<{ message: string }> {
+    const stackPipeIds: string[] = [];
+    const unitIds: string[] = [];
+
+    for (const collection of Object.keys(params)) {
+      if (Array.isArray(params[collection]) && collection.length > 0) {
+        stackPipeIds.push(...params[collection]?.map(data => data.stackPipeId));
+        unitIds.push(...params[collection]?.map(data => data.unitId));
+      }
+    }
+
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
-      stackIds: params.dailyTestSummaryData?.map(data => data.stackPipeId),
-      unitIds: params.dailyTestSummaryData?.map(data => data.unitId),
+      stackIds: [...new Set(stackPipeIds)],
+      unitIds: [...new Set(unitIds)],
     });
 
     if (isUndefinedOrNull(plantLocation)) {
@@ -77,9 +89,16 @@ export class EmissionsWorkspaceService {
       );
     });
 
+    if (isUndefinedOrNull(filteredMonitorPlans[0])) {
+      throw new NotFoundException('Monitor plan not found.');
+    }
+
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
     const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
+
+    // Import-28 Valid formulaIdentifiers for location
+    await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
 
     const evaluationDeletes: Array<Promise<DeleteResult>> = [];
     for (const monitorPlan of filteredMonitorPlans) {

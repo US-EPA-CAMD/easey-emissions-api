@@ -14,9 +14,13 @@ import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-worksp
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { genMonitorFormula } from '../../test/object-generators/monitor-formula';
+import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
+  let monitorFormulaRepository: MonitorFormulaRepository;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -28,6 +32,7 @@ describe('Emissions Checks Service Tests', () => {
         DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         EmissionsChecksService,
+        MonitorFormulaRepository,
         {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: () => jest,
@@ -52,6 +57,7 @@ describe('Emissions Checks Service Tests', () => {
     }).compile();
 
     service = module.get(EmissionsChecksService);
+    monitorFormulaRepository = module.get(MonitorFormulaRepository);
   });
 
   describe('test runChecks()', () => {
@@ -119,6 +125,64 @@ describe('Emissions Checks Service Tests', () => {
       expect(service.invalidDatesCheck(payload)).toEqual([message]);
 
       payload.year;
+    });
+  });
+
+  describe('invalidFormulasCheck', () => {
+    let payload;
+
+    beforeAll(() => {
+      payload = genEmissionsImportDto(1, {
+        include: ['hourlyOperatingData'],
+        hourlyOperatingAmount: 3,
+        hourlyOperatingImportConfig: {
+          derivedHourlyValueAmount: 3,
+          matsDerivedHourlyValueAmount: 3,
+          hourlyFuelFlowAmount: 3,
+          include: [
+            'derivedHourlyValueData',
+            'matsDerivedHourlyValueData',
+            'hourlyFuelFlowData',
+          ],
+          hourlyFuelFlowConfig: {
+            include: ['hourlyParameterFuelFlowData'],
+            hourlyParamFuelFlowAmount: 3,
+          },
+        },
+      })[0];
+    });
+
+    it('should return an empty array for empty request', async function() {
+      const payload = new EmissionsImportDTO();
+
+      await expect(service.invalidFormulasCheck(payload, '2')).resolves.toEqual(
+        undefined,
+      );
+    });
+
+    it('should return an empty array given data with valid formulaIdentifiers', async function() {
+      jest
+        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
+        .mockResolvedValue(genMonitorFormula<MonitorFormula>()[0]);
+
+      await expect(service.invalidFormulasCheck(payload, '1')).resolves.toEqual(
+        undefined,
+      );
+    });
+
+    it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
+      const errorMessage =
+        'The Client Tool database does not contain [FormulaID]. This file was not imported.';
+      jest
+        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
+        .mockResolvedValue(undefined);
+      CheckCatalogService.formatResultMessage = () => {
+        return errorMessage;
+      };
+
+      await expect(service.invalidFormulasCheck(payload, '2')).rejects.toThrow(
+        errorMessage,
+      );
     });
   });
 });
