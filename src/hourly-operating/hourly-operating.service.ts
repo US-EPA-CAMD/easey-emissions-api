@@ -76,7 +76,7 @@ export class HourlyOperatingService {
           hourlyOp.hourlyGFMData = values[4].filter(
             i => i.hourId === hourlyOp.id,
           );
-          hourlyOp.hourlyFuelFlow = values[5].filter(
+          hourlyOp.hourlyFuelFlowData = values[5].filter(
             i => i.hourId === hourlyOp.id,
           );
         });
