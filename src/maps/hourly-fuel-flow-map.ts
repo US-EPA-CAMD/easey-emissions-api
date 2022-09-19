@@ -12,6 +12,8 @@ export class HourlyFuelFlowMap extends BaseMap<
   public async one(
     entity: HrlyFuelFlow | HrlyFuelFlowWorkspace,
   ): Promise<HourlyFuelFlowDTO> {
+    const monitoringSystemId = entity.monitorSystem?.monitoringSystemId ?? null;
+
     return {
       fuelCode: entity.fuelCode,
       fuelUsageTime: entity.fuelUsageTime,
@@ -20,10 +22,10 @@ export class HourlyFuelFlowMap extends BaseMap<
       sourceOfDataVolumetricCode: entity.sourceOfDataVolumetricCode,
       massFlowRate: entity.massFlowRate,
       sourceOfDataMassCode: entity.sourceOfDataMassCode,
-      monitoringSystemId: entity.monitorSystem.monitoringSystemId,
+      monitoringSystemId,
       id: entity.id,
       hourId: entity.hourId,
-      monitoringSystemRecordId: entity.monitorSystem.id,
+      monitoringSystemRecordId: entity.monitoringSystemId,
       calcMassFlowRate: entity.calcMassFlowRate,
       userId: entity.userId,
       addDate: entity.addDate,
