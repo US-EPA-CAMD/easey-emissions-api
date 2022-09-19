@@ -22,6 +22,10 @@ import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entit
 import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
 import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
 import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
+import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterDTO } from '../dto/hourly-gas-flow-meter.dto';
 import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
 import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -35,6 +39,7 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
     'derivedHrlyValues',
     'matsMonitorHourlyValues',
     'matsDerivedHourlyValues',
+    'hrlyGasFlowMeters',
   ],
 });
 
@@ -64,6 +69,10 @@ const mockMatsDerivedHourlyValueService = {
   export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
 };
 
+const mockHourlyGasFlowMeterService = {
+  export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
+};
+
 describe('HourlyOperatingService', () => {
   let service: HourlyOperatingService;
   let repository: any;
@@ -81,6 +90,10 @@ describe('HourlyOperatingService', () => {
         MatsDerivedHourlyValueRepository,
         MatsDerivedHourlyValueMap,
         HourlyOperatingMap,
+        HourlyOperatingRepository,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterRepository,
+        HourlyGasFlowMeterService,
         HourlyFuelFlowService,
         HourlyFuelFlowRepository,
         HourlyFuelFlowMap,
@@ -109,6 +122,10 @@ describe('HourlyOperatingService', () => {
           useValue: mockMatsDerivedHourlyValueService,
         },
         {
+          provide: HourlyGasFlowMeterService,
+          useValue: mockHourlyGasFlowMeterService,
+        },
+        {
           provide: HourlyOperatingRepository,
           useValue: mockRepository,
         },
@@ -130,7 +147,7 @@ describe('HourlyOperatingService', () => {
 
       const result = await service.export(['123'], filters);
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0].derivedHourlyValue.length).toBeGreaterThan(0);
+      expect(result[0].derivedHourlyValueData.length).toBeGreaterThan(0);
     });
   });
 });

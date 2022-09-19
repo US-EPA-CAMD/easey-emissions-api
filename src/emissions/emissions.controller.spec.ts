@@ -32,6 +32,9 @@ import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-ho
 import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository';
 import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -71,6 +74,9 @@ describe('-- Emissions Controller --', () => {
         MatsDerivedHourlyValueRepository,
         EmissionsSubmissionsProgressRepository,
         EmissionsRepository,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterService,
+        HourlyGasFlowMeterRepository,
       ],
     }).compile();
 

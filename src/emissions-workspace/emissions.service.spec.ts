@@ -45,6 +45,10 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -91,6 +95,8 @@ describe('Emissions Workspace Service', () => {
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowWorkspaceService,
         HourlyParameterFuelFlowMap,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceService,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -134,6 +140,10 @@ describe('Emissions Workspace Service', () => {
           useValue: jest.mock(
             '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository',
           ),
+        },
+        {
+          provide: HourlyGasFlowMeterWorkspaceRepository,
+          useValue: mockHourlyGasFlowMeterWorkspaceRepository,
         },
       ],
     }).compile();

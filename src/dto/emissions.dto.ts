@@ -1,6 +1,7 @@
 import { FindOneOptions } from 'typeorm';
+import { Type } from 'class-transformer';
+import { ValidateNested, ValidationArguments } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
-import { ValidationArguments } from 'class-validator';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
 import {
@@ -56,23 +57,69 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
 }
 
 export class EmissionsImportDTO extends EmissionsBaseDTO {
+  @ValidateNested({ each: true })
+  @Type(() => DailyEmissionImportDTO)
   dailyEmissionData: DailyEmissionImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => WeeklyTestSummaryImportDTO)
   weeklyTestSummaryData: WeeklyTestSummaryImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => SummaryValueImportDTO)
   summaryValueData: SummaryValueImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => DailyTestSummaryImportDTO)
   dailyTestSummaryData: DailyTestSummaryImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => HourlyOperatingImportDTO)
   hourlyOperatingData: HourlyOperatingImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => LongTermFuelFlowImportDTO)
   longTermFuelFlowData: LongTermFuelFlowImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => SorbentTrapImportDTO)
   sorbentTrapData: SorbentTrapImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => Nsps4tSummaryImportDTO)
   nsps4tSummaryData: Nsps4tSummaryImportDTO[];
 }
 
 export class EmissionsDTO extends EmissionsRecordDTO {
+  @ValidateNested({ each: true })
+  @Type(() => DailyEmissionDTO)
   dailyEmissionData: DailyEmissionDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => WeeklyTestSummaryDTO)
   weeklyTestSummaryData: WeeklyTestSummaryDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => SummaryValueDTO)
   summaryValueData: SummaryValueDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => DailyTestSummaryDTO)
   dailyTestSummaryData: DailyTestSummaryDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => HourlyOperatingDTO)
   hourlyOperatingData: HourlyOperatingDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => LongTermFuelFlowDTO)
   longTermFuelFlowData: LongTermFuelFlowDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => SorbentTrapDTO)
   sorbentTrapData: SorbentTrapDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => Nsps4tSummaryDTO)
   nsps4tSummaryData: Nsps4tSummaryDTO[];
 }

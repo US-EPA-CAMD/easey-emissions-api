@@ -23,6 +23,10 @@ import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
 import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
 import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterDTO } from '../dto/hourly-gas-flow-meter.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
@@ -36,6 +40,7 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
     'derivedHrlyValues',
     'matsMonitorHourlyValues',
     'matsDerivedHourlyValues',
+    'hrlyGasFlowMeters',
   ],
 });
 
@@ -45,6 +50,10 @@ const mockRepository = {
 
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
+};
+
+const mockHourlyGasFlowMeterService = {
+  export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
 };
 
 const mockDerivedHourlyValueService = () => {
@@ -82,6 +91,9 @@ describe('HourlyOperatingWorskpaceService', () => {
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceRepository,
         MatsDerivedHourlyValueMap,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceRepository,
+        HourlyGasFlowMeterWorkspaceService,
         HourlyFuelFlowWorkspaceService,
         HourlyFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowMap,
@@ -109,6 +121,10 @@ describe('HourlyOperatingWorskpaceService', () => {
           useValue: mockMatsDerivedHourlyValueService,
         },
         {
+          provide: HourlyGasFlowMeterWorkspaceService,
+          useValue: mockHourlyGasFlowMeterService,
+        },
+        {
           provide: HourlyOperatingWorkspaceRepository,
           useValue: mockRepository,
         },
@@ -129,7 +145,7 @@ describe('HourlyOperatingWorskpaceService', () => {
       const filters = new EmissionsParamsDTO();
       const result = await service.export(['123'], filters);
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0].derivedHourlyValue.length).toBeGreaterThan(0);
+      expect(result[0].derivedHourlyValueData.length).toBeGreaterThan(0);
     });
   });
 });
