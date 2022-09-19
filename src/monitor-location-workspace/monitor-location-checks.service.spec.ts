@@ -27,7 +27,8 @@ describe('location checks service tests', () => {
   payload.hourlyOperatingData[0].stackPipeId = 'sp1';
   payload.hourlyOperatingData[0].monitorHourlyValueData = [
     { parameterCode: 'a', componentId: '1', monitoringSystemId: '1' },
-  ];genDerivedHourlyValueImportDto
+  ];
+  genDerivedHourlyValueImportDto;
   payload.hourlyOperatingData[0].stackPipeId = 'sp1';
   payload.hourlyOperatingData[0].monitorHourlyValueData = [
     { parameterCode: 'a', componentId: '1' },
@@ -37,12 +38,15 @@ describe('location checks service tests', () => {
   ];
   payload.hourlyOperatingData[0].hourlyGFMData = [{ componentId: '4' }];
   const genDerivedHourlyValueDtoData = genDerivedHourlyValueImportDto();
-  genDerivedHourlyValueDtoData[0].monitoringSystemId='4'
+  genDerivedHourlyValueDtoData[0].monitoringSystemId = '4';
   payload.hourlyOperatingData[0].derivedHourlyValueData = genDerivedHourlyValueDtoData;
-  payload.hourlyOperatingData[0].hourlyFuelFlowData = genHourlyFuelFlowImportDto(1, {include:["hourlyParameterFuelFlowData"], hourlyParamFuelFlowAmount: 1})
-  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].monitoringSystemId='5';
-  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].hourlyParameterFuelFlowData[0].monitoringSystemId = '5';
-
+  payload.hourlyOperatingData[0].hourlyFuelFlowData = genHourlyFuelFlowImportDto(
+    1,
+    { include: ['hourlyParameterFuelFlowData'], hourlyParamFuelFlowAmount: 1 },
+  );
+  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].monitoringSystemId = '5';
+  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].hourlyParameterFuelFlowData[0].monitoringSystemId =
+    '5';
 
   payload.sorbentTrapData = [new SorbentTrapImportDTO()];
   payload.sorbentTrapData[0].unitId = 'u2';
@@ -59,7 +63,7 @@ describe('location checks service tests', () => {
   payload.dailyTestSummaryData[0].unitId = 'u1';
 
   payload.longTermFuelFlowData = [new LongTermFuelFlowImportDTO()];
-  payload.longTermFuelFlowData[0].monitoringSystemId = "7"
+  payload.longTermFuelFlowData[0].monitoringSystemId = '7';
   payload.longTermFuelFlowData[0].longTermFuelFlowValue = 1;
 
   const mockRepository = () => ({
@@ -129,7 +133,6 @@ describe('location checks service tests', () => {
       ms4.id = '4';
       const ms5 = new MonitorSystem();
       ms5.id = '5';
-
 
       ml.components = [c4, c5];
       ml.monitorSystems = [ms4, ms5];

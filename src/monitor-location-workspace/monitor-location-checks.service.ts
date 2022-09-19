@@ -58,7 +58,8 @@ export class MonitorLocationChecksService {
       if ('matsMonitorHourlyValueData' in i)
         i.matsMonitorHourlyValueData.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('hourlyGFMData' in i)
@@ -73,7 +74,8 @@ export class MonitorLocationChecksService {
 
       if ('derivedHourlyValueData' in i)
         i.derivedHourlyValueData.forEach(d => {
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('hourlyFuelFlowData' in i) {
@@ -84,22 +86,21 @@ export class MonitorLocationChecksService {
           // The below forEach could probably be removed if they will always be the same, regardless
           // because it's being added to a Set, there won't be any repeating IDs.
           d.hourlyParameterFuelFlowData.forEach(h => {
-            !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+            !d.monitoringSystemId ||
+              location.monitoringSystemIds.add(d.monitoringSystemId);
           });
         });
       }
 
       // for the top level dtos like WeeklyTestSummary and DailyTestSummary
-      if ('componentId' in i) 
+      if ('componentId' in i)
         !i.componentId || location.componentIds.add(i.componentId);
 
       if ('monitoringSystemId' in i)
-         !i.monitoringSystemId || location.monitoringSystemIds.add(i.monitoringSystemId);
+        !i.monitoringSystemId || location.monitoringSystemIds.add(i.monitoringSystemId);
 
-      if ('longTermFuelFlowValue' in i) 
+      if ('longTermFuelFlowValue' in i)
         !i.monitoringSystemId || location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
-      
-      
     };
 
     payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
@@ -114,7 +115,6 @@ export class MonitorLocationChecksService {
   async runChecks(
     payload: EmissionsImportDTO,
   ): Promise<[LocationIdentifiers[], string[]]> {
-
     const errorList = [];
     const orisCode = payload.orisCode;
 
@@ -187,13 +187,13 @@ export class MonitorLocationChecksService {
             );
             if (
               !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode)
-            ){
+            ) {
               errorList.push(
                 CheckCatalogService.formatResultMessage('IMPORT-26-B', {
                   key: monitoringSystemId,
                 }),
-                );
-              }
+              );
+            }
           }
         });
       }
