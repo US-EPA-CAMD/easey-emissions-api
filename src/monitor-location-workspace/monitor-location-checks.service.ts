@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Logger } from '@us-epa-camd/easey-common/logger';
 import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
+import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
@@ -18,12 +18,12 @@ type ForLocationType =
   | HourlyOperatingImportDTO
   | DailyTestSummaryImportDTO
   | WeeklyTestSummaryImportDTO
-  | SorbentTrapImportDTO;
+  | SorbentTrapImportDTO
+  | LongTermFuelFlowImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
   constructor(
-    private readonly logger: Logger,
     @InjectRepository(MonitorLocationWorkspaceRepository)
     private readonly repository: MonitorLocationWorkspaceRepository,
   ) {}
@@ -32,76 +32,82 @@ export class MonitorLocationChecksService {
     const locations: LocationIdentifiers[] = [];
 
     const addLocation = (i: ForLocationType) => {
-      const location = locations.find(
+      let location = locations.find(
         l => l?.unitId === i?.unitId || l?.stackPipeId === i?.stackPipeId,
       );
 
-      if (location) {
-        if ('monitorHourlyValueData' in i)
-          i.monitorHourlyValueData.forEach(d => {
-            location.componentIds.add(d.componentId);
-          });
-
-        if ('matsMonitorHourlyValueData' in i)
-          i.matsMonitorHourlyValueData.forEach(d => {
-            location.componentIds.add(d.componentId);
-          });
-
-        if ('hourlyGFMData' in i)
-          i.hourlyGFMData.forEach(d => {
-            location.componentIds.add(d.componentId);
-          });
-
-        if ('samplingTrainData' in i)
-          i.samplingTrainData.forEach(d => {
-            location.componentIds.add(d.componentId);
-          });
-
-        // for WeeklyTestSummaryImportDTO and DailyTestSummaryImportDTO
-        if ('componentId' in i) location.componentIds.add(i.componentId);
-      } else {
-        const componentIds = new Set<string>();
-
-        if ('monitorHourlyValueData' in i) {
-          i.monitorHourlyValueData.forEach(d => {
-            componentIds.add(d.componentId);
-          });
-        }
-
-        if ('matsMonitorHourlyValueData' in i) {
-          i.matsMonitorHourlyValueData.forEach(d => {
-            componentIds.add(d.componentId);
-          });
-        }
-
-        if ('hourlyGFMData' in i) {
-          i.hourlyGFMData.forEach(d => {
-            componentIds.add(d.componentId);
-          });
-        }
-
-        if ('samplingTrainData' in i) {
-          i.samplingTrainData.forEach(d => {
-            componentIds.add(d.componentId);
-          });
-        }
-
-        // for WeeklyTestSummaryImportDTO and DailyTestSummaryImportDTO
-        if ('componentId' in i) componentIds.add(i.componentId);
-
-        locations.push({
+      if (!location) {
+        location = {
           unitId: i.unitId,
           locationId: null,
           stackPipeId: i.stackPipeId,
-          componentIds,
+          componentIds: new Set<string>(),
+          monitoringSystemIds: new Set<string>(),
+          ltffMonitoringSystemIds: new Set<string>(),
+        };
+
+        locations.push(location);
+      }
+
+      if ('monitorHourlyValueData' in i)
+        i.monitorHourlyValueData.forEach(d => {
+          !d.componentId || location.componentIds.add(d.componentId);
+          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+        });
+
+      if ('matsMonitorHourlyValueData' in i)
+        i.matsMonitorHourlyValueData.forEach(d => {
+          !d.componentId || location.componentIds.add(d.componentId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
+        });
+
+      if ('hourlyGFMData' in i)
+        i.hourlyGFMData.forEach(d => {
+          !d.componentId || location.componentIds.add(d.componentId);
+        });
+
+      if ('samplingTrainData' in i)
+        i.samplingTrainData.forEach(d => {
+          !d.componentId || location.componentIds.add(d.componentId);
+        });
+
+      if ('derivedHourlyValueData' in i)
+        i.derivedHourlyValueData.forEach(d => {
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
+        });
+
+      if ('hourlyFuelFlowData' in i) {
+        i.hourlyFuelFlowData.forEach(d => {
+          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+
+          // Would monitoringSystemId ever be different between HourlyFuelFlowData and HourlyParameterFuelFlowData?
+          // The below forEach could probably be removed if they will always be the same, regardless
+          // because it's being added to a Set, there won't be any repeating IDs.
+          d.hourlyParameterFuelFlowData.forEach(h => {
+            !d.monitoringSystemId ||
+              location.monitoringSystemIds.add(d.monitoringSystemId);
+          });
         });
       }
+
+      // for the top level dtos like WeeklyTestSummary and DailyTestSummary
+      if ('componentId' in i)
+        !i.componentId || location.componentIds.add(i.componentId);
+
+      if ('monitoringSystemId' in i)
+        !i.monitoringSystemId || location.monitoringSystemIds.add(i.monitoringSystemId);
+
+      if ('longTermFuelFlowValue' in i)
+        !i.monitoringSystemId || location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
     };
 
     payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
     payload?.hourlyOperatingData?.forEach(i => addLocation(i));
     payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
+    payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
 
     return locations;
   }
@@ -109,11 +115,10 @@ export class MonitorLocationChecksService {
   async runChecks(
     payload: EmissionsImportDTO,
   ): Promise<[LocationIdentifiers[], string[]]> {
-    this.logger.info('Running Unit/Stack Location Checks');
-
     const errorList = [];
     const orisCode = payload.orisCode;
 
+    // contains ids from the upload
     const locations: LocationIdentifiers[] = this.processLocations(payload);
 
     // This could be an import check in which case the below message would have to be updated
@@ -136,10 +141,16 @@ export class MonitorLocationChecksService {
 
       if (dbLocation) {
         location.locationId = dbLocation.id;
-        const dbComponentIds = dbLocation.components.map(i => i.componentId);
+
+        // @TODO change i.id to i.componentId once import for dailyTestSummary is changed to saving component identifier
+        const dbComponentIds = dbLocation?.components?.map(i => i.id);
+        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
+        const dbMonitoringSystemIds = dbLocation?.monitorSystems?.map(
+          i => i.id,
+        );
 
         location.componentIds.forEach(componentId => {
-          if (!dbComponentIds.includes(componentId)) {
+          if (!dbComponentIds?.includes(componentId)) {
             // IMPORT-27 All EM Components Present in the Database (Result A)
             errorList.push(
               CheckCatalogService.formatResultMessage('IMPORT-27-A', {
@@ -148,10 +159,46 @@ export class MonitorLocationChecksService {
             );
           }
         });
+
+        // IMPORT-26-A All EM Systems Present in the Production Database
+        location.monitoringSystemIds.forEach(monitoringSystemId => {
+          if (!dbMonitoringSystemIds?.includes(monitoringSystemId)) {
+            errorList.push(
+              CheckCatalogService.formatResultMessage('IMPORT-26-A', {
+                systemID: monitoringSystemId,
+              }),
+            );
+          }
+        });
+
+        // IMPORT-26-B All EM Systems Present in the Production Database
+        location.ltffMonitoringSystemIds.forEach(monitoringSystemId => {
+          if (!dbMonitoringSystemIds?.includes(monitoringSystemId)) {
+            errorList.push(
+              CheckCatalogService.formatResultMessage('IMPORT-26-A', {
+                systemID: monitoringSystemId,
+              }),
+            );
+          } else {
+            const validLtffSystemCodes = ['LTOL', 'LTGS'];
+            // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
+            const monitoringSystem = dbLocation.monitorSystems.find(
+              ms => ms.id === monitoringSystemId,
+            );
+            if (
+              !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode)
+            ) {
+              errorList.push(
+                CheckCatalogService.formatResultMessage('IMPORT-26-B', {
+                  key: monitoringSystemId,
+                }),
+              );
+            }
+          }
+        });
       }
     });
 
-    this.logger.info('Completed Unit/Stack Location Checks');
     return [locations, errorList];
   }
 }
