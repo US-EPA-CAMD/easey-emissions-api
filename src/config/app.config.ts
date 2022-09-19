@@ -37,4 +37,8 @@ export default registerAs('app', () => ({
   published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   submissionDays: +process.env.EASEY_EMISSIONS_API_SUBMISSION_DAYS || 38,
+  enableSecretToken: parseBool(
+    process.env.EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN,
+    false,
+  ),
 }));
