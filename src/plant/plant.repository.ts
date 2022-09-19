@@ -21,13 +21,8 @@ export class PlantRepository extends Repository<Plant> {
       .leftJoin('monitorLocation.unit', 'locationUnit')
       .leftJoin('monitorLocation.stackPipe', 'locationStack')
       .where('plant.oris_code = :orisCode', { orisCode })
-<<<<<<< HEAD
-      .andWhere('locationUnit.name IN(:...unitIds)', { unitIds })
-      .orWhere('locationStack.name IN(:...stackIds)', { stackIds })
-=======
       .andWhere('locationUnit.unitid IN(:...unitIds)', { unitIds })
       .orWhere('locationStack.stack_name IN(:...stackIds)', { stackIds })
->>>>>>> develop
       .getOne();
   }
 }
