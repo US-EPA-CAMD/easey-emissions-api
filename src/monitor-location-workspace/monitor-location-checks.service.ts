@@ -7,6 +7,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
+import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
@@ -18,7 +19,8 @@ type ForLocationType =
   | HourlyOperatingImportDTO
   | DailyTestSummaryImportDTO
   | WeeklyTestSummaryImportDTO
-  | SorbentTrapImportDTO;
+  | SorbentTrapImportDTO
+  | LongTermFuelFlowImportDTO; 
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -94,12 +96,17 @@ export class MonitorLocationChecksService {
 
       if ('monitoringSystemId' in i)
         location.monitoringSystemIds.add(i.monitoringSystemId);
+      
+      if( 'longTermFuelFlowValue' in i){
+        location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
+      }
     };
 
     payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
     payload?.hourlyOperatingData?.forEach(i => addLocation(i));
     payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
+    payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
 
     return locations;
   }
@@ -136,9 +143,9 @@ export class MonitorLocationChecksService {
       if (dbLocation) {
         location.locationId = dbLocation.id;
         
-        // @TODO change i.id to i.componentId once import for dailyTestSummary is fixed
+        // @TODO change i.id to i.componentId once import for dailyTestSummary is changed to saving component identifier
         const dbComponentIds = dbLocation.components.map(i => i.id);
-        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is fixed
+        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
         const dbMonitoringSystemIds = dbLocation.monitorSystems.map(i=> i.id)
 
         location.componentIds.forEach(componentId => {
@@ -152,8 +159,17 @@ export class MonitorLocationChecksService {
           }
         });
         
-        // IMPORT-26 All EM Systems Present in the Production Database 
+        // IMPORT-26-A All EM Systems Present in the Production Database 
         location.monitoringSystemIds.forEach(monitoringSystemId =>{
+          if( !dbMonitoringSystemIds.includes(monitoringSystemId) ){
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-26-A', {
+              systemID: monitoringSystemId
+            }))
+          }
+        })
+
+        // IMPORT-26-B All EM Systems Present in the Production Database 
+        location.ltffMonitoringSystemIds.forEach(monitoringSystemId =>{
           if( !dbMonitoringSystemIds.includes(monitoringSystemId) ){
             errorList.push(CheckCatalogService.formatResultMessage('IMPORT-26-A', {
               systemID: monitoringSystemId
@@ -161,6 +177,7 @@ export class MonitorLocationChecksService {
           }
           else{
             const validLtffSystemCodes = ["LTOL", "LTGS"]
+            // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
             const monitoringSystem = dbLocation.monitorSystems.find(ms => ms.id === monitoringSystemId)
             if( !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode) )
               errorList.push(CheckCatalogService.formatResultMessage('IMPORT-26-B', {
