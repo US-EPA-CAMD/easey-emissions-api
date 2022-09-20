@@ -27,7 +27,7 @@ describe('Utils', () => {
     it('should return an empty array if no values for key is found', function() {
       const object = { findMe: '123', notMe: 234 };
 
-      expect(objectValuesByKey('notFound', object));
+      expect(objectValuesByKey('notFound', object)).toEqual([]);
     });
 
     it('should return an array with a value given a key for a shallow object', function() {
