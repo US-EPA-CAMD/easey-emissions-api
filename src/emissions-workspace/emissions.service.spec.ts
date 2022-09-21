@@ -45,6 +45,12 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -79,6 +85,10 @@ describe('Emissions Workspace Service', () => {
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceService,
         WeeklyTestSummaryCheckService,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceService,
+        ComponentRepository,
+        MonitorSystemRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -122,6 +132,10 @@ describe('Emissions Workspace Service', () => {
           useValue: jest.mock(
             '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository',
           ),
+        },
+        {
+          provide: HourlyGasFlowMeterWorkspaceRepository,
+          useValue: mockHourlyGasFlowMeterWorkspaceRepository,
         },
       ],
     }).compile();
@@ -199,6 +213,7 @@ describe('Emissions Workspace Service', () => {
         emissionsDtoMock[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {} },
       ),
     ).resolves.toBeUndefined();
 
@@ -207,6 +222,7 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {} },
       ),
     ).resolves.toBeUndefined();
   });

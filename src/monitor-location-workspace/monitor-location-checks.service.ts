@@ -54,7 +54,8 @@ export class MonitorLocationChecksService {
       if ('monitorHourlyValueData' in i)
         i.monitorHourlyValueData.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('matsMonitorHourlyValueData' in i)
@@ -82,7 +83,8 @@ export class MonitorLocationChecksService {
 
       if ('hourlyFuelFlowData' in i) {
         i.hourlyFuelFlowData.forEach(d => {
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
 
           // Would monitoringSystemId ever be different between HourlyFuelFlowData and HourlyParameterFuelFlowData?
           // The below forEach could probably be removed if they will always be the same, regardless
@@ -99,10 +101,12 @@ export class MonitorLocationChecksService {
         !i.componentId || location.componentIds.add(i.componentId);
 
       if ('monitoringSystemId' in i)
-        !i.monitoringSystemId || location.monitoringSystemIds.add(i.monitoringSystemId);
+        !i.monitoringSystemId ||
+          location.monitoringSystemIds.add(i.monitoringSystemId);
 
       if ('longTermFuelFlowValue' in i)
-        !i.monitoringSystemId || location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
+        !i.monitoringSystemId ||
+          location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
     };
 
     payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
@@ -147,11 +151,9 @@ export class MonitorLocationChecksService {
       if (dbLocation) {
         location.locationId = dbLocation.id;
 
-        // @TODO change i.id to i.componentId once import for dailyTestSummary is changed to saving component identifier
-        const dbComponentIds = dbLocation?.components?.map(i => i.id);
-        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
+        const dbComponentIds = dbLocation?.components?.map(i => i.componentId);
         const dbMonitoringSystemIds = dbLocation?.monitorSystems?.map(
-          i => i.id,
+          i => i.monitoringSystemId,
         );
 
         location.componentIds.forEach(componentId => {

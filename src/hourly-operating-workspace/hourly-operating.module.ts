@@ -10,6 +10,7 @@ import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-w
 import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.module';
 import { MatsDerivedHourlyValueWorkspaceModule } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.module';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
+import { HourlyGasFlowMeterWorkspaceModule } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
     MonitorHourlyValueWorkspaceModule,
     MatsMonitorHourlyValueWorkspaceModule,
     MatsDerivedHourlyValueWorkspaceModule,
+    HourlyGasFlowMeterWorkspaceModule,
   ],
   controllers: [],
   providers: [
