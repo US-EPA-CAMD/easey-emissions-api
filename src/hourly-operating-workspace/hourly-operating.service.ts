@@ -94,26 +94,42 @@ export class HourlyOperatingWorkspaceService {
     identifiers: ImportIdentifiers,
   ) {
     // TODO Hourly Operating Import, Overwrite all on merge
-    const hourlyOperatingData = [new HrlyOpData()];
-
+    const promises = [];
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
       emissionsImport.hourlyOperatingData.length > 0
-    )
-      for (const hourlyOperatingDatum of hourlyOperatingData) {
-        if (
-          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValues) &&
-          hourlyOperatingDatum.matsMonitorHourlyValues.length > 0
-        )
-          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValues) {
-            await this.matsMonitorHourlyValueService.import(
-              matsMonitorHourlyValue,
-              hourlyOperatingDatum.id,
-              monitoringLocationId,
-              reportingPeriodId,
-              identifiers,
-            );
-          }
+    ) {
+      for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
+        hourlyOperatingDatum?.derivedHourlyValueData?.forEach(
+          derivedHrlyValue =>
+            promises.push(
+              this.derivedHourlyValueService.import(
+                derivedHrlyValue,
+                // TODO: Use hourid from above import
+                '',
+                monitoringLocationId,
+                reportingPeriodId,
+                identifiers,
+              ),
+            ),
+        );
+
+        hourlyOperatingDatum?.matsMonitorHourlyValueData?.forEach(
+          matsMonitorHourlyValue =>
+            promises.push(
+              this.matsMonitorHourlyValueService.import(
+                matsMonitorHourlyValue,
+                // TODO: Use hourid from above import
+                '',
+                monitoringLocationId,
+                reportingPeriodId,
+                identifiers,
+              ),
+            ),
+        );
       }
+    }
+
+    await Promise.all(promises);
   }
 }
