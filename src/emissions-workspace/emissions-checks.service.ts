@@ -9,6 +9,7 @@ import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { isUndefinedOrNull } from '../utils/utils';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorPlanChecksService } from 'src/monitor-plan-workspace/monitor-plan-checks.service';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -17,6 +18,7 @@ export class EmissionsChecksService {
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
+    private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
   private throwIfErrors(errorList: string[]) {
@@ -42,9 +44,13 @@ export class EmissionsChecksService {
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
     // IMPORT-27: All EM Components Present in the Production Database
-    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(
+    // IMPORT-26: All EM Systems Present in the Production Database
+    const [unitStackIdentifiers, locationErrors] = await this.monitorLocationCheckService.runChecks(
       payload,
     );
+    
+    // IMPORT-22: All EM Locations Present in Unique Monitoring Plan in the Production Database 
+    this.monitorPlanCheckService.runChecks(unitStackIdentifiers);
 
     errorList.push(
       ...weeklyTestSummaryCheckErrors,
