@@ -12,15 +12,12 @@ export class HourlyFuelFlowWorkspaceService {
     private readonly hourlyParameterFuelFlow: HourlyParameterFuelFlowWorkspaceService,
   ) {}
 
-  async export(monitoringLocationIds: string[]): Promise<HourlyFuelFlowDTO[]> {
-    if (
-      !Array.isArray(monitoringLocationIds) ||
-      monitoringLocationIds.length < 1
-    ) {
+  async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
+    if (!Array.isArray(hourlyOperatingIds) || hourlyOperatingIds.length < 1) {
       return null;
     }
 
-    const hourlyFuelFlow = await this.repository.export(monitoringLocationIds);
+    const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
     const mapped = await this.map.many(hourlyFuelFlow);
 
     for (const fuelFlow of mapped) {

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
 import { HrlyGasFlowMeter } from '../entities/hrly-gas-flow-meter.entity';
+import { HrlyGasFlowMeter as HrlyGasFlowMeterWorkspace } from '../entities/workspace/hrly-gas-flow-meter.entity';
 import { HourlyGasFlowMeterDTO } from '../dto/hourly-gas-flow-meter.dto';
 
 @Injectable()
 export class HourlyGasFlowMeterMap extends BaseMap<
-  HrlyGasFlowMeter,
+  HrlyGasFlowMeter | HrlyGasFlowMeterWorkspace,
   HourlyGasFlowMeterDTO
 > {
   public async one(entity: HrlyGasFlowMeter): Promise<HourlyGasFlowMeterDTO> {
