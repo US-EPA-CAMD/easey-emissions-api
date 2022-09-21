@@ -213,7 +213,7 @@ describe('Emissions Workspace Service', () => {
         emissionsDtoMock[0],
         faker.datatype.number(),
         faker.datatype.string(),
-        { monitoringSystems: {}, components: {} },
+        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves.toBeUndefined();
 
@@ -222,7 +222,7 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         faker.datatype.number(),
         faker.datatype.string(),
-        { monitoringSystems: {}, components: {} },
+        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves.toBeUndefined();
   });
