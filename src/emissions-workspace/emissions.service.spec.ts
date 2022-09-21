@@ -49,6 +49,8 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -85,6 +87,8 @@ describe('Emissions Workspace Service', () => {
         WeeklyTestSummaryCheckService,
         HourlyGasFlowMeterMap,
         HourlyGasFlowMeterWorkspaceService,
+        ComponentRepository,
+        MonitorSystemRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -209,6 +213,7 @@ describe('Emissions Workspace Service', () => {
         emissionsDtoMock[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {} },
       ),
     ).resolves.toBeUndefined();
 
@@ -217,6 +222,7 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {} },
       ),
     ).resolves.toBeUndefined();
   });

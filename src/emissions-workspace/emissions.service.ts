@@ -10,8 +10,20 @@ import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
-import { isUndefinedOrNull } from '../utils/utils';
+import { isUndefinedOrNull, objectValuesByKey } from '../utils/utils';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+
+// Import Identifier: Table Id
+export type ImportIdentifiers = {
+  components: {
+    [key: string]: string;
+  };
+  monitoringSystems: {
+    [key: string]: string;
+  };
+};
 
 @Injectable()
 export class EmissionsWorkspaceService {
@@ -22,6 +34,9 @@ export class EmissionsWorkspaceService {
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
     private readonly plantRepository: PlantRepository,
     private readonly hourlyOperatingService: HourlyOperatingWorkspaceService,
+    private readonly componentRepository: ComponentRepository,
+    private readonly monitorSystemRepository: MonitorSystemRepository,
+    private readonly hourlyOperatingValueService: HourlyOperatingWorkspaceService,
   ) {}
 
   async delete(
@@ -96,6 +111,7 @@ export class EmissionsWorkspaceService {
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
     const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
+    const identifiers = await this.getIdentifiers(params, monitoringLocationId);
 
     // Import-28 Valid formulaIdentifiers for location
     await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
@@ -111,12 +127,22 @@ export class EmissionsWorkspaceService {
     }
     await Promise.all(evaluationDeletes);
 
-    await this.importDailyTestSummaries(
-      params,
-      reportingPeriodId,
-      monitoringLocationId,
-    );
+    const importPromises = [
+      this.importDailyTestSummaries(
+        params,
+        reportingPeriodId,
+        monitoringLocationId,
+        identifiers,
+      ),
+      this.importHourlyOperating(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
+    ];
 
+    await Promise.all(importPromises);
     await this.repository.save(
       this.repository.create({
         monitorPlanId,
@@ -133,6 +159,7 @@ export class EmissionsWorkspaceService {
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
     monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
   ) {
     const dailyTestSummaryImports: Array<Promise<DailyTestSummaryDTO>> = [];
 
@@ -143,10 +170,83 @@ export class EmissionsWorkspaceService {
             ...dailyTestSummaryDatum,
             reportingPeriodId,
             monitoringLocationId,
+            identifiers,
           }),
         );
       }
       await Promise.all(dailyTestSummaryImports);
     }
+  }
+
+  async importHourlyOperating(
+    emissionImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    return this.hourlyOperatingValueService.import(
+      emissionImport,
+      monitoringLocationId,
+      reportingPeriodId,
+      identifiers,
+    );
+  }
+
+  async getIdentifiers(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+  ) {
+    const untypedParams = (emissionsImport as unknown) as Record<
+      string,
+      unknown
+    >;
+
+    const identifiers: ImportIdentifiers = {
+      components: {},
+      monitoringSystems: {},
+    };
+
+    const componentIdentifiers = objectValuesByKey<string>(
+      'componentId',
+      untypedParams,
+      true,
+    );
+    const monitoringSystemIdentifiers = objectValuesByKey<string>(
+      'monitoringSystemId',
+      untypedParams,
+      true,
+    );
+
+    const promises = [];
+
+    if (!isUndefinedOrNull(componentIdentifiers)) {
+      for (const componentId of componentIdentifiers) {
+        promises.push(
+          this.componentRepository
+            .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
+            .then(data => (identifiers.components[componentId] = data.id)),
+        );
+      }
+    }
+
+    if (!isUndefinedOrNull(monitoringSystemIdentifiers)) {
+      for (const monSysIdentifier of monitoringSystemIdentifiers) {
+        promises.push(
+          this.monitorSystemRepository
+            .findOneByIdentifierAndLocation(
+              monSysIdentifier,
+              monitoringLocationId,
+            )
+            .then(
+              data =>
+                (identifiers.monitoringSystems[monSysIdentifier] = data.id),
+            ),
+        );
+      }
+    }
+
+    await Promise.all(promises);
+
+    return identifiers;
   }
 }

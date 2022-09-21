@@ -17,12 +17,18 @@ import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspa
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
-    TypeOrmModule.forFeature([PlantRepository]),
-    TypeOrmModule.forFeature([MonitorFormulaRepository]),
+    TypeOrmModule.forFeature([
+      EmissionsWorkspaceRepository,
+      PlantRepository,
+      MonitorFormulaRepository,
+      ComponentRepository,
+      MonitorSystemRepository,
+    ]),
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
     Logger,

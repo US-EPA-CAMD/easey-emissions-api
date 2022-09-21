@@ -47,7 +47,7 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
 import { mockHourlyGasFlowMeterRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-repository';
 
-describe('Emissions Workspace Service', () => {
+describe('Emissions Service', () => {
   let configService: ConfigService;
   let emissionsMap: EmissionsMap;
   let emissionsRepository: EmissionsRepository;
