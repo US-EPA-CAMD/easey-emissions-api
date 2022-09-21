@@ -36,6 +36,8 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
     });
 
     it('should export a record', async () => {
+      jest.spyOn(repository, 'export').mockResolvedValue(null);
+
       const result = await service.export(['123']);
       expect(result).toEqual(null);
     });

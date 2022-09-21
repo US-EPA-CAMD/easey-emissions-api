@@ -218,25 +218,31 @@ export class EmissionsWorkspaceService {
     );
 
     const promises = [];
-    for (const componentId of componentIdentifiers) {
-      promises.push(
-        this.componentRepository
-          .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
-          .then(data => (identifiers.components[componentId] = data.id)),
-      );
+
+    if (!isUndefinedOrNull(componentIdentifiers)) {
+      for (const componentId of componentIdentifiers) {
+        promises.push(
+          this.componentRepository
+            .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
+            .then(data => (identifiers.components[componentId] = data.id)),
+        );
+      }
     }
 
-    for (const monSysIdentifier of monitoringSystemIdentifiers) {
-      promises.push(
-        this.monitorSystemRepository
-          .findOneByIdentifierAndLocation(
-            monSysIdentifier,
-            monitoringLocationId,
-          )
-          .then(
-            data => (identifiers.monitoringSystems[monSysIdentifier] = data.id),
-          ),
-      );
+    if (!isUndefinedOrNull(monitoringSystemIdentifiers)) {
+      for (const monSysIdentifier of monitoringSystemIdentifiers) {
+        promises.push(
+          this.monitorSystemRepository
+            .findOneByIdentifierAndLocation(
+              monSysIdentifier,
+              monitoringLocationId,
+            )
+            .then(
+              data =>
+                (identifiers.monitoringSystems[monSysIdentifier] = data.id),
+            ),
+        );
+      }
     }
 
     await Promise.all(promises);

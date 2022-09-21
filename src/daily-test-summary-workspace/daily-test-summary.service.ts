@@ -78,11 +78,11 @@ export class DailyTestSummaryWorkspaceService {
         ...parameters,
         id: randomUUID(),
         monitoringSystemId:
-          parameters.identifiers.monitoringSystems[
+          parameters?.identifiers?.monitoringSystems?.[
             parameters.monitoringSystemId
           ],
         componentId:
-          parameters.identifiers.monitoringSystems[parameters.componentId],
+          parameters?.identifiers?.monitoringSystems?.[parameters.componentId],
       }),
     );
 

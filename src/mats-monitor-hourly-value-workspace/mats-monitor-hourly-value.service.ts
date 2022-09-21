@@ -32,12 +32,12 @@ export class MatsMonitorHourlyValueWorkspaceService {
       this.repository.create({
         id: randomUUID(),
         monitoringSystemId:
-          identifiers.monitoringSystems[data.monitoringSystemId],
+          identifiers.monitoringSystems?.[data.monitoringSystemId],
         unadjustedHourlyValue: data.unadjustedHourlyValue,
         percentAvailable: data.percentAvailable,
         parameterCode: data.parameterCode,
         modcCode: data.modcCode,
-        componentId: identifiers.components[data.componentId],
+        componentId: identifiers.components?.[data.componentId],
         hourId,
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
