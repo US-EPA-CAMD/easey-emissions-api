@@ -101,15 +101,19 @@ export class HourlyOperatingWorkspaceService {
       emissionsImport.hourlyOperatingData.length > 0
     )
       for (const hourlyOperatingDatum of hourlyOperatingData) {
-        for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValues) {
-          await this.matsMonitorHourlyValueService.import(
-            matsMonitorHourlyValue,
-            hourlyOperatingDatum.id,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-          );
-        }
+        if (
+          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValues) &&
+          hourlyOperatingDatum.matsMonitorHourlyValues.length > 0
+        )
+          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValues) {
+            await this.matsMonitorHourlyValueService.import(
+              matsMonitorHourlyValue,
+              hourlyOperatingDatum.id,
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+            );
+          }
       }
   }
 }

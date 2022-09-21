@@ -20,7 +20,6 @@ export const objectValuesByKey = <ValueType>(
   for (const key of Object.keys(object)) {
     if (searchKey === key) {
       values.push(object[key]);
-      continue;
     }
 
     if (object[key] && typeof object[key] === 'object') {

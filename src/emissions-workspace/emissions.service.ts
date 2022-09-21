@@ -132,6 +132,7 @@ export class EmissionsWorkspaceService {
         params,
         reportingPeriodId,
         monitoringLocationId,
+        identifiers,
       ),
       this.importHourlyOperating(
         params,
@@ -158,6 +159,7 @@ export class EmissionsWorkspaceService {
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
     monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
   ) {
     const dailyTestSummaryImports: Array<Promise<DailyTestSummaryDTO>> = [];
 
@@ -168,6 +170,7 @@ export class EmissionsWorkspaceService {
             ...dailyTestSummaryDatum,
             reportingPeriodId,
             monitoringLocationId,
+            identifiers,
           }),
         );
       }
