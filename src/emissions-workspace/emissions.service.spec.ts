@@ -51,6 +51,8 @@ import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-wor
 import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
 import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -76,9 +78,11 @@ describe('Emissions Workspace Service', () => {
         HourlyOperatingMap,
         MonitorHourlyValueMap,
         MonitorLocationChecksService,
+        MonitorPlanChecksService,
         HourlyOperatingWorkspaceService,
         MonitorFormulaRepository,
         MonitorLocationWorkspaceRepository,
+        MonitorPlanWorkspaceRepository,
         MonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueMap,

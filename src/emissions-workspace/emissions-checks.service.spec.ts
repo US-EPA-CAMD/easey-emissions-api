@@ -17,6 +17,7 @@ import { genEmissionsImportDto } from '../../test/object-generators/emissions-dt
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { genMonitorFormula } from '../../test/object-generators/monitor-formula';
 import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -32,6 +33,7 @@ describe('Emissions Checks Service Tests', () => {
         DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         EmissionsChecksService,
+        MonitorPlanChecksService,
         MonitorFormulaRepository,
         {
           provide: DailyCalibrationWorkspaceRepository,
@@ -53,6 +55,13 @@ describe('Emissions Checks Service Tests', () => {
             runChecks: jest.fn().mockResolvedValue([[], []]),
           }),
         },
+        {
+          provide: MonitorPlanChecksService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockResolvedValue([]),
+          }),
+        },
+
       ],
     }).compile();
 
