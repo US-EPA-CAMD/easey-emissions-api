@@ -33,14 +33,14 @@ export class HrlyOpData extends BaseEntity {
   monitoringLocationId: string;
 
   @Column({ name: 'begin_date', nullable: false })
-  beginDate: Date;
+  date: Date;
 
   @Column({
     name: 'begin_hour',
     transformer: new NumericColumnTransformer(),
     nullable: false,
   })
-  beginHour: number;
+  hour: number;
 
   @Column({
     name: 'op_time',

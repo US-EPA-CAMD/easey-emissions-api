@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
@@ -14,6 +14,8 @@ import { isUndefinedOrNull, objectValuesByKey } from '../utils/utils';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -143,12 +145,16 @@ export class EmissionsWorkspaceService {
     ];
 
     await Promise.all(importPromises);
+    try{
     await this.repository.save(
       this.repository.create({
         monitorPlanId,
         reportingPeriodId,
       }),
     );
+    }catch(e){
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
 
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
@@ -179,17 +185,25 @@ export class EmissionsWorkspaceService {
   }
 
   async importHourlyOperating(
-    emissionImport: EmissionsImportDTO,
+    emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ) {
-    return this.hourlyOperatingValueService.import(
-      emissionImport,
-      monitoringLocationId,
-      reportingPeriodId,
-      identifiers,
-    );
+    const hourlyOperatingImports: Array<Promise<HourlyOperatingDTO>> = [];
+
+    if (Array.isArray(emissionsImport.hourlyOperatingData)) {
+      for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
+        hourlyOperatingImports.push(
+          this.hourlyOperatingService.import(emissionsImport, {
+            ...hourlyOperatingDatum,
+            reportingPeriodId,
+            monitoringLocationId,
+            identifiers,
+          }),
+        );
+      }
+    }
   }
 
   async getIdentifiers(

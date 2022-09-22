@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
-import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
+import {
+  HourlyOperatingDTO,
+  HourlyOperatingImportDTO,
+} from '../dto/hourly-operating.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
@@ -10,9 +13,16 @@ import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-v
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DeleteResult } from 'typeorm';
+import { randomUUID } from 'crypto';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+
+export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
+  reportingPeriodId: number;
+  monitoringLocationId: string;
+  identifiers: ImportIdentifiers;
+};
 
 @Injectable()
 export class HourlyOperatingWorkspaceService {
@@ -87,33 +97,52 @@ export class HourlyOperatingWorkspaceService {
     return hourlyOperating;
   }
 
+  async delete(id: string): Promise<DeleteResult> {
+    return this.repository.delete({ id });
+  }
+
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
-    reportingPeriodId: number,
-    identifiers: ImportIdentifiers,
-  ) {
+    data: HourlyOperatingCreate,
+  ): Promise<HourlyOperatingDTO> {
+    const result = await this.repository.save(
+      this.repository.create({
+        ...data,
+        id: randomUUID(),
+      }),
+    );
+
     // TODO Hourly Operating Import, Overwrite all on merge
-    const hourlyOperatingData = [new HrlyOpData()];
+    // const hourlyOperatingData = [new HrlyOpData()];
 
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
       emissionsImport.hourlyOperatingData.length > 0
     )
-      for (const hourlyOperatingDatum of hourlyOperatingData) {
+      for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
         if (
-          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValues) &&
-          hourlyOperatingDatum.matsMonitorHourlyValues.length > 0
+          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValueData) &&
+          hourlyOperatingDatum.matsMonitorHourlyValueData.length > 0
         )
-          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValues) {
+          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValueData) {
             await this.matsMonitorHourlyValueService.import(
               matsMonitorHourlyValue,
-              hourlyOperatingDatum.id,
-              monitoringLocationId,
-              reportingPeriodId,
-              identifiers,
+              result.id,
+              data.monitoringLocationId,
+              data.reportingPeriodId,
+              data.identifiers,
             );
           }
+        for (const monitorHourlyValue of hourlyOperatingDatum.monitorHourlyValueData) {
+          await this.monitorHourlyValueService.improt(
+            monitorHourlyValue,
+            result.id,
+            data.monitoringLocationId,
+            data.reportingPeriodId,
+            data.identifiers,
+          );
+        }
       }
+    return this.map.one(result);
   }
 }
