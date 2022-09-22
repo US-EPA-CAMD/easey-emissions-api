@@ -1,4 +1,4 @@
-import { MonitorPlan } from 'src/entities/workspace/monitor-plan.entity';
+import { MonitorPlan } from '../entities/workspace/monitor-plan.entity';
 import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(MonitorPlan)

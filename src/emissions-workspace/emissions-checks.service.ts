@@ -9,7 +9,7 @@ import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { isUndefinedOrNull } from '../utils/utils';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
-import { MonitorPlanChecksService } from 'src/monitor-plan-workspace/monitor-plan-checks.service';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 
 @Injectable()
 export class EmissionsChecksService {
