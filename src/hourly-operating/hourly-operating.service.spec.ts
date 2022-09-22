@@ -78,6 +78,12 @@ describe('HourlyOperatingService', () => {
   let repository: any;
   let map;
 
+  let monitorHourlyValueRepository: MonitorHourlyValueRepository;
+  let derivedHourlyValueRepository: DerivedHourlyValueRepository;
+  let matsMonitorHourlyValueRepository: MatsMonitorHourlyValueRepository;
+  let hourlyGasFlowMeterRepository: HourlyGasFlowMeterRepository;
+  let hourlyFuelFlowRepository: HourlyFuelFlowRepository;
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
@@ -101,10 +107,8 @@ describe('HourlyOperatingService', () => {
         HourlyParameterFuelFlowService,
         HourlyParameterFuelFlowRepository,
         HourlyParameterFuelFlowMap,
-        {
-          provide: DerivedHourlyValueRepository,
-          useValue: jest,
-        },
+        DerivedHourlyValueRepository,
+        HourlyOperatingRepository,
         {
           provide: MonitorHourlyValueService,
           useValue: mockMonitorHourlyValueService,
@@ -135,6 +139,14 @@ describe('HourlyOperatingService', () => {
     service = module.get(HourlyOperatingService);
     repository = module.get(HourlyOperatingRepository);
     map = module.get(HourlyOperatingMap);
+
+    monitorHourlyValueRepository = module.get(MonitorHourlyValueRepository);
+    derivedHourlyValueRepository = module.get(DerivedHourlyValueRepository);
+    matsMonitorHourlyValueRepository = module.get(
+      MatsMonitorHourlyValueRepository,
+    );
+    hourlyGasFlowMeterRepository = module.get(HourlyGasFlowMeterRepository);
+    hourlyFuelFlowRepository = module.get(HourlyFuelFlowRepository);
   });
 
   describe('hourly operating service export', () => {
@@ -144,6 +156,22 @@ describe('HourlyOperatingService', () => {
 
     it('should export Hourly OP Data', async () => {
       const filters = new EmissionsParamsDTO();
+
+      jest
+        .spyOn(monitorHourlyValueRepository, 'export')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(derivedHourlyValueRepository, 'export')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(matsMonitorHourlyValueRepository, 'export')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(hourlyGasFlowMeterRepository, 'export')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(hourlyFuelFlowRepository, 'export')
+        .mockResolvedValue(undefined);
 
       const result = await service.export(['123'], filters);
       expect(result.length).toBeGreaterThan(0);

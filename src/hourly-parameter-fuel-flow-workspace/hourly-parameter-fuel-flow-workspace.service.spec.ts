@@ -4,6 +4,9 @@ import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.m
 import { HourlyParameterFuelFlowWorkspaceService } from './hourly-parameter-fuel-flow-workspace.service';
 import { genHourlyParamFuelFlow } from '../../test/object-generators/hourly-param-fuel-flow';
 import { HrlyParamFuelFlow } from '../entities/workspace/hrly-param-fuel-flow.entity';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 
 describe('HourlyParameterFuelFlowWoskpaceService', () => {
   let service: HourlyParameterFuelFlowWorkspaceService;
@@ -15,6 +18,9 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
         HourlyParameterFuelFlowWorkspaceService,
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowMap,
+        HourlyFuelFlowWorkspaceService,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyFuelFlowMap,
       ],
     }).compile();
 
@@ -36,9 +42,10 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
             monitoringLocationId: param.monitoringLocationId,
             parameterCode: param.parameterCode,
             parameterValueForFuel: param.parameterValueForFuel,
-            formulaIdentifier: param.formulaIdentifier,
+            formulaIdentifier: param.monitorFormula?.formulaId ?? null,
+            monitoringFormulaRecordId: param.formulaIdentifier,
             sampleTypeCode: param.sampleTypeCode,
-            monitoringSystemId: param.monitoringSystemId,
+            monitoringSystemId: param.monitorSystem?.monitoringSystemId ?? null,
             operatingConditionCode: param.operatingConditionCode,
             segmentNumber: param.segmentNumber,
             parameterUomCode: param.parameterUomCode,

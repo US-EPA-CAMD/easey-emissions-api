@@ -142,7 +142,7 @@ describe('location checks service tests', () => {
       repository.getLocationsByUnitStackPipeIds.mockResolvedValue([ml]);
 
       const [, errorList] = await service.runChecks(payload);
-      expect(errorList.length).toEqual(3);
+      expect(errorList.length).toEqual(5);
     });
   });
 });

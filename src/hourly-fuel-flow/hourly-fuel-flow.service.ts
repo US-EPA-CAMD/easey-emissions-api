@@ -18,6 +18,11 @@ export class HourlyFuelFlowService {
     }
 
     const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
+
+    if (!Array.isArray(hourlyFuelFlow)) {
+      return null;
+    }
+
     const mapped = await this.map.many(hourlyFuelFlow);
 
     const promises = [];
