@@ -11,6 +11,7 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { HourlyOperatingModule } from '../hourly-operating/hourly-operating.module';
+import { HourlyParameterFuelFlowModule } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.module';
 
 @Module({
   imports: [
@@ -19,13 +20,10 @@ import { HourlyOperatingModule } from '../hourly-operating/hourly-operating.modu
       EmissionsSubmissionsProgressRepository,
     ]),
     DailyTestSummaryModule,
-    HourlyOperatingModule
+    HourlyOperatingModule,
+    HourlyParameterFuelFlowModule,
   ],
   controllers: [EmissionsController],
-  providers: [
-    EmissionsMap,
-    EmissionsService,
-    EmissionsSubmissionsProgressMap,
-  ],
+  providers: [EmissionsMap, EmissionsService, EmissionsSubmissionsProgressMap],
 })
 export class EmissionsModule {}

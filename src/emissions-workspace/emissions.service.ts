@@ -87,8 +87,16 @@ export class EmissionsWorkspaceService {
 
     for (const collection of Object.keys(params)) {
       if (Array.isArray(params[collection]) && collection.length > 0) {
-        stackPipeIds.push(...params[collection]?.map(data => data.stackPipeId));
-        unitIds.push(...params[collection]?.map(data => data.unitId));
+        stackPipeIds.push(
+          ...params[collection]
+            ?.map(data => data.stackPipeId)
+            .filter(id => !isUndefinedOrNull(id)),
+        );
+        unitIds.push(
+          ...params[collection]
+            ?.map(data => data.unitId)
+            .filter(id => !isUndefinedOrNull(id)),
+        );
       }
     }
 
@@ -97,7 +105,6 @@ export class EmissionsWorkspaceService {
       stackIds: [...new Set(stackPipeIds)],
       unitIds: [...new Set(unitIds)],
     });
-
     if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }

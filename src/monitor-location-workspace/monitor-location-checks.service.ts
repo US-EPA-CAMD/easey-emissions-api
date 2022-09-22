@@ -7,6 +7,7 @@ import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
+import { SummaryValueImportDTO } from '../dto/summary-value.dto';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
@@ -19,7 +20,8 @@ type ForLocationType =
   | DailyTestSummaryImportDTO
   | WeeklyTestSummaryImportDTO
   | SorbentTrapImportDTO
-  | LongTermFuelFlowImportDTO;
+  | LongTermFuelFlowImportDTO
+  | SummaryValueImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -112,6 +114,7 @@ export class MonitorLocationChecksService {
     payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
     payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
+    payload?.summaryValueData?.forEach(i=>addLocation(i));
 
     return locations;
   }
@@ -125,10 +128,12 @@ export class MonitorLocationChecksService {
     // contains ids from the upload
     const locations: LocationIdentifiers[] = this.processLocations(payload);
 
-    // This could be an import check in which case the below message would have to be updated
+    // IMPORT-22-A
     if (locations.length === 0) {
-      errorList.push('No location identifiers found in import file');
-    }
+      errorList.push(
+        CheckCatalogService.formatResultMessage('IMPORT-22-A'),
+      );
+}
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(
       orisCode,

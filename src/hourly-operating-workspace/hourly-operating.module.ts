@@ -11,12 +11,20 @@ import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-va
 import { MatsDerivedHourlyValueWorkspaceModule } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.module';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { HourlyGasFlowMeterWorkspaceModule } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.module';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       DerivedHourlyValueWorkspaceRepository,
       HourlyOperatingWorkspaceRepository,
+      HourlyFuelFlowWorkspaceRepository,
+      HourlyParameterFuelFlowWorkspaceRepository,
     ]),
     MonitorHourlyValueWorkspaceModule,
     MatsMonitorHourlyValueWorkspaceModule,
@@ -27,8 +35,12 @@ import { HourlyGasFlowMeterWorkspaceModule } from '../hourly-gas-flow-meter-work
   providers: [
     DerivedHourlyValueMap,
     DerivedHourlyValueWorkspaceService,
+    HourlyFuelFlowMap,
     HourlyOperatingMap,
     HourlyOperatingWorkspaceService,
+    HourlyFuelFlowWorkspaceService,
+    HourlyParameterFuelFlowWorkspaceService,
+    HourlyParameterFuelFlowMap,
   ],
   exports: [TypeOrmModule, HourlyOperatingMap, HourlyOperatingWorkspaceService],
 })

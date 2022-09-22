@@ -7,9 +7,10 @@ export class MonitorSystemRepository extends Repository<MonitorSystem> {
     systemIdentifier: string,
     monitoringLocationId: string,
   ) {
+    
     return this.createQueryBuilder('monitorSystem')
-      .where('monitorSystem.mon_loc_id', { monitoringLocationId })
-      .andWhere('monitorSystem.system_identifier', { systemIdentifier })
+      .where('monitorSystem.mon_loc_id = :monitoringLocationId', { monitoringLocationId })
+      .andWhere('monitorSystem.system_identifier = :systemIdentifier', { systemIdentifier })
       .getOne();
   }
 }
