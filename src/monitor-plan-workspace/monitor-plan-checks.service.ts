@@ -22,7 +22,7 @@ export class MonitorPlanChecksService {
 
   async import22BC(locations: LocationIdentifiers[]): Promise<string[]> {
     const errorList: string[] = [];
-    // const monitorLocationIds = dbMonitorLocations.map(ml => ml.id)
+
     const monitorLocationIds = locations
       .filter(l => !!l.locationId)
       .map(l => l.locationId);

@@ -50,7 +50,7 @@ describe('MonitorPlanChecksService tests', ()=>{
         it('should return a non empty array', async()=>{
             repository.getMonitorPlansByLocationIds.mockResolvedValue(genMonitorPlan(1, {include:["locations"], monitorLocationAmount: 1}))
             const errorList = await service.runChecks(unitStackLocations)
-            expect(errorList.length > 1);
+            expect(errorList.length).toBeGreaterThan(0);
         })
     })
     
