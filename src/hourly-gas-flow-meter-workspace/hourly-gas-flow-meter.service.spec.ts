@@ -5,6 +5,7 @@ import { HrlyGasFlowMeter } from '../entities/workspace/hrly-gas-flow-meter.enti
 import { HourlyGasFlowMeterWorkspaceRepository } from './hourly-gas-flow-meter.repository';
 import { HourlyGasFlowMeterWorkspaceService } from './hourly-gas-flow-meter.service';
 import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
+import { genHourlyGasFlowDto } from '../../test/object-generators/hourly-gas-flow-dto';
 
 describe('--HourlyGasFlowMeterService--', () => {
   let map: HourlyGasFlowMeterMap;
@@ -50,6 +51,21 @@ describe('--HourlyGasFlowMeterService--', () => {
           }),
         ),
       ).resolves.toEqual(mappedValues);
+    });
+  });
+
+  describe('import', () => {
+    it('should import data given correct import', async function() {
+      const mockedValues = genHourlyGasFlowDto()[0];
+
+      jest.spyOn(service, 'import').mockResolvedValue(null);
+
+      await expect(
+        service.import(mockedValues, '123', '123', 123, {
+          components: {},
+          monitoringSystems: {},
+        }),
+      ).resolves;
     });
   });
 });
