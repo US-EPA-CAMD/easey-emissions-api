@@ -21,7 +21,7 @@ export class MonitorHourlyValueWorkspaceService {
     return this.map.many(results);
   }
 
-  async improt(
+  async import(
     data: MonitorHourlyValueImportDTO,
     hourId: string,
     monitoringLocationId: string,

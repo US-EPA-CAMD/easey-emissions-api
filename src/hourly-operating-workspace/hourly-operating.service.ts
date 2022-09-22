@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import {
@@ -17,9 +17,8 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DeleteResult } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
   reportingPeriodId: number;
@@ -123,6 +122,7 @@ export class HourlyOperatingWorkspaceService {
     // TODO Hourly Operating Import, Overwrite all on merge
     // const hourlyOperatingData = [new HrlyOpData()];
 
+    const promises = [];
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
       emissionsImport.hourlyOperatingData.length > 0
@@ -133,24 +133,40 @@ export class HourlyOperatingWorkspaceService {
           hourlyOperatingDatum.matsMonitorHourlyValueData.length > 0
         )
           for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValueData) {
-            await this.matsMonitorHourlyValueService.import(
-              matsMonitorHourlyValue,
+            promises.push(
+              this.matsMonitorHourlyValueService.import(
+                matsMonitorHourlyValue,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
+              ),
+            );
+          }
+        for (const monitorHourlyValue of hourlyOperatingDatum.monitorHourlyValueData) {
+          promises.push(
+            this.monitorHourlyValueService.import(
+              monitorHourlyValue,
               result.id,
               data.monitoringLocationId,
               data.reportingPeriodId,
               data.identifiers,
-            );
-          }
-        for (const monitorHourlyValue of hourlyOperatingDatum.monitorHourlyValueData) {
-          await this.monitorHourlyValueService.improt(
-            monitorHourlyValue,
-            result.id,
-            data.monitoringLocationId,
-            data.reportingPeriodId,
-            data.identifiers,
+            ),
           );
         }
       }
+
+    const settled = await Promise.allSettled(promises);
+
+    for (const settledElement of settled) {
+      if (settledElement.status === 'rejected') {
+        throw new LoggingException(
+          settledElement.reason.details,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
     return this.map.one(result);
   }
 }

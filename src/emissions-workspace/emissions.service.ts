@@ -151,16 +151,26 @@ export class EmissionsWorkspaceService {
       ),
     ];
 
-    await Promise.all(importPromises);
-    try{
-    await this.repository.save(
-      this.repository.create({
-        monitorPlanId,
-        reportingPeriodId,
-      }),
-    );
-    }catch(e){
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    const importResults = await Promise.allSettled(importPromises);
+
+    for (const importResult of importResults) {
+      if (importResult.status === 'rejected') {
+        throw new LoggingException(
+          importResult.reason.details,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    try {
+      await this.repository.save(
+        this.repository.create({
+          monitorPlanId,
+          reportingPeriodId,
+        }),
+      );
+    } catch (e) {
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return {
@@ -187,7 +197,7 @@ export class EmissionsWorkspaceService {
           }),
         );
       }
-      await Promise.all(dailyTestSummaryImports);
+      return Promise.all(dailyTestSummaryImports);
     }
   }
 
@@ -211,6 +221,8 @@ export class EmissionsWorkspaceService {
         );
       }
     }
+
+    return Promise.all(hourlyOperatingImports);
   }
 
   async getIdentifiers(
