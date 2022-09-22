@@ -41,8 +41,8 @@ export class MonitorLocationWorkspaceRepository extends Repository<
     }
 
     const query = this.createQueryBuilder('ml')
-      .innerJoinAndSelect('ml.monitorSystems', 'ms')
-      .innerJoinAndSelect('ml.components', 'c')
+      .leftJoinAndSelect('ml.monitorSystems', 'ms')
+      .leftJoinAndSelect('ml.components', 'c')
       .leftJoinAndSelect('ml.unit', 'u')
       .leftJoin('u.plant', 'up')
       .leftJoinAndSelect('ml.stackPipe', 'sp')
@@ -52,7 +52,7 @@ export class MonitorLocationWorkspaceRepository extends Repository<
         unitIds,
         stackPipeIds,
       });
-
+    
     return query.getMany();
   }
 }
