@@ -10,7 +10,7 @@ export class MatsMonitorHourlyValueMap extends BaseMap<
   MatsMonitorHourlyValueDTO
 > {
   public async one(
-    entity: MatsMonitorHrlyValue,
+    entity: MatsMonitorHrlyValue | MatsMonitorHrlyValueWorkspace,
   ): Promise<MatsMonitorHourlyValueDTO> {
     const componentId = entity.component ? entity.component.componentId : null;
     const monitoringSystemId = entity.monitorSystem

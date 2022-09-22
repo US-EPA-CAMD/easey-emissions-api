@@ -10,6 +10,9 @@ import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-v
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 
 @Injectable()
@@ -88,5 +91,35 @@ export class HourlyOperatingWorkspaceService {
     }
 
     return hourlyOperating;
+  }
+
+  async import(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    // TODO Hourly Operating Import, Overwrite all on merge
+    const hourlyOperatingData = [new HrlyOpData()];
+
+    if (
+      Array.isArray(emissionsImport.hourlyOperatingData) &&
+      emissionsImport.hourlyOperatingData.length > 0
+    )
+      for (const hourlyOperatingDatum of hourlyOperatingData) {
+        if (
+          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValues) &&
+          hourlyOperatingDatum.matsMonitorHourlyValues.length > 0
+        )
+          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValues) {
+            await this.matsMonitorHourlyValueService.import(
+              matsMonitorHourlyValue,
+              hourlyOperatingDatum.id,
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+            );
+          }
+      }
   }
 }

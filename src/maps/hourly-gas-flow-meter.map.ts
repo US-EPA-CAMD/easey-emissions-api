@@ -9,7 +9,9 @@ export class HourlyGasFlowMeterMap extends BaseMap<
   HrlyGasFlowMeter | HrlyGasFlowMeterWorkspace,
   HourlyGasFlowMeterDTO
 > {
-  public async one(entity: HrlyGasFlowMeter): Promise<HourlyGasFlowMeterDTO> {
+  public async one(
+    entity: HrlyGasFlowMeter | HrlyGasFlowMeterWorkspace,
+  ): Promise<HourlyGasFlowMeterDTO> {
     const componentId = entity.component ? entity.component.componentId : null;
 
     return {

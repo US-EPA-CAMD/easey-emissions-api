@@ -17,6 +17,7 @@ import { genEmissionsImportDto } from '../../test/object-generators/emissions-dt
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { genMonitorFormula } from '../../test/object-generators/monitor-formula';
 import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
@@ -42,6 +43,7 @@ describe('Emissions Checks Service Tests', () => {
         DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         EmissionsChecksService,
+        MonitorPlanChecksService,
         MonitorFormulaRepository,
         MonitorHourlyValueWorkspaceService,
         HourlyFuelFlowWorkspaceService,
@@ -72,6 +74,13 @@ describe('Emissions Checks Service Tests', () => {
             runChecks: jest.fn().mockResolvedValue([[], []]),
           }),
         },
+        {
+          provide: MonitorPlanChecksService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockResolvedValue([]),
+          }),
+        },
+
       ],
     }).compile();
 

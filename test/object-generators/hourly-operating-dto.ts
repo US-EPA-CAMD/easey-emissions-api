@@ -10,6 +10,7 @@ import {
   genHourlyFuelFlowImportDto,
   GenHourlyFuelFlowImportDtoConfig,
 } from './hourly-fuel-flow-dto';
+import { genMatsMonitorHourlyValueImportDto } from './mats-monitor-hourly-value-dto';
 
 export type HourlyOperatingImportDtoConfig = {
   include?: Array<
@@ -24,6 +25,7 @@ export type HourlyOperatingImportDtoConfig = {
   hourlyFuelFlowAmount?: number;
   hourlyFuelFlowConfig?: GenHourlyFuelFlowImportDtoConfig;
   matsDerivedHourlyValueAmount?: number;
+  matsMonitorHourlyValueAmount?: number;
 };
 
 export const genHourlyOperatingImportDto = (
@@ -57,7 +59,9 @@ export const genHourlyOperatingImportDto = (
       matsMonitorHourlyValueData: config?.include?.includes(
         'matsMonitorHourlyValueData',
       )
-        ? [new MatsMonitorHourlyValueImportDTO()]
+        ? genMatsMonitorHourlyValueImportDto(
+            config?.matsMonitorHourlyValueAmount,
+          )
         : undefined,
       derivedHourlyValueData: config?.include?.includes(
         'derivedHourlyValueData',

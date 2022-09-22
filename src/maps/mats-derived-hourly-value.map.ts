@@ -10,7 +10,7 @@ export class MatsDerivedHourlyValueMap extends BaseMap<
   MatsDerivedHourlyValueDTO
 > {
   public async one(
-    entity: MatsDerivedHrlyValue,
+    entity: MatsDerivedHrlyValue | MatsDerivedHrlyValueWorkspace,
   ): Promise<MatsDerivedHourlyValueDTO> {
     return {
       id: entity.id,

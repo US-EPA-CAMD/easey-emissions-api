@@ -7,6 +7,7 @@ import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
+import { SummaryValueImportDTO } from '../dto/summary-value.dto';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 
@@ -19,7 +20,8 @@ type ForLocationType =
   | DailyTestSummaryImportDTO
   | WeeklyTestSummaryImportDTO
   | SorbentTrapImportDTO
-  | LongTermFuelFlowImportDTO;
+  | LongTermFuelFlowImportDTO
+  | SummaryValueImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -52,7 +54,8 @@ export class MonitorLocationChecksService {
       if ('monitorHourlyValueData' in i)
         i.monitorHourlyValueData.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('matsMonitorHourlyValueData' in i)
@@ -80,7 +83,8 @@ export class MonitorLocationChecksService {
 
       if ('hourlyFuelFlowData' in i) {
         i.hourlyFuelFlowData.forEach(d => {
-          !d.monitoringSystemId || location.monitoringSystemIds.add(d.monitoringSystemId);
+          !d.monitoringSystemId ||
+            location.monitoringSystemIds.add(d.monitoringSystemId);
 
           // Would monitoringSystemId ever be different between HourlyFuelFlowData and HourlyParameterFuelFlowData?
           // The below forEach could probably be removed if they will always be the same, regardless
@@ -97,10 +101,12 @@ export class MonitorLocationChecksService {
         !i.componentId || location.componentIds.add(i.componentId);
 
       if ('monitoringSystemId' in i)
-        !i.monitoringSystemId || location.monitoringSystemIds.add(i.monitoringSystemId);
+        !i.monitoringSystemId ||
+          location.monitoringSystemIds.add(i.monitoringSystemId);
 
       if ('longTermFuelFlowValue' in i)
-        !i.monitoringSystemId || location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
+        !i.monitoringSystemId ||
+          location.ltffMonitoringSystemIds.add(i.monitoringSystemId);
     };
 
     payload?.dailyTestSummaryData?.forEach(i => addLocation(i));
@@ -108,6 +114,7 @@ export class MonitorLocationChecksService {
     payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
     payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
+    payload?.summaryValueData?.forEach(i=>addLocation(i));
 
     return locations;
   }
@@ -121,10 +128,12 @@ export class MonitorLocationChecksService {
     // contains ids from the upload
     const locations: LocationIdentifiers[] = this.processLocations(payload);
 
-    // This could be an import check in which case the below message would have to be updated
+    // IMPORT-22-A
     if (locations.length === 0) {
-      errorList.push('No location identifiers found in import file');
-    }
+      errorList.push(
+        CheckCatalogService.formatResultMessage('IMPORT-22-A'),
+      );
+}
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(
       orisCode,
@@ -142,11 +151,9 @@ export class MonitorLocationChecksService {
       if (dbLocation) {
         location.locationId = dbLocation.id;
 
-        // @TODO change i.id to i.componentId once import for dailyTestSummary is changed to saving component identifier
-        const dbComponentIds = dbLocation?.components?.map(i => i.id);
-        // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
+        const dbComponentIds = dbLocation?.components?.map(i => i.componentId);
         const dbMonitoringSystemIds = dbLocation?.monitorSystems?.map(
-          i => i.id,
+          i => i.monitoringSystemId,
         );
 
         location.componentIds.forEach(componentId => {

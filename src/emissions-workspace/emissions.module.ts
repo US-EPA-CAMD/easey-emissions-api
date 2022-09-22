@@ -17,17 +17,28 @@ import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspa
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { MonitorPlanWorkspaceModule } from '../monitor-plan-workspace/monitor-plan.module';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
 import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([EmissionsWorkspaceRepository]),
-    TypeOrmModule.forFeature([PlantRepository]),
-    TypeOrmModule.forFeature([MonitorFormulaRepository]),
+    TypeOrmModule.forFeature([
+      EmissionsWorkspaceRepository,
+      PlantRepository,
+      MonitorFormulaRepository,
+      ComponentRepository,
+      MonitorSystemRepository,
+      MonitorPlanWorkspaceRepository,
+    ]),
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
     Logger,
     MonitorLocationWorkspaceModule,
+    MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
   ],
@@ -38,6 +49,7 @@ import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hou
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
+    MonitorPlanChecksService,
   ],
 })
 export class EmissionsWorkspaceModule {}

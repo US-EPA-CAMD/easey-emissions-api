@@ -10,7 +10,9 @@ export class MonitorHourlyValueMap extends BaseMap<
   MonitorHrlyValue | MonitorHrlyValueWorkspace,
   MonitorHourlyValueDTO
 > {
-  public async one(entity: any): Promise<MonitorHourlyValueDTO> {
+  public async one(
+    entity: MonitorHrlyValue | MonitorHrlyValueWorkspace,
+  ): Promise<MonitorHourlyValueDTO> {
     const componentId = entity.component ? entity.component.componentId : null;
     const monitoringSystemId = entity.monitorSystem
       ? entity.monitorSystem.monitoringSystemId
