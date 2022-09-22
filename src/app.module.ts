@@ -16,6 +16,8 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
 import { PlantModule } from './plant/plant.module';
 import { DerivedHourlyValueModule } from './derived-hourly-value/derived-hourly-value.module';
 import { DerivedHourlyValueWorkspaceModule } from './derived-hourly-value-workspace/derived-hourly-value-workspace.module';
+import { HourlyParameterFuelFlowWorkspaceModule } from './hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.module';
+import { HourlyFuelFlowModule } from './hourly-fuel-flow/hourly-fuel-flow.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { DerivedHourlyValueWorkspaceModule } from './derived-hourly-value-worksp
     PlantModule,
     DerivedHourlyValueModule,
     DerivedHourlyValueWorkspaceModule,
+    HourlyParameterFuelFlowWorkspaceModule,
+    HourlyFuelFlowModule,
   ],
 })
 export class AppModule {}
