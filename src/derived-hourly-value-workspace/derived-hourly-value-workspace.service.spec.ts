@@ -67,6 +67,6 @@ describe('DerivedHourlyValueWorkspaceService', () => {
         monitorFormulas: {},
         monitoringSystems: {},
       }),
-    );
+    ).resolves;
   });
 });

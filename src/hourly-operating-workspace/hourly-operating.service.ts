@@ -11,7 +11,6 @@ import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-v
 import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 
@@ -136,6 +135,6 @@ export class HourlyOperatingWorkspaceService {
       }
     }
 
-    await Promise.all(promises);
+    return Promise.all(promises);
   }
 }

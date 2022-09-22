@@ -28,7 +28,7 @@ export class MatsMonitorHourlyValueWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ) {
-    this.repository.save(
+    return this.repository.save(
       this.repository.create({
         id: randomUUID(),
         monitoringSystemId:
