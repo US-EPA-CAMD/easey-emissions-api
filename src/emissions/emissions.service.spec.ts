@@ -46,6 +46,12 @@ import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-f
 import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
 import { mockHourlyGasFlowMeterRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-repository';
+import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
+import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -81,6 +87,12 @@ describe('Emissions Service', () => {
         MatsDerivedHourlyValueService,
         HourlyGasFlowMeterService,
         HourlyGasFlowMeterMap,
+        HourlyFuelFlowService,
+        HourlyFuelFlowRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowService,
+        HourlyParameterFuelFlowMap,
+        HourlyParameterFuelFlowRepository,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,

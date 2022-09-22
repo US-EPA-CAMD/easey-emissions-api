@@ -22,6 +22,7 @@ import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
+import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monito
     MonitorLocationWorkspaceModule,
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
+    HourlyFuelFlowWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
