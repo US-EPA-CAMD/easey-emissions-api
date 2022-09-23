@@ -13,6 +13,7 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+import { isUndefinedOrNull } from 'src/utils/utils';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -137,17 +138,17 @@ export class MonitorLocationChecksService {
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(
       orisCode,
-      locations.filter(i => i.unitId !== null).map(i => i.unitId),
-      locations.filter(i => i.stackPipeId !== null).map(i => i.stackPipeId),
+      locations.filter(i => !isUndefinedOrNull(i.unitId)).map(i => i.unitId),
+      locations.filter(i => !isUndefinedOrNull(i.stackPipeId)).map(i => i.stackPipeId),
     );
-
+    
     locations.forEach(location => {
       const dbLocation = dbLocations.find(
         i =>
           i?.unit?.name === location?.unitId ||
           i?.stackPipe?.name === location?.stackPipeId,
       );
-
+      
       if (dbLocation) {
         location.locationId = dbLocation.id;
 
@@ -188,9 +189,8 @@ export class MonitorLocationChecksService {
             );
           } else {
             const validLtffSystemCodes = ['LTOL', 'LTGS'];
-            // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
             const monitoringSystem = dbLocation.monitorSystems.find(
-              ms => ms.id === monitoringSystemId,
+              ms => ms.monitoringSystemId === monitoringSystemId,
             );
             if (
               !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode)
