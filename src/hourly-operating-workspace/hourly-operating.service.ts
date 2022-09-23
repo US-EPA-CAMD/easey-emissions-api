@@ -121,7 +121,6 @@ export class HourlyOperatingWorkspaceService {
 
     // TODO Hourly Operating Import, Overwrite all on merge
     // const hourlyOperatingData = [new HrlyOpData()];
-
     const promises = [];
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
@@ -142,7 +141,7 @@ export class HourlyOperatingWorkspaceService {
                 data.identifiers,
               ),
             );
-          }
+        }
         for (const monitorHourlyValue of hourlyOperatingDatum.monitorHourlyValueData) {
           promises.push(
             this.monitorHourlyValueService.import(

@@ -36,14 +36,16 @@ export const genHourlyOpValues = <RepoType>(
   ) {
     hourlyOpValues.push(({
       id: faker.datatype.string(45),
-      reportingPeriodId: faker.datatype.string(45),
+      reportingPeriodId: faker.datatype.number({ min: 1, max: 38 }),
       monitoringLocationId: faker.datatype.string(45),
       beginDate: faker.datatype.datetime(),
       beginHour: faker.datatype.number({ min: 0, max: 23 }),
       operatingTime: optionalValue(faker.datatype.number()),
       hourLoad: optionalValue(faker.datatype.number()),
       loadRange: optionalValue(faker.datatype.number()),
-      commonStackLoadRange: optionalValue(faker.datatype.number()),
+      commonStackLoadRange: optionalValue(
+        faker.datatype.number({ min: 0, max: 38 }),
+      ),
       fcFactor: optionalValue(faker.datatype.number()),
       fdFactor: optionalValue(faker.datatype.number()),
       fwFactor: optionalValue(faker.datatype.number()),

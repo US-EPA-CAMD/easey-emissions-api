@@ -5,6 +5,7 @@ import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourl
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { mockDerivedHourlyValueWorkspaceRepository } from '../../test/mocks/mock-derived-hourly-value-workspace-repository';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
+import { genDerivedHourlyValueImportDto } from '../../test/object-generators/derived-hourly-value-dto';
 
 describe('DerivedHourlyValueWorkspaceService', () => {
   let map: DerivedHourlyValueMap;
@@ -53,5 +54,19 @@ describe('DerivedHourlyValueWorkspaceService', () => {
         }),
       ),
     ).resolves.toEqual(mappedValues);
+  });
+
+  it('should import data given correct data', async function() {
+    const mockedValues = genDerivedHourlyValueImportDto();
+
+    jest.spyOn(service, 'import').mockResolvedValue(null);
+
+    await expect(
+      service.import(mockedValues[0], '123', '123', 123, {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+      }),
+    ).resolves;
   });
 });

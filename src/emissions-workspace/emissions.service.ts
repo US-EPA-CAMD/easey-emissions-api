@@ -14,12 +14,16 @@ import { isUndefinedOrNull, objectValuesByKey } from '../utils/utils';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
   components: {
+    [key: string]: string;
+  };
+  monitorFormulas: {
     [key: string]: string;
   };
   monitoringSystems: {
@@ -39,6 +43,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly hourlyOperatingValueService: HourlyOperatingWorkspaceService,
+    private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
 
   async delete(
@@ -236,11 +241,17 @@ export class EmissionsWorkspaceService {
 
     const identifiers: ImportIdentifiers = {
       components: {},
+      monitorFormulas: {},
       monitoringSystems: {},
     };
 
     const componentIdentifiers = objectValuesByKey<string>(
       'componentId',
+      untypedParams,
+      true,
+    );
+    const formulaIdentifiers = objectValuesByKey<string>(
+      'formulaIdentifier',
       untypedParams,
       true,
     );
@@ -258,6 +269,19 @@ export class EmissionsWorkspaceService {
           this.componentRepository
             .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
             .then(data => (identifiers.components[componentId] = data.id)),
+        );
+      }
+    }
+
+    if (!isUndefinedOrNull(formulaIdentifiers)) {
+      for (const formulaId of formulaIdentifiers) {
+        promises.push(
+          this.monitorFormulaRepository
+            .getOneFormulaIdsMonLocId({
+              formulaIdentifier: formulaId,
+              monitoringLocationId,
+            })
+            .then(data => (identifiers.monitorFormulas[formulaId] = data.id)),
         );
       }
     }
