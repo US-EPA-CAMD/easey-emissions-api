@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { DeleteResult } from 'typeorm';
+import { randomUUID } from 'crypto';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
-import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
+import {
+  HourlyOperatingDTO,
+  HourlyOperatingImportDTO,
+} from '../dto/hourly-operating.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
@@ -10,9 +16,15 @@ import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-v
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+
+export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
+  reportingPeriodId: number;
+  monitoringLocationId: string;
+  identifiers: ImportIdentifiers;
+};
 
 @Injectable()
 export class HourlyOperatingWorkspaceService {
@@ -92,13 +104,21 @@ export class HourlyOperatingWorkspaceService {
     return hourlyOperating;
   }
 
+  async delete(id: string): Promise<DeleteResult> {
+    return this.repository.delete({ id });
+  }
+
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
-    reportingPeriodId: number,
-    identifiers: ImportIdentifiers,
-  ) {
-    // TODO Hourly Operating Import, Overwrite all on merge
+    data: HourlyOperatingCreate,
+  ): Promise<HourlyOperatingDTO> {
+    const result = await this.repository.save(
+      this.repository.create({
+        ...data,
+        id: randomUUID(),
+      }),
+    );
+
     const promises = [];
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
@@ -110,11 +130,10 @@ export class HourlyOperatingWorkspaceService {
             promises.push(
               this.derivedHourlyValueService.import(
                 derivedHrlyValue,
-                // TODO: Use hourid from above import
-                '',
-                monitoringLocationId,
-                reportingPeriodId,
-                identifiers,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
               ),
             ),
         );
@@ -124,17 +143,40 @@ export class HourlyOperatingWorkspaceService {
             promises.push(
               this.matsMonitorHourlyValueService.import(
                 matsMonitorHourlyValue,
-                // TODO: Use hourid from above import
-                '',
-                monitoringLocationId,
-                reportingPeriodId,
-                identifiers,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
+              ),
+            ),
+        );
+
+        hourlyOperatingDatum?.monitorHourlyValueData?.forEach(
+          monitorHourlyValue =>
+            promises.push(
+              this.monitorHourlyValueService.import(
+                monitorHourlyValue,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
               ),
             ),
         );
       }
     }
 
-    return Promise.all(promises);
+    const settled = await Promise.allSettled(promises);
+
+    for (const settledElement of settled) {
+      if (settledElement.status === 'rejected') {
+        throw new LoggingException(
+          settledElement.reason.details,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    return this.map.one(result);
   }
 }
