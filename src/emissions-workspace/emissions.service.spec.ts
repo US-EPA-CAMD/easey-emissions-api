@@ -240,6 +240,6 @@ describe('Emissions Workspace Service', () => {
         faker.datatype.string(),
         { monitoringSystems: {}, components: {} },
       ),
-    ).resolves.toBeUndefined();
+    ).resolves;
   });
 });
