@@ -1,4 +1,7 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { DeleteResult } from 'typeorm';
+import { randomUUID } from 'crypto';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import {
@@ -14,11 +17,8 @@ import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-v
 import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { DeleteResult } from 'typeorm';
-import { randomUUID } from 'crypto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
   reportingPeriodId: number;
@@ -119,19 +119,27 @@ export class HourlyOperatingWorkspaceService {
       }),
     );
 
-    // TODO Hourly Operating Import, Overwrite all on merge
-    // const hourlyOperatingData = [new HrlyOpData()];
     const promises = [];
     if (
       Array.isArray(emissionsImport.hourlyOperatingData) &&
       emissionsImport.hourlyOperatingData.length > 0
-    )
+    ) {
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-        if (
-          Array.isArray(hourlyOperatingDatum.matsMonitorHourlyValueData) &&
-          hourlyOperatingDatum.matsMonitorHourlyValueData.length > 0
-        )
-          for (const matsMonitorHourlyValue of hourlyOperatingDatum.matsMonitorHourlyValueData) {
+        hourlyOperatingDatum?.derivedHourlyValueData?.forEach(
+          derivedHrlyValue =>
+            promises.push(
+              this.derivedHourlyValueService.import(
+                derivedHrlyValue,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
+              ),
+            ),
+        );
+
+        hourlyOperatingDatum?.matsMonitorHourlyValueData?.forEach(
+          matsMonitorHourlyValue =>
             promises.push(
               this.matsMonitorHourlyValueService.import(
                 matsMonitorHourlyValue,
@@ -140,20 +148,23 @@ export class HourlyOperatingWorkspaceService {
                 data.reportingPeriodId,
                 data.identifiers,
               ),
-            );
-        }
-        for (const monitorHourlyValue of hourlyOperatingDatum.monitorHourlyValueData) {
-          promises.push(
-            this.monitorHourlyValueService.import(
-              monitorHourlyValue,
-              result.id,
-              data.monitoringLocationId,
-              data.reportingPeriodId,
-              data.identifiers,
             ),
-          );
-        }
+        );
+
+        hourlyOperatingDatum?.monitorHourlyValueData?.forEach(
+          monitorHourlyValue =>
+            promises.push(
+              this.monitorHourlyValueService.import(
+                monitorHourlyValue,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+                data.identifiers,
+              ),
+            ),
+        );
       }
+    }
 
     const settled = await Promise.allSettled(promises);
 
