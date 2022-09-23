@@ -13,7 +13,7 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
-import { isUndefinedOrNull } from 'src/utils/utils';
+import { isUndefinedOrNull } from '../utils/utils';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =

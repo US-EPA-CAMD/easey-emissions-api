@@ -59,6 +59,7 @@ describe('MonitorHourlyValueWorkspaceService', () => {
         service.import(monitorImport, '12345', '123', 150, {
           components: {},
           monitoringSystems: {},
+          monitorFormulas: {}
         }),
       ).resolves;
     });
