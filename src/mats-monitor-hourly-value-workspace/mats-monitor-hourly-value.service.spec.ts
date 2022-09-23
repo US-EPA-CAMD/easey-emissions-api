@@ -52,6 +52,7 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
       await expect(
         service.import(matsMonitorImport, '123', '123', 123, {
           components: {},
+          monitorFormulas: {},
           monitoringSystems: {},
         }),
       ).resolves;

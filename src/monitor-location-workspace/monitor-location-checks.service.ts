@@ -188,9 +188,8 @@ export class MonitorLocationChecksService {
             );
           } else {
             const validLtffSystemCodes = ['LTOL', 'LTGS'];
-            // @TODO change i.id to i.monitoringSystemId once import for dailyTestSummary is changed to saving monitoringSystem identifier
             const monitoringSystem = dbLocation.monitorSystems.find(
-              ms => ms.id === monitoringSystemId,
+              ms => ms.monitoringSystemId === monitoringSystemId,
             );
             if (
               !validLtffSystemCodes.includes(monitoringSystem?.systemTypeCode)
