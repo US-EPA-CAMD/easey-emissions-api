@@ -21,7 +21,6 @@ export class HourlyGasFlowMeterWorkspaceService {
     return this.map.many(results);
   }
 
-  // TODO Import from hourly-op-data import
   async import(
     data: HourlyGasFlowMeterImportDTO,
     hourId: string,

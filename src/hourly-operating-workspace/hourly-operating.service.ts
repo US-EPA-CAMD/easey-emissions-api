@@ -163,6 +163,18 @@ export class HourlyOperatingWorkspaceService {
               ),
             ),
         );
+
+        hourlyOperatingDatum?.hourlyGFMData?.forEach(hourlyGfmDatum => {
+          promises.push(
+            this.hourlyGasFlowMeterService.import(
+              hourlyGfmDatum,
+              result.id,
+              data.monitoringLocationId,
+              data.reportingPeriodId,
+              data.identifiers,
+            ),
+          );
+        });
       }
     }
 
