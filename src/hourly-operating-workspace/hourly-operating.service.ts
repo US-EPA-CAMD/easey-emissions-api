@@ -163,6 +163,19 @@ export class HourlyOperatingWorkspaceService {
               ),
             ),
         );
+
+        hourlyOperatingDatum?.hourlyFuelFlowData?.forEach(hourlyFuelFlow =>
+          promises.push(
+            this.hourlyFuelFlowService.import(
+              hourlyFuelFlow,
+              data,
+              result.id,
+              data.monitoringLocationId,
+              data.reportingPeriodId,
+              data.identifiers,
+            ),
+          ),
+        );
       }
     }
 

@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
-import { HourlyFuelFlowDTO } from '../dto/hourly-fuel-flow.dto';
+import {
+  HourlyFuelFlowDTO,
+  HourlyFuelFlowImportDTO,
+} from '../dto/hourly-fuel-flow.dto';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { randomUUID } from 'crypto';
+import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 
 @Injectable()
 export class HourlyFuelFlowWorkspaceService {
@@ -32,5 +38,50 @@ export class HourlyFuelFlowWorkspaceService {
     }
 
     return this.map.many(hourlyFuelFlow);
+  }
+
+  async import(
+    data: HourlyFuelFlowImportDTO,
+    hourlyOperatingImport: HourlyOperatingImportDTO,
+    hourId: string,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const result = await this.repository.save(
+      this.repository.create({
+        id: randomUUID(),
+        hourId,
+        fuelCode: data.fuelCode,
+        fuelUsageTime: data.fuelUsageTime,
+        volumetricFlowRate: data.volumetricFlowRate,
+        volumetricUnitsOfMeasureCode: data.volumetricUnitsOfMeasureCode,
+        sourceOfDataVolumetricCode: data.sourceOfDataVolumetricCode,
+        massFlowRate: data.massFlowRate,
+        sourceOfDataMassCode: data.sourceOfDataMassCode,
+        monitoringSystemId:
+          identifiers.monitoringSystems?.[data.monitoringSystemId],
+        monitoringLocationId: monitoringLocationId,
+        reportingPeriodId: reportingPeriodId,
+      }),
+    );
+
+    if (
+      Array.isArray(hourlyOperatingImport.hourlyFuelFlowData) &&
+      hourlyOperatingImport.hourlyFuelFlowData.length > 0
+    ) {
+      for (const fuelFlowDatum of hourlyOperatingImport.hourlyFuelFlowData) {
+        for (const paramFuelFlow of fuelFlowDatum.hourlyParameterFuelFlowData) {
+          await this.hourlyParameterFuelFlow.import(
+            paramFuelFlow,
+            result.id,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          );
+        }
+      }
+    }
+    return this.map.one(result);
   }
 }

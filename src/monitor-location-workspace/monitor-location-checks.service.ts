@@ -90,7 +90,7 @@ export class MonitorLocationChecksService {
           // Would monitoringSystemId ever be different between HourlyFuelFlowData and HourlyParameterFuelFlowData?
           // The below forEach could probably be removed if they will always be the same, regardless
           // because it's being added to a Set, there won't be any repeating IDs.
-          d.hourlyParameterFuelFlowData.forEach(h => {
+          d.hourlyParameterFuelFlowData?.forEach(h => {
             !d.monitoringSystemId ||
               location.monitoringSystemIds.add(d.monitoringSystemId);
           });
@@ -115,7 +115,7 @@ export class MonitorLocationChecksService {
     payload?.weeklyTestSummaryData?.forEach(i => addLocation(i));
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
     payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
-    payload?.summaryValueData?.forEach(i=>addLocation(i));
+    payload?.summaryValueData?.forEach(i => addLocation(i));
 
     return locations;
   }
@@ -131,24 +131,24 @@ export class MonitorLocationChecksService {
 
     // IMPORT-22-A
     if (locations.length === 0) {
-      errorList.push(
-        CheckCatalogService.formatResultMessage('IMPORT-22-A'),
-      );
-}
+      errorList.push(CheckCatalogService.formatResultMessage('IMPORT-22-A'));
+    }
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(
       orisCode,
       locations.filter(i => !isUndefinedOrNull(i.unitId)).map(i => i.unitId),
-      locations.filter(i => !isUndefinedOrNull(i.stackPipeId)).map(i => i.stackPipeId),
+      locations
+        .filter(i => !isUndefinedOrNull(i.stackPipeId))
+        .map(i => i.stackPipeId),
     );
-    
+
     locations.forEach(location => {
       const dbLocation = dbLocations.find(
         i =>
           i?.unit?.name === location?.unitId ||
           i?.stackPipe?.name === location?.stackPipeId,
       );
-      
+
       if (dbLocation) {
         location.locationId = dbLocation.id;
 
