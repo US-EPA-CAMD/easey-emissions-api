@@ -45,18 +45,22 @@ export class EmissionsChecksService {
 
     // IMPORT-27: All EM Components Present in the Production Database
     // IMPORT-26: All EM Systems Present in the Production Database
-    const [unitStackIdentifiers, locationErrors] = await this.monitorLocationCheckService.runChecks(
-      payload,
+    const [
+      unitStackIdentifiers,
+      locationErrors,
+    ] = await this.monitorLocationCheckService.runChecks(payload);
+
+    // IMPORT-22: All EM Locations Present in Unique Monitoring Plan in the Production Database
+    const monitorPlanCheckErrors = await this.monitorPlanCheckService.runChecks(
+      unitStackIdentifiers,
     );
-    
-    // IMPORT-22: All EM Locations Present in Unique Monitoring Plan in the Production Database 
-    this.monitorPlanCheckService.runChecks(unitStackIdentifiers);
 
     errorList.push(
       ...weeklyTestSummaryCheckErrors,
       ...invalidDatesCheckErrors,
       ...locationErrors,
       ...dailyTestSummaryCheckErrors,
+      ...monitorPlanCheckErrors,
     );
 
     this.throwIfErrors(errorList);
