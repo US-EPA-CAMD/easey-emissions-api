@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { In } from 'typeorm';
 import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
-import { MatsDerivedHourlyValueDTO, MatsDerivedHourlyValueImportDTO } from '../dto/mats-derived-hourly-value.dto';
+import {
+  MatsDerivedHourlyValueDTO,
+  MatsDerivedHourlyValueImportDTO,
+} from '../dto/mats-derived-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 
@@ -36,16 +39,7 @@ export class MatsDerivedHourlyValueWorkspaceService {
       hourId,
       monitoringLocationId,
       reportingPeriodId,
-    }
-    console.log("about to save matsderivedhourlyvalue")
-    console.log(o)
-    try{
-      return this.repository.save(
-        this.repository.create(o),
-      );
-    }catch(e){
-      console.log("printing error")
-      console.log(e)
-    }
+    };
+    return this.repository.save(this.repository.create(o));
   }
 }
