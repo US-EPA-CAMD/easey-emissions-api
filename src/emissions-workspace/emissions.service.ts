@@ -42,7 +42,6 @@ export class EmissionsWorkspaceService {
     private readonly hourlyOperatingService: HourlyOperatingWorkspaceService,
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
-    private readonly hourlyOperatingValueService: HourlyOperatingWorkspaceService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
 
@@ -268,7 +267,7 @@ export class EmissionsWorkspaceService {
         promises.push(
           this.componentRepository
             .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
-            .then(data => (identifiers.components[componentId] = data.id)),
+            .then(data => (identifiers.components[componentId] = data?.id)),
         );
       }
     }
@@ -281,7 +280,7 @@ export class EmissionsWorkspaceService {
               formulaIdentifier: formulaId,
               monitoringLocationId,
             })
-            .then(data => (identifiers.monitorFormulas[formulaId] = data.id)),
+            .then(data => (identifiers.monitorFormulas[formulaId] = data?.id)),
         );
       }
     }
@@ -296,7 +295,7 @@ export class EmissionsWorkspaceService {
             )
             .then(
               data =>
-                (identifiers.monitoringSystems[monSysIdentifier] = data.id),
+                (identifiers.monitoringSystems[monSysIdentifier] = data?.id),
             ),
         );
       }

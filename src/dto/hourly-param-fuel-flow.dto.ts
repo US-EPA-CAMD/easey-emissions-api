@@ -12,7 +12,7 @@ export class HourlyParamFuelFlowBaseDTO {
 export class HourlyParamFuelFlowRecordDTO extends HourlyParamFuelFlowBaseDTO {
   id: string;
   hourlyFuelFlowId: string;
-  monitoringFormulaRecordId: string;
+  monitoringFormulaRecordId?: string;
   calcParamValFuel?: number;
   userId?: string;
   addDate?: Date;
