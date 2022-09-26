@@ -164,15 +164,19 @@ export class HourlyOperatingWorkspaceService {
             ),
         );
 
-        hourlyOperatingDatum?.matsDerivedHourlyValueData?.forEach(matsDerivedHourlyValue=>{
-          promises.push(this.matsDerivedHourlyValueService.import(
-            matsDerivedHourlyValue,
-            data.identifiers,
-            result.id,
-            data.monitoringLocationId,
-            data.reportingPeriodId,
-          ))
-        })
+        hourlyOperatingDatum?.matsDerivedHourlyValueData?.forEach(
+          matsDerivedHourlyValue => {
+            promises.push(
+              this.matsDerivedHourlyValueService.import(
+                matsDerivedHourlyValue,
+                data.identifiers,
+                result.id,
+                data.monitoringLocationId,
+                data.reportingPeriodId,
+              ),
+            );
+          },
+        );
 
         hourlyOperatingDatum?.hourlyFuelFlowData?.forEach(hourlyFuelFlow =>
           promises.push(
@@ -186,6 +190,18 @@ export class HourlyOperatingWorkspaceService {
             ),
           ),
         );
+
+        hourlyOperatingDatum?.hourlyGFMData?.forEach(hourlyGfmDatum => {
+          promises.push(
+            this.hourlyGasFlowMeterService.import(
+              hourlyGfmDatum,
+              result.id,
+              data.monitoringLocationId,
+              data.reportingPeriodId,
+              data.identifiers,
+            ),
+          );
+        });
       }
     }
 
