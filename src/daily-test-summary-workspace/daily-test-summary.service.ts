@@ -82,7 +82,7 @@ export class DailyTestSummaryWorkspaceService {
             parameters.monitoringSystemId
           ],
         componentId:
-          parameters?.identifiers?.monitoringSystems?.[parameters.componentId],
+          parameters?.identifiers?.components?.[parameters.componentId],
       }),
     );
 

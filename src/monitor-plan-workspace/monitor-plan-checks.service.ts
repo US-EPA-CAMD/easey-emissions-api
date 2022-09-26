@@ -52,18 +52,21 @@ export class MonitorPlanChecksService {
     const dbMonitorPlans: MonitorPlan[] = await this.monitorPlanRepository.getMonitorPlansByLocationIds(
       monitorLocationIds,
     );
-    const monLocIdsFromMonPlans = dbMonitorPlans
+    let monLocIdsFromMonPlans = dbMonitorPlans
       .map(mp => mp.locations)
       .flat()
       .map(ml => ml.id);
-
+    
+    monLocIdsFromMonPlans = [...new Set(monLocIdsFromMonPlans)]
+    
     // Here, we are comparing the monitor location of the uploaded unit/stack ids and making sure there is
     // a monitor plan for the location.
     const invalidUnitStackLocations = locations.map(l => {
+
       // if the monitor location id from the unit/stack uploaded doesn't have a monitor plan for it, then return that unit/stack
       if (!monLocIdsFromMonPlans.includes(l.locationId))
         return l.unitId ? l.unitId : l.stackPipeId;
-    });
+    }).filter((i) => i !== undefined);
 
     if (invalidUnitStackLocations.length > 0) {
       errorList.push(

@@ -140,6 +140,8 @@ export class EmissionsWorkspaceService {
     }
     await Promise.all(evaluationDeletes);
 
+    console.log("identifiers")
+    console.log(identifiers)
     const importPromises = [
       this.importDailyTestSummaries(
         params,
@@ -156,7 +158,7 @@ export class EmissionsWorkspaceService {
     ];
 
     const importResults = await Promise.allSettled(importPromises);
-
+    console.log(importResults)
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
         throw new LoggingException(
