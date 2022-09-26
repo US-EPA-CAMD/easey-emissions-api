@@ -64,6 +64,7 @@ describe('--HourlyGasFlowMeterService--', () => {
         service.import(mockedValues, '123', '123', 123, {
           components: {},
           monitoringSystems: {},
+          monitorFormulas: {}
         }),
       ).resolves;
     });

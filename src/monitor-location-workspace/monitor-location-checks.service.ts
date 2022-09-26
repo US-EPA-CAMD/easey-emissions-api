@@ -132,6 +132,7 @@ export class MonitorLocationChecksService {
     // IMPORT-22-A
     if (locations.length === 0) {
       errorList.push(CheckCatalogService.formatResultMessage('IMPORT-22-A'));
+      return [locations, errorList];
     }
 
     const dbLocations: MonitorLocation[] = await this.repository.getLocationsByUnitStackPipeIds(

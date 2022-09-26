@@ -22,15 +22,36 @@ export class MonitorPlanChecksService {
 
   async import22BC(locations: LocationIdentifiers[]): Promise<string[]> {
     const errorList: string[] = [];
+    const invalidUnitNamePrefixes = ['CS', 'MS', 'CP', 'MP'];
+
+    if( locations?.length === 0)
+      return errorList;
+
+
+    const invalidUnitIds = locations
+      .filter(l => l?.unitId)
+      .filter(l => invalidUnitNamePrefixes.includes(l.unitId.substring(0, 2)))
+      .map(l => l.unitId);
+
+    if (invalidUnitIds.length > 0) {
+      errorList.push(
+        CheckCatalogService.formatResultMessage('IMPORT-22-C', {
+          invalid: invalidUnitIds,
+        }),
+      );
+    }
 
     const monitorLocationIds = locations
-      .filter(l => !!l.locationId)
-      .map(l => l.locationId);
+    .filter(l => l?.locationId)
+    .map(l => l.locationId);
+
+
+    if( monitorLocationIds.length === 0)
+      return errorList;
 
     const dbMonitorPlans: MonitorPlan[] = await this.monitorPlanRepository.getMonitorPlansByLocationIds(
       monitorLocationIds,
     );
-
     const monLocIdsFromMonPlans = dbMonitorPlans
       .map(mp => mp.locations)
       .flat()
@@ -50,21 +71,10 @@ export class MonitorPlanChecksService {
           invalid: invalidUnitStackLocations,
         }),
       );
-    } else {
-      const invalidUnitNamePrefixes = ['CS', 'MS', 'CP', 'MP'];
-      const invalidUnitIds = locations
-        .filter(l => invalidUnitNamePrefixes.includes(l.unitId.substring(0, 2)))
-        .map(l => l.unitId);
-
-      if (invalidUnitIds.length > 0) {
-        errorList.push(
-          CheckCatalogService.formatResultMessage('IMPORT-22-C', {
-            invalid: invalidUnitIds,
-          }),
-        );
-      }
-    }
+    }     
 
     return errorList;
   }
+
+  
 }
