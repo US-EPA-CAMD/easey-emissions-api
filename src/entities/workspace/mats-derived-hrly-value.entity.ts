@@ -30,7 +30,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   modcCode: string;
 
   @Column({ name: 'mon_form_id', nullable: true })
-  formulaIdentifier: string;
+  monFormId: string;
 
   @Column({ name: 'calc_unadjusted_hrly_value', nullable: true })
   calcUnadjustedHrlyValue: string;
