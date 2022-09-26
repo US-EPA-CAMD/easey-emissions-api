@@ -164,6 +164,16 @@ export class HourlyOperatingWorkspaceService {
             ),
         );
 
+        hourlyOperatingDatum?.matsDerivedHourlyValueData?.forEach(matsDerivedHourlyValue=>{
+          promises.push(this.matsDerivedHourlyValueService.import(
+            matsDerivedHourlyValue,
+            data.identifiers,
+            result.id,
+            data.monitoringLocationId,
+            data.reportingPeriodId,
+          ))
+        })
+
         hourlyOperatingDatum?.hourlyFuelFlowData?.forEach(hourlyFuelFlow =>
           promises.push(
             this.hourlyFuelFlowService.import(
