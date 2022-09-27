@@ -23,10 +23,15 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
 import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
+import { DailyEmissionWorkspaceModule } from '../daily-emission-workspace/daily-emission-workspace.module';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/daily-emission-workspace.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      DailyEmissionWorkspaceRepository,
       EmissionsWorkspaceRepository,
       PlantRepository,
       MonitorFormulaRepository,
@@ -34,6 +39,7 @@ import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hou
       MonitorSystemRepository,
       MonitorPlanWorkspaceRepository,
     ]),
+    DailyEmissionWorkspaceModule,
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
     Logger,
@@ -44,6 +50,8 @@ import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hou
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
+    DailyEmissionWorkspaceService,
+    DailyEmissionMap,
     DailyTestSummaryCheckService,
     EmissionsMap,
     EmissionsWorkspaceService,

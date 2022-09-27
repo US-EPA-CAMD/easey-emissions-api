@@ -1,11 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DailyEmission } from './daily-emission.entity';
 
@@ -67,10 +60,9 @@ export class DailyFuel extends BaseEntity {
   @Column({ name: 'mon_loc_id', nullable: false })
   monitoringLocationId: string;
 
-  @OneToMany(
+  @ManyToOne(
     () => DailyEmission,
-    o => o.dailyFuel,
+    o => o.dailyFuelData,
   )
-  @JoinColumn({ name: 'daily_emission_id' })
   dailyEmissions: DailyEmission[];
 }

@@ -18,6 +18,10 @@ import { DerivedHourlyValueModule } from './derived-hourly-value/derived-hourly-
 import { DerivedHourlyValueWorkspaceModule } from './derived-hourly-value-workspace/derived-hourly-value-workspace.module';
 import { HourlyParameterFuelFlowWorkspaceModule } from './hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.module';
 import { HourlyFuelFlowModule } from './hourly-fuel-flow/hourly-fuel-flow.module';
+import { DailyEmissionWorkspaceModule } from './daily-emission-workspace/daily-emission-workspace.module';
+import { DailyEmissionModule } from './daily-emission/daily-emission.module';
+import { DailyFuelModule } from './daily-fuel/daily-fuel.module';
+import { DailyFuelWorkspaceModule } from './daily-fuel-workspace/daily-fuel-workspace.module';
 
 @Module({
   imports: [
@@ -39,6 +43,10 @@ import { HourlyFuelFlowModule } from './hourly-fuel-flow/hourly-fuel-flow.module
     DerivedHourlyValueWorkspaceModule,
     HourlyParameterFuelFlowWorkspaceModule,
     HourlyFuelFlowModule,
+    DailyEmissionModule,
+    DailyEmissionWorkspaceModule,
+    DailyFuelModule,
+    DailyFuelWorkspaceModule,
   ],
 })
 export class AppModule {}
