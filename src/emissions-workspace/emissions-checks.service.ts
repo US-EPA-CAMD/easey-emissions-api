@@ -10,6 +10,7 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { isUndefinedOrNull } from '../utils/utils';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import moment from 'moment';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -132,8 +133,8 @@ export class EmissionsChecksService {
         return;
       }
 
-      const year = new Date(date).getFullYear();
-      const quarter = Math.floor(new Date(date).getMonth() / 3 + 1);
+      const year = moment(date).year();
+      const quarter = moment(date).quarter();
       const combo = Number(`${year}${quarter}`);
 
       if (typeof earliestDate === 'undefined' || combo < earliestDate) {
@@ -167,6 +168,7 @@ export class EmissionsChecksService {
     });
 
     const payloadCombo = Number(`${payload.year}${payload.quarter}`);
+
     if (payloadCombo < earliestDate || payloadCombo > latestDate) {
       return [CheckCatalogService.formatResultMessage('IMPORT-23-A')];
     }
