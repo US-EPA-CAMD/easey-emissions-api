@@ -16,11 +16,14 @@ import { DailyEmissionModule } from '../daily-emission/daily-emission.module';
 import { DailyEmissionService } from '../daily-emission/daily-emission.service';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
+import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       DailyEmissionRepository,
+      DailyFuelRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
     ]),
@@ -33,6 +36,7 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
   providers: [
     DailyEmissionService,
     DailyEmissionMap,
+    DailyFuelService,
     EmissionsMap,
     EmissionsService,
     EmissionsSubmissionsProgressMap,

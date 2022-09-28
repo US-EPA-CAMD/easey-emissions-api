@@ -190,7 +190,7 @@ describe('Emissions Service', () => {
       );
     });
 
-    it('should return an empty object is no emissions data is found', async function() {
+    it('should return an empty object if no emissions data is found', async function() {
       const dtoMock = genEmissionsParamsDto();
 
       jest.spyOn(emissionsRepository, 'export').mockResolvedValue(undefined);

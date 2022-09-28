@@ -110,8 +110,8 @@ export class DailyEmission extends BaseEntity {
 
   @OneToMany(
     () => DailyFuel,
-    o => o.dailyEmissions,
+    o => o.dailyEmission,
   )
   @JoinColumn({ name: 'daily_emission_id' })
-  dailyFuel: DailyFuel;
+  dailyFuelData: DailyFuel[];
 }

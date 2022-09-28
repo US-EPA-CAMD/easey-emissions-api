@@ -20,12 +20,10 @@ export class DailyEmissionMap extends BaseMap<
       ? entity?.monitorLocation?.stackPipe?.name
       : null;
 
-    const dailyFuelData = null;
-    // if (Array.isArray(entity.dailyFuel)) {
-    //   // TODO after daily fuel map
-    // }
-
     return {
+      id: entity.id,
+      reportingPeriodId: entity.reportingPeriodId,
+      monitoringLocationId: entity.monitoringLocationId,
       stackPipeId,
       unitId,
       parameterCode: entity.parameterCode,
@@ -35,15 +33,12 @@ export class DailyEmissionMap extends BaseMap<
       sorbentRelatedMassEmissions: entity.sorbentRelatedMassEmissions,
       unadjustedDailyEmissions: entity.unadjustedDailyEmissions,
       totalCarbonBurned: entity.totalCarbonBurned,
-      id: entity.id,
-      reportingPeriodId: entity.reportingPeriodId,
-      monitoringLocationId: entity.monitoringLocationId,
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
       calcTotalDailyEmissions: entity.calcTotalDailyEmissions,
       calcTotalOpTime: entity.calcTotalOpTime,
-      dailyFuelData,
+      dailyFuelData: null,
     };
   }
 }

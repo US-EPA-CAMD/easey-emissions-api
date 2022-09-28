@@ -27,11 +27,14 @@ import { DailyEmissionWorkspaceModule } from '../daily-emission-workspace/daily-
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/daily-emission-workspace.repository';
+import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
+import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       DailyEmissionWorkspaceRepository,
+      DailyFuelWorkspaceRepository,
       EmissionsWorkspaceRepository,
       PlantRepository,
       MonitorFormulaRepository,
@@ -52,6 +55,7 @@ import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/da
   providers: [
     DailyEmissionWorkspaceService,
     DailyEmissionMap,
+    DailyFuelWorkspaceService,
     DailyTestSummaryCheckService,
     EmissionsMap,
     EmissionsWorkspaceService,
