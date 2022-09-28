@@ -11,14 +11,14 @@ describe('DailyEmissionMap', () => {
 
   it('should map values correctly', async function() {
     const mocks = [
-      genDailyEmission(1),
+      genDailyEmission(1)[0],
       genDailyEmission(1, {
         include: ['dailyFuelData'],
         dailyFuelDataAmount: 2,
-      }),
+      })[0],
       genDailyEmission(1, {
         include: ['dailyFuelData', 'monitorLocation', 'reportingPeriod'],
-      }),
+      })[0],
     ];
 
     const expectOne = async (mock: DailyEmission) => {
@@ -26,7 +26,7 @@ describe('DailyEmissionMap', () => {
         id: mock.id,
         reportingPeriodId: mock.reportingPeriodId,
         monitoringLocationId: mock.monitoringLocationId,
-        stackPipeId: mock?.monitorLocation?.stackPipeId ?? null,
+        stackPipeId: mock?.monitorLocation?.stackPipe?.name ?? null,
         unitId: mock?.monitorLocation?.unit?.name ?? null,
         parameterCode: mock.parameterCode,
         date: mock.date,
@@ -45,7 +45,7 @@ describe('DailyEmissionMap', () => {
     };
 
     await Promise.all(
-      mocks.flat(1).map(mock => {
+      mocks.map(mock => {
         return expectOne((mock as unknown) as DailyEmission);
       }),
     );

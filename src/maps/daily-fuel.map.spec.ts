@@ -11,8 +11,8 @@ describe('DailFuelMap', () => {
 
   it('should map values correctly', async function() {
     const mocks = [
-      genDailyFuel(1),
-      genDailyFuel(1, { include: ['dailyEmission'] }),
+      genDailyFuel(1)[0],
+      genDailyFuel(1, { include: ['dailyEmission'] })[0],
     ];
 
     const expectOne = async (mock: DailyFuel) => {
@@ -33,7 +33,7 @@ describe('DailFuelMap', () => {
     };
 
     await Promise.all(
-      mocks.flat(1).map(mock => {
+      mocks.map(mock => {
         return expectOne((mock as unknown) as DailyFuel);
       }),
     );

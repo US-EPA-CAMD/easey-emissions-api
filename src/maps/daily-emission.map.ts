@@ -12,13 +12,9 @@ export class DailyEmissionMap extends BaseMap<
   public async one(
     entity: DailyEmission | DailyEmissionWorkspace,
   ): Promise<DailyEmissionDTO> {
-    const unitId = entity.monitorLocation?.unit
-      ? entity?.monitorLocation?.unit?.name
-      : null;
+    const unitId = entity.monitorLocation?.unit?.name ?? null;
 
-    const stackPipeId = entity.monitorLocation?.stackPipe
-      ? entity?.monitorLocation?.stackPipe?.name
-      : null;
+    const stackPipeId = entity.monitorLocation?.stackPipe?.name ?? null;
 
     return {
       id: entity.id,
