@@ -20,14 +20,16 @@ export class DailyEmissionService {
     });
 
     const promises = [];
-    for (const dailyEmission of dailyEmissionData) {
-      promises.push(
-        this.dailyFuelService.export([dailyEmission.id]).then(dailyFuel => {
-          dailyEmission.dailyFuelData = dailyFuel;
-        }),
-      );
+    if (Array.isArray(dailyEmissionData) && dailyEmissionData.length > 0) {
+      for (const dailyEmission of dailyEmissionData) {
+        promises.push(
+          this.dailyFuelService.export([dailyEmission.id]).then(dailyFuel => {
+            dailyEmission.dailyFuelData = dailyFuel;
+          }),
+        );
+      }
+      await Promise.all(promises);
     }
-    await Promise.all(promises);
 
     return dailyEmissionData;
   }
