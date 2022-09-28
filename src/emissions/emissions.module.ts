@@ -12,18 +12,34 @@ import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { HourlyOperatingModule } from '../hourly-operating/hourly-operating.module';
 import { HourlyParameterFuelFlowModule } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.module';
+import { DailyEmissionModule } from '../daily-emission/daily-emission.module';
+import { DailyEmissionService } from '../daily-emission/daily-emission.service';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
+import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      DailyEmissionRepository,
+      DailyFuelRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
     ]),
+    DailyEmissionModule,
     DailyTestSummaryModule,
     HourlyOperatingModule,
     HourlyParameterFuelFlowModule,
   ],
   controllers: [EmissionsController],
-  providers: [EmissionsMap, EmissionsService, EmissionsSubmissionsProgressMap],
+  providers: [
+    DailyEmissionService,
+    DailyEmissionMap,
+    DailyFuelService,
+    EmissionsMap,
+    EmissionsService,
+    EmissionsSubmissionsProgressMap,
+  ],
 })
 export class EmissionsModule {}
