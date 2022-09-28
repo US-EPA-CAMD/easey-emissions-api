@@ -21,6 +21,8 @@ export const exportDailyEmissionData = async ({
   const dailyEmissionData = await repository
     .createQueryBuilder('dailyEmission')
     .leftJoinAndSelect('dailyEmission.monitorLocation', 'monitorLocation')
+    .leftJoinAndSelect('monitorLocation.unit', 'unit')
+    .leftJoinAndSelect('monitorLocation.stackPipe', 'stack')
     .leftJoin('dailyEmission.reportingPeriod', 'reportingPeriod')
     .where('monitorLocation.mon_loc_id IN (:...monitoringLocationIds)', {
       monitoringLocationIds,

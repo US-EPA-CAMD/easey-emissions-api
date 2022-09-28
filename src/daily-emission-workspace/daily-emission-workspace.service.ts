@@ -31,13 +31,21 @@ export class DailyEmissionWorkspaceService {
       repository: this.repository,
     });
 
-    return Promise.all(
-      dailyEmissionData.map(async dailyEmission => {
-        dailyEmission.dailyFuelData = await this.dailyFuelWorkspaceService.export(
-          [dailyEmission.id],
+    const promises = [];
+    if (Array.isArray(dailyEmissionData) && dailyEmissionData.length > 0) {
+      for (const dailyEmission of dailyEmissionData) {
+        promises.push(
+          this.dailyFuelWorkspaceService
+            .export([dailyEmission.id])
+            .then(dailyFuel => {
+              dailyEmission.dailyFuelData = dailyFuel;
+            }),
         );
-      }),
-    );
+      }
+      await Promise.all(promises);
+    }
+
+    return dailyEmissionData;
   }
 
   async import(data: DailyEmissionWorkspaceCreate) {
