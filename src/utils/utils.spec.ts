@@ -1,6 +1,22 @@
-import { isUndefinedOrNull, objectValuesByKey } from './utils';
+import { hasArrayValues, isUndefinedOrNull, objectValuesByKey } from './utils';
 
 describe('Utils', () => {
+  describe('hasArrayValues', () => {
+    it('should return true if array has at least one value', function() {
+      expect(hasArrayValues([1])).toBe(true);
+      expect(hasArrayValues([{}])).toBe(true);
+      expect(hasArrayValues([undefined])).toBe(true);
+      expect(hasArrayValues([null])).toBe(true);
+    });
+
+    it('should return false if the value is not array or if the array is empty', function() {
+      expect(hasArrayValues([])).toBe(false);
+      expect(hasArrayValues(undefined)).toBe(false);
+      expect(hasArrayValues(null)).toBe(false);
+      expect(hasArrayValues("I'm not an array.")).toBe(false);
+    });
+  });
+
   describe('isUndefinedOrNull', () => {
     it('should return false for defined or non null value', function() {
       expect(isUndefinedOrNull(0)).toBe(false);

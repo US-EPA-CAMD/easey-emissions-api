@@ -10,13 +10,18 @@ import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
-import { isUndefinedOrNull, objectValuesByKey } from '../utils/utils';
+import {
+  hasArrayValues,
+  isUndefinedOrNull,
+  objectValuesByKey,
+} from '../utils/utils';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -29,6 +34,7 @@ export type ImportIdentifiers = {
   monitoringSystems: {
     [key: string]: string;
   };
+  userId?: string;
 };
 
 @Injectable()
@@ -39,6 +45,7 @@ export class EmissionsWorkspaceService {
     private readonly repository: EmissionsWorkspaceRepository,
     private readonly dailyTestSummaryService: DailyTestSummaryWorkspaceService,
     private readonly plantRepository: PlantRepository,
+    private readonly dailyEmissionService: DailyEmissionWorkspaceService,
     private readonly hourlyOperatingService: HourlyOperatingWorkspaceService,
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
@@ -82,7 +89,10 @@ export class EmissionsWorkspaceService {
     return this.repository.findOne();
   }
 
-  async import(params: EmissionsImportDTO): Promise<{ message: string }> {
+  async import(
+    params: EmissionsImportDTO,
+    userId?: string,
+  ): Promise<{ message: string }> {
     const stackPipeIds: string[] = [];
     const unitIds: string[] = [];
 
@@ -124,7 +134,11 @@ export class EmissionsWorkspaceService {
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
     const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
-    const identifiers = await this.getIdentifiers(params, monitoringLocationId);
+    const identifiers = await this.getIdentifiers(
+      params,
+      monitoringLocationId,
+      userId,
+    );
 
     // Import-28 Valid formulaIdentifiers for location
     await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
@@ -141,6 +155,12 @@ export class EmissionsWorkspaceService {
     await Promise.all(evaluationDeletes);
 
     const importPromises = [
+      this.importDailyEmissions(
+        params,
+        reportingPeriodId,
+        monitoringLocationId,
+        identifiers,
+      ),
       this.importDailyTestSummaries(
         params,
         reportingPeriodId,
@@ -180,6 +200,28 @@ export class EmissionsWorkspaceService {
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
     };
+  }
+
+  async importDailyEmissions(
+    emissionsImport: EmissionsImportDTO,
+    reportingPeriodId: number,
+    monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
+  ) {
+    if (hasArrayValues(emissionsImport.dailyEmissionData)) {
+      const promises = [];
+      for (const dailyEmission of emissionsImport.dailyEmissionData) {
+        promises.push(
+          this.dailyEmissionService.import({
+            ...dailyEmission,
+            identifiers,
+            monitoringLocationId,
+            reportingPeriodId,
+          }),
+        );
+      }
+      return Promise.all(promises);
+    }
   }
 
   async importDailyTestSummaries(
@@ -232,6 +274,7 @@ export class EmissionsWorkspaceService {
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
+    userId: string,
   ) {
     const untypedParams = (emissionsImport as unknown) as Record<
       string,
@@ -242,6 +285,7 @@ export class EmissionsWorkspaceService {
       components: {},
       monitorFormulas: {},
       monitoringSystems: {},
+      userId,
     };
 
     const componentIdentifiers = objectValuesByKey<string>(

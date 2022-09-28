@@ -1,3 +1,7 @@
+export const hasArrayValues = (value: unknown): boolean => {
+  return Array.isArray(value) && value.length > 0;
+};
+
 export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {
   if (Array.isArray(value)) {
     for (const item of value) {
