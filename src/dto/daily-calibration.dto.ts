@@ -1,14 +1,19 @@
+import { Transform } from "class-transformer";
+import moment from "moment";
+
 export class DailyCalibrationBaseDTO {
   onLineOffLineIndicator?: number;
 
   upscaleGasCode?: string;
-
+  
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   zeroInjectionDate?: Date;
 
   zeroInjectionHour?: number;
 
   zeroInjectionMinute?: number;
 
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   upscaleInjectionDate?: Date;
 
   upscaleInjectionHour?: number;
@@ -37,6 +42,7 @@ export class DailyCalibrationBaseDTO {
 
   vendorIdentifier?: string;
 
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   expirationDate?: Date;
 
   injectionProtocolCode?: string;

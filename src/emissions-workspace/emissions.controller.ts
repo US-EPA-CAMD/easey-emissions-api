@@ -1,4 +1,12 @@
-import { Get, Body, Post, Query, Controller } from '@nestjs/common';
+import {
+  Get,
+  Body,
+  Post,
+  Query,
+  Controller,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 
 import {
   ApiTags,
@@ -26,6 +34,7 @@ export class EmissionsWorkspaceController {
     description:
       'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     return this.service.export(params);
   }
