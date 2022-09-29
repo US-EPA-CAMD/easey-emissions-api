@@ -22,6 +22,10 @@ import { DailyEmissionWorkspaceModule } from './daily-emission-workspace/daily-e
 import { DailyEmissionModule } from './daily-emission/daily-emission.module';
 import { DailyFuelModule } from './daily-fuel/daily-fuel.module';
 import { DailyFuelWorkspaceModule } from './daily-fuel-workspace/daily-fuel-workspace.module';
+import { SorbentTrapModule } from './sorbent-trap/sorbent-trap.module';
+import { SamplingTrainModule } from './sampling-train/sampling-train.module';
+import { SorbentTrapWorkspaceModule } from './sorbent-trap-workspace/sorbent-trap-workspace.module';
+import { SamplingTrainWorkspaceModule } from './sampling-train-workspace/sampling-train-workspace.module';
 
 @Module({
   imports: [
@@ -47,6 +51,10 @@ import { DailyFuelWorkspaceModule } from './daily-fuel-workspace/daily-fuel-work
     DailyEmissionWorkspaceModule,
     DailyFuelModule,
     DailyFuelWorkspaceModule,
+    SorbentTrapModule,
+    SamplingTrainModule,
+    SorbentTrapWorkspaceModule,
+    SamplingTrainWorkspaceModule,
   ],
 })
 export class AppModule {}

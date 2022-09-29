@@ -19,6 +19,10 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
+import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
+import { SamplingTrainService } from '../sampling-train/sampling-train.service';
+import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
 
 @Module({
   imports: [
@@ -27,6 +31,8 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
       DailyFuelRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
+      SamplingTrainRepository,
+      SorbentTrapRepository,
     ]),
     DailyEmissionModule,
     DailyTestSummaryModule,
@@ -42,6 +48,8 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     EmissionsMap,
     EmissionsService,
     EmissionsSubmissionsProgressMap,
+    SamplingTrainService,
+    SorbentTrapService,
   ],
 })
 export class EmissionsModule {}

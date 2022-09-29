@@ -30,6 +30,10 @@ import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/da
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
 
 @Module({
   imports: [
@@ -42,6 +46,8 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
       ComponentRepository,
       MonitorSystemRepository,
       MonitorPlanWorkspaceRepository,
+      SorbentTrapWorkspaceRepository,
+      SamplingTrainWorkspaceRepository,
     ]),
     DailyEmissionWorkspaceModule,
     DailyTestSummaryWorkspaceModule,
@@ -64,6 +70,8 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
     MonitorPlanChecksService,
+    SorbentTrapWorkspaceService,
+    SamplingTrainWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}
