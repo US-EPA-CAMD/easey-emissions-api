@@ -1,13 +1,15 @@
 import { ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   WeeklySystemIntegrityDTO,
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
+import moment from 'moment';
 
 export class WeeklyTestSummaryBaseDTO {
   stackPipeId?: string;
   unitId?: string;
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
   hour: number;
   minute?: number;

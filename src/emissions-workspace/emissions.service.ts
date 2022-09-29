@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpStatus, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
@@ -73,7 +73,9 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
-      const results = await this.map.one(emissions);
+      const mappedResults = await this.map.one(emissions);
+      // instantiating EmissionsDTO class is necessary for @Transform to work properly
+      const results = new EmissionsDTO(mappedResults)
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];

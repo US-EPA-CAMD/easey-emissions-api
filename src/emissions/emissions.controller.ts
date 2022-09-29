@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Query, SerializeOptions, UseInterceptors } from '@nestjs/common';
 
 import {
   ApiExtraModels,
@@ -24,6 +24,7 @@ export class EmissionsController {
     description:
       'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     return this.service.export(params);
   }
