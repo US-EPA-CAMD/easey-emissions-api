@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import {Transform, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
 import {
@@ -25,10 +25,12 @@ import {
   MatsDerivedHourlyValueDTO,
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
+import moment from 'moment';
 
 export class HourlyOperatingBaseDTO {
   stackPipeId?: string;
   unitId?: string;
+  @Transform(({value})=>moment(value).format('YYYY-MM-DD'), {toPlainOnly:true})
   date: Date;
   hour: number;
   operatingTime?: number;

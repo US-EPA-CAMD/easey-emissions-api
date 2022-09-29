@@ -1,5 +1,6 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+import moment from 'moment';
 import {
   DailyCalibrationDTO,
   DailyCalibrationImportDTO,
@@ -10,6 +11,7 @@ export class DailyTestSummaryBaseDTO {
 
   unitId?: string;
 
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
 
   hour: number;

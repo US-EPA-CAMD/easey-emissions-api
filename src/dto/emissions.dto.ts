@@ -43,6 +43,11 @@ export class EmissionsBaseDTO {
   year: number;
   quarter: number;
   submissionComment?: string;
+
+  constructor(values: Object = {}) {
+    Object.assign(this, values);
+  }
+
 }
 
 export class EmissionsRecordDTO extends EmissionsBaseDTO {
@@ -54,6 +59,11 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   chkSessionId?: string;
   submissionId?: number;
   submissionAvailabilityCd?: string;
+
+  constructor(values: Object = {}) {
+    super(values)
+    Object.assign(this, values);
+  }
 }
 
 export class EmissionsImportDTO extends EmissionsBaseDTO {
@@ -122,4 +132,9 @@ export class EmissionsDTO extends EmissionsRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tSummaryDTO)
   nsps4tSummaryData: Nsps4tSummaryDTO[];
+
+  constructor(values: Object = {}) {
+    super(values)
+    Object.assign(this, values);
+  }
 }
