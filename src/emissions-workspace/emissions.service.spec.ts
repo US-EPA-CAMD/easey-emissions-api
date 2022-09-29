@@ -59,6 +59,12 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/daily-emission-workspace.repository';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
+import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -73,6 +79,12 @@ describe('Emissions Workspace Service', () => {
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
         EmissionsWorkspaceService,
+        DailyEmissionWorkspaceService,
+        DailyEmissionWorkspaceRepository,
+        DailyEmissionMap,
+        DailyFuelWorkspaceService,
+        DailyFuelWorkspaceRepository,
+        DailyFuelMap,
         DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         DailyCalibrationWorkspaceService,

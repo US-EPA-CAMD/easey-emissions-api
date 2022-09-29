@@ -116,6 +116,7 @@ export class MonitorLocationChecksService {
     payload?.sorbentTrapData?.forEach(i => addLocation(i));
     payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
     payload?.summaryValueData?.forEach(i => addLocation(i));
+    payload?.dailyEmissionData?.forEach(i => addLocation(i));
 
     return locations;
   }

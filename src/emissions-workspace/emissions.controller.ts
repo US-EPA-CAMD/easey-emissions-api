@@ -53,6 +53,6 @@ export class EmissionsWorkspaceController {
   ) {
     const userId = 'testUser';
     await this.checksService.runChecks(payload);
-    return this.service.import(payload);
+    return this.service.import(payload, userId);
   }
 }

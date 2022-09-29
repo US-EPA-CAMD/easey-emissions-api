@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
 
 @Module({
   imports: [
@@ -12,6 +14,11 @@ import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel
       DailyFuelWorkspaceRepository,
     ]),
   ],
-  providers: [DailyEmissionWorkspaceService, DailyFuelWorkspaceService],
+  providers: [
+    DailyEmissionMap,
+    DailyEmissionWorkspaceService,
+    DailyFuelMap,
+    DailyFuelWorkspaceService,
+  ],
 })
 export class DailyEmissionWorkspaceModule {}

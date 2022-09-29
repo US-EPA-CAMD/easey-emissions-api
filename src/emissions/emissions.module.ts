@@ -18,6 +18,7 @@ import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
   providers: [
     DailyEmissionService,
     DailyEmissionMap,
+    DailyFuelMap,
     DailyFuelService,
     EmissionsMap,
     EmissionsService,
