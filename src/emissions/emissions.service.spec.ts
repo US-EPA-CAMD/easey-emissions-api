@@ -52,6 +52,12 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { DailyEmissionService } from '../daily-emission/daily-emission.service';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -62,6 +68,7 @@ describe('Emissions Service', () => {
   let submissionProgressMap: EmissionsSubmissionsProgressMap;
   let dailyTestSummaryService: DailyTestSummaryService;
   let hourlyOperatingService: HourlyOperatingService;
+  let dailyEmissionService: DailyEmissionService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -74,6 +81,12 @@ describe('Emissions Service', () => {
         EmissionsMap,
         DailyTestSummaryMap,
         DailyCalibrationMap,
+        DailyEmissionService,
+        DailyEmissionMap,
+        DailyEmissionRepository,
+        DailyFuelService,
+        DailyFuelMap,
+        DailyFuelRepository,
         HourlyOperatingMap,
         MonitorHourlyValueMap,
         HourlyOperatingService,
@@ -158,6 +171,7 @@ describe('Emissions Service', () => {
     submissionProgressMap = module.get(EmissionsSubmissionsProgressMap);
     dailyTestSummaryService = module.get(DailyTestSummaryService);
     hourlyOperatingService = module.get(HourlyOperatingService);
+    dailyEmissionService = module.get(DailyEmissionService);
   });
 
   it('should have a emissions service', function() {
@@ -184,13 +198,14 @@ describe('Emissions Service', () => {
         .mockResolvedValue(emissionsMocks[0]);
       jest.spyOn(dailyTestSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(hourlyOperatingService, 'export').mockResolvedValue(null);
+      jest.spyOn(dailyEmissionService, 'export').mockResolvedValue(null);
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,
       );
     });
 
-    it('should return an empty object is no emissions data is found', async function() {
+    it('should return an empty object if no emissions data is found', async function() {
       const dtoMock = genEmissionsParamsDto();
 
       jest.spyOn(emissionsRepository, 'export').mockResolvedValue(undefined);

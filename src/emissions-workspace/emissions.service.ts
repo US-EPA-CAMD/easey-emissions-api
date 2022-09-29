@@ -17,6 +17,7 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -43,6 +44,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly dailyEmissionService: DailyEmissionWorkspaceService,
   ) {}
 
   async delete(
@@ -55,6 +57,7 @@ export class EmissionsWorkspaceService {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
+    const DAILY_EMISSION = 2;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -62,11 +65,12 @@ export class EmissionsWorkspaceService {
       params.quarter,
     );
 
-    if (emissions) {
+    if (emissions && Array.isArray(emissions.monitorPlan?.locations)) {
       const locationIds = emissions.monitorPlan?.locations?.map(s => s.id);
 
       promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
+      promises.push(this.dailyEmissionService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -74,6 +78,7 @@ export class EmissionsWorkspaceService {
       const results = new EmissionsDTO(mappedResults)
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
+      results.dailyEmissionData = promiseResult[DAILY_EMISSION];
 
       return results;
     }

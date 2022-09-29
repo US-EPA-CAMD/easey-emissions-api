@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
@@ -107,9 +108,10 @@ export class DailyEmission extends BaseEntity {
   @JoinColumn({ name: 'mon_loc_id' })
   monitorLocation: MonitorLocation;
 
-  @ManyToOne(
+  @OneToMany(
     () => DailyFuel,
-    o => o.dailyEmissions,
+    o => o.dailyEmission,
   )
-  dailyFuel: DailyFuel;
+  @JoinColumn({ name: 'daily_emission_id' })
+  dailyFuelData: DailyFuel[];
 }
