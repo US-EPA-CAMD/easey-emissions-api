@@ -20,10 +20,10 @@ export const exportDailyEmissionData = async ({
 }: ExportDailyEmissionDataProperties): Promise<DailyEmissionDTO[] | null> => {
   const dailyEmissionData = await repository
     .createQueryBuilder('dailyEmission')
-    .leftJoinAndSelect('dailyEmission.monitorLocation', 'monitorLocation')
+    .innerJoinAndSelect('dailyEmission.monitorLocation', 'monitorLocation')
     .leftJoinAndSelect('monitorLocation.unit', 'unit')
     .leftJoinAndSelect('monitorLocation.stackPipe', 'stack')
-    .leftJoin('dailyEmission.reportingPeriod', 'reportingPeriod')
+    .innerJoin('dailyEmission.reportingPeriod', 'reportingPeriod')
     .where('monitorLocation.mon_loc_id IN (:...monitoringLocationIds)', {
       monitoringLocationIds,
     })
