@@ -50,7 +50,6 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
-    private readonly dailyEmissionService: DailyEmissionWorkspaceService,
   ) {}
 
   async delete(
