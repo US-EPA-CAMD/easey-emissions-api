@@ -83,10 +83,9 @@ jobs:
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
       - name: Configure Env Vars (secrets)
-        run: |
-          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        run: devops/scripts/$APP_NAME/configure-env-vars-secrets.sh
         env:
-          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
+          EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -125,10 +124,9 @@ jobs:
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
       - name: Configure Env Vars (secrets)
-        run: |
-          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        run: devops/scripts/$APP_NAME/configure-env-vars-secrets.sh
         env:
-          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
+          EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -167,10 +165,9 @@ jobs:
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
       - name: Configure Env Vars (secrets)
-        run: |
-          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        run: devops/scripts/$APP_NAME/configure-env-vars-secrets.sh
         env:
-          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
+          EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
 
@@ -209,9 +206,8 @@ jobs:
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
       - name: Configure Env Vars (secrets)
-        run: |
-          cf set-env $APP_NAME EASEY_EMISSIONS_API_SECRET_TOKEN $API_SECRET_TOKEN
+        run: devops/scripts/$APP_NAME/configure-env-vars-secrets.sh
         env:
-          API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
+          EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
