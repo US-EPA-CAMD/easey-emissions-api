@@ -1,0 +1,42 @@
+import { genSamplingTrainImportDto } from '../../test/object-generators/sampling-train-dto';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { faker } from '@faker-js/faker';
+
+describe('ImportSamplingTrainData', () => {
+  let repository: SamplingTrainWorkspaceRepository;
+  let importSamplingTrainModule: typeof import('./import-sampling-train-data');
+
+  beforeAll(async () => {
+    repository = new SamplingTrainWorkspaceRepository();
+    importSamplingTrainModule = await import('./import-sampling-train-data');
+  });
+
+  it('should import data', async function() {
+    const importReturn = [...genSamplingTrainImportDto(3)];
+
+    jest
+      .spyOn(importSamplingTrainModule, 'importSamplingTrainData')
+      .mockResolvedValue(undefined);
+
+    await Promise.all(
+      importReturn.map(data => {
+        expect(
+          importSamplingTrainModule.importSamplingTrainData({
+            data: {
+              ...data,
+              sorbentTrapId: faker.datatype.string(),
+              reportingPeriodId: faker.datatype.number(),
+              monitoringLocationId: faker.datatype.string(),
+              identifiers: {
+                monitorFormulas: {},
+                monitoringSystems: {},
+                components: {},
+              },
+            },
+            repository,
+          }),
+        ).resolves.toEqual(undefined);
+      }),
+    );
+  });
+});
