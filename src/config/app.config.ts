@@ -34,6 +34,9 @@ export default registerAs('app', () => ({
   apiHost: getConfigValue(
     'EASEY_API_GATEWAY_HOST', 'api.epa.gov/easey/dev',
   ),
+  apiKey: getConfigValue(
+    'EASEY_EMISSIONS_API_KEY',
+  ),
   env: getConfigValue(
     'EASEY_EMISSIONS_API_ENV', 'local-dev',
   ),

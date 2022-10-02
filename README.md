@@ -47,6 +47,7 @@ The Emissions API uses a number of environment variables to properly configure t
 | title | EASEY_EMISSIONS_API_TITLE | Emissions Management | Configurable |
 | description | EASEY_EMISSIONS_API_DESCRIPTION | Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season) | Configurable |
 | apiHost | EASEY_API_GATEWAY_HOST | api.epa.gov/easey/dev | Configurable |
+| apiKey | EASEY_EMISSIONS_API_KEY | N/A | Dynamically set by CI/CD workflow |
 | env | EASEY_EMISSIONS_API_ENV | local-dev | Configurable |
 | enableCors | EASEY_EMISSIONS_API_ENABLE_CORS | true | Configurable |
 | enableApiKey | EASEY_EMISSIONS_API_ENABLE_API_KEY | false | Configurable |
@@ -56,6 +57,7 @@ The Emissions API uses a number of environment variables to properly configure t
 | perPageLimit | EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE | 500 | Configurable |
 | submissionDays | EASEY_EMISSIONS_API_SUBMISSION_DAYS | 38 | Configurable |
 | enableSecretToken | EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN | false | Configurable |
+| secretToken | EASEY_EMISSIONS_SECRET_TOKEN | N/A | Dynamically set by CI/CD workflow |
 | enableDebug | EASEY_EMISSIONS_API_ENABLE_DEBUG | false | Configurable |
 
 ## Environment Variables File
