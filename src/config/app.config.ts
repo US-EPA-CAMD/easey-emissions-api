@@ -1,13 +1,19 @@
-require('dotenv').config();
 import { registerAs } from '@nestjs/config';
-import { parseBool } from '@us-epa-camd/easey-common/utilities';
+import {
+  getConfigValue,
+  getConfigValueNumber,
+  getConfigValueBoolean,
+} from '@us-epa-camd/easey-common/utilities';
 
-const path = process.env.EASEY_EMISSIONS_API_PATH || 'emissions-mgmt';
-const host = process.env.EASEY_EMISSIONS_API_HOST || 'localhost';
-const port = +process.env.EASEY_EMISSIONS_API_PORT || 8040;
+require('dotenv').config();
 
-export const PAGINATION_MAX_PER_PAGE =
-  +process.env.EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE || 25000;
+const path = getConfigValue('EASEY_EMISSIONS_API_PATH', 'emissions-mgmt');
+const host = getConfigValue('EASEY_EMISSIONS_API_HOST', 'localhost');
+const port = getConfigValueNumber('EASEY_EMISSIONS_API_PORT', 8040);
+
+export const PAGINATION_MAX_PER_PAGE = getConfigValueNumber(
+  'EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE', 500,
+);
 
 let uri = `https://${host}/${path}`;
 
@@ -17,28 +23,47 @@ if (host === 'localhost') {
 
 export default registerAs('app', () => ({
   name: 'emissions-api',
-  title: process.env.EASEY_EMISSIONS_API_TITLE || 'Emissions Management',
-  description:
-    'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
-  path,
-  host,
-  apiHost: process.env.EASEY_API_GATEWAY_HOST || 'api.epa.gov/easey/dev',
-  port,
-  uri,
-  env: process.env.EASEY_EMISSIONS_API_ENV || 'local-dev',
-  enableCors: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_CORS, true),
-  enableApiKey: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_API_KEY, true),
-  enableAuthToken: parseBool(process.env.EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN),
-  enableGlobalValidationPipes: parseBool(
-    process.env.EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE,
-    true,
+  host, port, path, uri,
+  title: getConfigValue(
+    'EASEY_EMISSIONS_API_TITLE', 'Emissions Management',
   ),
-  version: process.env.EASEY_EMISSIONS_API_VERSION || 'v0.0.0',
-  published: process.env.EASEY_EMISSIONS_API_PUBLISHED || 'local',
+  description: getConfigValue(
+    'EASEY_EMISSIONS_API_DESCRIPTION',
+    'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
+  ),
+  apiHost: getConfigValue(
+    'EASEY_API_GATEWAY_HOST', 'api.epa.gov/easey/dev',
+  ),
+  env: getConfigValue(
+    'EASEY_EMISSIONS_API_ENV', 'local-dev',
+  ),
+  enableCors: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_CORS', true,
+  ),
+  enableApiKey: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_API_KEY',
+  ),
+  enableAuthToken: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN',
+  ),
+  enableGlobalValidationPipes: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE', true,
+  ),
+  version: getConfigValue(
+    'EASEY_EMISSIONS_API_VERSION', 'v0.0.0',
+  ),
+  published: getConfigValue(
+    'EASEY_EMISSIONS_API_PUBLISHED', 'local',
+  ),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
-  submissionDays: +process.env.EASEY_EMISSIONS_API_SUBMISSION_DAYS || 38,
-  enableSecretToken: parseBool(
-    process.env.EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN,
-    false,
+  submissionDays: getConfigValueNumber(
+    'EASEY_EMISSIONS_API_SUBMISSION_DAYS', 38,
+  ),
+  enableSecretToken: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN',
+  ),
+  // ENABLES DEBUG CONSOLE LOGS
+  enableDebug: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_DEBUG',
   ),
 }));

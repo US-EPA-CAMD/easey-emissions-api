@@ -1,11 +1,13 @@
 import { ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
+import moment from 'moment';
 
 export class DailyEmissionBaseDTO {
   stackPipeId?: string;
   unitId?: string;
   parameterCode: string;
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
   totalDailyEmissions?: number;
   adjustedDailyEmissions?: number;

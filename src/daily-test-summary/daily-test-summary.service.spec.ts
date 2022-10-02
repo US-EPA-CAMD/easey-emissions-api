@@ -12,7 +12,7 @@ import { DailyTestSummary } from '../entities/daily-test-summary.entity';
 import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
 import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
 
-describe('HourlyOperatingService', () => {
+describe('Daily Test Summary Service', () => {
   let service: DailyTestSummaryService;
   let repository: DailyTestSummaryRepository;
   let map: DailyTestSummaryMap;

@@ -10,6 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyFuelFlow } from './hrly-fuel-flow.entity';
 import { MonitorFormula } from './monitor-formula.entity';
 import { MonitorSystem } from './monitor-system.entity';
+import { MonitorLocation } from './monitor-location.entity';
 
 @Entity({ name: 'camdecmpswks.hrly_param_fuel_flow' })
 export class HrlyParamFuelFlow extends BaseEntity {
@@ -100,4 +101,11 @@ export class HrlyParamFuelFlow extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_sys_id' })
   monitorSystem: MonitorSystem;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.hrlyParamFuelFlows,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
 }

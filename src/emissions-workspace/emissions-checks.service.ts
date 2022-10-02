@@ -8,6 +8,9 @@ import { MonitorLocationChecksService } from '../monitor-location-workspace/moni
 import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { isUndefinedOrNull } from '../utils/utils';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import moment from 'moment';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -16,6 +19,8 @@ export class EmissionsChecksService {
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
+    private readonly monitorPlanCheckService: MonitorPlanChecksService,
+    private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
   private throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
@@ -40,8 +45,15 @@ export class EmissionsChecksService {
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
     // IMPORT-27: All EM Components Present in the Production Database
-    const [, locationErrors] = await this.monitorLocationCheckService.runChecks(
-      payload,
+    // IMPORT-26: All EM Systems Present in the Production Database
+    const [
+      unitStackIdentifiers,
+      locationErrors,
+    ] = await this.monitorLocationCheckService.runChecks(payload);
+
+    // IMPORT-22: All EM Locations Present in Unique Monitoring Plan in the Production Database
+    const monitorPlanCheckErrors = await this.monitorPlanCheckService.runChecks(
+      unitStackIdentifiers,
     );
 
     errorList.push(
@@ -49,12 +61,66 @@ export class EmissionsChecksService {
       ...invalidDatesCheckErrors,
       ...locationErrors,
       ...dailyTestSummaryCheckErrors,
+      ...monitorPlanCheckErrors,
     );
 
     this.throwIfErrors(errorList);
     this.logger.info('Completed Emissions Import Checks');
 
     return errorList;
+  }
+
+  async invalidFormulasCheck(
+    payload: EmissionsImportDTO,
+    monitoringLocationId: string,
+  ): Promise<void> {
+    const formulaIdentifiers = new Set<string>();
+
+    payload?.hourlyOperatingData?.forEach(hourlyOp => {
+      hourlyOp?.derivedHourlyValueData?.forEach(derived => {
+        if (!isUndefinedOrNull(derived.formulaIdentifier)) {
+          formulaIdentifiers.add(derived.formulaIdentifier);
+        }
+      });
+
+      hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
+        if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
+          formulaIdentifiers.add(matsDerived.formulaIdentifier);
+        }
+      });
+
+      hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
+        fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
+          if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
+            formulaIdentifiers.add(paramFuelFlow.formulaIdentifier);
+          }
+        });
+      });
+    });
+
+    if (formulaIdentifiers.size === 0) {
+      return;
+    }
+
+    for (const formulaIdentifier of formulaIdentifiers) {
+      const monitorFormula = await this.monitorFormulaRepository.getOneFormulaIdsMonLocId(
+        {
+          formulaIdentifier,
+          monitoringLocationId,
+        },
+      );
+
+      if (isUndefinedOrNull(monitorFormula)) {
+        const errorMessage = CheckCatalogService.formatResultMessage(
+          'IMPORT-28-A',
+          {
+            formulaID: formulaIdentifier,
+          },
+        );
+
+        throw new LoggingException(errorMessage, HttpStatus.BAD_REQUEST);
+      }
+    }
   }
 
   // IMPORT-23: Emission File Dates Valid
@@ -67,8 +133,8 @@ export class EmissionsChecksService {
         return;
       }
 
-      const year = new Date(date).getFullYear();
-      const quarter = Math.floor(new Date(date).getMonth() / 3 + 1);
+      const year = moment(date).year();
+      const quarter = moment(date).quarter();
       const combo = Number(`${year}${quarter}`);
 
       if (typeof earliestDate === 'undefined' || combo < earliestDate) {
@@ -102,6 +168,7 @@ export class EmissionsChecksService {
     });
 
     const payloadCombo = Number(`${payload.year}${payload.quarter}`);
+
     if (payloadCombo < earliestDate || payloadCombo > latestDate) {
       return [CheckCatalogService.formatResultMessage('IMPORT-23-A')];
     }

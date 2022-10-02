@@ -38,6 +38,33 @@ import { genPlant } from '../../test/object-generators/plant';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { Plant } from '../entities/plant.entity';
 import { faker } from '@faker-js/faker';
+import { EmissionsChecksService } from './emissions-checks.service';
+import { Logger } from '@us-epa-camd/easey-common/logger';
+import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterWorkspaceRepository } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.repository';
+import { ComponentRepository } from '../component/component.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/daily-emission-workspace.repository';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
+import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -52,19 +79,44 @@ describe('Emissions Workspace Service', () => {
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
         EmissionsWorkspaceService,
+        DailyEmissionWorkspaceService,
+        DailyEmissionWorkspaceRepository,
+        DailyEmissionMap,
+        DailyFuelWorkspaceService,
+        DailyFuelWorkspaceRepository,
+        DailyFuelMap,
+        DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         DailyCalibrationWorkspaceService,
         EmissionsMap,
+        EmissionsChecksService,
+        Logger,
         DailyTestSummaryMap,
         DailyCalibrationMap,
         HourlyOperatingMap,
         MonitorHourlyValueMap,
+        MonitorLocationChecksService,
+        MonitorPlanChecksService,
         HourlyOperatingWorkspaceService,
+        MonitorFormulaRepository,
+        MonitorLocationWorkspaceRepository,
+        MonitorPlanWorkspaceRepository,
         MonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueMap,
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueWorkspaceService,
+        WeeklyTestSummaryCheckService,
+        HourlyFuelFlowWorkspaceService,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowWorkspaceRepository,
+        HourlyParameterFuelFlowWorkspaceService,
+        HourlyParameterFuelFlowMap,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceService,
+        ComponentRepository,
+        MonitorSystemRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -108,6 +160,10 @@ describe('Emissions Workspace Service', () => {
           useValue: jest.mock(
             '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository',
           ),
+        },
+        {
+          provide: HourlyGasFlowMeterWorkspaceRepository,
+          useValue: mockHourlyGasFlowMeterWorkspaceRepository,
         },
       ],
     }).compile();
@@ -185,6 +241,7 @@ describe('Emissions Workspace Service', () => {
         emissionsDtoMock[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves.toBeUndefined();
 
@@ -193,7 +250,8 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         faker.datatype.number(),
         faker.datatype.string(),
+        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
-    ).resolves.toBeUndefined();
+    ).resolves;
   });
 });
