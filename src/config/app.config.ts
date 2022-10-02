@@ -12,7 +12,7 @@ const host = getConfigValue('EASEY_EMISSIONS_API_HOST', 'localhost');
 const port = getConfigValueNumber('EASEY_EMISSIONS_API_PORT', 8040);
 
 export const PAGINATION_MAX_PER_PAGE = getConfigValueNumber(
-  'EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE', 25000,
+  'EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE', 500,
 );
 
 let uri = `https://${host}/${path}`;
