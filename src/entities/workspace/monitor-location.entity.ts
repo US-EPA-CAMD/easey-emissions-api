@@ -28,6 +28,7 @@ import { StackPipe } from './stack-pipe.entity';
 import { Unit } from './unit.entity';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
+import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -202,4 +203,11 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorSystems: MonitorSystem[];
+
+  @OneToMany(
+    () => HrlyParamFuelFlow,
+    o => o.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  hrlyParamFuelFlows: HrlyParamFuelFlow[];
 }

@@ -13,11 +13,11 @@ export class HourlyOperatingMap extends BaseMap<
   public async one(
     entity: HrlyOpData | HrlyOpDataWorkspace,
   ): Promise<HourlyOperatingDTO> {
-    const unitId = entity.monitorLocation.unit
+    const unitId = entity.monitorLocation?.unit
       ? entity.monitorLocation.unit.name
       : null;
 
-    const stackPipeId = entity.monitorLocation.stackPipe
+    const stackPipeId = entity.monitorLocation?.stackPipe
       ? entity.monitorLocation.stackPipe.name
       : null;
 
@@ -27,8 +27,8 @@ export class HourlyOperatingMap extends BaseMap<
       stackPipeId: stackPipeId,
       unitId: unitId,
       reportingPeriodId: entity.reportingPeriodId,
-      date: entity.beginDate,
-      hour: entity.beginHour,
+      date: entity.date,
+      hour: entity.hour,
       operatingTime: entity.operatingTime,
       hourLoad: entity.hourLoad,
       loadUnitsOfMeasureCode: entity.loadUnitsOfMeasureCode,
@@ -47,12 +47,12 @@ export class HourlyOperatingMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      monitorHourlyValue: null,
-      matsMonitorHourlyValue: null,
-      derivedHourlyValue: null,
-      matsDerivedHourlyValue: null,
-      hourlyFuelFlow: null,
-      hourlyGasFlowMeter: null,
+      monitorHourlyValueData: null,
+      matsMonitorHourlyValueData: null,
+      derivedHourlyValueData: null,
+      matsDerivedHourlyValueData: null,
+      hourlyFuelFlowData: null,
+      hourlyGFMData: null,
     };
   }
 }

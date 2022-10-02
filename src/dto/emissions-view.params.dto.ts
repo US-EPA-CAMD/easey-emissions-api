@@ -34,9 +34,6 @@ export class EmissionsViewParamsDTO {
   stackPipeIds?: string[];
 
   @ApiProperty()
-  viewCode: string;
-
-  @ApiProperty()
   @IsYearFormat({
     each: true,
     message: ErrorMessages.SingleFormat('year', 'YYYY format'),

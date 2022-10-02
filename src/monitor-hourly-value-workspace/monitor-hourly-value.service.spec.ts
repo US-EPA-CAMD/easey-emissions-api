@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { genMonitorHourlyValueImportDto } from '../../test/object-generators/montior-hourly-value-dto';
 
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
@@ -14,7 +15,7 @@ const mockMap = {
 
 describe('MonitorHourlyValueWorkspaceService', () => {
   let service: MonitorHourlyValueWorkspaceService;
-  let repository: any;
+  let repository: MonitorHourlyValueWorkspaceRepository;
   let map;
 
   beforeEach(async () => {
@@ -45,6 +46,22 @@ describe('MonitorHourlyValueWorkspaceService', () => {
     it('should export a record', async () => {
       const result = await service.export(['123']);
       expect(result).toEqual(null);
+    });
+  });
+
+  describe('import', () => {
+    it('should import record', async () => {
+      const monitorImport = genMonitorHourlyValueImportDto()[0];
+
+      jest.spyOn(service, 'import').mockResolvedValue(undefined);
+
+      await expect(
+        service.import(monitorImport, '12345', '123', 150, {
+          components: {},
+          monitoringSystems: {},
+          monitorFormulas: {}
+        }),
+      ).resolves;
     });
   });
 });

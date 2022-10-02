@@ -14,13 +14,28 @@ import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-worksp
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { genMonitorFormula } from '../../test/object-generators/monitor-formula';
+import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
+import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
+import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
+import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
+  let monitorFormulaRepository: MonitorFormulaRepository;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule],
+      imports: [LoggerModule, CheckCatalogService],
       providers: [
         DailyCalibrationMap,
         DailyCalibrationWorkspaceService,
@@ -28,6 +43,17 @@ describe('Emissions Checks Service Tests', () => {
         DailyTestSummaryCheckService,
         DailyTestSummaryWorkspaceService,
         EmissionsChecksService,
+        MonitorPlanChecksService,
+        MonitorFormulaRepository,
+        MonitorHourlyValueWorkspaceService,
+        HourlyFuelFlowWorkspaceService,
+        MonitorHourlyValueWorkspaceRepository,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowWorkspaceService,
+        HourlyParameterFuelFlowWorkspaceRepository,
+        HourlyParameterFuelFlowMap,
+        MonitorHourlyValueMap,
         {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: () => jest,
@@ -48,10 +74,18 @@ describe('Emissions Checks Service Tests', () => {
             runChecks: jest.fn().mockResolvedValue([[], []]),
           }),
         },
+        {
+          provide: MonitorPlanChecksService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockResolvedValue([]),
+          }),
+        },
+
       ],
     }).compile();
 
     service = module.get(EmissionsChecksService);
+    monitorFormulaRepository = module.get(MonitorFormulaRepository);
   });
 
   describe('test runChecks()', () => {
@@ -119,6 +153,64 @@ describe('Emissions Checks Service Tests', () => {
       expect(service.invalidDatesCheck(payload)).toEqual([message]);
 
       payload.year;
+    });
+  });
+
+  describe('invalidFormulasCheck', () => {
+    let payload;
+
+    beforeAll(() => {
+      payload = genEmissionsImportDto(1, {
+        include: ['hourlyOperatingData'],
+        hourlyOperatingAmount: 3,
+        hourlyOperatingImportConfig: {
+          derivedHourlyValueAmount: 3,
+          matsDerivedHourlyValueAmount: 3,
+          hourlyFuelFlowAmount: 3,
+          include: [
+            'derivedHourlyValueData',
+            'matsDerivedHourlyValueData',
+            'hourlyFuelFlowData',
+          ],
+          hourlyFuelFlowConfig: {
+            include: ['hourlyParameterFuelFlowData'],
+            hourlyParamFuelFlowAmount: 3,
+          },
+        },
+      })[0];
+    });
+
+    it('should return an empty array for empty request', async function() {
+      const payload = new EmissionsImportDTO();
+
+      await expect(service.invalidFormulasCheck(payload, '2')).resolves.toEqual(
+        undefined,
+      );
+    });
+
+    it('should return an empty array given data with valid formulaIdentifiers', async function() {
+      jest
+        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
+        .mockResolvedValue(genMonitorFormula<MonitorFormula>()[0]);
+
+      await expect(service.invalidFormulasCheck(payload, '1')).resolves.toEqual(
+        undefined,
+      );
+    });
+
+    it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
+      const errorMessage =
+        'The Client Tool database does not contain [FormulaID]. This file was not imported.';
+      jest
+        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
+        .mockResolvedValue(undefined);
+      CheckCatalogService.formatResultMessage = () => {
+        return errorMessage;
+      };
+
+      await expect(service.invalidFormulasCheck(payload, '2')).rejects.toThrow(
+        errorMessage,
+      );
     });
   });
 });

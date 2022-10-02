@@ -7,14 +7,19 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm';
 
-import { Datatable } from './datatable.entity';
+import { DataTable } from './datatable.entity';
 
-@Entity({ name: 'camdecmpsaux.datacolumn' })
-export class Datacolumn extends BaseEntity {
+@Entity({ name: 'camdaux.datacolumn' })
+export class DataColumn extends BaseEntity {
   @PrimaryGeneratedColumn({
     name: 'datacolumn_id',
   })
   id: number;
+
+  @Column({
+    name: 'datatable_id',
+  })
+  dataTableId: number;  
 
   @Column({
     name: 'column_order',
@@ -27,19 +32,19 @@ export class Datacolumn extends BaseEntity {
   name: string;
 
   @Column({
+    name: 'alias',
+  })
+  alias: string;
+
+  @Column({
     name: 'display_name',
   })
   displayName: string;
 
-  @Column({
-    name: 'datatable_id',
-  })
-  datatableId: number;
-
   @ManyToOne(
-    () => Datatable,
+    () => DataTable,
     o => o.columns,
   )
   @JoinColumn({ name: 'datatable_id' })
-  datatable: Datatable;
+  dataTable: DataTable;
 }

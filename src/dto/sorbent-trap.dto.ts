@@ -1,12 +1,15 @@
 import { ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
+import moment from 'moment';
 
 export class SorbentTrapBaseDTO {
   stackPipeId?: string;
   unitId?: string;
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   beginDate: Date;
   beginHour: number;
+  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   endDate: Date;
   endHour: number;
   monitoringSystemId: string;
@@ -22,6 +25,7 @@ export class SorbentTrapRecordDTO extends SorbentTrapBaseDTO {
   id: string;
   monitoringLocationId: string;
   reportingPeriodId: number;
+  monitoringSystemRecordId: string;
   calcPairedTrapAgreement?: number;
   calcModcCode?: string;
   calcHgConcentration?: string;

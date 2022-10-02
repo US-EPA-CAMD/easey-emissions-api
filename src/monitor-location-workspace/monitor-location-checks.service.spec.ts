@@ -1,17 +1,21 @@
 import { Test } from '@nestjs/testing';
 import { MonitorLocationChecksService } from './monitor-location-checks.service';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
+import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { Component } from '../entities/workspace/component.entity';
 import { Unit } from '../entities/workspace/unit.entity';
-import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+import { MonitorSystem } from '../entities/workspace/monitor-system.entity';
+import { genDerivedHourlyValueImportDto } from '../../test/object-generators/derived-hourly-value-dto';
+import { genHourlyFuelFlowImportDto } from '../../test/object-generators/hourly-fuel-flow-dto';
 
 describe('location checks service tests', () => {
   let service: MonitorLocationChecksService;
@@ -22,14 +26,9 @@ describe('location checks service tests', () => {
   payload.hourlyOperatingData = [new HourlyOperatingImportDTO()];
   payload.hourlyOperatingData[0].stackPipeId = 'sp1';
   payload.hourlyOperatingData[0].monitorHourlyValueData = [
-    { parameterCode: 'a', componentId: '1' },
+    { parameterCode: 'a', componentId: '1', monitoringSystemId: '1' },
   ];
-  payload.hourlyOperatingData[0].matsMonitorHourlyValueData = [
-    { parameterCode: 'a', componentId: '2' },
-  ];
-  payload.hourlyOperatingData[0].hourlyGFMData = [{ componentId: '3' }];
-
-  payload.hourlyOperatingData = [new HourlyOperatingImportDTO()];
+  genDerivedHourlyValueImportDto;
   payload.hourlyOperatingData[0].stackPipeId = 'sp1';
   payload.hourlyOperatingData[0].monitorHourlyValueData = [
     { parameterCode: 'a', componentId: '1' },
@@ -38,6 +37,16 @@ describe('location checks service tests', () => {
     { parameterCode: 'a', componentId: '3' },
   ];
   payload.hourlyOperatingData[0].hourlyGFMData = [{ componentId: '4' }];
+  const genDerivedHourlyValueDtoData = genDerivedHourlyValueImportDto();
+  genDerivedHourlyValueDtoData[0].monitoringSystemId = '4';
+  payload.hourlyOperatingData[0].derivedHourlyValueData = genDerivedHourlyValueDtoData;
+  payload.hourlyOperatingData[0].hourlyFuelFlowData = genHourlyFuelFlowImportDto(
+    1,
+    { include: ['hourlyParameterFuelFlowData'], hourlyParamFuelFlowAmount: 1 },
+  );
+  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].monitoringSystemId = '5';
+  payload.hourlyOperatingData[0].hourlyFuelFlowData[0].hourlyParameterFuelFlowData[0].monitoringSystemId =
+    '5';
 
   payload.sorbentTrapData = [new SorbentTrapImportDTO()];
   payload.sorbentTrapData[0].unitId = 'u2';
@@ -52,6 +61,10 @@ describe('location checks service tests', () => {
   payload.weeklyTestSummaryData = [new WeeklyTestSummaryImportDTO()];
   payload.weeklyTestSummaryData[0].componentId = '6';
   payload.dailyTestSummaryData[0].unitId = 'u1';
+
+  payload.longTermFuelFlowData = [new LongTermFuelFlowImportDTO()];
+  payload.longTermFuelFlowData[0].monitoringSystemId = '7';
+  payload.longTermFuelFlowData[0].longTermFuelFlowValue = 1;
 
   const mockRepository = () => ({
     getLocationsByUnitStackPipeIds: jest.fn(),
@@ -87,6 +100,7 @@ describe('location checks service tests', () => {
       const u1ComponentIdList = Array.from(
         locations.find(e => e.unitId === 'u1').componentIds,
       );
+
       expect(u1ComponentIdList.sort()).toEqual(['4', '5', '6'].sort());
 
       const sp1ComponentIdList = Array.from(
@@ -103,7 +117,6 @@ describe('location checks service tests', () => {
 
     it('should return an empty errorList', async () => {
       repository.getLocationsByUnitStackPipeIds.mockResolvedValue([]);
-
       const [, errorList] = await service.runChecks(payload);
       expect(errorList.length).toEqual(0);
     });
@@ -112,18 +125,24 @@ describe('location checks service tests', () => {
       const ml: MonitorLocation = new MonitorLocation();
 
       const c4 = new Component();
-      c4.componentId = '4';
+      c4.id = '4';
       const c5 = new Component();
-      c5.componentId = '5';
+      c5.id = '5';
+
+      const ms4 = new MonitorSystem();
+      ms4.id = '4';
+      const ms5 = new MonitorSystem();
+      ms5.id = '5';
 
       ml.components = [c4, c5];
+      ml.monitorSystems = [ms4, ms5];
       ml.unit = new Unit();
       ml.unit.name = 'u1';
 
       repository.getLocationsByUnitStackPipeIds.mockResolvedValue([ml]);
 
       const [, errorList] = await service.runChecks(payload);
-      expect(errorList.length).toEqual(1);
+      expect(errorList.length).toEqual(5);
     });
   });
 });

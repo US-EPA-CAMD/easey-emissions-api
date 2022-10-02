@@ -1,6 +1,22 @@
-import { isUndefinedOrNull } from './utils';
+import { hasArrayValues, isUndefinedOrNull, objectValuesByKey } from './utils';
 
 describe('Utils', () => {
+  describe('hasArrayValues', () => {
+    it('should return true if array has at least one value', function() {
+      expect(hasArrayValues([1])).toBe(true);
+      expect(hasArrayValues([{}])).toBe(true);
+      expect(hasArrayValues([undefined])).toBe(true);
+      expect(hasArrayValues([null])).toBe(true);
+    });
+
+    it('should return false if the value is not array or if the array is empty', function() {
+      expect(hasArrayValues([])).toBe(false);
+      expect(hasArrayValues(undefined)).toBe(false);
+      expect(hasArrayValues(null)).toBe(false);
+      expect(hasArrayValues("I'm not an array.")).toBe(false);
+    });
+  });
+
   describe('isUndefinedOrNull', () => {
     it('should return false for defined or non null value', function() {
       expect(isUndefinedOrNull(0)).toBe(false);
@@ -20,6 +36,42 @@ describe('Utils', () => {
 
     it('should return false is no items in an array are undefined or null', function() {
       expect(isUndefinedOrNull(['123', 123])).toBe(false);
+    });
+  });
+
+  describe('objectValuesByKey', () => {
+    it('should return an empty array if no values for key is found', function() {
+      const object = { findMe: '123', notMe: 234 };
+
+      expect(objectValuesByKey('notFound', object)).toEqual([]);
+    });
+
+    it('should return an array with a value given a key for a shallow object', function() {
+      const object = { findMe: '123', notMe: 234 };
+
+      expect(objectValuesByKey('findMe', object)).toEqual(['123']);
+    });
+
+    it('should return an array of values give a key for a deep object', function() {
+      const object = {
+        findMe: '123',
+        notMe: 234,
+        nested: {
+          findMe: '123',
+          hello: 'there',
+          nestedNested: {
+            findMe: '235',
+          },
+        },
+      };
+
+      const results = objectValuesByKey('findMe', object);
+      const uniqueResults = objectValuesByKey('findMe', object, true);
+
+      expect(results.length).toEqual(3);
+      expect(results).toEqual(['123', '123', '235']);
+      expect(uniqueResults.length).toEqual(2);
+      expect(uniqueResults).toEqual(['123', '235']);
     });
   });
 });

@@ -14,15 +14,28 @@ export class PlantRepository extends Repository<Plant> {
     stackIds,
     unitIds,
   }: GetImportLocationsProperties): Promise<Plant> {
-    return this.createQueryBuilder('plant')
+    let unitsWhere =
+      unitIds && unitIds.length > 0 ? 'locationUnit.name IN (:...unitIds)' : '';
+
+    let stacksWhere =
+      stackIds && stackIds.length > 0
+        ? 'locationStack.name IN (:...stackIds)'
+        : '';
+
+    if (unitIds?.length > 0 && stackIds?.length > 0) {
+      unitsWhere = `(${unitsWhere})`;
+      stacksWhere = ` OR (${stacksWhere})`;
+    }
+
+    const q = this.createQueryBuilder('plant')
       .innerJoinAndSelect('plant.monitorPlans', 'monitorPlans')
       .innerJoinAndSelect('monitorPlans.locations', 'monitorLocation')
       .innerJoinAndSelect('monitorPlans.beginRptPeriod', 'reportingPeriod')
       .leftJoin('monitorLocation.unit', 'locationUnit')
       .leftJoin('monitorLocation.stackPipe', 'locationStack')
       .where('plant.oris_code = :orisCode', { orisCode })
-      .andWhere('locationUnit.unit_id IN(:...unitIds)', { unitIds })
-      .orWhere('locationStack.stack_pipe_id IN(:...stackIds)', { stackIds })
-      .getOne();
+      .andWhere(`${unitsWhere}${stacksWhere}`, { unitIds, stackIds });
+
+    return q.getOne();
   }
 }

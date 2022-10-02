@@ -19,6 +19,7 @@ export class HourlyFuelFlowBaseDTO {
 export class HourlyFuelFlowRecordDTO extends HourlyFuelFlowBaseDTO {
   id: string;
   hourId: string;
+  monitoringSystemRecordId?: string;
   calcMassFlowRate?: number;
   userId?: string;
   addDate?: Date;

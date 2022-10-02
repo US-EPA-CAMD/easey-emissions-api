@@ -12,10 +12,12 @@ import { randomUUID } from 'crypto';
 import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { isUndefinedOrNull } from '../utils/utils';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
   monitoringLocationId: string;
+  identifiers: ImportIdentifiers;
 };
 
 @Injectable()
@@ -75,6 +77,12 @@ export class DailyTestSummaryWorkspaceService {
       this.repository.create({
         ...parameters,
         id: randomUUID(),
+        monitoringSystemId:
+          parameters?.identifiers?.monitoringSystems?.[
+            parameters.monitoringSystemId
+          ],
+        componentId:
+          parameters?.identifiers?.components?.[parameters.componentId],
       }),
     );
 

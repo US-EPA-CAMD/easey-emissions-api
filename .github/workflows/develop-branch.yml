@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Checkout devops repo
         uses: actions/checkout@v2
         with:
@@ -54,5 +52,9 @@ jobs:
           CF_PASSWORD: ${{ secrets.CF_DEV_DEPLOYMENT_SVC_PWD }}
       - name: Init Application
         run: devops/scripts/cf-app-init.sh
+      - name: Configure Env Vars (secrets)
+        run: scripts/environment-variables-secrets.sh
+        env:
+          EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh

@@ -7,19 +7,14 @@ import {
   PrimaryColumn
 } from 'typeorm';
 
-import { Datatable } from './datatable.entity';
+import { DataTable } from './datatable.entity';
 
-@Entity({ name: 'camdecmpsaux.dataset' })
-export class Dataset extends BaseEntity {
+@Entity({ name: 'camdaux.dataset' })
+export class DataSet extends BaseEntity {
   @PrimaryColumn({
     name: 'dataset_cd',
   })
   code: string;
-
-  @Column({
-    name: 'display_name',
-  })
-  displayName: string;
 
   @Column({
     name: 'template_cd',
@@ -27,14 +22,19 @@ export class Dataset extends BaseEntity {
   templateCode: string;
 
   @Column({
+    name: 'display_name',
+  })
+  displayName: string;
+
+  @Column({
     name: 'no_results_msg',
   })
   noResultsMessage: string;
 
   @OneToMany(
-    () => Datatable,
-    o => o.dataset,
+    () => DataTable,
+    o => o.dataSet,
   )
   @JoinColumn({ name: 'dataset_cd' })
-  datatables: Datatable[];
+  tables: DataTable[];
 }

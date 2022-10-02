@@ -32,6 +32,21 @@ import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-ho
 import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository';
 import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
+import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
+import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
+import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { DailyEmissionService } from '../daily-emission/daily-emission.service';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
+import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -46,6 +61,12 @@ describe('-- Emissions Controller --', () => {
         DerivedHourlyValueService,
         DerivedHourlyValueRepository,
         EmissionsService,
+        DailyEmissionService,
+        DailyEmissionMap,
+        DailyEmissionRepository,
+        DailyFuelService,
+        DailyFuelMap,
+        DailyFuelRepository,
         DailyTestSummaryService,
         DailyCalibrationService,
         EmissionsMap,
@@ -71,6 +92,15 @@ describe('-- Emissions Controller --', () => {
         MatsDerivedHourlyValueRepository,
         EmissionsSubmissionsProgressRepository,
         EmissionsRepository,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterService,
+        HourlyGasFlowMeterRepository,
+        HourlyFuelFlowService,
+        HourlyFuelFlowRepository,
+        HourlyFuelFlowMap,
+        HourlyParameterFuelFlowService,
+        HourlyParameterFuelFlowRepository,
+        HourlyParameterFuelFlowMap,
       ],
     }).compile();
 

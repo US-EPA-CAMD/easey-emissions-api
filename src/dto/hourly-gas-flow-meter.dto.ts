@@ -10,6 +10,7 @@ export class HourlyGasFlowMeterBaseDTO {
 export class HourlyGasFlowMeterRecordDTO extends HourlyGasFlowMeterBaseDTO {
   id: string;
   hourId: string;
+  componentRecordId: string;
   monitoringLocationId: string;
   reportingPeriodId: number;
   calcFlowToSamplingRatio?: number;

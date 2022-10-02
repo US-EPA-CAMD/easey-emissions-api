@@ -8,11 +8,11 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm';
 
-import { Dataset } from './dataset.entity';
-import { Datacolumn } from './datacolumn.entity';
+import { DataSet } from './dataset.entity';
+import { DataColumn } from './datacolumn.entity';
 
-@Entity({ name: 'camdecmpsaux.datatable' })
-export class Datatable extends BaseEntity {
+@Entity({ name: 'camdaux.datatable' })
+export class DataTable extends BaseEntity {
   @PrimaryGeneratedColumn({
     name: 'datatable_id',
   })
@@ -21,7 +21,7 @@ export class Datatable extends BaseEntity {
   @Column({
     name: 'dataset_cd',
   })
-  datasetCode: string;
+  dataSetCode: string;
 
   @Column({
     name: 'table_order',
@@ -44,16 +44,16 @@ export class Datatable extends BaseEntity {
   noResultsMessage: string;
 
   @ManyToOne(
-    () => Dataset,
-    o => o.datatables,
+    () => DataSet,
+    o => o.tables,
   )
   @JoinColumn({ name: 'dataset_cd' })
-  dataset: Dataset;
+  dataSet: DataSet;
 
   @OneToMany(
-    () => Datacolumn,
-    o => o.datatable,
+    () => DataColumn,
+    o => o.dataTable,
   )
   @JoinColumn({ name: 'datatable_id' })
-  columns: Datacolumn[];
+  columns: DataColumn[];
 }

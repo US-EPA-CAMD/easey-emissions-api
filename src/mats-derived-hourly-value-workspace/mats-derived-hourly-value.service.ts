@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { In } from 'typeorm';
 import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
-import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+import {
+  MatsDerivedHourlyValueDTO,
+  MatsDerivedHourlyValueImportDTO,
+} from '../dto/mats-derived-hourly-value.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class MatsDerivedHourlyValueWorkspaceService {
@@ -16,5 +21,25 @@ export class MatsDerivedHourlyValueWorkspaceService {
       where: { hourId: In(hourIds) },
     });
     return this.map.many(results);
+  }
+
+  async import(
+    data: MatsDerivedHourlyValueImportDTO,
+    identifiers: ImportIdentifiers,
+    hourId: string,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+  ) {
+    const o = {
+      id: randomUUID(),
+      parameterCode: data.parameterCode,
+      unadjustedHourlyValue: data.unadjustedHourlyValue,
+      modcCode: data.modcCode,
+      monFormId: identifiers?.monitorFormulas?.[data.formulaIdentifier],
+      hourId,
+      monitoringLocationId,
+      reportingPeriodId,
+    };
+    return this.repository.save(this.repository.create(o));
   }
 }
