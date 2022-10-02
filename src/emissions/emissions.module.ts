@@ -19,6 +19,7 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { EmissionsViewModule } from 'src/emissions-view/emissions-view.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
     ]),
+    EmissionsViewModule,
     DailyEmissionModule,
     DailyTestSummaryModule,
     HourlyOperatingModule,
