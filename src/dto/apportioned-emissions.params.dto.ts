@@ -31,7 +31,7 @@ export class MatsApportionedEmissionsParamsDTO {
   @IsOptional()
   @IsStateCode({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'stateCode'),
+    message: ErrorMessages.UnitCharacteristics(true, 'state-code'),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   stateCode?: State[];
@@ -55,7 +55,7 @@ export class MatsApportionedEmissionsParamsDTO {
   @IsOptional()
   @IsUnitType({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'unitType'),
+    message: ErrorMessages.UnitCharacteristics(true, 'unit-type-code'),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   unitType?: UnitType[];
@@ -67,7 +67,7 @@ export class MatsApportionedEmissionsParamsDTO {
   @IsOptional()
   @IsUnitFuelType({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'unitFuelType'),
+    message: ErrorMessages.UnitCharacteristics(true, 'fuel-type-code'),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   unitFuelType?: UnitFuelType[];
@@ -79,7 +79,7 @@ export class MatsApportionedEmissionsParamsDTO {
   @IsOptional()
   @IsControlTechnology({
     each: true,
-    message: ErrorMessages.UnitCharacteristics(true, 'controlTechnologies'),
+    message: ErrorMessages.UnitCharacteristics(true, 'control-code'),
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   controlTechnologies?: ControlTechnology[];
@@ -98,7 +98,7 @@ export class ApportionedEmissionsParamsDTO extends MatsApportionedEmissionsParam
   @IsEmissionsProgram({
     each: true,
     message:
-      ErrorMessages.UnitCharacteristics(true, 'programCodeInfo') +
+      ErrorMessages.UnitCharacteristics(true, 'program-code') +
       '?emissionsUIFilter=true',
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))

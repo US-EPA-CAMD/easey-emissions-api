@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DailyTestSummaryWorkspaceModule } from '../daily-test-summary-workspace/daily-test-summary.module';
@@ -43,10 +44,11 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
       MonitorSystemRepository,
       MonitorPlanWorkspaceRepository,
     ]),
+    Logger,
+    HttpModule,
     DailyEmissionWorkspaceModule,
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
-    Logger,
     MonitorLocationWorkspaceModule,
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
