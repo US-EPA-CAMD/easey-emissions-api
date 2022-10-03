@@ -72,4 +72,9 @@ export default registerAs('app', () => ({
   enableDebug: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_DEBUG',
   ),
+  // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
+  // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
+  currentUser: getConfigValue(
+    'EASEY_EMISSIONS_API_CURRENT_USER',
+  ),
 }));

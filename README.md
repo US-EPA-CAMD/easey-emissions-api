@@ -64,9 +64,16 @@ The Emissions API uses a number of environment variables to properly configure t
 ## Environment Variables File
 Database credentials are injected into the cloud.gov environments as part of the CI/CD deployment process therefore they do not need to be configured. However, when running locally for local development the following environment variables are required to be configured using a local .env file in the root of the project. **PLEASE DO NOT commit the .env file to source control.**
 
-- EASEY_EMISSIONS_API_ENABLE_DEBUG=true
-- EASEY_EMISSIONS_API_ENABLE_API_KEY=false
-- EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=false
+- EASEY_EMISSIONS_API_ENABLE_DEBUG=true|false
+- EASEY_EMISSIONS_API_ENABLE_API_KEY=true|false
+  - IF ABOVE IS TRUE
+  - EASEY_EMISSIONS_API_KEY={ask project dev/tech lead}
+- EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN=true|false
+  - IF ABOVE IS TRUE
+  - EASEY_EMISSIONS_API_CURRENT_USER={ "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
+- EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=true|false
+  - IF ABOVE IS TRUE
+  - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
 
 **Please refer to our [Getting Started](https://github.com/US-EPA-CAMD/devops/blob/master/GETTING-STARTED.md) instructions on how to configure the following environment variables & connect to the database.**
 - EASEY_DB_HOST
