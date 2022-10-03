@@ -62,6 +62,9 @@ export default registerAs('app', () => ({
   submissionDays: getConfigValueNumber(
     'EASEY_EMISSIONS_API_SUBMISSION_DAYS', 38,
   ),
+  secretToken: getConfigValue(
+    'EASEY_EMISSIONS_API_SECRET_TOKEN',
+  ),
   enableSecretToken: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN',
   ),
