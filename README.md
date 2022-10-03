@@ -51,6 +51,7 @@ The Emissions API uses a number of environment variables to properly configure t
 | env | EASEY_EMISSIONS_API_ENV | local-dev | Configurable |
 | enableCors | EASEY_EMISSIONS_API_ENABLE_CORS | true | Configurable |
 | enableApiKey | EASEY_EMISSIONS_API_ENABLE_API_KEY | false | Configurable |
+| enableAuthToken | EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN | false | Configurable |
 | enableGlobalValidationPipes | EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE | true | Configurable |
 | version | EASEY_EMISSIONS_API_VERSION | v0.0.0 | Dynamically set by CI/CD workflow |
 | published | EASEY_EMISSIONS_API_PUBLISHED | local | Dynamically set by CI/CD workflow |
