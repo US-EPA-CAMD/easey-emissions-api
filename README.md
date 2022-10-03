@@ -80,9 +80,6 @@ Database credentials are injected into the cloud.gov environments as part of the
   - IF ABOVE IS TRUE THEN SET
     - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
 
-**Current User object format:**
-{ "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
-
 **Please refer to our [Getting Started](https://github.com/US-EPA-CAMD/devops/blob/master/GETTING-STARTED.md) instructions on how to configure the following environment variables & connect to the database.**
 - EASEY_DB_HOST
 - EASEY_DB_PORT
