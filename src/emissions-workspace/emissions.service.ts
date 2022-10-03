@@ -90,6 +90,7 @@ export class EmissionsWorkspaceService {
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
 
       return results;
     }
