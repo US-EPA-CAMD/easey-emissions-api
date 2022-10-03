@@ -75,6 +75,7 @@ Database credentials are injected into the cloud.gov environments as part of the
     - USE AUTH API TO SIGNIN & GET AUTH TOKEN TO USE AS A BEARER TOKEN
   - IF ABOVE IS FALSE THEN SET
     - EASEY_EMISSIONS_API_CURRENT_USER={see below}
+    - FORMAT: { "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
 - EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=true|false
   - IF ABOVE IS TRUE THEN SET
     - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
