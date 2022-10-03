@@ -1,11 +1,12 @@
 #THIS FILE SHOULD CONTAIN DEV SETTINGS AND CI/CD WORKFLOW WILL CHANGE SETTINGS BASED ON ENV
-name: emissions-api
-title: Emissions Management
-path: emissions-mgmt
-port: 8080
-memory: 2048
 disk: 1024
+memory: 2048
 instances: 1
-environment: development
+name: emissions-api
 host: api-easey-dev.app.cloud.gov
+port: 8080
+path: emissions-mgmt
+title: Emissions Management
+description: Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)
+environment: development
 apiHost: api.epa.gov/easey/dev
