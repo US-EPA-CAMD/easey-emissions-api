@@ -40,9 +40,9 @@ The Emissions API uses a number of environment variables to properly configure t
 | Typescript Var Name | Environment Var Name | Default Value | Comment |
 | :------------------ | :------------------- | :------------ | :------ |
 | name | N/A | emissions-api | Fixed value |
-| host | EASEY_EMISSIONS_HOST | localhost | Configurable
-| port | EASEY_EMISSIONS_PORT | 8040 | Configurable |
-| path | EASEY_EMISSIONS_PATH | emissions-mgmt | Configurable |
+| host | EASEY_EMISSIONS_API_HOST | localhost | Configurable
+| port | EASEY_EMISSIONS_API_PORT | 8040 | Configurable |
+| path | EASEY_EMISSIONS_API_PATH | emissions-mgmt | Configurable |
 | uri | N/A | N/A | Determined by host, port, & path |
 | title | EASEY_EMISSIONS_API_TITLE | Emissions Management | Configurable |
 | description | EASEY_EMISSIONS_API_DESCRIPTION | Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season) | Configurable |
@@ -55,6 +55,7 @@ The Emissions API uses a number of environment variables to properly configure t
 | published | EASEY_EMISSIONS_API_PUBLISHED | local | Dynamically set by CI/CD workflow |
 | perPageLimit | EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE | 500 | Configurable |
 | submissionDays | EASEY_EMISSIONS_API_SUBMISSION_DAYS | 38 | Configurable |
+| secretToken | EASEY_EMISSIONS_API_SECRET_TOKEN | N/A | Dynamically set by CI/CD workflow |
 | enableSecretToken | EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN | false | Configurable |
 | enableDebug | EASEY_EMISSIONS_API_ENABLE_DEBUG | false | Configurable |
 
