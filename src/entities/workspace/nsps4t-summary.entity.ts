@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -77,19 +78,17 @@ export class Nsps4tSummary extends BaseEntity {
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
 
-  // @TODO: Verify this relationship type once there is data in nsps4t-annual and nsps4t-summary tables
-  @OneToOne(
+  @OneToMany(
     () => Nsps4tAnnual,
     o => o.nsps4tSummary,
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
-  nsps4tAnnual: Nsps4tAnnual;
+  nsps4tAnnualData: Nsps4tAnnual[];
 
-  // @TODO: Verify this relationship type once there is data in nsps4t-compliance-period and nsps4t-summary tables
-  @OneToOne(
+  @OneToMany(
     () => Nsps4tCompliancePeriod,
     o => o.nsps4tSummary,
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
-  nsps4tCompliancePeriod: Nsps4tCompliancePeriod;
+  nsps4tCompliancePeriodData: Nsps4tCompliancePeriod[];
 }

@@ -1,11 +1,9 @@
-import { getManager, DeleteResult, FindConditions } from 'typeorm';
+import { DeleteResult, FindConditions } from 'typeorm';
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
@@ -25,6 +23,7 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -53,6 +52,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
   ) {}
 
   async delete(
@@ -83,7 +83,7 @@ export class EmissionsWorkspaceService {
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
-      const results = new EmissionsDTO(mappedResults)
+      const results = new EmissionsDTO(mappedResults);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
@@ -176,6 +176,12 @@ export class EmissionsWorkspaceService {
         identifiers,
       ),
       this.importHourlyOperating(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
+      this.importNsps4tSummaries(
         params,
         monitoringLocationId,
         reportingPeriodId,
@@ -277,6 +283,30 @@ export class EmissionsWorkspaceService {
     }
 
     return Promise.all(hourlyOperatingImports);
+  }
+
+  async importNsps4tSummaries(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const nsps4tSummaryImports = [];
+
+    if (Array.isArray(emissionsImport.nsps4tSummaryData)) {
+      for (const nsps4tSummary of emissionsImport.nsps4tSummaryData) {
+        nsps4tSummaryImports.push(
+          this.nsps4tSummaryWorkspaceService.import({
+            ...nsps4tSummary,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(nsps4tSummaryImports);
   }
 
   async getIdentifiers(

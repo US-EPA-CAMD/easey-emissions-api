@@ -22,6 +22,9 @@ import { DailyEmissionWorkspaceModule } from './daily-emission-workspace/daily-e
 import { DailyEmissionModule } from './daily-emission/daily-emission.module';
 import { DailyFuelModule } from './daily-fuel/daily-fuel.module';
 import { DailyFuelWorkspaceModule } from './daily-fuel-workspace/daily-fuel-workspace.module';
+import { Nsps4tAnnualWorkspaceModule } from './nsps4t-annual-workspace/nsps4t-annual-workspace.module';
+import { Nsps4tCompliancePeriodWorkspaceModule } from './nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.module';
+import { Nsps4tSummaryWorkspaceModule } from './nsps4t-summary-workspace-new/nsps4t-summary-workspace.module';
 
 @Module({
   imports: [
@@ -47,6 +50,9 @@ import { DailyFuelWorkspaceModule } from './daily-fuel-workspace/daily-fuel-work
     DailyEmissionWorkspaceModule,
     DailyFuelModule,
     DailyFuelWorkspaceModule,
+    Nsps4tAnnualWorkspaceModule,
+    Nsps4tCompliancePeriodWorkspaceModule,
+    Nsps4tSummaryWorkspaceModule,
   ],
 })
 export class AppModule {}
