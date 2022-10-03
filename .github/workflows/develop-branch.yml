@@ -55,7 +55,7 @@ jobs:
       - name: Configure Env Vars (secrets)
         run: scripts/environment-variables-secrets.sh
         env:
-          EMISSIONS_API_KEY: ${{ secrets.API_KEY_NON_PROD }}
+          EMISSIONS_API_KEY: ${{ secrets.API_KEY }}
           EMISSIONS_API_SECRET_TOKEN: ${{ secrets.API_SECRET_TOKEN }}
       - name: Deploy
         run: devops/scripts/deploy.sh
