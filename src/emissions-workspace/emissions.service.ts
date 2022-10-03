@@ -1,12 +1,14 @@
+import { DeleteResult, FindConditions } from 'typeorm';
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { PlantRepository } from '../plant/plant.repository';
-import { DeleteResult, FindConditions } from 'typeorm';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
@@ -21,7 +23,6 @@ import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 
@@ -89,7 +90,6 @@ export class EmissionsWorkspaceService {
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
-      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
 
       return results;
     }

@@ -23,6 +23,7 @@ import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { EmissionsViewModule } from 'src/emissions-view/emissions-view.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SamplingTrainRepository } from '../sampling-train/sampling-train.reposi
       SamplingTrainRepository,
       SorbentTrapRepository,
     ]),
+    EmissionsViewModule,
     DailyEmissionModule,
     DailyTestSummaryModule,
     HourlyOperatingModule,
