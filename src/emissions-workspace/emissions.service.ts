@@ -1,11 +1,9 @@
-import { getManager, DeleteResult, FindConditions } from 'typeorm';
+import { DeleteResult, FindConditions } from 'typeorm';
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
@@ -25,6 +23,7 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -53,6 +52,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly sorbentTrapService: SorbentTrapWorkspaceService,
   ) {}
 
   async delete(
@@ -66,6 +66,7 @@ export class EmissionsWorkspaceService {
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
+    const SORBENT_TRAP = 3;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -79,14 +80,16 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
+      promises.push(this.sorbentTrapService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
-      const results = new EmissionsDTO(mappedResults)
+      const results = new EmissionsDTO(mappedResults);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
 
       return results;
     }

@@ -65,6 +65,11 @@ import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { EmissionsDTO } from '../dto/emissions.dto';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -117,6 +122,10 @@ describe('Emissions Workspace Service', () => {
         HourlyGasFlowMeterWorkspaceService,
         ComponentRepository,
         MonitorSystemRepository,
+        SorbentTrapWorkspaceService,
+        SorbentTrapWorkspaceRepository,
+        SamplingTrainWorkspaceService,
+        SamplingTrainWorkspaceRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -188,14 +197,13 @@ describe('Emissions Workspace Service', () => {
   it('should successfully export emissions data', async function() {
     const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>();
     const dtoMocks = genEmissionsRecordDto();
-    const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
 
     jest
       .spyOn(emissionsRepository, 'export')
       .mockResolvedValue(emissionsMocks[0]);
 
     await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
-      mappedEmissions,
+      new EmissionsDTO(),
     );
   });
 
