@@ -12,7 +12,7 @@ import { WeeklySystemIntegrityModule } from '../weekly-system-integrity/weekly-s
     WeeklySystemIntegrityModule,
   ],
   controllers: [],
-  providers: [WeeklyTestSummaryMap, WeeklyTestSummaryService,],
+  providers: [WeeklyTestSummaryMap, WeeklyTestSummaryService],
   exports: [TypeOrmModule, WeeklyTestSummaryMap, WeeklyTestSummaryService],
 })
 export class WeeklyTestSummaryModule {}

@@ -6,7 +6,9 @@ import { WeeklySystemIntegrityWorkspaceService } from './weekly-system-integrity
 import { WeeklySystemIntegrityWorkspaceRepository } from './weekly-system-integrity.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WeeklySystemIntegrityWorkspaceRepository])],
+  imports: [
+    TypeOrmModule.forFeature([WeeklySystemIntegrityWorkspaceRepository]),
+  ],
   providers: [WeeklySystemIntegrityMap, WeeklySystemIntegrityWorkspaceService],
   exports: [
     TypeOrmModule,
