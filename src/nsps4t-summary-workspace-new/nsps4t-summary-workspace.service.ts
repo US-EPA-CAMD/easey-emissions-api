@@ -24,47 +24,51 @@ export class Nsps4tSummaryWorkspaceService {
 
     const promises = [];
 
-    for (const nsps4tFourthQuarter of data.nsps4tFourthQuarterData) {
-      promises.push(
-        this.nsps4tAnnualService
-          .import({
-            ...nsps4tFourthQuarter,
-            nsps4tSumId: nsps4tSummaryData.id,
-            reportingPeriodId: data.reportingPeriodId,
-            monitoringLocationId: data.monitoringLocationId,
-            identifiers: data.identifiers,
-          })
-          .then(data => {
-            if (data && !hasArrayValues(nsps4tSummaryData.nsps4tAnnualData)) {
-              nsps4tSummaryData.nsps4tAnnualData = [data];
-            } else if (data) {
-              nsps4tSummaryData.nsps4tAnnualData.push(data);
-            }
-          }),
-      );
+    if (hasArrayValues(data.nsps4tFourthQuarterData)) {
+      for (const nsps4tFourthQuarter of data.nsps4tFourthQuarterData) {
+        promises.push(
+          this.nsps4tAnnualService
+            .import({
+              ...nsps4tFourthQuarter,
+              nsps4tSumId: nsps4tSummaryData.id,
+              reportingPeriodId: data.reportingPeriodId,
+              monitoringLocationId: data.monitoringLocationId,
+              identifiers: data.identifiers,
+            })
+            .then(data => {
+              if (data && !hasArrayValues(nsps4tSummaryData.nsps4tAnnualData)) {
+                nsps4tSummaryData.nsps4tAnnualData = [data];
+              } else if (data) {
+                nsps4tSummaryData.nsps4tAnnualData.push(data);
+              }
+            }),
+        );
+      }
     }
 
-    for (const nsps4tCompliancePeriod of data.nsps4tCompliancePeriodData) {
-      promises.push(
-        this.nsps4tCompliancePeriodService
-          .import({
-            ...nsps4tCompliancePeriod,
-            nsps4tSumId: nsps4tSummaryData.id,
-            reportingPeriodId: data.reportingPeriodId,
-            monitoringLocationId: data.monitoringLocationId,
-            identifiers: data.identifiers,
-          })
-          .then(data => {
-            if (
-              data &&
-              !hasArrayValues(nsps4tSummaryData.nsps4tCompliancePeriodData)
-            ) {
-              nsps4tSummaryData.nsps4tCompliancePeriodData = [data];
-            } else if (data) {
-              nsps4tSummaryData.nsps4tCompliancePeriodData.push(data);
-            }
-          }),
-      );
+    if (hasArrayValues(data.nsps4tCompliancePeriodData)) {
+      for (const nsps4tCompliancePeriod of data.nsps4tCompliancePeriodData) {
+        promises.push(
+          this.nsps4tCompliancePeriodService
+            .import({
+              ...nsps4tCompliancePeriod,
+              nsps4tSumId: nsps4tSummaryData.id,
+              reportingPeriodId: data.reportingPeriodId,
+              monitoringLocationId: data.monitoringLocationId,
+              identifiers: data.identifiers,
+            })
+            .then(data => {
+              if (
+                data &&
+                !hasArrayValues(nsps4tSummaryData.nsps4tCompliancePeriodData)
+              ) {
+                nsps4tSummaryData.nsps4tCompliancePeriodData = [data];
+              } else if (data) {
+                nsps4tSummaryData.nsps4tCompliancePeriodData.push(data);
+              }
+            }),
+        );
+      }
     }
 
     await Promise.all(promises);

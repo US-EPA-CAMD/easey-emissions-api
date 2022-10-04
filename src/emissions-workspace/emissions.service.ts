@@ -101,29 +101,15 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
-    const stackPipeIds: string[] = [];
-    const unitIds: string[] = [];
-
-    for (const collection of Object.keys(params)) {
-      if (Array.isArray(params[collection]) && collection.length > 0) {
-        stackPipeIds.push(
-          ...params[collection]
-            ?.map(data => data.stackPipeId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-        unitIds.push(
-          ...params[collection]
-            ?.map(data => data.unitId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-      }
-    }
+    const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
+    const unitIds = objectValuesByKey<string>('unitId', params, true);
 
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
-      stackIds: [...new Set(stackPipeIds)],
-      unitIds: [...new Set(unitIds)],
+      stackIds: stackPipeIds,
+      unitIds: unitIds,
     });
+
     if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }
@@ -314,11 +300,6 @@ export class EmissionsWorkspaceService {
     monitoringLocationId: string,
     userId: string,
   ) {
-    const untypedParams = (emissionsImport as unknown) as Record<
-      string,
-      unknown
-    >;
-
     const identifiers: ImportIdentifiers = {
       components: {},
       monitorFormulas: {},
@@ -328,17 +309,17 @@ export class EmissionsWorkspaceService {
 
     const componentIdentifiers = objectValuesByKey<string>(
       'componentId',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const formulaIdentifiers = objectValuesByKey<string>(
       'formulaIdentifier',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const monitoringSystemIdentifiers = objectValuesByKey<string>(
       'monitoringSystemId',
-      untypedParams,
+      emissionsImport,
       true,
     );
 

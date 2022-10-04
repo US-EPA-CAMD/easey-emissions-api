@@ -11,14 +11,13 @@ type ExportDailyEmissionDataProperties = {
   dailyEmissionMap?: DailyEmissionMap;
 };
 
-export const exportDailyEmissionData = async ({
-  monitoringLocationIds,
+export const exportDailyEmissionQuery = ({
+  repository,
   year,
   quarter,
-  repository,
-  dailyEmissionMap = new DailyEmissionMap(),
-}: ExportDailyEmissionDataProperties): Promise<DailyEmissionDTO[] | null> => {
-  const dailyEmissionData = await repository
+  monitoringLocationIds,
+}: Omit<ExportDailyEmissionDataProperties, 'dailyEmissionMap'>) => {
+  return repository
     .createQueryBuilder('dailyEmission')
     .innerJoinAndSelect('dailyEmission.monitorLocation', 'monitorLocation')
     .leftJoinAndSelect('monitorLocation.unit', 'unit')
@@ -30,6 +29,21 @@ export const exportDailyEmissionData = async ({
     .andWhere('reportingPeriod.year = :year', { year })
     .andWhere('reportingPeriod.quarter = :quarter', { quarter })
     .getMany();
+};
+
+export const exportDailyEmissionData = async ({
+  monitoringLocationIds,
+  year,
+  quarter,
+  repository,
+  dailyEmissionMap = new DailyEmissionMap(),
+}: ExportDailyEmissionDataProperties): Promise<DailyEmissionDTO[] | null> => {
+  const dailyEmissionData = await exportDailyEmissionQuery({
+    repository,
+    year,
+    quarter,
+    monitoringLocationIds,
+  });
 
   const mapped = await dailyEmissionMap.many(dailyEmissionData);
 

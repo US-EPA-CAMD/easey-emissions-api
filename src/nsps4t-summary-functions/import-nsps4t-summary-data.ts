@@ -31,6 +31,7 @@ export const importNsps4tSummaryData = async ({
       monitoringLocationId: data.monitoringLocationId,
       reportingPeriodId: data.reportingPeriodId,
       userId: data.identifiers?.userId,
+      addDate: new Date().toISOString(),
     }),
   );
 };

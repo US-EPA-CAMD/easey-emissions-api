@@ -2,55 +2,29 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { genDailyEmission } from '../../test/object-generators/daily-emission';
 import { DailyEmission } from '../entities/daily-emission.entity';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { exportDailyEmissionData } from './export-daily-emission-data';
 import { faker } from '@faker-js/faker';
 
 describe('ExportDailyEmissionData', () => {
   let dailyEmissionRepository;
+  let exportDailyEmissionModule: typeof import('./export-daily-emission-data');
 
   beforeAll(async () => {
     dailyEmissionRepository = new DailyEmissionRepository();
+    exportDailyEmissionModule = await import('./export-daily-emission-data');
   });
 
   it('should export records', async function() {
     const dailyEmissionMocks = genDailyEmission<DailyEmission>(3);
-    const mappedDailyEmision = await new DailyEmissionMap().many(
+    const mappedDailyEmission = await new DailyEmissionMap().many(
       dailyEmissionMocks,
     );
 
-    const createQueryBuilder: any = {
-      distinct: () => {
-        return {
-          leftJoinAndSelect: () => {
-            return {
-              leftJoin: () => {
-                return {
-                  where: () => {
-                    return {
-                      andWhere: () => {
-                        return {
-                          andWhere: () => {
-                            return {
-                              getMany: () => dailyEmissionMocks,
-                            };
-                          },
-                        };
-                      },
-                    };
-                  },
-                };
-              },
-            };
-          },
-        };
-      },
-    };
     jest
-      .spyOn(dailyEmissionRepository, 'createQueryBuilder')
-      .mockImplementationOnce(() => createQueryBuilder);
+      .spyOn(exportDailyEmissionModule, 'exportDailyEmissionQuery')
+      .mockResolvedValue(dailyEmissionMocks);
 
     await expect(
-      exportDailyEmissionData({
+      exportDailyEmissionModule.exportDailyEmissionData({
         quarter: faker.helpers.arrayElement([1, 2, 3, 4]),
         year: faker.date.soon().getFullYear(),
         repository: dailyEmissionRepository,
@@ -59,6 +33,6 @@ describe('ExportDailyEmissionData', () => {
           3,
         ),
       }),
-    ).resolves.toEqual(mappedDailyEmision);
+    ).resolves.toEqual(mappedDailyEmission);
   });
 });
