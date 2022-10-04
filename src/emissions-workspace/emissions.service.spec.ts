@@ -65,6 +65,11 @@ import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { EmissionsDTO } from '../dto/emissions.dto';
 import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
 import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
 import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
@@ -124,6 +129,10 @@ describe('Emissions Workspace Service', () => {
         HourlyGasFlowMeterWorkspaceService,
         ComponentRepository,
         MonitorSystemRepository,
+        SorbentTrapWorkspaceService,
+        SorbentTrapWorkspaceRepository,
+        SamplingTrainWorkspaceService,
+        SamplingTrainWorkspaceRepository,
         Nsps4tCompliancePeriodWorkspaceRepository,
         Nsps4tCompliancePeriodWorkspaceService,
         Nsps4tAnnualWorkspaceRepository,

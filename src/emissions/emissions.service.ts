@@ -12,6 +12,7 @@ import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summar
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
 import { DailyEmissionService } from '../daily-emission/daily-emission.service';
+import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 
 @Injectable()
 export class EmissionsService {
@@ -24,6 +25,7 @@ export class EmissionsService {
     private readonly dailyTestSummaryService: DailyTestSummaryService,
     private readonly hourlyOperatingService: HourlyOperatingService,
     private readonly dailyEmissionService: DailyEmissionService,
+    private readonly sorbentTrapService: SorbentTrapService,
   ) {}
 
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
@@ -31,6 +33,7 @@ export class EmissionsService {
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
+    const SORBENT_TRAP = 3;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -44,12 +47,14 @@ export class EmissionsService {
       promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
+      promises.push(this.sorbentTrapService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
 
       return results;
     }

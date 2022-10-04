@@ -34,6 +34,7 @@ Follow these [instructions](https://github.com/US-EPA-CAMD/devops/blob/master/GE
     ```
     $ yarn install
     ```
+
 ## Configuration
 The Emissions API uses a number of environment variables to properly configure the api. The following is the list of configureble values and their default setting.
 
@@ -43,38 +44,41 @@ The Emissions API uses a number of environment variables to properly configure t
 | host | EASEY_EMISSIONS_API_HOST | localhost | Configurable
 | port | EASEY_EMISSIONS_API_PORT | 8040 | Configurable |
 | path | EASEY_EMISSIONS_API_PATH | emissions-mgmt | Configurable |
-| uri | N/A | N/A | Determined by host, port, & path |
 | title | EASEY_EMISSIONS_API_TITLE | Emissions Management | Configurable |
 | description | EASEY_EMISSIONS_API_DESCRIPTION | Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season) | Configurable |
-| apiHost | EASEY_API_GATEWAY_HOST | api.epa.gov/easey/dev | Configurable |
-| apiKey | EASEY_EMISSIONS_API_KEY | N/A | Dynamically set by CI/CD workflow |
 | env | EASEY_EMISSIONS_API_ENV | local-dev | Configurable |
-| enableCors | EASEY_EMISSIONS_API_ENABLE_CORS | true | Configurable |
+| apiKey | EASEY_EMISSIONS_API_KEY | *** | Dynamically set by CI/CD workflow |
 | enableApiKey | EASEY_EMISSIONS_API_ENABLE_API_KEY | false | Configurable |
+| secretToken | EASEY_EMISSIONS_API_SECRET_TOKEN | *** | Dynamically set by CI/CD workflow |
+| enableSecretToken | EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN | false | Configurable |
+| enableCors | EASEY_EMISSIONS_API_ENABLE_CORS | true | Configurable |
 | enableAuthToken | EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN | false | Configurable |
 | enableGlobalValidationPipes | EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE | true | Configurable |
 | version | EASEY_EMISSIONS_API_VERSION | v0.0.0 | Dynamically set by CI/CD workflow |
 | published | EASEY_EMISSIONS_API_PUBLISHED | local | Dynamically set by CI/CD workflow |
-| perPageLimit | EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE | 500 | Configurable |
 | submissionDays | EASEY_EMISSIONS_API_SUBMISSION_DAYS | 38 | Configurable |
-| secretToken | EASEY_EMISSIONS_API_SECRET_TOKEN | N/A | Dynamically set by CI/CD workflow |
-| enableSecretToken | EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN | false | Configurable |
-| secretToken | EASEY_EMISSIONS_SECRET_TOKEN | N/A | Dynamically set by CI/CD workflow |
 | enableDebug | EASEY_EMISSIONS_API_ENABLE_DEBUG | false | Configurable |
+| currentUser | EASEY_EMISSIONS_API_CURRENT_USER | {} | Configurable |
+| perPageLimit | EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE | 500 | Configurable |
+| apiHost | EASEY_API_GATEWAY_HOST | api.epa.gov/easey/dev | Configurable |
+| authApi.uri | EASEY_AUTH_API | https://api.epa.gov/easey/dev/auth-mgmt | Configurable |
 
 ## Environment Variables File
 Database credentials are injected into the cloud.gov environments as part of the CI/CD deployment process therefore they do not need to be configured. However, when running locally for local development the following environment variables are required to be configured using a local .env file in the root of the project. **PLEASE DO NOT commit the .env file to source control.**
 
 - EASEY_EMISSIONS_API_ENABLE_DEBUG=true|false
 - EASEY_EMISSIONS_API_ENABLE_API_KEY=true|false
-  - IF ABOVE IS TRUE
-  - EASEY_EMISSIONS_API_KEY={ask project dev/tech lead}
+  - IF ABOVE IS TRUE THEN SET
+    - EASEY_EMISSIONS_API_KEY={ask project dev/tech lead}
 - EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN=true|false
-  - IF ABOVE IS TRUE
-  - EASEY_EMISSIONS_API_CURRENT_USER={ "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
+  - IF ABOVE IS TRUE THEN
+    - USE AUTH API TO SIGNIN & GET AUTH TOKEN TO USE AS A BEARER TOKEN
+  - IF ABOVE IS FALSE THEN SET
+    - EASEY_EMISSIONS_API_CURRENT_USER={see below}
+    - FORMAT: { "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
 - EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=true|false
-  - IF ABOVE IS TRUE
-  - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
+  - IF ABOVE IS TRUE THEN SET
+    - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
 
 **Please refer to our [Getting Started](https://github.com/US-EPA-CAMD/devops/blob/master/GETTING-STARTED.md) instructions on how to configure the following environment variables & connect to the database.**
 - EASEY_DB_HOST

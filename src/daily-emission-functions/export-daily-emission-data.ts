@@ -11,11 +11,11 @@ type ExportDailyEmissionDataProperties = {
   dailyEmissionMap?: DailyEmissionMap;
 };
 
-export const exportDailyEmissionQuery = ({
-  repository,
+export const exportDailyEmissionQuery = async ({
+  monitoringLocationIds,
   year,
   quarter,
-  monitoringLocationIds,
+  repository,
 }: Omit<ExportDailyEmissionDataProperties, 'dailyEmissionMap'>) => {
   return repository
     .createQueryBuilder('dailyEmission')
@@ -39,10 +39,10 @@ export const exportDailyEmissionData = async ({
   dailyEmissionMap = new DailyEmissionMap(),
 }: ExportDailyEmissionDataProperties): Promise<DailyEmissionDTO[] | null> => {
   const dailyEmissionData = await exportDailyEmissionQuery({
-    repository,
+    monitoringLocationIds,
     year,
     quarter,
-    monitoringLocationIds,
+    repository,
   });
 
   const mapped = await dailyEmissionMap.many(dailyEmissionData);
