@@ -19,6 +19,7 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { WeeklyTestSummaryModule } from '../weekly-test-summary/weekly-test-summary.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     DailyEmissionModule,
     DailyTestSummaryModule,
     HourlyOperatingModule,
+    WeeklyTestSummaryModule,
     HourlyParameterFuelFlowModule,
   ],
   controllers: [EmissionsController],

@@ -22,6 +22,7 @@ import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.rep
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -50,6 +51,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
   ) {}
 
   async delete(
@@ -63,6 +65,7 @@ export class EmissionsWorkspaceService {
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
+    const WEEKLY_TEST_SUMMARIES = 3;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -76,6 +79,7 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
+      promises.push(this.weeklyTestSummaryService.export(locationIds, params))
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -84,6 +88,7 @@ export class EmissionsWorkspaceService {
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
 
       return results;
     }

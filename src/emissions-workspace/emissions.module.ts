@@ -46,6 +46,7 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     DailyEmissionWorkspaceModule,
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
+    WeeklyTestSummaryWorkspaceModule,
     Logger,
     MonitorLocationWorkspaceModule,
     MonitorPlanWorkspaceModule,
