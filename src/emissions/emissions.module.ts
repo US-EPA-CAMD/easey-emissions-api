@@ -24,6 +24,8 @@ import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
+import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { SamplingTrainRepository } from '../sampling-train/sampling-train.reposi
       DailyFuelRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
+      Nsps4tSummaryRepository,
       SamplingTrainRepository,
       SorbentTrapRepository,
     ]),
@@ -50,6 +53,7 @@ import { SamplingTrainRepository } from '../sampling-train/sampling-train.reposi
     EmissionsMap,
     EmissionsService,
     EmissionsSubmissionsProgressMap,
+    Nsps4tSummaryService,
     SamplingTrainService,
     SorbentTrapService,
   ],

@@ -7,6 +7,8 @@ import {
 } from '../nsps4t-summary-functions/import-nsps4t-summary-data';
 import { Injectable } from '@nestjs/common';
 import { hasArrayValues } from '../utils/utils';
+import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 @Injectable()
 export class Nsps4tSummaryWorkspaceService {
@@ -15,6 +17,15 @@ export class Nsps4tSummaryWorkspaceService {
     private readonly nsps4tAnnualService: Nsps4tAnnualWorkspaceService,
     private readonly nsps4tCompliancePeriodService: Nsps4tCompliancePeriodWorkspaceService,
   ) {}
+
+  async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
+    return exportNsps4tSummaryData({
+      monitoringLocationIds,
+      year: params.year,
+      quarter: params.quarter,
+      repository: this.repository,
+    });
+  }
 
   async import(data: Nsps4tSummaryDataCreate) {
     const nsps4tSummaryData = await importNsps4tSummaryData({
