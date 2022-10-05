@@ -4,7 +4,7 @@ import { SelectQueryBuilder } from 'typeorm';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
-import { WeeklyTestSummary } from 'src/entities/workspace/weekly-test-summary.entity';
+import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
 
 let filters = new EmissionsParamsDTO();
 
