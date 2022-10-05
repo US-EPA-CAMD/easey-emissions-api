@@ -19,7 +19,7 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
-import { EmissionsViewModule } from 'src/emissions-view/emissions-view.module';
+import { EmissionsViewModule } from '../emissions-view/emissions-view.module';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
