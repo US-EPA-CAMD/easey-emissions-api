@@ -70,6 +70,13 @@ import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorben
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
 import { EmissionsDTO } from '../dto/emissions.dto';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
+import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { EmissionsDTO } from '../dto/emissions.dto';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -126,6 +133,12 @@ describe('Emissions Workspace Service', () => {
         SorbentTrapWorkspaceRepository,
         SamplingTrainWorkspaceService,
         SamplingTrainWorkspaceRepository,
+        Nsps4tCompliancePeriodWorkspaceRepository,
+        Nsps4tCompliancePeriodWorkspaceService,
+        Nsps4tAnnualWorkspaceRepository,
+        Nsps4tAnnualWorkspaceService,
+        Nsps4tSummaryWorkspaceRepository,
+        Nsps4tSummaryWorkspaceService,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,

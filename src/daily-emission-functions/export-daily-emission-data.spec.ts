@@ -15,7 +15,7 @@ describe('ExportDailyEmissionData', () => {
 
   it('should export records', async function() {
     const dailyEmissionMocks = genDailyEmission<DailyEmission>(3);
-    const mappedDailyEmision = await new DailyEmissionMap().many(
+    const mappedDailyEmission = await new DailyEmissionMap().many(
       dailyEmissionMocks,
     );
 
@@ -33,6 +33,6 @@ describe('ExportDailyEmissionData', () => {
           3,
         ),
       }),
-    ).resolves.toEqual(mappedDailyEmision);
+    ).resolves.toEqual(mappedDailyEmission);
   });
 });

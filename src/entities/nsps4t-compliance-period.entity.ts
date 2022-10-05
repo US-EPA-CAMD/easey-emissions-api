@@ -108,10 +108,9 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
 
-  // @TODO: Verify this relationship type once there is data in nsps4t-annual and nsps4t-summary tables
-  @OneToOne(
+  @ManyToOne(
     () => Nsps4tSummary,
-    o => o.nsps4tCompliancePeriod,
+    o => o.nsps4tCompliancePeriodData,
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
   nsps4tSummary: Nsps4tSummary;
