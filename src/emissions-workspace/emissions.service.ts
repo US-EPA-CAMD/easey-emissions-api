@@ -25,6 +25,7 @@ import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.rep
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -54,6 +55,7 @@ export class EmissionsWorkspaceService {
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
+    private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
   ) {}
 
   async delete(
@@ -68,6 +70,7 @@ export class EmissionsWorkspaceService {
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
+    const WEEKLY_TEST_SUMMARIES = 4;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -82,6 +85,7 @@ export class EmissionsWorkspaceService {
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
+      promises.push(this.weeklyTestSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -91,6 +95,7 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
 
       return results;
     }

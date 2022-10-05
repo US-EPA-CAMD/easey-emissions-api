@@ -70,6 +70,12 @@ import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorben
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
 import { EmissionsDTO } from '../dto/emissions.dto';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
+import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
+import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integrity-workspace/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -126,6 +132,12 @@ describe('Emissions Workspace Service', () => {
         SorbentTrapWorkspaceRepository,
         SamplingTrainWorkspaceService,
         SamplingTrainWorkspaceRepository,
+        WeeklyTestSummaryWorkspaceService,
+        WeeklyTestSummaryWorkspaceRepository,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityWorkspaceService,
+        WeeklySystemIntegrityWorkspaceRepository,
+        WeeklySystemIntegrityMap,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
