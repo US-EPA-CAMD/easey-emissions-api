@@ -30,6 +30,10 @@ import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/da
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SummaryValueService } from '../summary-value-workspace/summary-value.service';
+import { SummaryValueMap } from '../maps/summary-value.map';
+import { SummaryValueWorkspaceRepository } from '../summary-value-workspace/summary-value.repository';
+import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
 
 @Module({
   imports: [
@@ -51,6 +55,7 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
+    SummaryValueWorkspaceModule
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

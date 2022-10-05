@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, HttpStatus, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpStatus,
+} from '@nestjs/common';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
@@ -22,6 +26,9 @@ import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.rep
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { SummaryValueDTO } from '../dto/summary-value.dto';
+import { SummaryValueService } from '../summary-value-workspace/summary-value.service';
+import { Console } from 'console';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -50,6 +57,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly summaryValueService: SummaryValueService,
   ) {}
 
   async delete(
@@ -80,7 +88,7 @@ export class EmissionsWorkspaceService {
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
-      const results = new EmissionsDTO(mappedResults)
+      const results = new EmissionsDTO(mappedResults);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
@@ -178,6 +186,7 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importSummaryValue(params, monitoringLocationId, reportingPeriodId),
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -274,6 +283,28 @@ export class EmissionsWorkspaceService {
     }
 
     return Promise.all(hourlyOperatingImports);
+  }
+
+  async importSummaryValue(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId,
+  ) {
+    const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
+
+    if (Array.isArray(emissionsImport.summaryValueData)) {
+      for (const summaryValueDatum of emissionsImport.summaryValueData) {
+        summaryValueImports.push(
+          this.summaryValueService.import({
+            ...summaryValueDatum,
+            monitoringLocationId,
+            reportingPeriodId,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(summaryValueImports);
   }
 
   async getIdentifiers(
