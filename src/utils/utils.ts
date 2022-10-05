@@ -2,6 +2,12 @@ export const hasArrayValues = (value: unknown): boolean => {
   return Array.isArray(value) && value.length > 0;
 };
 
+export const arrayFilterUndefinedNull = <Type>(array: Type[]): Type[] => {
+  return array.filter(value => {
+    return typeof value !== 'undefined' && value !== null;
+  });
+};
+
 export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {
   if (Array.isArray(value)) {
     for (const item of value) {

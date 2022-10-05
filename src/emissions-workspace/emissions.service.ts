@@ -13,6 +13,7 @@ import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import {
+  arrayFilterUndefinedNull,
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
@@ -184,6 +185,12 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importSorbentTrap(
+        params,
+        reportingPeriodId,
+        monitoringLocationId,
+        identifiers,
+      ),
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -282,6 +289,28 @@ export class EmissionsWorkspaceService {
     return Promise.all(hourlyOperatingImports);
   }
 
+  async importSorbentTrap(
+    emissionsImport: EmissionsImportDTO,
+    reportingPeriodId: number,
+    monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
+  ) {
+    if (hasArrayValues(emissionsImport.sorbentTrapData)) {
+      const promises = [];
+      for (const sorbentTrap of emissionsImport.sorbentTrapData) {
+        promises.push(
+          this.sorbentTrapService.import({
+            ...sorbentTrap,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+      return Promise.all(promises);
+    }
+  }
+
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
@@ -317,8 +346,10 @@ export class EmissionsWorkspaceService {
 
     const promises = [];
 
-    if (!isUndefinedOrNull(componentIdentifiers)) {
-      for (const componentId of componentIdentifiers) {
+    if (hasArrayValues(componentIdentifiers)) {
+      for (const componentId of arrayFilterUndefinedNull(
+        componentIdentifiers,
+      )) {
         promises.push(
           this.componentRepository
             .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
@@ -327,8 +358,8 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(formulaIdentifiers)) {
-      for (const formulaId of formulaIdentifiers) {
+    if (hasArrayValues(formulaIdentifiers)) {
+      for (const formulaId of arrayFilterUndefinedNull(formulaIdentifiers)) {
         promises.push(
           this.monitorFormulaRepository
             .getOneFormulaIdsMonLocId({
@@ -340,8 +371,10 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(monitoringSystemIdentifiers)) {
-      for (const monSysIdentifier of monitoringSystemIdentifiers) {
+    if (hasArrayValues(monitoringSystemIdentifiers)) {
+      for (const monSysIdentifier of arrayFilterUndefinedNull(
+        monitoringSystemIdentifiers,
+      )) {
         promises.push(
           this.monitorSystemRepository
             .findOneByIdentifierAndLocation(
