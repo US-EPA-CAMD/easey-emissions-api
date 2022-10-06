@@ -62,6 +62,12 @@ import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
+import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
+import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
+import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
+import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
+import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -74,6 +80,7 @@ describe('Emissions Service', () => {
   let hourlyOperatingService: HourlyOperatingService;
   let dailyEmissionService: DailyEmissionService;
   let sorbentTrapService: SorbentTrapService;
+  let nsps4tSummaryService: Nsps4tSummaryService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -115,6 +122,12 @@ describe('Emissions Service', () => {
         SorbentTrapRepository,
         SamplingTrainService,
         SamplingTrainRepository,
+        Nsps4tAnnualService,
+        Nsps4tAnnualRepository,
+        Nsps4tCompliancePeriodService,
+        Nsps4tCompliancePeriodRepository,
+        Nsps4tSummaryService,
+        Nsps4tSummaryRepository,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
@@ -182,6 +195,7 @@ describe('Emissions Service', () => {
     hourlyOperatingService = module.get(HourlyOperatingService);
     dailyEmissionService = module.get(DailyEmissionService);
     sorbentTrapService = module.get(SorbentTrapService);
+    nsps4tSummaryService = module.get(Nsps4tSummaryService);
   });
 
   it('should have a emissions service', function() {
@@ -210,6 +224,7 @@ describe('Emissions Service', () => {
       jest.spyOn(hourlyOperatingService, 'export').mockResolvedValue(null);
       jest.spyOn(dailyEmissionService, 'export').mockResolvedValue(null);
       jest.spyOn(sorbentTrapService, 'export').mockResolvedValue(null);
+      jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,

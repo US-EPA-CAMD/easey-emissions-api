@@ -26,6 +26,10 @@ import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
+import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
+import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
+import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
+import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 
 @Module({
   imports: [
@@ -34,6 +38,8 @@ import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.reposi
       DailyFuelRepository,
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
+      Nsps4tAnnualRepository,
+      Nsps4tCompliancePeriodRepository,
       Nsps4tSummaryRepository,
       SamplingTrainRepository,
       SorbentTrapRepository,
@@ -53,6 +59,8 @@ import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.reposi
     EmissionsMap,
     EmissionsService,
     EmissionsSubmissionsProgressMap,
+    Nsps4tAnnualService,
+    Nsps4tCompliancePeriodService,
     Nsps4tSummaryService,
     SamplingTrainService,
     SorbentTrapService,

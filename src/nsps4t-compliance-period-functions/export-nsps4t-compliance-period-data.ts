@@ -17,7 +17,7 @@ export const exportNsps4tCompliancePeriodQuery = async ({
 }: Omit<ExportNsps4tCompliancePeriodDataProperties, 'map'>) => {
   return repository
     .createQueryBuilder('nsps4tCompliancePeriod')
-    .where('nsps4tCompliancePeriod.nsps4t_sum_id IN (...nsps4tSummaryIds)', {
+    .where('nsps4tCompliancePeriod.nsps4t_sum_id IN (:...nsps4tSummaryIds)', {
       nsps4tSummaryIds,
     })
     .getMany();
