@@ -5,7 +5,7 @@ import {
   HourlyParamFuelFlowDTO,
   HourlyParamFuelFlowImportDTO,
 } from '../dto/hourly-param-fuel-flow.dto';
-import { ImportIdentifiers } from 'src/emissions-workspace/emissions.service';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 
 @Injectable()
