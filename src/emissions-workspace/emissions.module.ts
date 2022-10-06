@@ -31,6 +31,17 @@ import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/da
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
+import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
 
 @Module({
   imports: [
@@ -43,6 +54,11 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
       ComponentRepository,
       MonitorSystemRepository,
       MonitorPlanWorkspaceRepository,
+      SorbentTrapWorkspaceRepository,
+      SamplingTrainWorkspaceRepository,
+      Nsps4tSummaryWorkspaceRepository,
+      Nsps4tAnnualWorkspaceRepository,
+      Nsps4tCompliancePeriodWorkspaceRepository,
     ]),
     Logger,
     HttpModule,
@@ -53,6 +69,7 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
+    SummaryValueWorkspaceModule
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
@@ -66,6 +83,11 @@ import { DailyFuelMap } from '../maps/daily-fuel.map';
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
     MonitorPlanChecksService,
+    SorbentTrapWorkspaceService,
+    SamplingTrainWorkspaceService,
+    Nsps4tAnnualWorkspaceService,
+    Nsps4tSummaryWorkspaceService,
+    Nsps4tCompliancePeriodWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

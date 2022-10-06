@@ -8,7 +8,7 @@ export const genHourlyFuelFlow = <RepoType>(amount = 1): RepoType[] => {
   const hourlyFuelFlows: RepoType[] = [];
 
   for (let param = 0; param < amount; param++) {
-    hourlyFuelFlows.push({
+    hourlyFuelFlows.push(({
       id: faker.datatype.string(),
       hourlyId: faker.datatype.string(),
       monitoringSystemId: optionalValue(faker.datatype.string()),
@@ -29,7 +29,7 @@ export const genHourlyFuelFlow = <RepoType>(amount = 1): RepoType[] => {
       monitorSystem: new MonitorSystem(),
       hrlyOpData: new HrlyFuelFlow(),
       hrlyParamFuelFlows: new HrlyParamFuelFlow(),
-    } as RepoType);
+    } as unknown)as RepoType);
   }
 
   return hourlyFuelFlows;

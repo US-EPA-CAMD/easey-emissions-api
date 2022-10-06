@@ -75,12 +75,10 @@ Database credentials are injected into the cloud.gov environments as part of the
     - USE AUTH API TO SIGNIN & GET AUTH TOKEN TO USE AS A BEARER TOKEN
   - IF ABOVE IS FALSE THEN SET
     - EASEY_EMISSIONS_API_CURRENT_USER={see below}
+    - FORMAT: { "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
 - EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=true|false
   - IF ABOVE IS TRUE THEN SET
     - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
-
-**Current User object format:**
-{ "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
 
 **Please refer to our [Getting Started](https://github.com/US-EPA-CAMD/devops/blob/master/GETTING-STARTED.md) instructions on how to configure the following environment variables & connect to the database.**
 - EASEY_DB_HOST
@@ -119,7 +117,7 @@ $ yarn start
 
 ## API Endpoints
 Please refer to the Emissions Management API Swagger Documentation for descriptions of the endpoints.<br>
-[Dev Environment](https://api.epa.gov/easey/dev/emissions-mgmt/swagger/) | [Test Environment](https://api.epa.gov/easey/test/emissions-mgmt/swagger/) | [Beta Environment](https://api.epa.gov/easey/beta/emissions-mgmt/swagger/) | [Staging Environment](https://api.epa.gov/easey/staging/emissions-mgmt/swagger/)
+[Dev Environment](https://api.epa.gov/easey/dev/emissions-mgmt/swagger/) | [Test Environment](https://api.epa.gov/easey/test/emissions-mgmt/swagger/) | [Performance Environment](https://api.epa.gov/easey/perf/emissions-mgmt/swagger/) | [Beta Environment](https://api.epa.gov/easey/beta/emissions-mgmt/swagger/) | [Staging Environment](https://api.epa.gov/easey/staging/emissions-mgmt/swagger/)
 
 ## License & Contributing
 This project is licensed under the MIT License. We encourage you to read this project’s [License](LICENSE), [Contributing Guidelines](CONTRIBUTING.md), and [Code of Conduct](CODE-OF-CONDUCT.md).

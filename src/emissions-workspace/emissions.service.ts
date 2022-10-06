@@ -1,11 +1,9 @@
-import { getManager, DeleteResult, FindConditions } from 'typeorm';
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
+import { DeleteResult, FindConditions } from 'typeorm';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
@@ -15,6 +13,7 @@ import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import {
+  arrayFilterUndefinedNull,
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
@@ -25,6 +24,11 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { SummaryValueDTO } from '../dto/summary-value.dto';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -53,6 +57,10 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly summaryValueService: SummaryValueWorkspaceService,
+    private readonly sorbentTrapService: SorbentTrapWorkspaceService,
+    private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
+    private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
   ) {}
 
   async delete(
@@ -66,6 +74,8 @@ export class EmissionsWorkspaceService {
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
+    const SORBENT_TRAP = 3;
+    const WEEKLY_TEST_SUMMARIES = 4;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -79,14 +89,18 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyTestSummaryService.export(locationIds, params));
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
+      promises.push(this.sorbentTrapService.export(locationIds, params));
+      promises.push(this.weeklyTestSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
-      const results = new EmissionsDTO(mappedResults)
+      const results = new EmissionsDTO(mappedResults);
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
 
       return results;
     }
@@ -101,29 +115,15 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
-    const stackPipeIds: string[] = [];
-    const unitIds: string[] = [];
-
-    for (const collection of Object.keys(params)) {
-      if (Array.isArray(params[collection]) && collection.length > 0) {
-        stackPipeIds.push(
-          ...params[collection]
-            ?.map(data => data.stackPipeId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-        unitIds.push(
-          ...params[collection]
-            ?.map(data => data.unitId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-      }
-    }
+    const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
+    const unitIds = objectValuesByKey<string>('unitId', params, true);
 
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
-      stackIds: [...new Set(stackPipeIds)],
-      unitIds: [...new Set(unitIds)],
+      stackIds: stackPipeIds,
+      unitIds: unitIds,
     });
+
     if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }
@@ -181,6 +181,19 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importSummaryValue(params, monitoringLocationId, reportingPeriodId),
+      this.importSorbentTrap(
+        params,
+        reportingPeriodId,
+        monitoringLocationId,
+        identifiers,
+      ),
+      this.importNsps4tSummaries(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -188,7 +201,7 @@ export class EmissionsWorkspaceService {
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
         throw new LoggingException(
-          importResult.reason.details,
+          importResult.reason.detail,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -279,16 +292,79 @@ export class EmissionsWorkspaceService {
     return Promise.all(hourlyOperatingImports);
   }
 
+  async importSummaryValue(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId,
+  ) {
+    const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
+
+    if (Array.isArray(emissionsImport.summaryValueData)) {
+      for (const summaryValueDatum of emissionsImport.summaryValueData) {
+        summaryValueImports.push(
+          this.summaryValueService.import({
+            ...summaryValueDatum,
+            monitoringLocationId,
+            reportingPeriodId,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(summaryValueImports);
+  }
+  
+  async importSorbentTrap(
+    emissionsImport: EmissionsImportDTO,
+    reportingPeriodId: number,
+    monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
+  ) {
+    if (hasArrayValues(emissionsImport.sorbentTrapData)) {
+      const promises = [];
+      for (const sorbentTrap of emissionsImport.sorbentTrapData) {
+        promises.push(
+          this.sorbentTrapService.import({
+            ...sorbentTrap,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+      return Promise.all(promises);
+    }
+  }
+
+  async importNsps4tSummaries(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const nsps4tSummaryImports = [];
+
+    if (Array.isArray(emissionsImport.nsps4tSummaryData)) {
+      for (const nsps4tSummary of emissionsImport.nsps4tSummaryData) {
+        nsps4tSummaryImports.push(
+          this.nsps4tSummaryWorkspaceService.import({
+            ...nsps4tSummary,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(nsps4tSummaryImports);
+  }
+
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
     userId: string,
   ) {
-    const untypedParams = (emissionsImport as unknown) as Record<
-      string,
-      unknown
-    >;
-
     const identifiers: ImportIdentifiers = {
       components: {},
       monitorFormulas: {},
@@ -298,24 +374,26 @@ export class EmissionsWorkspaceService {
 
     const componentIdentifiers = objectValuesByKey<string>(
       'componentId',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const formulaIdentifiers = objectValuesByKey<string>(
       'formulaIdentifier',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const monitoringSystemIdentifiers = objectValuesByKey<string>(
       'monitoringSystemId',
-      untypedParams,
+      emissionsImport,
       true,
     );
 
     const promises = [];
 
-    if (!isUndefinedOrNull(componentIdentifiers)) {
-      for (const componentId of componentIdentifiers) {
+    if (hasArrayValues(componentIdentifiers)) {
+      for (const componentId of arrayFilterUndefinedNull(
+        componentIdentifiers,
+      )) {
         promises.push(
           this.componentRepository
             .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
@@ -324,8 +402,8 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(formulaIdentifiers)) {
-      for (const formulaId of formulaIdentifiers) {
+    if (hasArrayValues(formulaIdentifiers)) {
+      for (const formulaId of arrayFilterUndefinedNull(formulaIdentifiers)) {
         promises.push(
           this.monitorFormulaRepository
             .getOneFormulaIdsMonLocId({
@@ -337,8 +415,10 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(monitoringSystemIdentifiers)) {
-      for (const monSysIdentifier of monitoringSystemIdentifiers) {
+    if (hasArrayValues(monitoringSystemIdentifiers)) {
+      for (const monSysIdentifier of arrayFilterUndefinedNull(
+        monitoringSystemIdentifiers,
+      )) {
         promises.push(
           this.monitorSystemRepository
             .findOneByIdentifierAndLocation(

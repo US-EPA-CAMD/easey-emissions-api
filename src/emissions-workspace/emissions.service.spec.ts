@@ -65,6 +65,23 @@ import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { EmissionsDTO } from '../dto/emissions.dto';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
+import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
+import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integrity-workspace/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
+import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -117,6 +134,22 @@ describe('Emissions Workspace Service', () => {
         HourlyGasFlowMeterWorkspaceService,
         ComponentRepository,
         MonitorSystemRepository,
+        SorbentTrapWorkspaceService,
+        SorbentTrapWorkspaceRepository,
+        SamplingTrainWorkspaceService,
+        SamplingTrainWorkspaceRepository,
+        WeeklyTestSummaryWorkspaceService,
+        WeeklyTestSummaryWorkspaceRepository,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityWorkspaceService,
+        WeeklySystemIntegrityWorkspaceRepository,
+        WeeklySystemIntegrityMap,
+        Nsps4tCompliancePeriodWorkspaceRepository,
+        Nsps4tCompliancePeriodWorkspaceService,
+        Nsps4tAnnualWorkspaceRepository,
+        Nsps4tAnnualWorkspaceService,
+        Nsps4tSummaryWorkspaceRepository,
+        Nsps4tSummaryWorkspaceService,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -188,14 +221,13 @@ describe('Emissions Workspace Service', () => {
   it('should successfully export emissions data', async function() {
     const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>();
     const dtoMocks = genEmissionsRecordDto();
-    const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
 
     jest
       .spyOn(emissionsRepository, 'export')
       .mockResolvedValue(emissionsMocks[0]);
 
     await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
-      mappedEmissions,
+      new EmissionsDTO(),
     );
   });
 

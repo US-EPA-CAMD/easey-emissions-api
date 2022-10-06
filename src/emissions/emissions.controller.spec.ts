@@ -47,6 +47,16 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
+import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
+import { SamplingTrainService } from '../sampling-train/sampling-train.service';
+import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
+import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
+import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-summary.repository';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
+import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -101,6 +111,16 @@ describe('-- Emissions Controller --', () => {
         HourlyParameterFuelFlowService,
         HourlyParameterFuelFlowRepository,
         HourlyParameterFuelFlowMap,
+        SorbentTrapRepository,
+        SorbentTrapService,
+        SamplingTrainRepository,
+        SamplingTrainService,
+        WeeklyTestSummaryService,
+        WeeklyTestSummaryRepository,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityService,
+        WeeklySystemIntegrityMap,
+        WeeklySystemIntegrityRepository,
       ],
     }).compile();
 

@@ -2,6 +2,12 @@ export const hasArrayValues = (value: unknown): boolean => {
   return Array.isArray(value) && value.length > 0;
 };
 
+export const arrayFilterUndefinedNull = <Type>(array: Type[]): Type[] => {
+  return array.filter(value => {
+    return typeof value !== 'undefined' && value !== null;
+  });
+};
+
 export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {
   if (Array.isArray(value)) {
     for (const item of value) {
@@ -16,7 +22,7 @@ export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {
 
 export const objectValuesByKey = <ValueType>(
   searchKey: string,
-  object: Record<string, unknown>,
+  object: unknown,
   isUnique = false,
 ): ValueType[] => {
   const values = [];
@@ -27,12 +33,7 @@ export const objectValuesByKey = <ValueType>(
     }
 
     if (object[key] && typeof object[key] === 'object') {
-      values.push(
-        ...objectValuesByKey<ValueType>(
-          searchKey,
-          object[key] as Record<string, unknown>,
-        ),
-      );
+      values.push(...objectValuesByKey<ValueType>(searchKey, object[key]));
     }
   }
 

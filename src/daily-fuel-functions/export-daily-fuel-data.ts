@@ -9,18 +9,27 @@ type ExportDailyFuelDataProperties = {
   map?: DailyFuelMap;
 };
 
+export const exportDailyFuelQuery = async ({
+  dailyEmissionIds,
+  repository,
+}: Omit<ExportDailyFuelDataProperties, 'map'>) => {
+  return repository
+    .createQueryBuilder('dailyFuel')
+    .where('dailyFuel.dailyEmissionId IN (:...dailyEmissionIds)', {
+      dailyEmissionIds,
+    })
+    .getMany();
+};
+
 export const exportDailyFuelData = async ({
   dailyEmissionIds,
   repository,
   map = new DailyFuelMap(),
 }: ExportDailyFuelDataProperties): Promise<DailyFuelDTO[] | null> => {
-  const dailyFuelQuery = repository
-    .createQueryBuilder('dailyFuel')
-    .where('dailyFuel.dailyEmissionId IN (:...dailyEmissionIds)', {
-      dailyEmissionIds,
-    });
-
-  const dailyFuelData = await dailyFuelQuery.getMany();
+  const dailyFuelData = await exportDailyFuelQuery({
+    dailyEmissionIds,
+    repository,
+  });
 
   const mapped = await map.many(dailyFuelData);
 
