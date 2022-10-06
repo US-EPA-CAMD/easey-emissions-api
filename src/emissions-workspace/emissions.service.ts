@@ -28,6 +28,7 @@ import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -59,6 +60,7 @@ export class EmissionsWorkspaceService {
     private readonly summaryValueService: SummaryValueWorkspaceService,
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
     private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
+    private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
   ) {}
 
   async delete(
@@ -113,29 +115,15 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
-    const stackPipeIds: string[] = [];
-    const unitIds: string[] = [];
-
-    for (const collection of Object.keys(params)) {
-      if (Array.isArray(params[collection]) && collection.length > 0) {
-        stackPipeIds.push(
-          ...params[collection]
-            ?.map(data => data.stackPipeId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-        unitIds.push(
-          ...params[collection]
-            ?.map(data => data.unitId)
-            .filter(id => !isUndefinedOrNull(id)),
-        );
-      }
-    }
+    const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
+    const unitIds = objectValuesByKey<string>('unitId', params, true);
 
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
-      stackIds: [...new Set(stackPipeIds)],
-      unitIds: [...new Set(unitIds)],
+      stackIds: stackPipeIds,
+      unitIds: unitIds,
     });
+
     if (isUndefinedOrNull(plantLocation)) {
       throw new NotFoundException('Plant not found.');
     }
@@ -198,6 +186,12 @@ export class EmissionsWorkspaceService {
         params,
         reportingPeriodId,
         monitoringLocationId,
+        identifiers,
+      ),
+      this.importNsps4tSummaries(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
         identifiers,
       ),
     ];
@@ -342,16 +336,35 @@ export class EmissionsWorkspaceService {
     }
   }
 
+  async importNsps4tSummaries(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const nsps4tSummaryImports = [];
+
+    if (Array.isArray(emissionsImport.nsps4tSummaryData)) {
+      for (const nsps4tSummary of emissionsImport.nsps4tSummaryData) {
+        nsps4tSummaryImports.push(
+          this.nsps4tSummaryWorkspaceService.import({
+            ...nsps4tSummary,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(nsps4tSummaryImports);
+  }
+
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
     userId: string,
   ) {
-    const untypedParams = (emissionsImport as unknown) as Record<
-      string,
-      unknown
-    >;
-
     const identifiers: ImportIdentifiers = {
       components: {},
       monitorFormulas: {},
@@ -361,17 +374,17 @@ export class EmissionsWorkspaceService {
 
     const componentIdentifiers = objectValuesByKey<string>(
       'componentId',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const formulaIdentifiers = objectValuesByKey<string>(
       'formulaIdentifier',
-      untypedParams,
+      emissionsImport,
       true,
     );
     const monitoringSystemIdentifiers = objectValuesByKey<string>(
       'monitoringSystemId',
-      untypedParams,
+      emissionsImport,
       true,
     );
 

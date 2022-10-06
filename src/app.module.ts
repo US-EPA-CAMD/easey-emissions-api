@@ -26,6 +26,9 @@ import { SorbentTrapModule } from './sorbent-trap/sorbent-trap.module';
 import { SamplingTrainModule } from './sampling-train/sampling-train.module';
 import { SorbentTrapWorkspaceModule } from './sorbent-trap-workspace/sorbent-trap-workspace.module';
 import { SamplingTrainWorkspaceModule } from './sampling-train-workspace/sampling-train-workspace.module';
+import { Nsps4tAnnualWorkspaceModule } from './nsps4t-annual-workspace/nsps4t-annual-workspace.module';
+import { Nsps4tCompliancePeriodWorkspaceModule } from './nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.module';
+import { Nsps4tSummaryWorkspaceModule } from './nsps4t-summary-workspace-new/nsps4t-summary-workspace.module';
 
 @Module({
   imports: [
@@ -55,6 +58,9 @@ import { SamplingTrainWorkspaceModule } from './sampling-train-workspace/samplin
     SamplingTrainModule,
     SorbentTrapWorkspaceModule,
     SamplingTrainWorkspaceModule,
+    Nsps4tAnnualWorkspaceModule,
+    Nsps4tCompliancePeriodWorkspaceModule,
+    Nsps4tSummaryWorkspaceModule,
   ],
 })
 export class AppModule {}

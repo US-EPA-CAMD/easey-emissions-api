@@ -36,6 +36,12 @@ import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-t
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
 import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
+import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
 
 @Module({
   imports: [
@@ -50,6 +56,9 @@ import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sa
       MonitorPlanWorkspaceRepository,
       SorbentTrapWorkspaceRepository,
       SamplingTrainWorkspaceRepository,
+      Nsps4tSummaryWorkspaceRepository,
+      Nsps4tAnnualWorkspaceRepository,
+      Nsps4tCompliancePeriodWorkspaceRepository,
     ]),
     Logger,
     HttpModule,
@@ -76,6 +85,9 @@ import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sa
     MonitorPlanChecksService,
     SorbentTrapWorkspaceService,
     SamplingTrainWorkspaceService,
+    Nsps4tAnnualWorkspaceService,
+    Nsps4tSummaryWorkspaceService,
+    Nsps4tCompliancePeriodWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

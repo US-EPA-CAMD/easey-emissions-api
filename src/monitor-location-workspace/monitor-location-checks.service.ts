@@ -14,6 +14,7 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { isUndefinedOrNull } from '../utils/utils';
+import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -22,7 +23,8 @@ type ForLocationType =
   | WeeklyTestSummaryImportDTO
   | SorbentTrapImportDTO
   | LongTermFuelFlowImportDTO
-  | SummaryValueImportDTO;
+  | SummaryValueImportDTO
+  | Nsps4tSummaryImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -117,6 +119,7 @@ export class MonitorLocationChecksService {
     payload?.longTermFuelFlowData?.forEach(i => addLocation(i));
     payload?.summaryValueData?.forEach(i => addLocation(i));
     payload?.dailyEmissionData?.forEach(i => addLocation(i));
+    payload?.nsps4tSummaryData?.forEach(i => addLocation(i));
 
     return locations;
   }
