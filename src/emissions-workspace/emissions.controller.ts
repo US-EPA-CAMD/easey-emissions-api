@@ -3,6 +3,7 @@ import {
   Body,
   Post,
   Query,
+  UseGuards,
   Controller,
   UseInterceptors,
   ClassSerializerInterceptor,
@@ -13,12 +14,19 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
   ApiSecurity,
+  ApiQuery,
 } from '@nestjs/swagger';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
+import { User } from '@us-epa-camd/easey-common/decorators';
+import { AuthGuard } from '@us-epa-camd/easey-common/guards';
+import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
+
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { EmissionsViewDTO } from '../dto/emissions-view.dto';
+import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 
 @Controller()
 @ApiTags('Emissions')
@@ -40,8 +48,8 @@ export class EmissionsWorkspaceController {
   }
 
   @Post('import')
+  @UseGuards(AuthGuard)
   @ApiBearerAuth('Token')
-  //@UseGuards(AuthGuard)
   @ApiOkResponse({
     type: EmissionsDTO,
     description: 'Imports Emissions data from JSON file into the workspace',
@@ -49,10 +57,9 @@ export class EmissionsWorkspaceController {
   ///@UseInterceptors(FormatValidationErrorsInterceptor)
   async import(
     @Body() payload: EmissionsImportDTO,
-    //    @CurrentUser() userId: string,
+    @User() user: CurrentUser,
   ) {
-    const userId = 'testUser';
     await this.checksService.runChecks(payload);
-    return this.service.import(payload, userId);
+    return this.service.import(payload, user.userId);
   }
 }

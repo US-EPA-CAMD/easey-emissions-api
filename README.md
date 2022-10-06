@@ -35,6 +35,58 @@ Follow these [instructions](https://github.com/US-EPA-CAMD/devops/blob/master/GE
     $ yarn install
     ```
 
+## Configuration
+The Emissions API uses a number of environment variables to properly configure the api. The following is the list of configureble values and their default setting.
+
+| Typescript Var Name | Environment Var Name | Default Value | Comment |
+| :------------------ | :------------------- | :------------ | :------ |
+| name | N/A | emissions-api | Fixed value |
+| host | EASEY_EMISSIONS_API_HOST | localhost | Configurable
+| port | EASEY_EMISSIONS_API_PORT | 8040 | Configurable |
+| path | EASEY_EMISSIONS_API_PATH | emissions-mgmt | Configurable |
+| title | EASEY_EMISSIONS_API_TITLE | Emissions Management | Configurable |
+| description | EASEY_EMISSIONS_API_DESCRIPTION | Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season) | Configurable |
+| env | EASEY_EMISSIONS_API_ENV | local-dev | Configurable |
+| apiKey | EASEY_EMISSIONS_API_KEY | *** | Dynamically set by CI/CD workflow |
+| enableApiKey | EASEY_EMISSIONS_API_ENABLE_API_KEY | false | Configurable |
+| secretToken | EASEY_EMISSIONS_API_SECRET_TOKEN | *** | Dynamically set by CI/CD workflow |
+| enableSecretToken | EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN | false | Configurable |
+| enableCors | EASEY_EMISSIONS_API_ENABLE_CORS | true | Configurable |
+| enableAuthToken | EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN | false | Configurable |
+| enableGlobalValidationPipes | EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE | true | Configurable |
+| version | EASEY_EMISSIONS_API_VERSION | v0.0.0 | Dynamically set by CI/CD workflow |
+| published | EASEY_EMISSIONS_API_PUBLISHED | local | Dynamically set by CI/CD workflow |
+| submissionDays | EASEY_EMISSIONS_API_SUBMISSION_DAYS | 38 | Configurable |
+| enableDebug | EASEY_EMISSIONS_API_ENABLE_DEBUG | false | Configurable |
+| currentUser | EASEY_EMISSIONS_API_CURRENT_USER | {} | Configurable |
+| perPageLimit | EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE | 500 | Configurable |
+| apiHost | EASEY_API_GATEWAY_HOST | api.epa.gov/easey/dev | Configurable |
+| authApi.uri | EASEY_AUTH_API | https://api.epa.gov/easey/dev/auth-mgmt | Configurable |
+
+## Environment Variables File
+Database credentials are injected into the cloud.gov environments as part of the CI/CD deployment process therefore they do not need to be configured. However, when running locally for local development the following environment variables are required to be configured using a local .env file in the root of the project. **PLEASE DO NOT commit the .env file to source control.**
+
+- EASEY_EMISSIONS_API_ENABLE_DEBUG=true|false
+- EASEY_EMISSIONS_API_ENABLE_API_KEY=true|false
+  - IF ABOVE IS TRUE THEN SET
+    - EASEY_EMISSIONS_API_KEY={ask project dev/tech lead}
+- EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN=true|false
+  - IF ABOVE IS TRUE THEN
+    - USE AUTH API TO SIGNIN & GET AUTH TOKEN TO USE AS A BEARER TOKEN
+  - IF ABOVE IS FALSE THEN SET
+    - EASEY_EMISSIONS_API_CURRENT_USER={see below}
+    - FORMAT: { "userId": "testuser", "roles": [ { "orisCode": 3, "role": "P" } ] }
+- EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN=true|false
+  - IF ABOVE IS TRUE THEN SET
+    - EASEY_EMISSIONS_API_SECRET_TOKEN={ask project dev/tech lead}
+
+**Please refer to our [Getting Started](https://github.com/US-EPA-CAMD/devops/blob/master/GETTING-STARTED.md) instructions on how to configure the following environment variables & connect to the database.**
+- EASEY_DB_HOST
+- EASEY_DB_PORT
+- EASEY_DB_NAME
+- EASEY_DB_USER
+- EASEY_DB_PWD
+
 ## Building, Testing, & Running the application
 From within the projects root directory run the following commands using the yarn command line interface
 
@@ -65,7 +117,7 @@ $ yarn start
 
 ## API Endpoints
 Please refer to the Emissions Management API Swagger Documentation for descriptions of the endpoints.<br>
-[Dev Environment](https://api.epa.gov/easey/dev/emissions-mgmt/swagger/) | [Test Environment](https://api.epa.gov/easey/test/emissions-mgmt/swagger/) | [Beta Environment](https://api.epa.gov/easey/beta/emissions-mgmt/swagger/) | [Staging Environment](https://api.epa.gov/easey/staging/emissions-mgmt/swagger/)
+[Dev Environment](https://api.epa.gov/easey/dev/emissions-mgmt/swagger/) | [Test Environment](https://api.epa.gov/easey/test/emissions-mgmt/swagger/) | [Performance Environment](https://api.epa.gov/easey/perf/emissions-mgmt/swagger/) | [Beta Environment](https://api.epa.gov/easey/beta/emissions-mgmt/swagger/) | [Staging Environment](https://api.epa.gov/easey/staging/emissions-mgmt/swagger/)
 
 ## License & Contributing
 This project is licensed under the MIT License. We encourage you to read this project’s [License](LICENSE), [Contributing Guidelines](CONTRIBUTING.md), and [Code of Conduct](CODE-OF-CONDUCT.md).

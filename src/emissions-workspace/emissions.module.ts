@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DailyTestSummaryWorkspaceModule } from '../daily-test-summary-workspace/daily-test-summary.module';
@@ -31,6 +32,10 @@ import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-wo
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
 import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
 
 @Module({
   imports: [
@@ -43,11 +48,14 @@ import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-
       ComponentRepository,
       MonitorSystemRepository,
       MonitorPlanWorkspaceRepository,
+      SorbentTrapWorkspaceRepository,
+      SamplingTrainWorkspaceRepository,
     ]),
+    Logger,
+    HttpModule,
     DailyEmissionWorkspaceModule,
     DailyTestSummaryWorkspaceModule,
     HourlyOperatingWorkspaceModule,
-    Logger,
     MonitorLocationWorkspaceModule,
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
@@ -66,6 +74,8 @@ import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-
     EmissionsSubmissionsProgressMap,
     EmissionsChecksService,
     MonitorPlanChecksService,
+    SorbentTrapWorkspaceService,
+    SamplingTrainWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

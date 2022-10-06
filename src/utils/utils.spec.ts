@@ -1,6 +1,18 @@
-import { hasArrayValues, isUndefinedOrNull, objectValuesByKey } from './utils';
+import {
+  arrayFilterUndefinedNull,
+  hasArrayValues,
+  isUndefinedOrNull,
+  objectValuesByKey,
+} from './utils';
 
 describe('Utils', () => {
+  describe('arrayFilterUndefinedNull', () => {
+    it('should return a filtered array', function() {
+      expect(arrayFilterUndefinedNull([1, 3, undefined, null])).toEqual([1, 3]);
+      expect(arrayFilterUndefinedNull([])).toEqual([]);
+    });
+  });
+
   describe('hasArrayValues', () => {
     it('should return true if array has at least one value', function() {
       expect(hasArrayValues([1])).toBe(true);
