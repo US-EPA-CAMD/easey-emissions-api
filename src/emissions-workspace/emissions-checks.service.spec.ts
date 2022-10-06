@@ -20,7 +20,6 @@ import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
-import { MonitorHourlyValueModule } from '../monitor-hourly-value/monitor-hourly-value.module';
 import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -28,6 +27,12 @@ import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fue
 import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
+import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
+import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integrity-workspace/weekly-system-integrity.repository';
+import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -54,6 +59,12 @@ describe('Emissions Checks Service Tests', () => {
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowMap,
         MonitorHourlyValueMap,
+        WeeklyTestSummaryWorkspaceRepository,
+        WeeklyTestSummaryWorkspaceService,
+        WeeklySystemIntegrityWorkspaceService,
+        WeeklySystemIntegrityMap,
+        WeeklySystemIntegrityWorkspaceRepository,
+        WeeklyTestSummaryMap,
         {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: () => jest,

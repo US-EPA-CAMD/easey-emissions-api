@@ -56,14 +56,14 @@ export class MonitorLocation extends BaseEntity {
   userId: string;
 
   @Column({
-    name: 'userid',
+    name: 'add_date',
     nullable: true,
     type: 'date',
   })
   addDate: Date;
 
   @Column({
-    name: 'userid',
+    name: 'update_date',
     nullable: true,
     type: 'date',
   })

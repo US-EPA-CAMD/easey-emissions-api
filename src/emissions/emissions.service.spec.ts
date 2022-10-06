@@ -62,6 +62,12 @@ import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-summary.repository';
+import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
+import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -74,6 +80,7 @@ describe('Emissions Service', () => {
   let hourlyOperatingService: HourlyOperatingService;
   let dailyEmissionService: DailyEmissionService;
   let sorbentTrapService: SorbentTrapService;
+  let weeklyTestSummaryService: WeeklyTestSummaryService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -115,6 +122,12 @@ describe('Emissions Service', () => {
         SorbentTrapRepository,
         SamplingTrainService,
         SamplingTrainRepository,
+        WeeklyTestSummaryRepository,
+        WeeklyTestSummaryService,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityService,
+        WeeklySystemIntegrityRepository,
+        WeeklySystemIntegrityMap,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
@@ -182,6 +195,7 @@ describe('Emissions Service', () => {
     hourlyOperatingService = module.get(HourlyOperatingService);
     dailyEmissionService = module.get(DailyEmissionService);
     sorbentTrapService = module.get(SorbentTrapService);
+    weeklyTestSummaryService = module.get(WeeklyTestSummaryService);
   });
 
   it('should have a emissions service', function() {
@@ -210,6 +224,7 @@ describe('Emissions Service', () => {
       jest.spyOn(hourlyOperatingService, 'export').mockResolvedValue(null);
       jest.spyOn(dailyEmissionService, 'export').mockResolvedValue(null);
       jest.spyOn(sorbentTrapService, 'export').mockResolvedValue(null);
+      jest.spyOn(weeklyTestSummaryService, 'export').mockResolvedValue(null);
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,

@@ -13,6 +13,7 @@ import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import {
+  arrayFilterUndefinedNull,
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
@@ -24,6 +25,7 @@ import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.rep
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
 
 // Import Identifier: Table Id
@@ -54,6 +56,7 @@ export class EmissionsWorkspaceService {
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
+    private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
   ) {}
 
@@ -69,6 +72,7 @@ export class EmissionsWorkspaceService {
     const HOURLY_OPERATING = 1;
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
+    const WEEKLY_TEST_SUMMARIES = 4;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -83,6 +87,7 @@ export class EmissionsWorkspaceService {
       promises.push(this.hourlyOperatingService.export(locationIds, params));
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
+      promises.push(this.weeklyTestSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -92,6 +97,7 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
 
       return results;
     }
@@ -170,6 +176,12 @@ export class EmissionsWorkspaceService {
         params,
         monitoringLocationId,
         reportingPeriodId,
+        identifiers,
+      ),
+      this.importSorbentTrap(
+        params,
+        reportingPeriodId,
+        monitoringLocationId,
         identifiers,
       ),
       this.importNsps4tSummaries(
@@ -276,6 +288,28 @@ export class EmissionsWorkspaceService {
     return Promise.all(hourlyOperatingImports);
   }
 
+  async importSorbentTrap(
+    emissionsImport: EmissionsImportDTO,
+    reportingPeriodId: number,
+    monitoringLocationId: string,
+    identifiers: ImportIdentifiers,
+  ) {
+    if (hasArrayValues(emissionsImport.sorbentTrapData)) {
+      const promises = [];
+      for (const sorbentTrap of emissionsImport.sorbentTrapData) {
+        promises.push(
+          this.sorbentTrapService.import({
+            ...sorbentTrap,
+            monitoringLocationId,
+            reportingPeriodId,
+            identifiers,
+          }),
+        );
+      }
+      return Promise.all(promises);
+    }
+  }
+
   async importNsps4tSummaries(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
@@ -330,8 +364,10 @@ export class EmissionsWorkspaceService {
 
     const promises = [];
 
-    if (!isUndefinedOrNull(componentIdentifiers)) {
-      for (const componentId of componentIdentifiers) {
+    if (hasArrayValues(componentIdentifiers)) {
+      for (const componentId of arrayFilterUndefinedNull(
+        componentIdentifiers,
+      )) {
         promises.push(
           this.componentRepository
             .findOneByIdentifierAndLocation(componentId, monitoringLocationId)
@@ -340,8 +376,8 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(formulaIdentifiers)) {
-      for (const formulaId of formulaIdentifiers) {
+    if (hasArrayValues(formulaIdentifiers)) {
+      for (const formulaId of arrayFilterUndefinedNull(formulaIdentifiers)) {
         promises.push(
           this.monitorFormulaRepository
             .getOneFormulaIdsMonLocId({
@@ -353,8 +389,10 @@ export class EmissionsWorkspaceService {
       }
     }
 
-    if (!isUndefinedOrNull(monitoringSystemIdentifiers)) {
-      for (const monSysIdentifier of monitoringSystemIdentifiers) {
+    if (hasArrayValues(monitoringSystemIdentifiers)) {
+      for (const monSysIdentifier of arrayFilterUndefinedNull(
+        monitoringSystemIdentifiers,
+      )) {
         promises.push(
           this.monitorSystemRepository
             .findOneByIdentifierAndLocation(
