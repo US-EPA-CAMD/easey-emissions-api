@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Console } from 'console';
 import { randomUUID } from 'crypto';
 import {
   SummaryValueDTO,
@@ -20,13 +21,28 @@ export class SummaryValueWorkspaceService {
   ) {}
 
   async import(data: SummaryValueCreate): Promise<SummaryValueDTO> {
-    const result = await this.repository.save(
-      this.repository.create({
-        ...data,
-        id: randomUUID(),
-      }),
-    );
 
-    return this.map.one(result);
+    const uniqueResults = await this.repository.find({
+      where:{
+        'reportingPeriodId': data.reportingPeriodId,
+        'monitoringLocationId': data.monitoringLocationId,
+        'parameterCode': data.parameterCode
+      }
+    });
+
+    let entity;
+    if( uniqueResults.length > 0){
+      data.reportingPeriodId = undefined;
+      data.monitoringLocationId = undefined;
+      data.parameterCode = undefined;
+
+      entity = this.repository.create({...data, id: uniqueResults[0].id});
+    }
+    else
+      entity = this.repository.create({...data, id: randomUUID()})
+
+    const result = await this.repository.save(entity)
+
+    return result;
   }
 }
