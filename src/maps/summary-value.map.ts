@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-
-import { MonitorHrlyValue } from '../entities/monitor-hrly-value.entity';
-import { MonitorHrlyValue as MonitorHrlyValueWorkspace } from '../entities/workspace/monitor-hrly-value.entity';
-import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 import { SummaryValue } from '../entities/summary-value.entity';
 import { SummaryValue as SummaryValueWorkspace } from '../entities/workspace/summary-value.entity';
 import { SummaryValueDTO } from '../dto/summary-value.dto';
@@ -18,13 +14,9 @@ export class SummaryValueMap extends BaseMap<
     entity: SummaryValue | SummaryValueWorkspace,
   ): Promise<SummaryValueDTO> {
 
-    const unitId = entity.monitorLocation?.unit
-    ? entity?.monitorLocation?.unit?.name
-    : null;
+    const unitId = entity?.monitorLocation?.unit?.name ?? null;
 
-  const stackPipeId = entity.monitorLocation?.stackPipe
-    ? entity?.monitorLocation?.stackPipe?.name
-    : null;
+  const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
 
     return {
       id: entity.id,

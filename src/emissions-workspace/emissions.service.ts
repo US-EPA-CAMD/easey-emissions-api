@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
@@ -27,8 +23,7 @@ import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { SummaryValueDTO } from '../dto/summary-value.dto';
-import { SummaryValueService } from '../summary-value-workspace/summary-value.service';
-import { Console } from 'console';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -57,7 +52,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
-    private readonly summaryValueService: SummaryValueService,
+    private readonly summaryValueService: SummaryValueWorkspaceService,
   ) {}
 
   async delete(
@@ -194,7 +189,7 @@ export class EmissionsWorkspaceService {
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
         throw new LoggingException(
-          importResult.reason.details,
+          importResult.reason.detail,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }

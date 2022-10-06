@@ -209,7 +209,7 @@ export class HourlyOperatingWorkspaceService {
     for (const settledElement of settled) {
       if (settledElement.status === 'rejected') {
         throw new LoggingException(
-          settledElement.reason.details,
+          settledElement.reason.detail,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
