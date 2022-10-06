@@ -14,7 +14,6 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
   ApiSecurity,
-  ApiQuery,
 } from '@nestjs/swagger';
 
 import { User } from '@us-epa-camd/easey-common/decorators';
@@ -25,8 +24,6 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EmissionsChecksService } from './emissions-checks.service';
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 
 @Controller()
 @ApiTags('Emissions')
@@ -55,10 +52,7 @@ export class EmissionsWorkspaceController {
     description: 'Imports Emissions data from JSON file into the workspace',
   })
   ///@UseInterceptors(FormatValidationErrorsInterceptor)
-  async import(
-    @Body() payload: EmissionsImportDTO,
-    @User() user: CurrentUser,
-  ) {
+  async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
   }

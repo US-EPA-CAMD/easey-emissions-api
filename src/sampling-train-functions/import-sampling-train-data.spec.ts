@@ -14,9 +14,9 @@ describe('ImportSamplingTrainData', () => {
   it('should import data', async function() {
     const importReturn = [...genSamplingTrainImportDto(3)];
 
-    jest
-      .spyOn(importSamplingTrainModule, 'importSamplingTrainData')
-      .mockResolvedValue(undefined);
+    // @ts-expect-error force as undefined
+    jest.spyOn(repository, 'create').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     await Promise.all(
       importReturn.map(data => {
