@@ -121,8 +121,7 @@ export class HourlyOperatingWorkspaceService {
 
     const promises = [];
     if (
-      Array.isArray(emissionsImport.hourlyOperatingData) &&
-      emissionsImport.hourlyOperatingData.length > 0
+      Array.isArray(emissionsImport?.hourlyOperatingData?.length > 0)
     ) {
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
         hourlyOperatingDatum?.derivedHourlyValueData?.forEach(
@@ -210,7 +209,7 @@ export class HourlyOperatingWorkspaceService {
     for (const settledElement of settled) {
       if (settledElement.status === 'rejected') {
         throw new LoggingException(
-          settledElement.reason.details,
+          settledElement.reason.detail,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -218,4 +217,6 @@ export class HourlyOperatingWorkspaceService {
 
     return this.map.one(result);
   }
+
+  
 }

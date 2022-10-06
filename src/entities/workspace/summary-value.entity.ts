@@ -5,12 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
+  Unique,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmpswks.summary_value' })
+@Unique(["reportingPeriodId", "monitoringLocationId", "parameterCode"])
 export class SummaryValue extends BaseEntity {
   @PrimaryColumn({
     name: 'sum_value_id',
