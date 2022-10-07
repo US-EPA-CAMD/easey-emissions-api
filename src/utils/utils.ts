@@ -1,3 +1,5 @@
+export * from './util-modules/date-utils';
+
 export const hasArrayValues = (value: unknown): boolean => {
   return Array.isArray(value) && value.length > 0;
 };

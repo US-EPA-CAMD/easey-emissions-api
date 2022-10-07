@@ -68,6 +68,7 @@ import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { quarterFromMonth } from '../utils/util-modules/date-utils';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -241,25 +242,58 @@ describe('Emissions Service', () => {
   });
 
   describe('get submission progress', () => {
-    it('should get submission progress', async function() {
+    it('should return submissions progress if queryResult is defined and not in dev environment', async function() {
       const mockedProgress = genEmissionsSubmissionsProgress<
         EmissionsSubmissionsProgress
-      >();
+      >()[0];
+
       jest
         .spyOn(submissionProgressRepository, 'getSubmissionProgress')
-        .mockResolvedValue(mockedProgress[0]);
+        .mockResolvedValue(mockedProgress);
 
-      const mapped = await submissionProgressMap.one(mockedProgress[0]);
+      const mapped = await submissionProgressMap.one(mockedProgress);
 
       await expect(
         emissionsService.getSubmissionProgress(faker.date.soon()),
       ).resolves.toEqual(mapped);
     });
 
-    it('should return undefined if not query result is found', async function() {
+    it('should return generated result if the queryResult is undefined and in dev environment', async function() {
       jest
         .spyOn(submissionProgressRepository, 'getSubmissionProgress')
         .mockResolvedValue(undefined);
+
+      jest
+        .spyOn(configService, 'get')
+        .mockImplementation((property: string) => {
+          return 'development';
+        });
+
+      const date = new Date('Jan. 1, 2022');
+      const result = ((await emissionsService.getSubmissionProgress(
+        date,
+      )) as unknown) as {
+        quarter: number;
+        quarterName: string;
+        percentage: number;
+        year: number;
+      };
+      expect(result.quarter).toEqual(quarterFromMonth(date.getUTCMonth() + 1));
+      expect(result.quarterName).toEqual('Fourth');
+      expect(result.year).toEqual(2021);
+      expect(result.percentage).not.toBeNaN();
+    });
+
+    it('should return undefined if queryResult is undefined and not in dev environment', async function() {
+      jest
+        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
+        .mockResolvedValue(undefined);
+
+      jest
+        .spyOn(configService, 'get')
+        .mockImplementation((property: string) => {
+          return 'production';
+        });
 
       await expect(
         emissionsService.getSubmissionProgress(faker.date.soon()),
