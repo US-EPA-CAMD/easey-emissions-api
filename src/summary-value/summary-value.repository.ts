@@ -1,8 +1,8 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { SummaryValue } from '../entities/workspace/summary-value.entity';
+import { SummaryValue } from '../entities/summary-value.entity';
 
 @EntityRepository(SummaryValue)
-export class SummaryValueWorkspaceRepository extends Repository<SummaryValue> {
+export class SummaryValueRepository extends Repository<SummaryValue> {
     async export(monitoringLocationIds: string[], year: number, quarter: number) {
         const query = this.createQueryBuilder('sv')
           .innerJoinAndSelect('sv.monitorLocation', 'ml')

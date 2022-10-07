@@ -25,6 +25,7 @@ import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
 import { WeeklyTestSummaryModule } from '../weekly-test-summary/weekly-test-summary.module';
+import { SummaryValueModule } from '../summary-value/summary-value.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { WeeklyTestSummaryModule } from '../weekly-test-summary/weekly-test-summ
     HourlyOperatingModule,
     WeeklyTestSummaryModule,
     HourlyParameterFuelFlowModule,
+    SummaryValueModule,
   ],
   controllers: [EmissionsController],
   providers: [

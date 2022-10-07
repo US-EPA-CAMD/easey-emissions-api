@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Console } from 'console';
 import { randomUUID } from 'crypto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import {
   SummaryValueDTO,
   SummaryValueImportDTO,
@@ -19,6 +19,19 @@ export class SummaryValueWorkspaceService {
     private readonly map: SummaryValueMap,
     private readonly repository: SummaryValueWorkspaceRepository,
   ) {}
+
+  async export(
+    monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
+  ): Promise<SummaryValueDTO[]> {
+    const results = await this.repository.export(
+      monitoringLocationIds,
+      params.year,
+      params.quarter,
+    );
+
+    return this.map.many(results);
+  }
 
   async import(data: SummaryValueCreate): Promise<SummaryValueDTO> {
 
