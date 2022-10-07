@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { optionalValue } from './util';
-import { HrlyFuelFlow } from '../../src/entities/hrly-fuel-flow.entity';
 import { MonitorSystem } from '../../src/entities/monitor-system.entity';
 import { genHourlyOpValues } from './hourly-op-data-values';
 
@@ -16,7 +15,7 @@ export const genHourlyFuelFlow = <RepoType>(
   const hourlyFuelFlows: RepoType[] = [];
 
   for (let param = 0; param < amount; param++) {
-    hourlyFuelFlows.push({
+    hourlyFuelFlows.push(({
       id: faker.datatype.string(),
       hourlyId: faker.datatype.string(),
       monitoringSystemId: optionalValue(faker.datatype.string()),
@@ -43,7 +42,7 @@ export const genHourlyFuelFlow = <RepoType>(
       hrlyParamFuelFlows: config?.include.includes('hrlyParamFuelFlows')
         ? genHourlyFuelFlow(config?.hrlyParamFuelFlowsAmount)
         : undefined,
-    } as unknown as RepoType);
+    } as unknown) as RepoType);
   }
 
   return hourlyFuelFlows;
