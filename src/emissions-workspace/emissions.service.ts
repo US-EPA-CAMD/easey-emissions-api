@@ -1,5 +1,5 @@
-import { DeleteResult, FindConditions } from 'typeorm';
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
+import { DeleteResult, FindConditions } from 'typeorm';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
@@ -24,6 +24,8 @@ import { MonitorSystemRepository } from '../monitor-system/monitor-system.reposi
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
+import { SummaryValueDTO } from '../dto/summary-value.dto';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
@@ -55,6 +57,7 @@ export class EmissionsWorkspaceService {
     private readonly componentRepository: ComponentRepository,
     private readonly monitorSystemRepository: MonitorSystemRepository,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
+    private readonly summaryValueService: SummaryValueWorkspaceService,
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
     private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
@@ -178,6 +181,7 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importSummaryValue(params, monitoringLocationId, reportingPeriodId),
       this.importSorbentTrap(
         params,
         reportingPeriodId,
@@ -197,7 +201,7 @@ export class EmissionsWorkspaceService {
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
         throw new LoggingException(
-          importResult.reason.details,
+          importResult.reason.detail,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -288,6 +292,28 @@ export class EmissionsWorkspaceService {
     return Promise.all(hourlyOperatingImports);
   }
 
+  async importSummaryValue(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId,
+  ) {
+    const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
+
+    if (Array.isArray(emissionsImport.summaryValueData)) {
+      for (const summaryValueDatum of emissionsImport.summaryValueData) {
+        summaryValueImports.push(
+          this.summaryValueService.import({
+            ...summaryValueDatum,
+            monitoringLocationId,
+            reportingPeriodId,
+          }),
+        );
+      }
+    }
+
+    return Promise.all(summaryValueImports);
+  }
+  
   async importSorbentTrap(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,

@@ -31,6 +31,7 @@ import { DailyEmissionWorkspaceRepository } from '../daily-emission-workspace/da
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
@@ -68,6 +69,7 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
+    SummaryValueWorkspaceModule
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

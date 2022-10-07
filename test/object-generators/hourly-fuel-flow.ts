@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { optionalValue } from './util';
+import { HrlyFuelFlow } from '../../src/entities/hrly-fuel-flow.entity';
 import { MonitorSystem } from '../../src/entities/monitor-system.entity';
 import { genHourlyOpValues } from './hourly-op-data-values';
 
@@ -42,7 +43,7 @@ export const genHourlyFuelFlow = <RepoType>(
       hrlyParamFuelFlows: config?.include.includes('hrlyParamFuelFlows')
         ? genHourlyFuelFlow(config?.hrlyParamFuelFlowsAmount)
         : undefined,
-    } as RepoType);
+    } as unknown as RepoType);
   }
 
   return hourlyFuelFlows;
