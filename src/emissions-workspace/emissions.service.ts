@@ -28,7 +28,7 @@ import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
-import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -76,6 +76,7 @@ export class EmissionsWorkspaceService {
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
+    const NSPS4T_SUMMARY = 5;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -91,6 +92,9 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
+      promises.push(
+        this.nsps4tSummaryWorkspaceService.export(locationIds, params),
+      );
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -101,6 +105,7 @@ export class EmissionsWorkspaceService {
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;
     }

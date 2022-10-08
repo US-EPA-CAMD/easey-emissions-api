@@ -1,4 +1,4 @@
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
 import exp from 'constants';
 import { faker } from '@faker-js/faker';

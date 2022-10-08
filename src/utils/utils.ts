@@ -8,6 +8,21 @@ export const arrayFilterUndefinedNull = <Type>(array: Type[]): Type[] => {
   });
 };
 
+export const arrayPushCreate = <SourceType>(
+  source: Array<SourceType> | undefined,
+  values: SourceType[] | undefined,
+) => {
+  if (!hasArrayValues(values)) {
+    return source;
+  }
+
+  if (!hasArrayValues(source)) {
+    return values;
+  }
+
+  return [...source, ...values];
+};
+
 export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {
   if (Array.isArray(value)) {
     for (const item of value) {
