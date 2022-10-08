@@ -57,6 +57,12 @@ import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
+import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
+import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
+import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
+import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
+import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -100,6 +106,12 @@ describe('-- Emissions Controller --', () => {
         MatsDerivedHourlyValueMap,
         MatsDerivedHourlyValueService,
         MatsDerivedHourlyValueRepository,
+        Nsps4tAnnualService,
+        Nsps4tAnnualRepository,
+        Nsps4tCompliancePeriodService,
+        Nsps4tCompliancePeriodRepository,
+        Nsps4tSummaryService,
+        Nsps4tSummaryRepository,
         EmissionsSubmissionsProgressRepository,
         EmissionsRepository,
         HourlyGasFlowMeterMap,

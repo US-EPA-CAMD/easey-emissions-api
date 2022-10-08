@@ -15,6 +15,7 @@ import { DailyEmissionService } from '../daily-emission/daily-emission.service';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { quarterFromMonth } from '../utils/utils';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 
 @Injectable()
 export class EmissionsService {
@@ -29,6 +30,7 @@ export class EmissionsService {
     private readonly weeklyTestSummaryService: WeeklyTestSummaryService,
     private readonly dailyEmissionService: DailyEmissionService,
     private readonly sorbentTrapService: SorbentTrapService,
+    private readonly nsps4tSummaryService: Nsps4tSummaryService,
   ) {}
 
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
@@ -38,6 +40,7 @@ export class EmissionsService {
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
+    const NSPS4T_SUMMARY = 5;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -53,6 +56,7 @@ export class EmissionsService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
+      promises.push(this.nsps4tSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
@@ -61,6 +65,7 @@ export class EmissionsService {
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;
     }
