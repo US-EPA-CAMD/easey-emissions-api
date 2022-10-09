@@ -10,12 +10,13 @@ import { faker } from '@faker-js/faker';
 import { mockRepositoryFunctions } from '../../test/mocks/mock-repository-functions';
 import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { SummaryValue } from '../entities/workspace/summary-value.entity';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { util } from 'prettier';
 
-const mockMap = {
-  many: () => [],
-  one: () => null,
-};
-
+const mockRepository = {
+  ...mockRepositoryFunctions,
+  export: jest.fn(),
+}
 
 describe('Summary Value Workspace Service Test', () => {
   let service: SummaryValueWorkspaceService;
@@ -26,13 +27,10 @@ describe('Summary Value Workspace Service Test', () => {
     const module = await Test.createTestingModule({
       providers: [
         SummaryValueWorkspaceService,
-        {
-          provide: SummaryValueMap,
-          useValue: mockMap,
-        },
+        SummaryValueMap,
         {
           provide: SummaryValueWorkspaceRepository,
-          useValue: mockRepositoryFunctions,
+          useValue: mockRepository,
         },
       ],
     }).compile();
@@ -42,7 +40,7 @@ describe('Summary Value Workspace Service Test', () => {
     map = module.get(SummaryValueMap);
 
     repository.save.mockResolvedValue(null)
-    repository.find.mockResolvedValue(genSummaryValue(1))
+    repository.find.mockResolvedValue(genSummaryValue<SummaryValue>(1))
   });
 
   describe('Summary Value Import', () => {
@@ -60,14 +58,20 @@ describe('Summary Value Workspace Service Test', () => {
     });
   });
 
-  describe('Summary Value Export', async () =>{
+  describe('Summary Value Export', () =>{
 
-    const genSumValues = genSummaryValue<SummaryValue>(2);
-    const promises = [];
-    genSumValues.forEach(value => {
-      promises.push(map.one(value));
-    });
-    const mappedSumValues = await Promise.all(promises);
-    const r = await service.export();
+    it( 'should successfully export', async ()=>{
+      const genSumValues = genSummaryValue<SummaryValue>(2);
+      const promises = [];
+      const params = new EmissionsParamsDTO();
+      genSumValues.forEach(value => {
+        promises.push(map.one(value));
+      });
+      const mappedSumValues = await Promise.all(promises);
+      jest.spyOn(repository, 'export').mockResolvedValue(genSumValues);
+  
+      const r = await service.export(genSumValues.map(v=>v.monitoringLocationId), params);
+      expect(r).toEqual(mappedSumValues)  
+    })
   })
 });

@@ -82,6 +82,9 @@ import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
 import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
+import { SummaryValueMap } from '../maps/summary-value.map';
+import { SummaryValueWorkspaceRepository } from '../summary-value-workspace/summary-value.repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -150,6 +153,9 @@ describe('Emissions Workspace Service', () => {
         Nsps4tAnnualWorkspaceService,
         Nsps4tSummaryWorkspaceRepository,
         Nsps4tSummaryWorkspaceService,
+        SummaryValueWorkspaceService,
+        SummaryValueMap,
+        SummaryValueWorkspaceRepository,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
