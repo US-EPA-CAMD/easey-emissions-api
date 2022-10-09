@@ -68,6 +68,13 @@ import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { quarterFromMonth } from '../utils/util-modules/date-utils';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
+import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
+import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
+import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
+import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
+import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -81,6 +88,7 @@ describe('Emissions Service', () => {
   let dailyEmissionService: DailyEmissionService;
   let sorbentTrapService: SorbentTrapService;
   let weeklyTestSummaryService: WeeklyTestSummaryService;
+  let nsps4tSummaryService: Nsps4tSummaryService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -128,6 +136,12 @@ describe('Emissions Service', () => {
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityRepository,
         WeeklySystemIntegrityMap,
+        Nsps4tAnnualService,
+        Nsps4tAnnualRepository,
+        Nsps4tCompliancePeriodService,
+        Nsps4tCompliancePeriodRepository,
+        Nsps4tSummaryService,
+        Nsps4tSummaryRepository,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
@@ -196,6 +210,7 @@ describe('Emissions Service', () => {
     dailyEmissionService = module.get(DailyEmissionService);
     sorbentTrapService = module.get(SorbentTrapService);
     weeklyTestSummaryService = module.get(WeeklyTestSummaryService);
+    nsps4tSummaryService = module.get(Nsps4tSummaryService);
   });
 
   it('should have a emissions service', function() {
@@ -225,6 +240,7 @@ describe('Emissions Service', () => {
       jest.spyOn(dailyEmissionService, 'export').mockResolvedValue(null);
       jest.spyOn(sorbentTrapService, 'export').mockResolvedValue(null);
       jest.spyOn(weeklyTestSummaryService, 'export').mockResolvedValue(null);
+      jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,
@@ -241,25 +257,58 @@ describe('Emissions Service', () => {
   });
 
   describe('get submission progress', () => {
-    it('should get submission progress', async function() {
+    it('should return submissions progress if queryResult is defined and not in dev environment', async function() {
       const mockedProgress = genEmissionsSubmissionsProgress<
         EmissionsSubmissionsProgress
-      >();
+      >()[0];
+
       jest
         .spyOn(submissionProgressRepository, 'getSubmissionProgress')
-        .mockResolvedValue(mockedProgress[0]);
+        .mockResolvedValue(mockedProgress);
 
-      const mapped = await submissionProgressMap.one(mockedProgress[0]);
+      const mapped = await submissionProgressMap.one(mockedProgress);
 
       await expect(
         emissionsService.getSubmissionProgress(faker.date.soon()),
       ).resolves.toEqual(mapped);
     });
 
-    it('should return undefined if not query result is found', async function() {
+    it('should return generated result if the queryResult is undefined and in dev environment', async function() {
       jest
         .spyOn(submissionProgressRepository, 'getSubmissionProgress')
         .mockResolvedValue(undefined);
+
+      jest
+        .spyOn(configService, 'get')
+        .mockImplementation((property: string) => {
+          return 'development';
+        });
+
+      const date = new Date('Jan. 1, 2022');
+      const result = ((await emissionsService.getSubmissionProgress(
+        date,
+      )) as unknown) as {
+        quarter: number;
+        quarterName: string;
+        percentage: number;
+        year: number;
+      };
+      expect(result.quarter).toEqual(quarterFromMonth(date.getUTCMonth() + 1));
+      expect(result.quarterName).toEqual('Fourth');
+      expect(result.year).toEqual(2021);
+      expect(result.percentage).not.toBeNaN();
+    });
+
+    it('should return undefined if queryResult is undefined and not in dev environment', async function() {
+      jest
+        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
+        .mockResolvedValue(undefined);
+
+      jest
+        .spyOn(configService, 'get')
+        .mockImplementation((property: string) => {
+          return 'production';
+        });
 
       await expect(
         emissionsService.getSubmissionProgress(faker.date.soon()),

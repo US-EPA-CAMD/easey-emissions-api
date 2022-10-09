@@ -15,6 +15,8 @@ import { DailyEmissionService } from '../daily-emission/daily-emission.service';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { SummaryValueService } from '../summary-value/summary-value.service';
+import { quarterFromMonth } from '../utils/util-modules/date-utils';
+import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 
 @Injectable()
 export class EmissionsService {
@@ -30,6 +32,7 @@ export class EmissionsService {
     private readonly dailyEmissionService: DailyEmissionService,
     private readonly sorbentTrapService: SorbentTrapService,
     private readonly summaryValueService: SummaryValueService,
+    private readonly nsps4tSummaryService: Nsps4tSummaryService,
   ) {}
 
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
@@ -40,6 +43,7 @@ export class EmissionsService {
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
     const SUMMARY_VALUES = 5;
+    const NSPS4T_SUMMARY = 5;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -57,6 +61,7 @@ export class EmissionsService {
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
       promises.push(this.summaryValueService.export(locationIds, params));
 
+      promises.push(this.nsps4tSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
@@ -66,6 +71,7 @@ export class EmissionsService {
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
       results.summaryValueData = promiseResult[SUMMARY_VALUES];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;
     }
@@ -83,33 +89,35 @@ export class EmissionsService {
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
 
-    if (queryResult === undefined) {
-      if (
+    const isValidDevQuery = () => {
+      return (
         ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),
         ) &&
         ([1, 4, 7, 10].includes(month) ||
           ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
-      ) {
-        queryResult = new EmissionsSubmissionsProgress();
+      );
+    };
 
-        let year = date.getUTCFullYear();
-        if (month >= 1 && month <= 3) {
-          queryResult.quarter = 4;
-          year--;
-        } else if (month >= 4 && month <= 6) {
-          queryResult.quarter = 1;
-        } else if (month >= 7 && month <= 9) {
-          queryResult.quarter = 2;
-        } else {
-          queryResult.quarter = 3;
-        }
-        queryResult.calendarYear = year;
-        queryResult.submittedPercentage = Math.floor(Math.random() * 100);
-      } else {
-        return undefined;
-      }
+    if (typeof queryResult !== 'undefined') {
+      return this.submissionProgressMap.one(queryResult);
     }
+
+    if (!isValidDevQuery()) {
+      return undefined;
+    }
+
+    queryResult = new EmissionsSubmissionsProgress();
+
+    let year = date.getUTCFullYear();
+    queryResult.quarter = quarterFromMonth(month);
+
+    if (queryResult.quarter === 4) {
+      year--;
+    }
+
+    queryResult.calendarYear = year;
+    queryResult.submittedPercentage = Math.floor(Math.random() * 100);
 
     return this.submissionProgressMap.one(queryResult);
   }

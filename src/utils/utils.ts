@@ -1,3 +1,5 @@
+export * from './util-modules/date-utils';
+
 export const hasArrayValues = (value: unknown): boolean => {
   return Array.isArray(value) && value.length > 0;
 };
@@ -6,6 +8,21 @@ export const arrayFilterUndefinedNull = <Type>(array: Type[]): Type[] => {
   return array.filter(value => {
     return typeof value !== 'undefined' && value !== null;
   });
+};
+
+export const arrayPushCreate = <SourceType>(
+  source: Array<SourceType> | undefined,
+  values: SourceType[] | undefined,
+) => {
+  if (!hasArrayValues(values)) {
+    return source;
+  }
+
+  if (!hasArrayValues(source)) {
+    return values;
+  }
+
+  return [...source, ...values];
 };
 
 export const isUndefinedOrNull = <Type>(value: Type | Type[]): boolean => {

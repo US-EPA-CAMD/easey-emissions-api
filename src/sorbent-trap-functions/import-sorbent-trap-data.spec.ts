@@ -17,9 +17,9 @@ describe('ImportSorbentTrapData', () => {
       ...genSorbentTrapImportDto(3, { include: ['samplingTrainData'] }),
     ];
 
-    jest
-      .spyOn(importSorbentTrapModule, 'importSorbentTrapData')
-      .mockResolvedValue(undefined);
+    // @ts-expect-error force as undefined
+    jest.spyOn(repository, 'create').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     await Promise.all(
       importReturn.map(data => {

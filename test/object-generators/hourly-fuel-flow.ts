@@ -1,10 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { optionalValue } from './util';
-import { HrlyFuelFlow } from '../../src/entities/hrly-fuel-flow.entity';
 import { MonitorSystem } from '../../src/entities/monitor-system.entity';
-import { HrlyParamFuelFlow } from '../../src/entities/workspace/hrly-param-fuel-flow.entity';
+import { genHourlyOpValues } from './hourly-op-data-values';
 
-export const genHourlyFuelFlow = <RepoType>(amount = 1): RepoType[] => {
+type GenHourlyFuelFlowConfig = {
+  include?: Array<'monitorSystem' | 'hrlyOpData' | 'hrlyParamFuelFlows'>;
+  hrlyParamFuelFlowsAmount?: number;
+};
+
+export const genHourlyFuelFlow = <RepoType>(
+  amount = 1,
+  config?: GenHourlyFuelFlowConfig,
+): RepoType[] => {
   const hourlyFuelFlows: RepoType[] = [];
 
   for (let param = 0; param < amount; param++) {
@@ -26,10 +33,16 @@ export const genHourlyFuelFlow = <RepoType>(amount = 1): RepoType[] => {
       calcAppdStatus: optionalValue(faker.datatype.string()),
       reportingPeriodId: faker.datatype.number(),
       monitoringLocationId: faker.datatype.string(),
-      monitorSystem: new MonitorSystem(),
-      hrlyOpData: new HrlyFuelFlow(),
-      hrlyParamFuelFlows: new HrlyParamFuelFlow(),
-    } as unknown)as RepoType);
+      monitorSystem: config?.include.includes('monitorSystem')
+        ? new MonitorSystem()
+        : undefined,
+      hrlyOpData: config?.include.includes('hrlyOpData')
+        ? genHourlyOpValues()[0]
+        : undefined,
+      hrlyParamFuelFlows: config?.include.includes('hrlyParamFuelFlows')
+        ? genHourlyFuelFlow(config?.hrlyParamFuelFlowsAmount)
+        : undefined,
+    } as unknown) as RepoType);
   }
 
   return hourlyFuelFlows;
