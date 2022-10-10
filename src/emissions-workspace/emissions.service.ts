@@ -29,6 +29,7 @@ import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
+import { WeeklyTestSummaryDTO } from '../../src/dto/weekly-test-summary.dto';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -203,6 +204,12 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importWeeklyTestSummary(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -322,7 +329,7 @@ export class EmissionsWorkspaceService {
 
     return Promise.all(summaryValueImports);
   }
-  
+
   async importSorbentTrap(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
@@ -369,6 +376,28 @@ export class EmissionsWorkspaceService {
     return Promise.all(nsps4tSummaryImports);
   }
 
+  async importWeeklyTestSummary(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const weeklyTestSummaryImports: Array<Promise<WeeklyTestSummaryDTO>> = [];
+
+    if (Array.isArray(emissionsImport.weeklyTestSummaryData)) {
+      for (const weeklyTestSummary of emissionsImport.weeklyTestSummaryData) {
+        weeklyTestSummaryImports.push(
+          this.weeklyTestSummaryService.import({
+            ...weeklyTestSummary,
+            reportingPeriodId,
+            monitoringLocationId,
+            identifiers,
+          }),
+        );
+      }
+    }
+    return Promise.all(weeklyTestSummaryImports);
+  }
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,

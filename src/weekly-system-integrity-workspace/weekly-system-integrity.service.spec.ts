@@ -6,6 +6,8 @@ import { WeeklySystemIntegrityWorkspaceRepository } from './weekly-system-integr
 import { WeeklySystemIntegrityWorkspaceService } from './weekly-system-integrity.service';
 import { mockWeeklySystemIntegrityWorkspaceRepository } from '../../test/mocks/mock-weekly-system-integrity-workspace-repository';
 import { WeeklySystemIntegrity } from '../entities/workspace/weekly-system-integrity.entity';
+import { genWeeklySystemIntegrityDto } from '../../test/object-generators/weekly-system-integrity.dto';
+import { WeeklySystemIntegrityImportDTO } from '../dto/weekly-system-integrity.dto';
 
 describe('--WeeklySystemIntegrityWorkspaceService--', () => {
   let map: WeeklySystemIntegrityMap;
@@ -50,6 +52,17 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
           }),
         ),
       ).resolves.toEqual(mappedValues);
+    });
+  });
+
+  describe('import', () => {
+    it('should successfully import a weekly test summary record', async () => {
+      const generatedData = genWeeklySystemIntegrityDto(1)[0];
+      const importData: WeeklySystemIntegrityImportDTO = {
+        ...generatedData,
+      };
+      const result = await service.import(importData, '123', '123', 1);
+      expect(result).toBeNull();
     });
   });
 });
