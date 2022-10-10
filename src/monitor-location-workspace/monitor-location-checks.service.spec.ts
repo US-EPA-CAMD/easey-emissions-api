@@ -91,8 +91,10 @@ describe('location checks service tests', () => {
       const locations: LocationIdentifiers[] = service.processLocations(
         payload,
       );
-
-      expect(locations.length).toEqual(2);
+      
+      console.log(locations)
+      
+      expect(locations.length).toEqual(4);
       expect(locations.filter(e => e.unitId === 'u1').length).toEqual(1);
       expect(locations.filter(e => e.stackPipeId === 'sp1').length).toEqual(1);
 
