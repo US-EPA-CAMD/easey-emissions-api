@@ -63,6 +63,9 @@ import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
 import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
 import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
+import { SummaryValueService } from '../summary-value/summary-value.service';
+import { SummaryValueRepository } from '../summary-value/summary-value.repository';
+import { SummaryValueMap } from '../maps/summary-value.map';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -133,6 +136,9 @@ describe('-- Emissions Controller --', () => {
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityRepository,
+        SummaryValueMap,
+        SummaryValueRepository,
+        SummaryValueService,
       ],
     }).compile();
 

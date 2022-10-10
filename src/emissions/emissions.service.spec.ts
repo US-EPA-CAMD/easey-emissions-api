@@ -75,6 +75,9 @@ import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
 import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
 import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
+import { SummaryValueRepository } from '../summary-value/summary-value.repository';
+import { SummaryValueService } from '../summary-value/summary-value.service';
+import { SummaryValueMap } from '../maps/summary-value.map';
 
 describe('Emissions Service', () => {
   let configService: ConfigService;
@@ -89,6 +92,7 @@ describe('Emissions Service', () => {
   let sorbentTrapService: SorbentTrapService;
   let weeklyTestSummaryService: WeeklyTestSummaryService;
   let nsps4tSummaryService: Nsps4tSummaryService;
+  let summaryValueService: SummaryValueService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -142,6 +146,9 @@ describe('Emissions Service', () => {
         Nsps4tCompliancePeriodRepository,
         Nsps4tSummaryService,
         Nsps4tSummaryRepository,
+        SummaryValueService,
+        SummaryValueRepository,
+        SummaryValueMap,
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
@@ -211,6 +218,7 @@ describe('Emissions Service', () => {
     sorbentTrapService = module.get(SorbentTrapService);
     weeklyTestSummaryService = module.get(WeeklyTestSummaryService);
     nsps4tSummaryService = module.get(Nsps4tSummaryService);
+    summaryValueService = module.get(SummaryValueService);
   });
 
   it('should have a emissions service', function() {
@@ -241,6 +249,7 @@ describe('Emissions Service', () => {
       jest.spyOn(sorbentTrapService, 'export').mockResolvedValue(null);
       jest.spyOn(weeklyTestSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
+      jest.spyOn(summaryValueService, 'export').mockResolvedValue(null);
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,

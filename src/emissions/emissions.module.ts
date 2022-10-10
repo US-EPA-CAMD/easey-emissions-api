@@ -25,6 +25,7 @@ import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
 import { WeeklyTestSummaryModule } from '../weekly-test-summary/weekly-test-summary.module';
+import { SummaryValueModule } from '../summary-value/summary-value.module';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
 import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
@@ -51,6 +52,7 @@ import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/ns
     HourlyOperatingModule,
     WeeklyTestSummaryModule,
     HourlyParameterFuelFlowModule,
+    SummaryValueModule,
   ],
   controllers: [EmissionsController],
   providers: [

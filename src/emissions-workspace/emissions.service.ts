@@ -61,6 +61,7 @@ export class EmissionsWorkspaceService {
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
     private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
+    private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
   ) {}
 
   async delete(
@@ -76,7 +77,8 @@ export class EmissionsWorkspaceService {
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
-    const NSPS4T_SUMMARY = 5;
+    const SUMMARY_VALUES = 5;
+    const NSPS4T_SUMMARY = 6;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -92,6 +94,7 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
+      promises.push(this.summaryValueWorkspaceService.export(locationIds, params));
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
@@ -105,6 +108,7 @@ export class EmissionsWorkspaceService {
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;

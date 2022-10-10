@@ -14,7 +14,8 @@ import { HourlyOperatingService } from '../hourly-operating/hourly-operating.ser
 import { DailyEmissionService } from '../daily-emission/daily-emission.service';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
-import { quarterFromMonth } from '../utils/utils';
+import { SummaryValueService } from '../summary-value/summary-value.service';
+import { quarterFromMonth } from '../utils/util-modules/date-utils';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 
 @Injectable()
@@ -30,6 +31,7 @@ export class EmissionsService {
     private readonly weeklyTestSummaryService: WeeklyTestSummaryService,
     private readonly dailyEmissionService: DailyEmissionService,
     private readonly sorbentTrapService: SorbentTrapService,
+    private readonly summaryValueService: SummaryValueService,
     private readonly nsps4tSummaryService: Nsps4tSummaryService,
   ) {}
 
@@ -40,7 +42,8 @@ export class EmissionsService {
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
-    const NSPS4T_SUMMARY = 5;
+    const SUMMARY_VALUES = 5;
+    const NSPS4T_SUMMARY = 6;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -56,6 +59,8 @@ export class EmissionsService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
+      promises.push(this.summaryValueService.export(locationIds, params));
+
       promises.push(this.nsps4tSummaryService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
@@ -65,6 +70,7 @@ export class EmissionsService {
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;
