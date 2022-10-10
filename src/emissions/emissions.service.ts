@@ -43,7 +43,7 @@ export class EmissionsService {
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
     const SUMMARY_VALUES = 5;
-    const NSPS4T_SUMMARY = 5;
+    const NSPS4T_SUMMARY = 6;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
