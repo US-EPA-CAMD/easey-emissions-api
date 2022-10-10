@@ -16,7 +16,7 @@ import { util } from 'prettier';
 const mockRepository = {
   ...mockRepositoryFunctions,
   export: jest.fn(),
-}
+};
 
 describe('Summary Value Workspace Service Test', () => {
   let service: SummaryValueWorkspaceService;
@@ -39,12 +39,11 @@ describe('Summary Value Workspace Service Test', () => {
     repository = module.get(SummaryValueWorkspaceRepository);
     map = module.get(SummaryValueMap);
 
-    repository.save.mockResolvedValue(null)
-    repository.find.mockResolvedValue(genSummaryValue<SummaryValue>(1))
+    repository.save.mockResolvedValue(null);
+    repository.find.mockResolvedValue(genSummaryValue<SummaryValue>(1));
   });
 
   describe('Summary Value Import', () => {
-    
     it('should successfully import a summary value record', async () => {
       const generatedData = genSummaryValueImportDto(1)[0];
       const importData: SummaryValueCreate = {
@@ -58,9 +57,8 @@ describe('Summary Value Workspace Service Test', () => {
     });
   });
 
-  describe('Summary Value Export', () =>{
-
-    it( 'should successfully export', async ()=>{
+  describe('Summary Value Export', () => {
+    it('should successfully export', async () => {
       const genSumValues = genSummaryValue<SummaryValue>(2);
       const promises = [];
       const params = new EmissionsParamsDTO();
@@ -69,9 +67,12 @@ describe('Summary Value Workspace Service Test', () => {
       });
       const mappedSumValues = await Promise.all(promises);
       jest.spyOn(repository, 'export').mockResolvedValue(genSumValues);
-  
-      const r = await service.export(genSumValues.map(v=>v.monitoringLocationId), params);
-      expect(r).toEqual(mappedSumValues)  
-    })
-  })
+
+      const r = await service.export(
+        genSumValues.map(v => v.monitoringLocationId),
+        params,
+      );
+      expect(r).toEqual(mappedSumValues);
+    });
+  });
 });
