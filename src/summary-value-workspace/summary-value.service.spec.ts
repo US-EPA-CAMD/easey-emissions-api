@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import {
   SummaryValueCreate,
   SummaryValueWorkspaceService,
@@ -6,11 +8,11 @@ import {
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-import-dto';
-import { faker } from '@faker-js/faker';
 
 const mockRepository = {
   create: () => null,
   save: () => null,
+  find: () => null,
 };
 
 const mockMap = {

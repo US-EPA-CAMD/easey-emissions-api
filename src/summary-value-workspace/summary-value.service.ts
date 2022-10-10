@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Console } from 'console';
 import { randomUUID } from 'crypto';
+
 import {
   SummaryValueDTO,
   SummaryValueImportDTO,
@@ -31,7 +31,7 @@ export class SummaryValueWorkspaceService {
     });
 
     let entity;
-    if( uniqueResults.length > 0){
+    if( uniqueResults?.length > 0){
       data.reportingPeriodId = undefined;
       data.monitoringLocationId = undefined;
       data.parameterCode = undefined;

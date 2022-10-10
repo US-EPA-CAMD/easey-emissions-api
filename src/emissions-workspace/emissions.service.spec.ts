@@ -82,6 +82,13 @@ import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
 import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
+import { SummaryValueWorkspaceRepository } from '../summary-value-workspace/summary-value.repository';
+import { SummaryValueMap } from '../maps/summary-value.map';
+import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-summary.repository';
+import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
+import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -150,6 +157,15 @@ describe('Emissions Workspace Service', () => {
         Nsps4tAnnualWorkspaceService,
         Nsps4tSummaryWorkspaceRepository,
         Nsps4tSummaryWorkspaceService,
+        SummaryValueWorkspaceService,
+        SummaryValueWorkspaceRepository,
+        SummaryValueMap,
+        WeeklyTestSummaryRepository,
+        WeeklyTestSummaryService,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityRepository,
+        WeeklySystemIntegrityService,
+        WeeklySystemIntegrityMap,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,

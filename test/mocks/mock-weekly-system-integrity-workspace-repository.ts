@@ -1,4 +1,5 @@
 export const mockWeeklySystemIntegrityWorkspaceRepository = {
-    find: () => jest,
-  };
-  
+  find: () => null,
+  create: () => null,
+  save: () => null,
+};
