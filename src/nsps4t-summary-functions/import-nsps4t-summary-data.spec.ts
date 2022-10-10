@@ -1,6 +1,5 @@
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
-import exp from 'constants';
 import { faker } from '@faker-js/faker';
 
 describe('ImportNsps4tSummaryData', () => {
@@ -24,9 +23,9 @@ describe('ImportNsps4tSummaryData', () => {
       }),
     ];
 
-    jest
-      .spyOn(importNsps4tSummaryModule, 'importNsps4tSummaryData')
-      .mockResolvedValue(undefined);
+    // @ts-expect-error force as undefined
+    jest.spyOn(repository, 'create').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     await Promise.all(
       imports.map(data => {
