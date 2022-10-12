@@ -1,15 +1,39 @@
 import {
   arrayFilterUndefinedNull,
+  arrayPushCreate,
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
 } from './utils';
+import { faker } from '@faker-js/faker';
 
 describe('Utils', () => {
   describe('arrayFilterUndefinedNull', () => {
     it('should return a filtered array', function() {
       expect(arrayFilterUndefinedNull([1, 3, undefined, null])).toEqual([1, 3]);
       expect(arrayFilterUndefinedNull([])).toEqual([]);
+    });
+  });
+
+  describe('arrayPushCreate', () => {
+    const newArray = faker.helpers.uniqueArray(faker.datatype.string, 3);
+    it('should new array if source is undefined or empty', function() {
+      expect(arrayPushCreate(undefined, newArray)).toEqual(newArray);
+      expect(arrayPushCreate([], newArray)).toEqual(newArray);
+    });
+
+    it('should return the source if values are empty or undefined', function() {
+      expect(arrayPushCreate(undefined, undefined)).toEqual(undefined);
+      expect(arrayPushCreate(undefined, [])).toEqual(undefined);
+      expect(arrayPushCreate([], undefined)).toEqual([]);
+      expect(arrayPushCreate([], [])).toEqual([]);
+    });
+
+    it('should return the appended array if source and new array have values', function() {
+      expect(arrayPushCreate(newArray, newArray)).toEqual([
+        ...newArray,
+        ...newArray,
+      ]);
     });
   });
 

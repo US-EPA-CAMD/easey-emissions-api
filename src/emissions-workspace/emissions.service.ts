@@ -28,7 +28,8 @@ import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
-import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
+import { WeeklyTestSummaryDTO } from '../../src/dto/weekly-test-summary.dto';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -61,6 +62,7 @@ export class EmissionsWorkspaceService {
     private readonly sorbentTrapService: SorbentTrapWorkspaceService,
     private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
+    private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
   ) {}
 
   async delete(
@@ -76,6 +78,8 @@ export class EmissionsWorkspaceService {
     const DAILY_EMISSION = 2;
     const SORBENT_TRAP = 3;
     const WEEKLY_TEST_SUMMARIES = 4;
+    const SUMMARY_VALUES = 5;
+    const NSPS4T_SUMMARY = 6;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -91,6 +95,10 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
+      promises.push(this.summaryValueWorkspaceService.export(locationIds, params));
+      promises.push(
+        this.nsps4tSummaryWorkspaceService.export(locationIds, params),
+      );
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -101,6 +109,8 @@ export class EmissionsWorkspaceService {
       results.dailyEmissionData = promiseResult[DAILY_EMISSION];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP];
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
 
       return results;
     }
@@ -189,6 +199,12 @@ export class EmissionsWorkspaceService {
         identifiers,
       ),
       this.importNsps4tSummaries(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
+      this.importWeeklyTestSummary(
         params,
         monitoringLocationId,
         reportingPeriodId,
@@ -313,7 +329,7 @@ export class EmissionsWorkspaceService {
 
     return Promise.all(summaryValueImports);
   }
-  
+
   async importSorbentTrap(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
@@ -360,6 +376,28 @@ export class EmissionsWorkspaceService {
     return Promise.all(nsps4tSummaryImports);
   }
 
+  async importWeeklyTestSummary(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const weeklyTestSummaryImports: Array<Promise<WeeklyTestSummaryDTO>> = [];
+
+    if (Array.isArray(emissionsImport.weeklyTestSummaryData)) {
+      for (const weeklyTestSummary of emissionsImport.weeklyTestSummaryData) {
+        weeklyTestSummaryImports.push(
+          this.weeklyTestSummaryService.import({
+            ...weeklyTestSummary,
+            reportingPeriodId,
+            monitoringLocationId,
+            identifiers,
+          }),
+        );
+      }
+    }
+    return Promise.all(weeklyTestSummaryImports);
+  }
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,

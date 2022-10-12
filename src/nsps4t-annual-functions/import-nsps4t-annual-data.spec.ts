@@ -14,9 +14,9 @@ describe('ImportNsps4tAnnualData', () => {
   it('should import data', async function() {
     const imports = [...genNsps4tAnnualImportDto(3)];
 
-    jest
-      .spyOn(importNsps4tAnnualModule, 'importNsps4tAnnualData')
-      .mockResolvedValue(undefined);
+    // @ts-expect-error force as undefined
+    jest.spyOn(repository, 'create').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     await Promise.all(
       imports.map(data => {

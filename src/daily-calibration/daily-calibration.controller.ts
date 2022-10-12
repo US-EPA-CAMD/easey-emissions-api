@@ -1,13 +1,6 @@
-import {
-  Controller,
-  Get,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
-import {
-  ApiOkResponse,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { DailyCalibrationService } from './daily-calibration.service';
 
@@ -15,10 +8,7 @@ import { DailyCalibrationService } from './daily-calibration.service';
 @ApiTags('Emissions Daily')
 @ApiSecurity('APIKey')
 export class DailyCalibrationController {
-  
-  constructor(
-    private readonly service: DailyCalibrationService
-  ) { }
+  constructor(private readonly service: DailyCalibrationService) {}
 
   @Get()
   @ApiOkResponse({

@@ -1,7 +1,11 @@
 import { Test } from '@nestjs/testing';
+
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
-import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
+import {
+  WeeklyTestSummaryWorkspaceService,
+  WeeklyTestSummaryCreate,
+} from './weekly-test-summary.service';
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
@@ -67,6 +71,21 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
           params,
         ),
       ).resolves.toEqual(mappedValues);
+    });
+  });
+
+  describe('import', () => {
+    it('should successfully import a weekly test summary record', async () => {
+      const generatedData = genWeeklyTestSumValues<WeeklyTestSummary>(1);
+
+      const mappedMock = await map.one(generatedData[0]);
+
+      jest.spyOn(repository, 'save').mockResolvedValue(generatedData[0]);
+      await expect(
+        service.import(
+          (generatedData[0] as unknown) as WeeklyTestSummaryCreate,
+        ),
+      ).resolves.toEqual(mappedMock);
     });
   });
 });

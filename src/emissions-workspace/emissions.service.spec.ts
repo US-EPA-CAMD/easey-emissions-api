@@ -80,8 +80,15 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
 import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
 import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
-import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.service';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
+import { SummaryValueMap } from '../maps/summary-value.map';
+import { SummaryValueWorkspaceRepository } from '../summary-value-workspace/summary-value.repository';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
+import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-summary.repository';
+import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
+import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -150,6 +157,15 @@ describe('Emissions Workspace Service', () => {
         Nsps4tAnnualWorkspaceService,
         Nsps4tSummaryWorkspaceRepository,
         Nsps4tSummaryWorkspaceService,
+        SummaryValueWorkspaceService,
+        SummaryValueMap,
+        SummaryValueWorkspaceRepository,
+        WeeklyTestSummaryRepository,
+        WeeklyTestSummaryService,
+        WeeklyTestSummaryMap,
+        WeeklySystemIntegrityRepository,
+        WeeklySystemIntegrityService,
+        WeeklySystemIntegrityMap,
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,

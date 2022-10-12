@@ -1,11 +1,6 @@
 import { Controller, Get, Query, Param } from '@nestjs/common';
 
-import {
-  ApiOkResponse,
-  ApiQuery,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewResultsDTO } from '../dto/emissions-view-results.dto';
@@ -16,9 +11,7 @@ import { EmissionsViewService } from './emissions-view.service';
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 export class EmissionsViewController {
-  constructor(
-    private readonly service: EmissionsViewService
-  ) {}
+  constructor(private readonly service: EmissionsViewService) {}
 
   @Get()
   @ApiOkResponse({
@@ -48,7 +41,8 @@ export class EmissionsViewController {
   })
   getView(
     @Param('viewCode') viewCode: string,
-    @Query() params: EmissionsViewParamsDTO): Promise<EmissionsViewResultsDTO> {
+    @Query() params: EmissionsViewParamsDTO,
+  ): Promise<EmissionsViewResultsDTO> {
     return this.service.getView(viewCode, params);
   }
 }

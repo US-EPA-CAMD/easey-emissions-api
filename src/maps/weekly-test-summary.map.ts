@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
+
 import { WeeklyTestSummary as WeeklyTestSummaryWorkspace } from '../entities/workspace/weekly-test-summary.entity';
 import { WeeklyTestSummary } from '../entities/weekly-test-summary.entity';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
@@ -12,9 +13,9 @@ export class WeeklyTestSummaryMap extends BaseMap<
   public async one(
     entity: WeeklyTestSummary | WeeklyTestSummaryWorkspace,
   ): Promise<WeeklyTestSummaryDTO> {
-    const unitId = entity.monitorLocation?.unit?.name ?? null;
-    const stackPipeId = entity.monitorLocation?.stackPipe?.name ?? null;
-    const componentId = entity.component?.componentId ?? null;
+    const unitId = entity?.monitorLocation?.unit?.name ?? null;
+    const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
+    const componentId = entity?.component?.componentId ?? null;
 
     return {
       id: entity.id,

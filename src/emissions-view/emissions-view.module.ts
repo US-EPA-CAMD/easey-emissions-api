@@ -5,9 +5,7 @@ import { EmissionsViewRepository } from './emissions-view.repository';
 import { EmissionsViewService } from './emissions-view.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([EmissionsViewRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([EmissionsViewRepository])],
   controllers: [EmissionsViewController],
   providers: [EmissionsViewService],
 })

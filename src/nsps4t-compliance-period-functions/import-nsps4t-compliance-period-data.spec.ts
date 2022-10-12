@@ -16,12 +16,9 @@ describe('ImportNsps4tCompliancePeriodData', () => {
   it('should import data', async function() {
     const imports = [...genNsps4tCompliancePeriodImportDTO(3)];
 
-    jest
-      .spyOn(
-        importNsps4tCompliancePeriodModule,
-        'importNsps4tCompliancePeriodData',
-      )
-      .mockResolvedValue(undefined);
+    // @ts-expect-error force as undefined
+    jest.spyOn(repository, 'create').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     await Promise.all(
       imports.map(data => {

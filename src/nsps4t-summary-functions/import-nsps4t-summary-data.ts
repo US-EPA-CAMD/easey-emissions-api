@@ -2,7 +2,7 @@ import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace-new/nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 
 export type Nsps4tSummaryDataCreate = Nsps4tSummaryImportDTO & {
   monitoringLocationId: string;
