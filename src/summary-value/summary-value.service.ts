@@ -6,6 +6,8 @@ import {
 } from '../dto/summary-value.dto';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueRepository } from './summary-value.repository';
+import { exportSupplementarySummaryValues } from '../summary-value-functions/summary-value-export';
+import { SummaryValueParamsDto } from '../dto/summary-value-params.dto';
 
 export type SummaryValueCreate = SummaryValueImportDTO & {
   reportingPeriodId: number;
@@ -30,5 +32,16 @@ export class SummaryValueService {
     );
 
     return this.map.many(results);
+  }
+
+  async supplementaryExport(
+    params: SummaryValueParamsDto,
+  ): Promise<SummaryValueDTO[]> {
+    return exportSupplementarySummaryValues(
+      {
+        ...params,
+      },
+      this.repository,
+    );
   }
 }

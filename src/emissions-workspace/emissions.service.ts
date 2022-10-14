@@ -29,7 +29,7 @@ import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
-import { WeeklyTestSummaryDTO } from '../../src/dto/weekly-test-summary.dto';
+import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -95,7 +95,9 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
-      promises.push(this.summaryValueWorkspaceService.export(locationIds, params));
+      promises.push(
+        this.summaryValueWorkspaceService.export(locationIds, params),
+      );
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
