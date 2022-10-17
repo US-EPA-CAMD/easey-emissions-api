@@ -8,7 +8,9 @@ export const exportSupplementarySummaryValuesQuery = async (
   params: SummaryValueParamsDto,
   repository: SummaryValueRepository,
 ): Promise<SummaryValue[]> => {
-  const plantConditons = `plant.oris_code IN (${params.orisCode.join(', ')})`;
+  const plantConditons = `plant.oris_code IN (${params.orisCode.join(
+    ', ',
+  )}) AND plant.oris_code NOTNULL`;
   const reportingPeriodConditions = `
     reportingPeriod.calendar_year >= ${params.beginYear} AND
     reportingPeriod.quarter >= ${params.beginQuarter} AND
@@ -18,10 +20,10 @@ export const exportSupplementarySummaryValuesQuery = async (
 
   const query = repository
     .createQueryBuilder('summaryValue')
-    .leftJoinAndSelect('summaryValue.monitorLocation', 'monitorLocation')
-    .leftJoin('monitorLocation.monitorPlans', 'monitorPlans')
-    .leftJoin('monitorPlans.plant', 'plant', plantConditons)
-    .leftJoin(
+    .innerJoinAndSelect('summaryValue.monitorLocation', 'monitorLocation')
+    .innerJoin('monitorLocation.monitorPlans', 'monitorPlans')
+    .innerJoin('monitorPlans.plant', 'plant', plantConditons)
+    .innerJoin(
       'summaryValue.reportingPeriod',
       'reportingPeriod',
       reportingPeriodConditions,

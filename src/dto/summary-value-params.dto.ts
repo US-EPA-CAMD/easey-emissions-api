@@ -6,7 +6,7 @@ import {
   IsYearFormat,
 } from '@us-epa-camd/easey-common/pipes';
 import { IsInYearAndQuarterRange } from '../pipes/is-in-year-and-quarter-range.pipe';
-import { IsArray } from 'class-validator';
+import { IsArray, Length } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class SummaryValueParamsDto {
@@ -22,6 +22,7 @@ export class SummaryValueParamsDto {
   })
   @IsArray()
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty(), each: true })
+  @Length(1, 6, { each: true })
   orisCode: number[];
 
   @ApiProperty()
