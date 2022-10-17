@@ -8,6 +8,12 @@ describe('SummaryValueParamsDto', () => {
     const params = genSummaryValueParamsDtos()[0];
     const paramsDto = plainToClass(SummaryValueParamsDto, params);
 
+    for (const paramsDtoKey in paramsDto) {
+      if (!Array.isArray(paramsDto[paramsDtoKey])) {
+        paramsDto[paramsDtoKey] = String(paramsDto[paramsDtoKey]);
+      }
+    }
+
     const errors = await validate(paramsDto);
     expect(errors.length).toBe(0);
   });
@@ -19,7 +25,7 @@ describe('SummaryValueParamsDto', () => {
     for (const error of errors) {
       if (error.constraints.isArray) {
         expect(error.constraints.isArray).toBe(
-          `${error.property} should not be null, undefined, or empty`,
+          `${error.property} must be an array`,
         );
       }
 
@@ -35,9 +41,8 @@ describe('SummaryValueParamsDto', () => {
 
   it('should return errors for invalid types', async function() {
     const paramsDto = plainToClass(SummaryValueParamsDto, {
-      orisCodes: '123, 346',
-      beginYear: '2006',
-      beginQuarter: '0',
+      beginYear: false,
+      beginQuarter: {},
       endYear: true,
       endQuarter: [],
     });
@@ -45,7 +50,7 @@ describe('SummaryValueParamsDto', () => {
 
     expect(errors.length).toBe(5);
 
-    paramsDto.beginYear = 2006;
+    paramsDto.beginYear = ('2006' as unknown) as number;
     errors = await validate(paramsDto);
     expect(errors.length).toBe(4);
   });

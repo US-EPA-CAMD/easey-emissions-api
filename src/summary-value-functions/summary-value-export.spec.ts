@@ -1,6 +1,5 @@
 import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { exportSupplementarySummaryValues } from './summary-value-export';
-import { faker } from '@faker-js/faker';
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValue } from '../entities/summary-value.entity';
 import { SummaryValueMap } from '../maps/summary-value.map';

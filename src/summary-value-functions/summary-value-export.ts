@@ -8,27 +8,26 @@ export const exportSupplementarySummaryValuesQuery = async (
   params: SummaryValueParamsDto,
   repository: SummaryValueRepository,
 ): Promise<SummaryValue[]> => {
-  return repository.find({
-    where: {
-      monitorLocation: {
-        stackPipe: {
-          plant: {
-            orisCode: params.orisCodes,
-          },
-        },
-      },
-      reportingPeriod: {
-        quarter: {
-          greaterThanOrEqual: params.beginQuarter,
-          lessThanOrEqual: params.endQuarter,
-        },
-        year: {
-          greaterThanOrEqual: params.beginYear,
-          lessThanOrEqual: params.endYear,
-        },
-      },
-    },
-  });
+  const plantConditons = `plant.oris_code IN (${params.orisCode.join(', ')})`;
+  const reportingPeriodConditions = `
+    reportingPeriod.calendar_year >= ${params.beginYear} AND
+    reportingPeriod.quarter >= ${params.beginQuarter} AND
+    reportingPeriod.calendar_year <= ${params.endYear} AND
+    reportingPeriod.quarter <= ${params.beginQuarter}
+  `;
+
+  const query = repository
+    .createQueryBuilder('summaryValue')
+    .leftJoinAndSelect('summaryValue.monitorLocation', 'monitorLocation')
+    .leftJoin('monitorLocation.monitorPlans', 'monitorPlans')
+    .leftJoin('monitorPlans.plant', 'plant', plantConditons)
+    .leftJoin(
+      'summaryValue.reportingPeriod',
+      'reportingPeriod',
+      reportingPeriodConditions,
+    );
+
+  return query.getMany();
 };
 
 export const exportSupplementarySummaryValues = async (
