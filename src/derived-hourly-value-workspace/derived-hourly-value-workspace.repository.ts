@@ -10,7 +10,8 @@ export class DerivedHourlyValueWorkspaceRepository extends Repository<
       .where('DerivedHrlyValue.hour_id IN(:...hourIds)', {
         hourIds,
       })
-      .innerJoinAndSelect('DerivedHrlyValue.monitorSystem', 'monitorSystem')
+      .leftJoinAndSelect('DerivedHrlyValue.monitorSystem', 'monitorSystem')
+      .leftJoinAndSelect('DerivedHrlyValue.monitorFormula', 'monitorFormula')
       .getMany();
   }
 }

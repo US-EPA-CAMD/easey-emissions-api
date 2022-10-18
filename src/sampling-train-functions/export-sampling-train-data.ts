@@ -14,9 +14,9 @@ export const exportSamplingTrainQuery = async ({
   repository,
 }: Omit<ExportSamplingTrainDataProperties, 'samplingTrainMap'>) => {
   return repository
-    .createQueryBuilder('sorbentTrap')
-    .innerJoinAndSelect('sorbentTrap.component', 'component')
-    .where('sorbentTrap.trap_id = :sorbentTrapId', { sorbentTrapId })
+    .createQueryBuilder('samplingTrain')
+    .leftJoinAndSelect('samplingTrain.component', 'component')
+    .where('samplingTrain.trap_id = :sorbentTrapId', { sorbentTrapId })
     .getMany();
 };
 
