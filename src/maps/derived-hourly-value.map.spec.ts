@@ -11,7 +11,7 @@ describe('DerivedHourlyValueMap', () => {
 
   it('should map one value correctly', async function() {
     const derivedHourlyValues = genDerivedHrlyValues<DerivedHrlyValue>(3, {
-      include: ['monitorSystem'],
+      include: ['monitorSystem', 'monitorFormula'],
     });
 
     for (const derivedHourlyValue of derivedHourlyValues) {
@@ -19,13 +19,16 @@ describe('DerivedHourlyValueMap', () => {
         id: derivedHourlyValue.id,
         hourId: derivedHourlyValue.hourId,
         monitoringSystemRecordId: derivedHourlyValue.monSysId,
-        monitoringSystemId: derivedHourlyValue.monitorSystem.monitoringSystemId,
+        monitoringSystemId:
+          derivedHourlyValue?.monitorSystem?.monitoringSystemId ?? null,
         reportingPeriodId: derivedHourlyValue.rptPeriodId,
         parameterCode: derivedHourlyValue.parameterCode,
         unadjustedHourlyValue: derivedHourlyValue.unadjustedHrlyValue,
         adjustedHourlyValue: derivedHourlyValue.adjustedHrlyValue,
         modcCode: derivedHourlyValue.modcCode,
-        formulaIdentifier: derivedHourlyValue.monFormId,
+        formulaIdentifier:
+          derivedHourlyValue?.monitorFormula?.formulaId ?? null,
+        monitoringFormulaRecordId: derivedHourlyValue.monFormId,
         percentAvailable: derivedHourlyValue.pctAvailable,
         operatingConditionCode: derivedHourlyValue.operatingConditionCode,
         segmentNumber: derivedHourlyValue.segmentNum,

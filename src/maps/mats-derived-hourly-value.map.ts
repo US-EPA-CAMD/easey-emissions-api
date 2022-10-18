@@ -12,6 +12,8 @@ export class MatsDerivedHourlyValueMap extends BaseMap<
   public async one(
     entity: MatsDerivedHrlyValue | MatsDerivedHrlyValueWorkspace,
   ): Promise<MatsDerivedHourlyValueDTO> {
+    const formulaIdentifier = entity.monitorFormula?.formulaId ?? null;
+
     return {
       id: entity.id,
       hourId: entity.hourId,
@@ -20,7 +22,8 @@ export class MatsDerivedHourlyValueMap extends BaseMap<
       parameterCode: entity.parameterCode,
       unadjustedHourlyValue: entity.unadjustedHourlyValue,
       modcCode: entity.modcCode,
-      formulaIdentifier: entity.monFormId,
+      formulaIdentifier: formulaIdentifier,
+      monitoringFormulaRecordId: entity.monFormId,
       calcUnadjustedHrlyValue: entity.calcUnadjustedHrlyValue,
       calcPctDiluent: entity.calcPctDiluent,
       calcPctMoisture: entity.calcPctMoisture,

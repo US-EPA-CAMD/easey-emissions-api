@@ -8,6 +8,7 @@ export class MatsDerivedHourlyValueBaseDTO {
 export class MatsDerivedHourlyValueRecordDTO extends MatsDerivedHourlyValueBaseDTO {
   id: string;
   hourId: string;
+  monitoringFormulaRecordId: string;
   calcUnadjustedHrlyValue?: string;
   calcPctDiluent?: number;
   calcPctMoisture?: number;
