@@ -1,11 +1,24 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Request } from 'express';
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  UseInterceptors,
+  Req,
+} from '@nestjs/common';
 
-import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiQuery,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
-import { EmissionsViewResultsDTO } from '../dto/emissions-view-results.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewService } from './emissions-view.service';
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 @Controller()
 @ApiTags('Emissions')
@@ -26,6 +39,10 @@ export class EmissionsViewController {
   @ApiOkResponse({
     description:
       'Retrieves the specified view of Emissions data for the provided Monitor Plan & Reporting Period',
+    content: {
+      'application/json': {},
+      'text/csv': {},
+    },
   })
   @ApiQuery({
     style: 'pipeDelimited',
@@ -39,10 +56,12 @@ export class EmissionsViewController {
     required: false,
     explode: false,
   })
+  @UseInterceptors(Json2CsvInterceptor)
   getView(
     @Param('viewCode') viewCode: string,
+    @Req() req: Request,
     @Query() params: EmissionsViewParamsDTO,
-  ): Promise<EmissionsViewResultsDTO> {
-    return this.service.getView(viewCode, params);
+  ) {
+    return this.service.getView(viewCode, req, params);
   }
 }
