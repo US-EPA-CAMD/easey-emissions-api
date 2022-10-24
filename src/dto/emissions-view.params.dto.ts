@@ -33,7 +33,9 @@ export class EmissionsViewParamsDTO {
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   stackPipeIds?: string[];
 
-  @ApiProperty()
+  @ApiProperty({
+    isArray: true,
+  })
   @IsYearFormat({
     each: true,
     message: ErrorMessages.SingleFormat('year', 'YYYY format'),
@@ -43,9 +45,12 @@ export class EmissionsViewParamsDTO {
     message:
       'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
   })
-  year: number;
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  year: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    isArray: true,
+  })
   @IsValidNumber(4, {
     each: true,
     message: ErrorMessages.SingleFormat(
@@ -54,5 +59,13 @@ export class EmissionsViewParamsDTO {
     ),
   })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  quarter: number;
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  quarter: number[];
+
+  @ApiProperty({
+    description:
+      'Attaches a file with data in the format specified by the Accept header',
+    default: false,
+  })
+  attachFile?: boolean;
 }

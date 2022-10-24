@@ -33,7 +33,7 @@ export class EmissionsViewService {
       `
       SELECT rpt_period_id AS "id"
       FROM camdecmpsmd.reporting_period
-      WHERE calendar_year = $1 AND quarter = $2;`,
+      WHERE calendar_year = ANY($1) AND quarter = ANY($2);`,
       [params.year, params.quarter],
     );
 
@@ -71,9 +71,8 @@ export class EmissionsViewService {
       `
       SELECT ${columnList.join(',')}
       FROM ${schema}.emission_view_${viewCode.toLowerCase()}
-      WHERE rpt_period_id = $1 AND mon_loc_id = ANY($2)
-      LIMIT 2;`,
-      [rptPeriod[0].id, monLocs.map(i => i.id)],
+      WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2);`,
+      [rptPeriod.map(i => i.id), monLocs.map(i => i.id)],
     );
 
     columnList = columns.map(i =>
