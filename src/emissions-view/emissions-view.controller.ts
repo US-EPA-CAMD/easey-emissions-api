@@ -8,12 +8,7 @@ import {
   Req,
 } from '@nestjs/common';
 
-import {
-  ApiOkResponse,
-  ApiQuery,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -54,6 +49,18 @@ export class EmissionsViewController {
     style: 'pipeDelimited',
     name: 'stackPipeIds',
     required: false,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'year',
+    required: true,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'quarter',
+    required: true,
     explode: false,
   })
   @UseInterceptors(Json2CsvInterceptor)

@@ -22,10 +22,15 @@ export function IsInYearAndQuarterRange(
           const date = new Date();
           const year = date.getFullYear().toString();
           const quarter = Math.floor((date.getMonth() + 3) / 3).toString();
+          let currentYearValidation = true;
           if (value && relatedValue) {
+            if (value.some(e => e === year)) {
+              currentYearValidation = relatedValue.every(e => e <= quarter);
+            }
             return (
-              value >= 2009 &&
-              (value < year || (value === year && relatedValue <= quarter))
+              value.every(e => e >= 2009) &&
+              value.every(e => e <= year) &&
+              currentYearValidation
             );
           }
           return true;
