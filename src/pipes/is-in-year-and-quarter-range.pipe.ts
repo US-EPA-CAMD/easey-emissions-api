@@ -7,6 +7,7 @@ import {
 export function IsInYearAndQuarterRange(
   property: string,
   validationOptions?: ValidationOptions,
+  multiSelect = false,
 ) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
@@ -23,7 +24,9 @@ export function IsInYearAndQuarterRange(
           const year = date.getFullYear().toString();
           const quarter = Math.floor((date.getMonth() + 3) / 3).toString();
           let currentYearValidation = true;
+          if (value.length > 0)
           if (value && relatedValue) {
+            if (multiSelect){
             if (value.some(e => e === year)) {
               currentYearValidation = relatedValue.every(e => e <= quarter);
             }
@@ -33,6 +36,11 @@ export function IsInYearAndQuarterRange(
               currentYearValidation
             );
           }
+          else {
+            value >= 2009 &&
+            (value < year || (value === year && relatedValue <= quarter))
+          }
+        }
           return true;
         },
       },
