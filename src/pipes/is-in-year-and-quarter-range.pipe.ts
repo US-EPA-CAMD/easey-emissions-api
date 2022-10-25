@@ -37,7 +37,7 @@ export function IsInYearAndQuarterRange(
             );
           }
           else {
-            value >= 2009 &&
+            return value >= 2009 &&
             (value < year || (value === year && relatedValue <= quarter))
           }
         }
