@@ -133,6 +133,9 @@ export class HourUnitDataView {
   })
   heatInput: number;
 
+  @Column({ name: 'heat_input_measure_flg' })
+  heatInputMeasureFlg: string;
+
   @Column({ name: 'primary_fuel_info' })
   primaryFuelInfo: string;
 
