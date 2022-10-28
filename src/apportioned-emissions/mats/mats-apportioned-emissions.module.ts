@@ -5,11 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsModule } from './hourly/hourly-mats-apportioned-emissions.module';
-import { ProgramYearDimRepository } from '../program-year-dim.repository';
+import { UnitFactRepository } from '../unit-fact.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProgramYearDimRepository]),
+    TypeOrmModule.forFeature([UnitFactRepository]),
     HourlyMatsApportionedEmissionsModule
   ],
   controllers: [MatsApportionedEmissionsController],

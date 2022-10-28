@@ -11,11 +11,11 @@ import { OzoneApportionedEmissionsModule } from './ozone/ozone-apportioned-emiss
 import { MatsApportionedEmissionsModule } from './mats/mats-apportioned-emissions.module';
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
-import { ProgramYearDimRepository } from './program-year-dim.repository';
+import { UnitFactRepository } from './unit-fact.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProgramYearDimRepository]),
+    TypeOrmModule.forFeature([UnitFactRepository]),
     HttpModule,
     HourlyApportionedEmissionsModule,
     DailyApportionedEmissionsModule,

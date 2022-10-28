@@ -1,12 +1,9 @@
-import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { BeginDate, EndDate } from '../utils/validator.const';
 
 export class ApplicableMatsApportionedEmissionsAttributesParamsDTO {
-  @ApiHideProperty()
-  currentDate: Date = this.getCurrentDate;
-
   @ApiProperty({
     description: propertyMetadata.beginDate.description,
   })
@@ -18,8 +15,4 @@ export class ApplicableMatsApportionedEmissionsAttributesParamsDTO {
   })
   @EndDate(true)
   endDate: Date;
-
-  private get getCurrentDate(): Date {
-    return new Date();
-  }
 }

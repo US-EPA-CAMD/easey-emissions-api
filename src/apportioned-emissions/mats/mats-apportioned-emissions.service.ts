@@ -7,14 +7,14 @@ import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
-import { ProgramYearDimRepository } from '../program-year-dim.repository';
+import { UnitFactRepository } from '../unit-fact.repository';
 
 @Injectable()
 export class MatsApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(ProgramYearDimRepository)
-    private readonly programYearRepository: ProgramYearDimRepository,
+    @InjectRepository(UnitFactRepository)
+    private readonly unitFactRepository: UnitFactRepository
   ) {}
 
   async getApplicableApportionedEmissionsAttributes(
@@ -25,9 +25,8 @@ export class MatsApportionedEmissionsService {
       this.logger.info(
         'Getting all applicable apportioned emissions attributes',
       );
-      query = await this.programYearRepository.getApplicableApportionedEmissionsAttributes(
-        applicableApportionedEmissionsParamsDTO.year,
-        true,
+      query = await this.unitFactRepository.getApplicableApportionedEmissionsAttributes(
+        applicableApportionedEmissionsParamsDTO.year, true
       );
       this.logger.info('Got all applicable apportioned emissions attributes');
     } catch (e) {
