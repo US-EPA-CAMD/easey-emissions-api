@@ -6,8 +6,8 @@ import { ControlYearDim } from '../entities/control-year-dim.entity';
 import { ProgramYearDim } from '../entities/program-year-dim.entity';
 import { UnitTypeYearDim } from '../entities/unit-type-year-dim.entity';
 
-@EntityRepository(ProgramYearDim)
-export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
+@EntityRepository(UnitFact)
+export class UnitFactRepository extends Repository<UnitFact> {
   async getApplicableApportionedEmissionsAttributes(
     yearArray: number[],
     matsDataOnly: boolean = false,
@@ -20,47 +20,40 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
     yearArray: number[],
     matsDataOnly: boolean = false,
   ): Promise<any> {
-    const query = this.createQueryBuilder('pyd')
-      .select(
-        [
-          'pyd.year',
-          'pyd.programCode',
-          'uf.facilityId',
-          'uf.stateCode',
-          'utyd.unitTypeCode',
-          'fyd.fuelTypeCode',
-          'cyd.controlCode',
-        ].map(col => {
+    const columnList = [
+      'uf.year',
+      'pyd.programCode',
+      'uf.facilityId',
+      'uf.stateCode',
+      'utyd.unitTypeCode',
+      'fyd.fuelTypeCode',
+      'cyd.controlCode',
+    ];
+
+    const query = this.createQueryBuilder('uf')
+      .select(columnList.map(col => {
           return `${col} AS "${col.split('.')[1]}"`;
         }),
       )
-      .innerJoin(
-        UnitFact, 
-        'uf', 'pyd.year = uf.year AND pyd.id = uf.id')
-      .innerJoin(
+      .distinctOn(columnList)
+      .leftJoin(ProgramYearDim,
+        'pyd',
+        'pyd.year = uf.year AND pyd.id = uf.id')
+      .leftJoin(
         UnitTypeYearDim,
         'utyd',
-        'uf.year = utyd.year AND uf.id = utyd.id',
+        'utyd.year = uf.year AND utyd.id = uf.id',
       )
-      .innerJoin(
+      .leftJoin(
         FuelYearDim,
         'fyd',
-        'utyd.year = fyd.year AND utyd.id = fyd.id',
+        'fyd.year = uf.year AND fyd.id = uf.id',
       )
-      .innerJoin(
+      .leftJoin(
         ControlYearDim,
         'cyd',
-        'fyd.year = cyd.year AND fyd.id = cyd.id',
-      )
-      .distinctOn([
-        'pyd.op_year',
-        'pyd.prg_code',
-        'uf.fac_id',
-        'uf.stateCode',
-        'utyd.unit_type',
-        'fyd.fuel_code',
-        'cyd.control_code',
-      ]);
+        'cyd.year = uf.year AND cyd.id = uf.id',
+      );
 
     if (matsDataOnly) {
       query.where(`pyd.programCode = 'MATS'`);
@@ -68,7 +61,7 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
       query.where(`pyd.programCode <> 'MATS'`);
     }
 
-    query.andWhere(`pyd.year IN (:...years)`, {
+    query.andWhere(`uf.year IN (:...years)`, {
         years: yearArray,
     });
 
@@ -77,7 +70,7 @@ export class ProgramYearDimRepository extends Repository<ProgramYearDim> {
   
   async lastArchivedYear(): Promise<number> {
     const result = await this.query(
-      'SELECT MAX(op_year) AS "year" FROM camddmw_arch.hour_unit_data_a;',
+      'SELECT MAX(op_year) AS "year" FROM camddmw_arch.annual_unit_data_a;',
     );
     return result[0].year;
   }
