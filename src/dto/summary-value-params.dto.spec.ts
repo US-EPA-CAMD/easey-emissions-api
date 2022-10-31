@@ -18,6 +18,27 @@ describe('SummaryValueParamsDto', () => {
     expect(errors.length).toBe(0);
   });
 
+  it('should return an error message for missing properties', async function() {
+    const paramsDto = plainToClass(SummaryValueParamsDto, {});
+    const errors = await validate(paramsDto);
+
+    for (const error of errors) {
+      if (error.constraints.isArray) {
+        expect(error.constraints.isArray).toBe(
+          `${error.property} must be an array`,
+        );
+      }
+
+      if (error.constraints.isNumber) {
+        expect(error.constraints.isNumber).toBe(
+          `${error.property} must be a number conforming to the specified constraints`,
+        );
+      }
+    }
+
+    expect(errors.length).toBe(5);
+  });
+
   it('should return errors for invalid types', async function() {
     const paramsDto = plainToClass(SummaryValueParamsDto, {
       beginYear: false,

@@ -16,10 +16,10 @@ import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 export class HourlyOperatingController {
   constructor(private readonly service: HourlyOperatingService) {}
 
-  @Get('summary-values')
+  @Get('hourly-operating-data')
   @ApiOkResponse({
     description:
-      'Exports summary values for specified ORIS codes and reporting period.',
+      'Exports hourly operating data for specified ORIS codes and reporting period.',
   })
   @UseInterceptors(ClassSerializerInterceptor)
   supplementaryExport(
