@@ -19,9 +19,9 @@ export const exportSupplementaryHourlyOperatingDataQuery = async (
     AND plant.oris_code NOTNULL
   `;
   const reportingPeriodConditions = `
-    reportingPeriod.calendar >= ${beginYear} AND
+    reportingPeriod.calendar_year >= ${beginYear} AND
     reportingPeriod.quarter >= ${beginQuarter} AND
-    reportingPeriod.calendar <= ${endYear} AND
+    reportingPeriod.calendar_year <= ${endYear} AND
     reportingPeriod.quarter <= ${endQuarter}
   `;
 
