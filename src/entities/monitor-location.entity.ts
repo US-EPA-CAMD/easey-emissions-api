@@ -28,6 +28,7 @@ import { SummaryValue } from './summary-value.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { Component } from './component.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
+import { DerivedHrlyValue } from './derived-hrly-value.entity';
 
 @Entity({ name: 'camdecmps.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -118,6 +119,13 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   summaryValues: SummaryValue[];
+
+  @OneToMany(
+    () => SummaryValue,
+    c => c.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  derivedHrlyValues: DerivedHrlyValue[];
 
   @OneToMany(
     () => DailyTestSummary,
