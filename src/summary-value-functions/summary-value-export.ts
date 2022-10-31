@@ -15,7 +15,7 @@ export const exportSupplementarySummaryValuesQuery = async (
     reportingPeriod.calendar_year >= ${params.beginYear} AND
     reportingPeriod.quarter >= ${params.beginQuarter} AND
     reportingPeriod.calendar_year <= ${params.endYear} AND
-    reportingPeriod.quarter <= ${params.beginQuarter}
+    reportingPeriod.quarter <= ${params.endQuarter}
   `;
 
   const query = repository
