@@ -17,7 +17,7 @@ import { DerivedHourlyValueParamsDto } from '../dto/derived-hourly-value-params.
 export class DerivedHourlyValueController {
   constructor(private readonly service: DerivedHourlyValueService) {}
 
-  @Get('derived-hourly-values')
+  @Get('derived-hourly-value')
   @ApiOkResponse({
     description:
       'Exports derived hourly values for specified ORIS codes and reporting period.',

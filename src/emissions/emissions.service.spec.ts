@@ -38,8 +38,6 @@ import {
 } from '../../test/object-generators/emissions-dto';
 import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
 import { mockEmissionsSubmissionsProgressRepository } from '../../test/mocks/emissions-submissions-progress-repository';
-import { genEmissionsSubmissionsProgress } from '../../test/object-generators/emissions-submissions-progress';
-import { faker } from '@faker-js/faker';
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
 import { mockHourlyOperatingRepository } from '../../test/mocks/hourly-operating-repository';
 import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
@@ -68,7 +66,6 @@ import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
-import { quarterFromMonth } from '../utils/util-modules/date-utils';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { Nsps4tSummaryRepository } from '../nsps4t-summary/nsps4t-summary.repository';
 import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
@@ -80,12 +77,9 @@ import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 
 describe('Emissions Service', () => {
-  let configService: ConfigService;
   let emissionsMap: EmissionsMap;
   let emissionsRepository: EmissionsRepository;
   let emissionsService: EmissionsService;
-  let submissionProgressRepository: EmissionsSubmissionsProgressRepository;
-  let submissionProgressMap: EmissionsSubmissionsProgressMap;
   let dailyTestSummaryService: DailyTestSummaryService;
   let hourlyOperatingService: HourlyOperatingService;
   let dailyEmissionService: DailyEmissionService;
@@ -204,14 +198,9 @@ describe('Emissions Service', () => {
       ],
     }).compile();
 
-    configService = module.get(ConfigService);
     emissionsRepository = module.get(EmissionsRepository);
     emissionsService = module.get(EmissionsService);
     emissionsMap = module.get(EmissionsMap);
-    submissionProgressRepository = module.get(
-      EmissionsSubmissionsProgressRepository,
-    );
-    submissionProgressMap = module.get(EmissionsSubmissionsProgressMap);
     dailyTestSummaryService = module.get(DailyTestSummaryService);
     hourlyOperatingService = module.get(HourlyOperatingService);
     dailyEmissionService = module.get(DailyEmissionService);
@@ -262,66 +251,6 @@ describe('Emissions Service', () => {
       jest.spyOn(emissionsRepository, 'export').mockResolvedValue(undefined);
 
       await expect(emissionsService.export(dtoMock[0])).resolves.toEqual({});
-    });
-  });
-
-  describe('get submission progress', () => {
-    it('should return submissions progress if queryResult is defined and not in dev environment', async function() {
-      const mockedProgress = genEmissionsSubmissionsProgress<
-        EmissionsSubmissionsProgress
-      >()[0];
-
-      jest
-        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
-        .mockResolvedValue(mockedProgress);
-
-      const mapped = await submissionProgressMap.one(mockedProgress);
-
-      await expect(
-        emissionsService.getSubmissionProgress(faker.date.soon()),
-      ).resolves.toEqual(mapped);
-    });
-
-    it('should return generated result if the queryResult is undefined and in dev environment', async function() {
-      jest
-        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
-        .mockResolvedValue(undefined);
-
-      jest
-        .spyOn(configService, 'get')
-        .mockImplementation((property: string) => {
-          return 'development';
-        });
-
-      const date = new Date('Jan. 1, 2022');
-      const result = ((await emissionsService.getSubmissionProgress(
-        date,
-      )) as unknown) as {
-        quarter: number;
-        quarterName: string;
-        percentage: number;
-        year: number;
-      };
-      expect(result.quarter).toEqual(quarterFromMonth(date.getUTCMonth() + 1));
-      expect(result.quarterName).toEqual('Fourth');
-      expect(result.year).toEqual(2021);
-      expect(result.percentage).not.toBeNaN();
-    });
-
-    it('should return undefined if queryResult is undefined and not in dev environment', async function() {
-      jest
-        .spyOn(submissionProgressRepository, 'getSubmissionProgress')
-        .mockResolvedValue(undefined);
-
-      jest
-        .spyOn(configService, 'get')
-        .mockImplementation((property: string) => {
-          return 'production';
-        });
-
-      await expect(
-        emissionsService.getSubmissionProgress(faker.date.soon()),
-      ).resolves.toEqual(undefined);
     });
   });
 });

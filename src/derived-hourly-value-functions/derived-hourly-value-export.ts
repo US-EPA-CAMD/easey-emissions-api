@@ -4,37 +4,56 @@ import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
 import { quarterFromMonth } from '../utils/util-modules/date-utils';
 import { DerivedHourlyValueDTO } from '../dto/derived-hourly-value.dto';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
+import { hasArrayValues } from '../utils/utils';
 
 export const exportSupplementaryDerivedHourlyValuesQuery = async (
   params: DerivedHourlyValueParamsDto,
   repository: DerivedHourlyValueRepository,
 ): Promise<DerivedHrlyValue[]> => {
-  const beginYear = params.beginDate.getFullYear();
-  const beginQuarter = quarterFromMonth(params.beginDate.getMonth());
-  const endYear = params.endDate.getFullYear();
-  const endQuarter = quarterFromMonth(params.endDate.getMonth());
+  const beginYear = new Date(params.beginDate).getFullYear();
+  const beginQuarter = quarterFromMonth(new Date(params.beginDate).getMonth());
+  const endYear = new Date(params.endDate).getFullYear();
+  const endQuarter = quarterFromMonth(new Date(params.endDate).getMonth());
 
-  const plantConditions = `
-    plant.oris_code IN (${params.orisCode.join(', ')}) 
-    AND plant.oris_code NOTNULL
-  `;
-  const reportingPeriodConditions = `
-    reportingPeriod.calendar >= ${beginYear} AND
-    reportingPeriod.quarter >= ${beginQuarter} AND
-    reportingPeriod.calendar <= ${endYear} AND
-    reportingPeriod.quarter <= ${endQuarter}
-  `;
+  const reportingPeriodConditions = `reportingPeriod.calendar_year BETWEEN ${beginYear} AND ${endYear} AND reportingPeriod.quarter BETWEEN ${beginQuarter} AND ${endQuarter}`;
 
-  const query = repository
+  let query = repository
     .createQueryBuilder('derivedHourly')
     .innerJoinAndSelect('derivedHourly.monitorLocation', 'monitorLocation')
-    .innerJoin('monitorLocation.monitorPlans', 'monitorPlans')
-    .innerJoin('monitorPlans.plant', 'plant', plantConditions)
+    .innerJoinAndSelect('derivedHourly.monitorFormula', 'monitorFormula')
+    .innerJoinAndSelect('derivedHourly.monitorSystem', 'monitorSystem')
     .innerJoin(
       'derivedHourly.reportingPeriod',
       'reportingPeriod',
       reportingPeriodConditions,
     );
+
+  if (hasArrayValues(params.orisCode)) {
+    const plantConditions = `plant.oris_code IN (${params.orisCode.join(
+      ', ',
+    )}) AND plant.oris_code NOTNULL`;
+
+    query = query
+      .innerJoin('monitorLocation.monitorPlans', 'monitorPlans')
+      .innerJoin('monitorPlans.plant', 'plant', plantConditions);
+  }
+
+  if (hasArrayValues(params.locationName)) {
+    const locationStrings = params.locationName
+      ?.map(location => `'${location}'`)
+      .join(', ');
+
+    const stackPipeCondition = `stackPipe.stack_name IN (${locationStrings})`;
+    const unitCondition = `unit.unitid IN (${locationStrings})`;
+
+    query = query
+      .leftJoinAndSelect(
+        'monitorLocation.stackPipe',
+        'stackPipe',
+        stackPipeCondition,
+      )
+      .leftJoinAndSelect('monitorLocation.unit', 'unit', unitCondition);
+  }
 
   return query.getMany();
 };
