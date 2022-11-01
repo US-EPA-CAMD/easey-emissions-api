@@ -10,7 +10,7 @@ import { UnitTypeYearDim } from '../entities/unit-type-year-dim.entity';
 export class UnitFactRepository extends Repository<UnitFact> {
   async getApplicableApportionedEmissionsAttributes(
     yearArray: number[],
-    matsDataOnly: boolean = false,
+    matsDataOnly = false,
   ): Promise<ProgramYearDim[]> {
     const query = await this.queryBuilderHelper(yearArray, matsDataOnly);
     return query.getRawMany();
@@ -18,7 +18,7 @@ export class UnitFactRepository extends Repository<UnitFact> {
 
   async queryBuilderHelper(
     yearArray: number[],
-    matsDataOnly: boolean = false,
+    matsDataOnly = false,
   ): Promise<any> {
     const columnList = [
       'uf.year',
@@ -31,29 +31,20 @@ export class UnitFactRepository extends Repository<UnitFact> {
     ];
 
     const query = this.createQueryBuilder('uf')
-      .select(columnList.map(col => {
+      .select(
+        columnList.map(col => {
           return `${col} AS "${col.split('.')[1]}"`;
         }),
       )
       .distinctOn(columnList)
-      .leftJoin(ProgramYearDim,
-        'pyd',
-        'pyd.year = uf.year AND pyd.id = uf.id')
+      .leftJoin(ProgramYearDim, 'pyd', 'pyd.year = uf.year AND pyd.id = uf.id')
       .leftJoin(
         UnitTypeYearDim,
         'utyd',
         'utyd.year = uf.year AND utyd.id = uf.id',
       )
-      .leftJoin(
-        FuelYearDim,
-        'fyd',
-        'fyd.year = uf.year AND fyd.id = uf.id',
-      )
-      .leftJoin(
-        ControlYearDim,
-        'cyd',
-        'cyd.year = uf.year AND cyd.id = uf.id',
-      );
+      .leftJoin(FuelYearDim, 'fyd', 'fyd.year = uf.year AND fyd.id = uf.id')
+      .leftJoin(ControlYearDim, 'cyd', 'cyd.year = uf.year AND cyd.id = uf.id');
 
     if (matsDataOnly) {
       query.where(`pyd.programCode = 'MATS'`);
@@ -62,12 +53,12 @@ export class UnitFactRepository extends Repository<UnitFact> {
     }
 
     query.andWhere(`uf.year IN (:...years)`, {
-        years: yearArray,
+      years: yearArray,
     });
 
     return query;
   }
-  
+
   async lastArchivedYear(): Promise<number> {
     const result = await this.query(
       'SELECT MAX(op_year) AS "year" FROM camddmw_arch.annual_unit_data_a;',

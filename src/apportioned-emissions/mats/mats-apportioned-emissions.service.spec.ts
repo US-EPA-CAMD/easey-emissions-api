@@ -6,7 +6,7 @@ import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.se
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 import { HourUnitMatsDataArch } from '../../entities/hour-unit-mats-data-arch.entity';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
-import { ProgramYearDimRepository } from '../program-year-dim.repository';
+import { UnitFactRepository } from '../unit-fact.repository';
 
 const mockRepository = () => ({
   getApplicableEmissions: jest.fn(),
@@ -30,19 +30,17 @@ describe('-- MATS Apportioned Emissions Service --', () => {
   let service: MatsApportionedEmissionsService;
   let repository: any;
   let req: any;
+  let unitFactRepository;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
         MatsApportionedEmissionsService,
+        UnitFactRepository,
         {
           provide: HourUnitMatsDataRepository,
           useFactory: mockRepository,
-        },
-        {
-          provide: ProgramYearDimRepository,
-          useValue: programYearRepositoryMock,
         },
       ],
     }).compile();
@@ -51,6 +49,7 @@ describe('-- MATS Apportioned Emissions Service --', () => {
     req.res.setHeader.mockReturnValue();
     service = module.get(MatsApportionedEmissionsService);
     repository = module.get(HourUnitMatsDataRepository);
+    unitFactRepository = module.get(UnitFactRepository);
   });
 
   describe('getApplicableEmissions', () => {
@@ -66,6 +65,13 @@ describe('-- MATS Apportioned Emissions Service --', () => {
           'getApplicableApportionedEmissionsAttributes',
         )
         // @ts-expect-error Allow empty array
+        .mockResolvedValue([]);
+
+      jest
+        .spyOn(
+          unitFactRepository,
+          'getApplicableApportionedEmissionsAttributes',
+        )
         .mockResolvedValue([]);
       const result = await service.getApplicableApportionedEmissionsAttributes(
         filters,

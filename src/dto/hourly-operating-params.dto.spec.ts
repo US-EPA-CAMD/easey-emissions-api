@@ -19,6 +19,6 @@ describe('HourlyOperatingParamsDto', () => {
     const params = plainToClass(HourlyOperatingParamsDto, {});
     const errors = await validate(params);
 
-    expect(errors.length).toBe(3);
+    expect(errors.length).toBe(2);
   });
 });

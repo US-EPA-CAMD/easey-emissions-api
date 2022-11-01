@@ -103,8 +103,16 @@ export const genHourlyOperatingParamsDto = (
     dtos.push({
       beginDate: (faker.date.soon().toISOString() as unknown) as Date,
       endDate: (faker.date.soon().toISOString() as unknown) as Date,
-      locationName: faker.helpers.uniqueArray(faker.datatype.string, 3),
-      orisCode: (faker.helpers.uniqueArray(orisCode, 3) as unknown) as number[],
+      locationName: optionalValue(
+        (faker.helpers
+          .uniqueArray(faker.datatype.string, 3)
+          .join('|') as unknown) as string[],
+      ),
+      orisCode: optionalValue(
+        (faker.helpers
+          .uniqueArray(orisCode, 3)
+          .join('|') as unknown) as number[],
+      ),
     });
   }
 

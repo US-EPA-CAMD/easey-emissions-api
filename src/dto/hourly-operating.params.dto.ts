@@ -7,39 +7,28 @@ import moment from 'moment/moment';
 
 export class HourlyOperatingParamsDto {
   @ApiProperty()
-  @Transform(data => {
-    let value = data.obj.orisCode;
-
-    if (data.key === 'orisCode' && !Array.isArray(data.obj.orisCode)) {
-      value = [data.obj.orisCode];
+  @Transform(({ value }) => {
+    if (value) {
+      return value.split('|').map((item: string) => item.trim());
     }
-
-    return value;
   })
-  @IsArray()
-  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty(), each: true })
-  @Length(1, 6, { each: true })
   orisCode: number[];
 
   @ApiProperty()
-  @Transform(data => {
-    let value = data.obj.locationName;
-
-    if (data.key === 'locationName' && !Array.isArray(data.obj.locationName)) {
-      value = [data.obj.locationName];
+  @Transform(({ value }) => {
+    if (value) {
+      return value.split('|').map((item: string) => item.trim());
     }
-
-    return value;
   })
   locationName: string[];
 
   @ApiProperty()
-  @IsNotEmptyString()
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   beginDate: Date;
 
   @ApiProperty()
-  @IsNotEmptyString()
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   endDate: Date;
 }

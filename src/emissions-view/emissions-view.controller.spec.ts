@@ -35,7 +35,11 @@ describe('EmissionsViewController', () => {
     jest.spyOn(emissionsViewService, 'getView').mockResolvedValue(undefined);
 
     await expect(
-      emissionsViewController.getView('code', new EmissionsViewParamsDTO()),
+      emissionsViewController.getView(
+        'code',
+        undefined,
+        new EmissionsViewParamsDTO(),
+      ),
     ).resolves.toEqual(undefined);
   });
 });

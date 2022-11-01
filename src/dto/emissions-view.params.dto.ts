@@ -41,10 +41,14 @@ export class EmissionsViewParamsDTO {
     message: ErrorMessages.SingleFormat('year', 'YYYY format'),
   })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  @IsInYearAndQuarterRange('quarter', {
-    message:
-      'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
-  }, true)
+  @IsInYearAndQuarterRange(
+    'quarter',
+    {
+      message:
+        'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
+    },
+    true,
+  )
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 
