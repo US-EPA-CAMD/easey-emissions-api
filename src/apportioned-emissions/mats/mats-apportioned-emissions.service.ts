@@ -14,7 +14,7 @@ export class MatsApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
     @InjectRepository(UnitFactRepository)
-    private readonly unitFactRepository: UnitFactRepository
+    private readonly unitFactRepository: UnitFactRepository,
   ) {}
 
   async getApplicableApportionedEmissionsAttributes(
@@ -26,7 +26,8 @@ export class MatsApportionedEmissionsService {
         'Getting all applicable apportioned emissions attributes',
       );
       query = await this.unitFactRepository.getApplicableApportionedEmissionsAttributes(
-        applicableApportionedEmissionsParamsDTO.year, true
+        applicableApportionedEmissionsParamsDTO.year,
+        true,
       );
       this.logger.info('Got all applicable apportioned emissions attributes');
     } catch (e) {

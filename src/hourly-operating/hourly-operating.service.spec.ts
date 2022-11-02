@@ -17,7 +17,7 @@ import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourl
 import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
 import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { HrlyOpData } from '../entities/hrly-op-data.entity';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
 import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
 import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
@@ -32,6 +32,7 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { genHourlyOperatingParamsDto } from '../../test/object-generators/hourly-operating-dto';
 
 const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   include: [
@@ -77,6 +78,7 @@ describe('HourlyOperatingService', () => {
   let service: HourlyOperatingService;
   let repository: any;
   let map;
+  let exportModule: typeof import('../hourly-operating-functions/hourly-operating-export');
 
   let monitorHourlyValueRepository: MonitorHourlyValueRepository;
   let derivedHourlyValueRepository: DerivedHourlyValueRepository;
@@ -140,6 +142,10 @@ describe('HourlyOperatingService', () => {
     repository = module.get(HourlyOperatingRepository);
     map = module.get(HourlyOperatingMap);
 
+    exportModule = await import(
+      '../hourly-operating-functions/hourly-operating-export'
+    );
+
     monitorHourlyValueRepository = module.get(MonitorHourlyValueRepository);
     derivedHourlyValueRepository = module.get(DerivedHourlyValueRepository);
     matsMonitorHourlyValueRepository = module.get(
@@ -177,5 +183,17 @@ describe('HourlyOperatingService', () => {
       expect(result.length).toBeGreaterThan(0);
       expect(result[0].derivedHourlyValueData.length).toBeGreaterThan(0);
     });
+  });
+
+  it('should export supplementary hourly op data', async function() {
+    const params = genHourlyOperatingParamsDto()[0];
+    const results = genHourlyOpValues<HrlyOpData>(3);
+    const mapped = new HourlyOperatingMap().many(results);
+
+    jest
+      .spyOn(exportModule, 'exportSupplementaryHourlyOperatingDataQuery')
+      .mockResolvedValue(results);
+
+    await expect(service.supplementaryExport(params)).toEqual(mapped);
   });
 });

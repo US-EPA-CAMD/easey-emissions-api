@@ -35,7 +35,9 @@ export const genSummaryValueParamsDtos = (
       beginYear: faker.date.soon().getFullYear(),
       endQuarter: faker.helpers.arrayElement([1, 2, 3, 4]),
       endYear: faker.date.soon().getFullYear(),
-      orisCode: Array.from({ length: 3 }, faker.datatype.number),
+      orisCode: (Array.from({ length: 3 }, () =>
+        faker.datatype.string(6),
+      ) as unknown) as number[],
     });
   }
 

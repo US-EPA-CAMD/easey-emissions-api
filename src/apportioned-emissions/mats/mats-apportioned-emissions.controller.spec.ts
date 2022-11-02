@@ -8,7 +8,7 @@ import { MatsApportionedEmissionsController } from './mats-apportioned-emissions
 import { HourlyMatsApportionedEmissionsService } from './hourly/hourly-mats-apportioned-emissions.service';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
-import { ProgramYearDimRepository } from '../program-year-dim.repository';
+import { UnitFactRepository } from '../unit-fact.repository';
 
 const mockRequest = (url: string) => {
   return {
@@ -32,10 +32,7 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
         MatsApportionedEmissionsService,
         HourlyMatsApportionedEmissionsService,
         HourUnitMatsDataRepository,
-        {
-          provide: ProgramYearDimRepository,
-          useValue: jest,
-        },
+        UnitFactRepository,
       ],
     }).compile();
 

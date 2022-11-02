@@ -24,23 +24,24 @@ export function IsInYearAndQuarterRange(
           const year = date.getFullYear().toString();
           const quarter = Math.floor((date.getMonth() + 3) / 3).toString();
           let currentYearValidation = true;
-          if (value.length > 0)
-          if (value && relatedValue) {
-            if (multiSelect){
-            if (value.some(e => e === year)) {
-              currentYearValidation = relatedValue.every(e => e <= quarter);
+          if (value?.length > 0)
+            if (value && relatedValue) {
+              if (multiSelect) {
+                if (value.some(e => e === year)) {
+                  currentYearValidation = relatedValue.every(e => e <= quarter);
+                }
+                return (
+                  value.every(e => e >= 2009) &&
+                  value.every(e => e <= year) &&
+                  currentYearValidation
+                );
+              } else {
+                return (
+                  value >= 2009 &&
+                  (value < year || (value === year && relatedValue <= quarter))
+                );
+              }
             }
-            return (
-              value.every(e => e >= 2009) &&
-              value.every(e => e <= year) &&
-              currentYearValidation
-            );
-          }
-          else {
-            return value >= 2009 &&
-            (value < year || (value === year && relatedValue <= quarter))
-          }
-        }
           return true;
         },
       },
