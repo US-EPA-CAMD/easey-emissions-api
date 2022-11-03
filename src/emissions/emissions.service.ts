@@ -15,7 +15,6 @@ import { DailyEmissionService } from '../daily-emission/daily-emission.service';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { SummaryValueService } from '../summary-value/summary-value.service';
-import { quarterFromMonth } from '../utils/util-modules/date-utils';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 
 @Injectable()
@@ -89,35 +88,33 @@ export class EmissionsService {
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
 
-    const isValidDevQuery = () => {
-      return (
+    if (queryResult === undefined) {
+      if (
         ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),
         ) &&
         ([1, 4, 7, 10].includes(month) ||
           ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
-      );
-    };
+      ) {
+        queryResult = new EmissionsSubmissionsProgress();
 
-    if (typeof queryResult !== 'undefined') {
-      return this.submissionProgressMap.one(queryResult);
+        let year = date.getUTCFullYear();
+        if (month >= 1 && month <= 3) {
+          queryResult.quarter = 4;
+          year--;
+        } else if (month >= 4 && month <= 6) {
+          queryResult.quarter = 1;
+        } else if (month >= 7 && month <= 9) {
+          queryResult.quarter = 2;
+        } else {
+          queryResult.quarter = 3;
+        }
+        queryResult.calendarYear = year;
+        queryResult.submittedPercentage = Math.floor(Math.random() * 100);
+      } else {
+        return undefined;
+      }
     }
-
-    if (!isValidDevQuery()) {
-      return undefined;
-    }
-
-    queryResult = new EmissionsSubmissionsProgress();
-
-    let year = date.getUTCFullYear();
-    queryResult.quarter = quarterFromMonth(month);
-
-    if (queryResult.quarter === 4) {
-      year--;
-    }
-
-    queryResult.calendarYear = year;
-    queryResult.submittedPercentage = Math.floor(Math.random() * 100);
 
     return this.submissionProgressMap.one(queryResult);
   }

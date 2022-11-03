@@ -23,6 +23,7 @@ import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { SamplingTrain } from './sampling-train.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
+import { DerivedHrlyValue } from './derived-hrly-value.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -106,6 +107,13 @@ export class ReportingPeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   summaryValues: SummaryValue[];
+
+  @OneToMany(
+    () => SummaryValue,
+    c => c.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  derivedHrlyValues: DerivedHrlyValue[];
 
   @OneToMany(
     () => DailyTestSummary,
