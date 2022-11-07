@@ -66,6 +66,10 @@ export default registerAs('app', () => ({
   submissionDays: getConfigValueNumber(
     'EASEY_EMISSIONS_API_SUBMISSION_DAYS', 38,
   ),
+  reqSizeLimit: getConfigValue(
+    'EASEY_EMISSIONS_API_REQ_SIZE_LIMIT',
+    '30mb',
+  ),
   // ENABLES DEBUG CONSOLE LOGS
   enableDebug: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_DEBUG',

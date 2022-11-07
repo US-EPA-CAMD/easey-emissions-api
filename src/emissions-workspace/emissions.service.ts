@@ -142,8 +142,8 @@ export class EmissionsWorkspaceService {
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
       return (
-        plan.beginRptPeriod.year === params.year &&
-        plan.beginRptPeriod.quarter === params.quarter
+        plan.beginRptPeriod.year <= params.year &&
+        plan.beginRptPeriod.quarter <= params.quarter
       );
     });
 
