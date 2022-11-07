@@ -14,7 +14,7 @@ export function IsReportingPeriodFormat(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args: ValidationArguments) {
           if (value) {
-            return String(value).match(/[0-9]+\sQ[1-4]+/) != null;
+            return String(value).match(/^\d{4}\sQ[1-4]{1}$/) != null;
           }
           return true;
         },
