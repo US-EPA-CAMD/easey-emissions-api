@@ -10,6 +10,8 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { HrlyOpData } from './hrly-op-data.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { MonitorFormula } from './monitor-formula.entity';
+import { MonitorLocation } from './monitor-location.entity';
+import { ReportingPeriod } from './reporting-period.entity';
 
 @Entity({ name: 'camdecmps.derived_hrly_value' })
 export class DerivedHrlyValue extends BaseEntity {
@@ -150,4 +152,18 @@ export class DerivedHrlyValue extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_form_id' })
   monitorFormula: MonitorFormula;
+
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+
+  @ManyToOne(
+    () => ReportingPeriod,
+    o => o.derivedHrlyValues,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  reportingPeriod: ReportingPeriod;
 }

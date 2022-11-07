@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DerivedHourlyValueService } from './derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
-import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
+import {
+  genDerivedHourlyValueParamsDto,
+  genDerivedHrlyValues,
+} from '../../test/object-generators/derived-hourly-value';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { mockDerivedHourlyValueRepository } from '../../test/mocks/mock-derived-hourly-value-repository';
 import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
@@ -10,6 +13,7 @@ describe('DerivedHourlyValueService', () => {
   let map: DerivedHourlyValueMap;
   let repository: DerivedHourlyValueRepository;
   let service: DerivedHourlyValueService;
+  let exportModule: typeof import('../derived-hourly-value-functions/derived-hourly-value-export');
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,6 +30,10 @@ describe('DerivedHourlyValueService', () => {
     map = module.get(DerivedHourlyValueMap);
     repository = module.get(DerivedHourlyValueRepository);
     service = module.get<DerivedHourlyValueService>(DerivedHourlyValueService);
+
+    exportModule = await import(
+      '../derived-hourly-value-functions/derived-hourly-value-export'
+    );
   });
 
   it('should be defined', () => {
@@ -51,5 +59,17 @@ describe('DerivedHourlyValueService', () => {
         }),
       ),
     ).resolves.toEqual(mappedValues);
+  });
+
+  it('should export supplementary derived hourly values', async function() {
+    const params = genDerivedHourlyValueParamsDto()[0];
+    const results = genDerivedHrlyValues<DerivedHrlyValue>(3);
+    const mapped = new DerivedHourlyValueMap().many(results);
+
+    jest
+      .spyOn(exportModule, 'exportSupplementaryDerivedHourlyValuesQuery')
+      .mockResolvedValue(results);
+
+    await expect(service.supplementaryExport(params)).toEqual(mapped);
   });
 });

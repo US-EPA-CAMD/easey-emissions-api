@@ -3,6 +3,7 @@ import { HrlyOpData } from '../../src/entities/hrly-op-data.entity';
 import { MonitorSystem } from '../../src/entities/monitor-system.entity';
 import { MonitorFormula } from '../../src/entities/monitor-formula.entity';
 import { optionalValue } from './util';
+import { DerivedHourlyValueParamsDto } from '../../src/dto/derived-hourly-value-params.dto';
 
 type GenDerivedHrlyValueConfig = {
   include?: Array<'hrlyOpData' | 'monitorSystem' | 'monitorFormula'>;
@@ -70,4 +71,25 @@ export const genDerivedHrlyValues = <RepoType>(
     } as unknown) as RepoType);
   }
   return hourlyValues;
+};
+
+export const genDerivedHourlyValueParamsDto = (
+  amount = 1,
+): DerivedHourlyValueParamsDto[] => {
+  const dtos: DerivedHourlyValueParamsDto[] = [];
+
+  const orisCode = () => {
+    return faker.datatype.string(6);
+  };
+
+  for (let i = 0; i < amount; i++) {
+    dtos.push({
+      beginDate: (faker.date.soon().toISOString() as unknown) as Date,
+      endDate: (faker.date.soon().toISOString() as unknown) as Date,
+      locationName: faker.helpers.uniqueArray(faker.datatype.string, 3),
+      orisCode: (faker.helpers.uniqueArray(orisCode, 3) as unknown) as number[],
+    });
+  }
+
+  return dtos;
 };
