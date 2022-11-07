@@ -53,15 +53,9 @@ export class EmissionsViewController {
   })
   @ApiQuery({
     style: 'pipeDelimited',
-    name: 'year',
+    name: 'reportingPeriod',
     required: true,
-    explode: false,
-  })
-  @ApiQuery({
-    style: 'pipeDelimited',
-    name: 'quarter',
-    required: true,
-    explode: false,
+    explode: false
   })
   @UseInterceptors(Json2CsvInterceptor)
   getView(

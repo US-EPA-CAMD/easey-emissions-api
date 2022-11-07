@@ -1,16 +1,13 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmptyString,
-  IsValidNumber,
-  IsYearFormat,
-} from '@us-epa-camd/easey-common/pipes';
+import { IsNotEmptyString } from '@us-epa-camd/easey-common/pipes';
 import {
   ErrorMessages,
   propertyMetadata,
 } from '@us-epa-camd/easey-common/constants';
 import { OneOrMore } from '../pipes/one-or-more.pipe';
-import { IsInYearAndQuarterRange } from '../pipes/is-in-year-and-quarter-range.pipe';
+import { IsReportingPeriodFormat } from '../pipes/is-reporting-period-format.pipe';
+import { IsInReportingPeriodRange } from '../pipes/is-in-reporting-period.pipe';
 
 export class EmissionsViewParamsDTO {
   @ApiProperty()
@@ -36,35 +33,18 @@ export class EmissionsViewParamsDTO {
   @ApiProperty({
     isArray: true,
   })
-  @IsYearFormat({
-    each: true,
-    message: ErrorMessages.SingleFormat('year', 'YYYY format'),
-  })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  @IsInYearAndQuarterRange(
-    'quarter',
-    {
-      message:
-        'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
-    },
-    true,
-  )
-  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
-  year: number[];
-
-  @ApiProperty({
-    isArray: true,
-  })
-  @IsValidNumber(4, {
+  @IsReportingPeriodFormat({
     each: true,
-    message: ErrorMessages.SingleFormat(
-      'quarter',
-      'single digit format (ex.1,2,3,4)',
-    ),
+    message: 'Year and Quarter must be specified in this format YYYY Q1',
   })
-  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
+  @IsInReportingPeriodRange({
+    each: true,
+    message:
+      'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
+  })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
-  quarter: number[];
+  reportingPeriod: string[];
 
   @ApiProperty({
     description:

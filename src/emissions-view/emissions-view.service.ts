@@ -28,44 +28,50 @@ export class EmissionsViewService {
   ) {
     const mgr = getManager();
     const schema = 'camdecmpswks';
+    const reportingPeriods = params.reportingPeriod;
+    const monitorPlanId = params.monitorPlanId;
+    const unitIds = params.unitIds ?? [{}];
+    const stackPipeIds = params.stackPipeIds ?? [{}];
+    const viewCodeUpperCase = viewCode.toUpperCase();
+    const templateCode = 'EMVIEW';
 
-    const rptPeriod = await mgr.query(
-      `
-      SELECT rpt_period_id AS "id"
-      FROM camdecmpsmd.reporting_period
-      WHERE calendar_year = ANY($1) AND quarter = ANY($2);`,
-      [params.year, params.quarter],
-    );
+    const rptPeriod = await mgr
+      .createQueryBuilder()
+      .select('rp.id AS id')
+      .from('camdecmpsmd.reporting_period', 'rp')
+      .where('rp.periodAbbreviation IN (:...reportingPeriods)', {
+        reportingPeriods,
+      })
+      .getRawMany();
 
-    const monLocs = await mgr.query(
-      `
-      SELECT ml.mon_loc_id AS "id"
-      FROM ${schema}.monitor_location ml
-      JOIN ${schema}.monitor_plan_location mpl USING(mon_loc_id)
-      LEFT JOIN camd.unit u USING(unit_id)
-      LEFT JOIN ${schema}.stack_pipe sp USING(stack_pipe_id)
-      WHERE mpl.mon_plan_id = $1 AND (u.unitid = ANY($2) OR sp.stack_name = ANY($3));`,
-      [params.monitorPlanId, params.unitIds, params.stackPipeIds],
-    );
+    const monLocs = await mgr
+      .createQueryBuilder()
+      .select('ml.id AS id')
+      .from(`${schema}.monitor_location`, 'ml')
+      .innerJoin('ml.monitorPlans', 'mp')
+      .leftJoin('ml.unit', 'u')
+      .leftJoin('ml.stackPipe', 'sp')
+      .where('mp.id = :monitorPlanId', { monitorPlanId })
+      .andWhere('u.name IN (:...unitIds) OR sp.name IN (:...stackPipeIds)', {
+        unitIds,
+        stackPipeIds,
+      })
+      .getRawMany();
 
-    const columns = await mgr.query(
-      `
-      SELECT
-        ds.display_name AS "viewName",
-        ds.no_results_msg AS "noResultsMsg",
-        col.name AS "columnName",
-        col.alias AS "columnAlias",
-        col.display_name AS "columnLabel"
-      FROM camdaux.datacolumn col
-      JOIN camdaux.datatable dt USING(datatable_id)
-      JOIN camdaux.dataset ds USING(dataset_cd)
-      WHERE ds.template_cd = $1
-      AND ds.dataset_cd = $2
-      ORDER BY col.column_order`,
-      ['EMVIEW', viewCode.toUpperCase()],
-    );
+    const columns = await mgr
+      .createQueryBuilder()
+      .select(
+        'ds.displayName AS viewName, col.name AS columnName, col.alias AS columnAlias, col.displayName AS columnLabel',
+      )
+      .from('camdaux.datacolumn', 'col')
+      .innerJoin('col.dataTable', 'dt')
+      .innerJoin('dt.dataSet', 'ds')
+      .where('ds.templateCode = :templateCode', { templateCode })
+      .andWhere('ds.code = :viewCodeUpperCase ', { viewCodeUpperCase })
+      .orderBy('col.columnOrder')
+      .getRawMany();
 
-    let columnList = columns.map(i => `${i.columnName} AS "${i.columnAlias}"`);
+    let columnList = columns.map(i => `${i.columnname} AS "${i.columnalias}"`);
 
     const viewData = await mgr.query(
       `
@@ -77,7 +83,7 @@ export class EmissionsViewService {
 
     columnList = columns.map(i =>
       JSON.parse(
-        `{ "label": "${i.columnLabel}", "value": "${i.columnAlias}" }`,
+        `{ "label": "${i.columnlabel}", "value": "${i.columnalias}" }`,
       ),
     );
 
