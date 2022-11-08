@@ -1,24 +1,24 @@
 import { Test } from '@nestjs/testing';
-import { EmissionsViewRepository } from './emissions-view.repository';
-import { EmissionsViewController } from './emissions-view.controller';
-import { EmissionsViewService } from './emissions-view.service';
+import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
+import { EmissionsViewWorkspaceController } from './emissions-view.controller';
+import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 
-describe('EmissionsViewController', () => {
-  let emissionsViewController: EmissionsViewController;
-  let emissionsViewService: EmissionsViewService;
+describe('EmissionsViewWorkspaceController', () => {
+  let emissionsViewController: EmissionsViewWorkspaceController;
+  let emissionsViewService: EmissionsViewWorkspaceService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EmissionsViewRepository,
-        EmissionsViewController,
-        EmissionsViewService,
+        EmissionsViewWorkspaceRepository,
+        EmissionsViewWorkspaceController,
+        EmissionsViewWorkspaceService,
       ],
     }).compile();
 
-    emissionsViewController = module.get(EmissionsViewController);
-    emissionsViewService = module.get(EmissionsViewService);
+    emissionsViewController = module.get(EmissionsViewWorkspaceController);
+    emissionsViewService = module.get(EmissionsViewWorkspaceService);
   });
 
   it('should get available views', async function() {

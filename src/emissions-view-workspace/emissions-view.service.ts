@@ -4,11 +4,11 @@ import { Request } from 'express';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { EmissionsViewRepository } from './emissions-view.repository';
+import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
 
 @Injectable()
-export class EmissionsViewService {
-  constructor(private readonly repository: EmissionsViewRepository) {}
+export class EmissionsViewWorkspaceService {
+  constructor(private readonly repository: EmissionsViewWorkspaceRepository) {}
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
     const results = await this.repository.find({ templateCode: 'EMVIEW' });

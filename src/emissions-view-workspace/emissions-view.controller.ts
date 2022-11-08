@@ -12,14 +12,14 @@ import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { EmissionsViewService } from './emissions-view.service';
+import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
-export class EmissionsViewController {
-  constructor(private readonly service: EmissionsViewService) {}
+export class EmissionsViewWorkspaceController {
+  constructor(private readonly service: EmissionsViewWorkspaceService) {}
 
   @Get()
   @ApiOkResponse({
@@ -55,7 +55,7 @@ export class EmissionsViewController {
     style: 'pipeDelimited',
     name: 'reportingPeriod',
     required: true,
-    explode: false
+    explode: false,
   })
   @UseInterceptors(Json2CsvInterceptor)
   getView(
