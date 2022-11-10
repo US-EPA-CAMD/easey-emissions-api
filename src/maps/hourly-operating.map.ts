@@ -47,12 +47,12 @@ export class HourlyOperatingMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      monitorHourlyValueData: null,
-      matsMonitorHourlyValueData: null,
-      derivedHourlyValueData: null,
-      matsDerivedHourlyValueData: null,
-      hourlyFuelFlowData: null,
-      hourlyGFMData: null,
+      monitorHourlyValueData: [],
+      matsMonitorHourlyValueData: [],
+      derivedHourlyValueData: [],
+      matsDerivedHourlyValueData: [],
+      hourlyFuelFlowData: [],
+      hourlyGFMData: [],
     };
   }
 }

@@ -33,7 +33,7 @@ describe('HourlyFuelFlowMap', () => {
         calcAppdStatus: mock.calcAppdStatus,
         reportingPeriodId: mock.reportingPeriodId,
         monitoringLocationId: mock.monitoringLocationId,
-        hourlyParameterFuelFlowData: mock.hrlyParamFuelFlows ?? null,
+        hourlyParameterFuelFlowData: mock.hrlyParamFuelFlows ?? [],
       });
     };
 

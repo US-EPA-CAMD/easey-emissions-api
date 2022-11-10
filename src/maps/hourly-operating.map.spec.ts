@@ -43,12 +43,12 @@ describe('HourlyOperatingMap', () => {
         userId: mock.userId,
         addDate: mock.addDate,
         updateDate: mock.updateDate,
-        monitorHourlyValueData: mock.monitorHourlyValues ?? null,
-        matsMonitorHourlyValueData: mock.matsMonitorHourlyValues ?? null,
-        derivedHourlyValueData: mock.derivedHrlyValues ?? null,
-        matsDerivedHourlyValueData: mock.matsDerivedHourlyValues ?? null,
-        hourlyFuelFlowData: mock.hrlyFuelFlows ?? null,
-        hourlyGFMData: mock.hrlyGasFlowMeters ?? null,
+        monitorHourlyValueData: mock.monitorHourlyValues ?? [],
+        matsMonitorHourlyValueData: mock.matsMonitorHourlyValues ?? [],
+        derivedHourlyValueData: mock.derivedHrlyValues ?? [],
+        matsDerivedHourlyValueData: mock.matsDerivedHourlyValues ?? [],
+        hourlyFuelFlowData: mock.hrlyFuelFlows ?? [],
+        hourlyGFMData: mock.hrlyGasFlowMeters ?? [],
       });
     };
 
