@@ -40,7 +40,7 @@ describe('DailyEmissionMap', () => {
         updateDate: mock.updateDate,
         calcTotalDailyEmissions: mock.calcTotalDailyEmissions,
         calcTotalOpTime: mock.calcTotalOpTime,
-        dailyFuelData: null,
+        dailyFuelData: [],
       });
     };
 
