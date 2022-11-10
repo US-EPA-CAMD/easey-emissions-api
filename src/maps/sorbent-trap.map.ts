@@ -36,7 +36,7 @@ export class SorbentTrapMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      samplingTrainData: null,
+      samplingTrainData: [],
     };
   }
 }
