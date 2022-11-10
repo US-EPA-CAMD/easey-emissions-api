@@ -33,7 +33,7 @@ export class Nsps4tSummaryWorkspaceService {
           nsps4tSummary.nsps4tFourthQuarterData = arrayPushCreate(
             nsps4tSummary.nsps4tFourthQuarterData,
             data,
-          );
+          ) ?? [];
         }),
         this.nsps4tCompliancePeriodService
           .export([nsps4tSummary.id])
@@ -41,7 +41,7 @@ export class Nsps4tSummaryWorkspaceService {
             nsps4tSummary.nsps4tCompliancePeriodData = arrayPushCreate(
               nsps4tSummary.nsps4tCompliancePeriodData,
               data,
-            );
+            ) ?? [];
           }),
       );
     }

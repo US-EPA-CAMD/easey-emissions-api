@@ -35,10 +35,10 @@ describe('NSPS4TSummaryMap', () => {
             param.nsps4tCompliancePeriodData,
           )
             ? param.nsps4tCompliancePeriodData
-            : null,
+            : [],
           nsps4tFourthQuarterData: hasArrayValues(param.nsps4tAnnualData)
             ? param.nsps4tAnnualData
-            : null,
+            : [],
         };
       }),
     );
