@@ -106,13 +106,13 @@ export class EmissionsWorkspaceService {
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
       const results = new EmissionsDTO(mappedResults);
-      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
-      results.dailyEmissionData = promiseResult[DAILY_EMISSION];
-      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
-      results.summaryValueData = promiseResult[SUMMARY_VALUES];
-      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
+      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] && [];
+      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] && [];
+      results.dailyEmissionData = promiseResult[DAILY_EMISSION] && [];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP] && [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] && [];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES] && [];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] && [];
 
       return results;
     }

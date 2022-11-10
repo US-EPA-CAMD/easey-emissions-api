@@ -43,7 +43,7 @@ export class DailyTestSummaryService {
 
       summaries.forEach(s => {
         s.dailyCalibrationData =
-          dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? null;
+          dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? [];
       });
     }
 

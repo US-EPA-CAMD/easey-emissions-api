@@ -1,5 +1,5 @@
 import { FindOneOptions } from 'typeorm';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ValidateNested, ValidationArguments } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
@@ -89,6 +89,7 @@ export class EmissionsImportDTO extends EmissionsBaseDTO {
 
   @ValidateNested({ each: true })
   @Type(() => LongTermFuelFlowImportDTO)
+  @Transform(d=> d=== null ? [] : d, {toPlainOnly: true})
   longTermFuelFlowData: LongTermFuelFlowImportDTO[];
 
   @ValidateNested({ each: true })

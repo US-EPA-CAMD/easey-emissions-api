@@ -26,14 +26,14 @@ export class EmissionsMap extends BaseMap<
       chkSessionId: entity.chkSessionId,
       submissionId: entity.submissionId,
       submissionAvailabilityCd: entity.submissionAvailabilityCd,
-      dailyEmissionData: null,
-      weeklyTestSummaryData: null,
-      summaryValueData: null,
-      dailyTestSummaryData: null,
-      hourlyOperatingData: null,
-      longTermFuelFlowData: null,
-      sorbentTrapData: null,
-      nsps4tSummaryData: null,
+      dailyEmissionData: [],
+      weeklyTestSummaryData: [],
+      summaryValueData: [],
+      dailyTestSummaryData: [],
+      hourlyOperatingData: [],
+      longTermFuelFlowData: [],
+      sorbentTrapData: [],
+      nsps4tSummaryData: [],
     };
   }
 }
