@@ -43,7 +43,7 @@ export class WeeklyTestSummaryService {
         weeklyTestSum.weeklySystemIntegrityData =
           weeklySystemIntegrityData?.filter(
             i => i.weeklyTestSumId === weeklyTestSum.id,
-          ) ?? null;
+          ) ?? [];
       });
     }
     return weeklyTestSummaries;

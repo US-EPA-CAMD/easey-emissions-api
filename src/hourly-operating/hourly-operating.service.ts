@@ -63,24 +63,24 @@ export class HourlyOperatingService {
         hourlyOperating?.forEach(hourlyOp => {
           hourlyOp.monitorHourlyValueData = values?.[0]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.derivedHourlyValueData = values?.[1]?.filter(
             derivedHourlyDatum => {
               return derivedHourlyDatum.hourId === hourlyOp.id;
             },
-          );
+          ) ?? [];
           hourlyOp.matsMonitorHourlyValueData = values?.[2]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.matsDerivedHourlyValueData = values?.[3]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.hourlyGFMData = values?.[4]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.hourlyFuelFlowData = values?.[5]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
         });
       }
     }

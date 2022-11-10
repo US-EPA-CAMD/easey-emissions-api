@@ -26,7 +26,7 @@ export class DailyTestSummaryMap extends BaseMap<
 
     const monitoringSystemId = entity.monitorSystem?.monitoringSystemId ?? null;
 
-    let dailyCalibrationData = null;
+    let dailyCalibrationData = [];
     if (Array.isArray(entity.dailyCalibrations)) {
       dailyCalibrationData = await new DailyCalibrationMap().many(
         entity.dailyCalibrations,

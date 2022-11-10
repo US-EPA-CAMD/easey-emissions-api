@@ -226,8 +226,8 @@ describe('Emissions Service', () => {
 
       const dtoMocks = genEmissionsRecordDto();
       const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
-      mappedEmissions.dailyTestSummaryData = null;
-      mappedEmissions.hourlyOperatingData = null;
+      mappedEmissions.dailyTestSummaryData = [];
+      mappedEmissions.hourlyOperatingData = [];
 
       jest
         .spyOn(emissionsRepository, 'export')

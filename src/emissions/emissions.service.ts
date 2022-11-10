@@ -64,13 +64,13 @@ export class EmissionsService {
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
-      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
-      results.dailyEmissionData = promiseResult[DAILY_EMISSION];
-      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
-      results.summaryValueData = promiseResult[SUMMARY_VALUES];
-      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
+      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] ?? [];
+      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
+      results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
 
       return results;
     }

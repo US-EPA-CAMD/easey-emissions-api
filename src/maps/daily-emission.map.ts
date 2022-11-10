@@ -34,7 +34,7 @@ export class DailyEmissionMap extends BaseMap<
       updateDate: entity.updateDate,
       calcTotalDailyEmissions: entity.calcTotalDailyEmissions,
       calcTotalOpTime: entity.calcTotalOpTime,
-      dailyFuelData: null,
+      dailyFuelData: [],
     };
   }
 }
