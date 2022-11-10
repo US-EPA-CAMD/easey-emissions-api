@@ -3,12 +3,12 @@ import { Request } from 'express';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
+import { EmissionsViewRepository } from './emissions-view.repository';
 import { getSelectedView } from '../utils/selected-emission-view';
 
 @Injectable()
-export class EmissionsViewWorkspaceService {
-  constructor(private readonly repository: EmissionsViewWorkspaceRepository) {}
+export class EmissionsViewService {
+  constructor(private readonly repository: EmissionsViewRepository) {}
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
     const results = await this.repository.find({ templateCode: 'EMVIEW' });
@@ -26,6 +26,6 @@ export class EmissionsViewWorkspaceService {
     req: Request,
     params: EmissionsViewParamsDTO,
   ) {
-    return getSelectedView(viewCode, 'camdecmpswks', req, params);
+    return getSelectedView(viewCode, 'camdecmps', req, params);
   }
 }
