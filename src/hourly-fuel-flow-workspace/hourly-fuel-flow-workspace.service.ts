@@ -20,13 +20,13 @@ export class HourlyFuelFlowWorkspaceService {
 
   async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
     if (!Array.isArray(hourlyOperatingIds) || hourlyOperatingIds.length < 1) {
-      return null;
+      return [];
     }
 
     const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
 
     if (!Array.isArray(hourlyFuelFlow)) {
-      return null;
+      return [];
     }
 
     const mapped = await this.map.many(hourlyFuelFlow);
@@ -34,7 +34,7 @@ export class HourlyFuelFlowWorkspaceService {
     for (const fuelFlow of mapped) {
       fuelFlow.hourlyParameterFuelFlowData = await this.hourlyParameterFuelFlow.export(
         fuelFlow.id,
-      );
+      ) ?? [];
     }
 
     return this.map.many(hourlyFuelFlow);

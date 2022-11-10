@@ -28,8 +28,8 @@ export class Nsps4tSummaryMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      nsps4tCompliancePeriodData: null,
-      nsps4tFourthQuarterData: null,
+      nsps4tCompliancePeriodData: [],
+      nsps4tFourthQuarterData: [],
     };
   }
 }

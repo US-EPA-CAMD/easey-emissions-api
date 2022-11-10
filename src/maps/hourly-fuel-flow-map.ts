@@ -34,7 +34,7 @@ export class HourlyFuelFlowMap extends BaseMap<
       calcAppdStatus: entity.calcAppdStatus,
       reportingPeriodId: entity.reportingPeriodId,
       monitoringLocationId: entity.monitoringLocationId,
-      hourlyParameterFuelFlowData: null,
+      hourlyParameterFuelFlowData: [],
     };
   }
 }

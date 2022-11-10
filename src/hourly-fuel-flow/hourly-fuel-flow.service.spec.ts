@@ -30,7 +30,7 @@ describe('HourlyFuelFlowService', () => {
 
   describe('export', () => {
     it('should return null given no fuel flows were found', async function() {
-      await expect(service.export([])).resolves.toEqual(null);
+      await expect(service.export([])).resolves.toEqual([]);
     });
 
     it('should return the correct shape of data given correct inputs', function() {});
