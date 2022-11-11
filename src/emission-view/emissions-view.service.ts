@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewRepository } from './emissions-view.repository';
 import { getSelectedView } from '../utils/selected-emission-view';
@@ -9,18 +8,6 @@ import { getSelectedView } from '../utils/selected-emission-view';
 @Injectable()
 export class EmissionsViewService {
   constructor(private readonly repository: EmissionsViewRepository) {}
-
-  async getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    const results = await this.repository.find({ templateCode: 'EMVIEW' });
-
-    return results.map(e => {
-      return {
-        code: e.code,
-        name: e.displayName,
-      };
-    });
-  }
-
   async getView(
     viewCode: string,
     req: Request,

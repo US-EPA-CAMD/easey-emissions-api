@@ -27,26 +27,26 @@ export class Nsps4tSummaryWorkspaceService {
     });
 
     if (hasArrayValues(nsps4tSummaryData)) {
-      const promises = [];
-      for (const nsps4tSummary of nsps4tSummaryData) {
-        promises.push(
-          this.nsps4tAnnualService.export([nsps4tSummary.id]).then(data => {
-            nsps4tSummary.nsps4tFourthQuarterData =
-              arrayPushCreate(nsps4tSummary.nsps4tFourthQuarterData, data) ??
-              [];
+    const promises = [];
+    for (const nsps4tSummary of nsps4tSummaryData) {
+      promises.push(
+        this.nsps4tAnnualService.export([nsps4tSummary.id]).then(data => {
+          nsps4tSummary.nsps4tFourthQuarterData = arrayPushCreate(
+            nsps4tSummary.nsps4tFourthQuarterData,
+            data,
+          ) ?? [];
+        }),
+        this.nsps4tCompliancePeriodService
+          .export([nsps4tSummary.id])
+          .then(data => {
+            nsps4tSummary.nsps4tCompliancePeriodData = arrayPushCreate(
+              nsps4tSummary.nsps4tCompliancePeriodData,
+              data,
+            ) ?? [];
           }),
-          this.nsps4tCompliancePeriodService
-            .export([nsps4tSummary.id])
-            .then(data => {
-              nsps4tSummary.nsps4tCompliancePeriodData =
-                arrayPushCreate(
-                  nsps4tSummary.nsps4tCompliancePeriodData,
-                  data,
-                ) ?? [];
-            }),
-        );
-      }
-      await Promise.all(promises);
+      );
+    }
+    await Promise.all(promises);
     }
     return nsps4tSummaryData;
   }
