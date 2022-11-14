@@ -10,7 +10,6 @@ import {
 
 import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -20,15 +19,6 @@ import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 @ApiSecurity('APIKey')
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
-
-  @Get()
-  @ApiOkResponse({
-    isArray: true,
-    description: 'Retrieves a list of Emissions data views that are available',
-  })
-  getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    return this.service.getAvailableViews();
-  }
 
   @Get(':viewCode')
   @ApiOkResponse({
