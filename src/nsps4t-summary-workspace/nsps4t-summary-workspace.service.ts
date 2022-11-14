@@ -26,6 +26,7 @@ export class Nsps4tSummaryWorkspaceService {
       repository: this.repository,
     });
 
+    if (hasArrayValues(nsps4tSummaryData)) {
     const promises = [];
     for (const nsps4tSummary of nsps4tSummaryData) {
       promises.push(
@@ -46,7 +47,7 @@ export class Nsps4tSummaryWorkspaceService {
       );
     }
     await Promise.all(promises);
-
+    }
     return nsps4tSummaryData;
   }
 

@@ -14,6 +14,7 @@ import { OzoneApportionedEmissionsModule } from './apportioned-emissions/ozone/o
 import { MatsApportionedEmissionsModule } from './apportioned-emissions/mats/mats-apportioned-emissions.module';
 import { HourlyMatsApportionedEmissionsModule } from './apportioned-emissions/mats/hourly/hourly-mats-apportioned-emissions.module';
 import { EmissionsViewWorkspaceModule } from './emissions-view-workspace/emissions-view.module';
+import { EmissionsViewModule } from './emission-view/emissions-view.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,11 @@ const routes: Routes = [
       {
         path: '/daily-calibrations',
         module: DailyCalibrationModule,
-      },    
+      },
+      {
+        path: '/views',
+        module: EmissionsViewModule,
+      },
     ],
   },
   {
@@ -37,7 +42,7 @@ const routes: Routes = [
       {
         path: '/views',
         module: EmissionsViewWorkspaceModule,
-      },  
+      },
     ],
   },
   {

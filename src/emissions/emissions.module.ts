@@ -19,7 +19,6 @@ import { DailyEmissionRepository } from '../daily-emission/daily-emission.reposi
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
-import { EmissionsViewWorkspaceModule } from '../emissions-view-workspace/emissions-view.module';
 import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
@@ -32,6 +31,8 @@ import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
 import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
 import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
+import { EmissionsViewModule } from '../emission-view/emissions-view.module';
+import { EmissionsViewWorkspaceModule } from 'src/emissions-view-workspace/emissions-view.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/ns
       SorbentTrapRepository,
     ]),
     EmissionsViewWorkspaceModule,
+    EmissionsViewModule,
     DailyEmissionModule,
     DailyTestSummaryModule,
     HourlyOperatingModule,
