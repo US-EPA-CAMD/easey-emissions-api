@@ -22,16 +22,6 @@ describe('EmissionsViewWorkspaceController', () => {
   });
 
   it('should get available views', async function() {
-    jest
-      .spyOn(emissionsViewService, 'getAvailableViews')
-      .mockResolvedValue(undefined);
-
-    await expect(emissionsViewController.getAvailableViews()).resolves.toEqual(
-      undefined,
-    );
-  });
-
-  it('should get available views', async function() {
     jest.spyOn(emissionsViewService, 'getView').mockResolvedValue(undefined);
 
     await expect(
