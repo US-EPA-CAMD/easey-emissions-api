@@ -8,6 +8,7 @@ import {
 import { OneOrMore } from '../pipes/one-or-more.pipe';
 import { IsReportingPeriodFormat } from '../pipes/is-reporting-period-format.pipe';
 import { IsInReportingPeriodRange } from '../pipes/is-in-reporting-period.pipe';
+import { ArrayMaxLength } from '../pipes/array-max-length.pipe';
 
 export class EmissionsViewParamsDTO {
   @ApiProperty()
@@ -44,6 +45,9 @@ export class EmissionsViewParamsDTO {
       'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  @ArrayMaxLength(4, {
+    message: 'You can only select a maximum of four reporting periods',
+  })
   reportingPeriod: string[];
 
   @ApiProperty({
