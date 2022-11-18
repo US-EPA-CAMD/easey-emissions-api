@@ -4,9 +4,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { getManager } from 'typeorm';
 import * as selectedEmissionView from '../utils/selected-emission-view';
+import { EmissionsViewDTO } from '../dto/emissions-view.dto';
+
+const mockRepository = {
+  find: jest.fn(),
+};
 
 describe('EmissionsViewService', () => {
   let service: EmissionsViewService;
+  let repository: any;
   let req: any;
   let params = new EmissionsViewParamsDTO();
 
@@ -19,14 +25,26 @@ describe('EmissionsViewService', () => {
           provide: getManager,
           useFactory: jest.fn(),
         },
+        {
+          provide: EmissionsViewRepository,
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
-    service = module.get<EmissionsViewService>(EmissionsViewService);
+    service = module.get(EmissionsViewService);
+    repository = module.get(EmissionsViewRepository);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should return list of views', async () => {
+    const expectedResult: EmissionsViewDTO[] = [];
+    repository.find.mockResolvedValue(expectedResult);
+    const result = await service.getAvailableViews();
+    expect(result).toEqual(expectedResult);
   });
 
   it('should return selected view data', async () => {
