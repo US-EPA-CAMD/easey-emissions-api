@@ -53,13 +53,33 @@ export async function getSelectedView(
 
   let columnList = columns.map(i => `${i.columnname} AS "${i.columnalias}"`);
 
-  const viewData = await mgr.query(
-    `
-      SELECT ${columnList.join(',')}
-      FROM ${schema}.emission_view_${viewCode.toLowerCase()}
-      WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2);`,
+  const viewData = await (await mgr.query(`
+    SELECT ${columnList.join(',')}
+    FROM ${schema}.emission_view_${viewCode.toLowerCase()}
+    WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2);`,
     [rptPeriod.map(i => i.id), monLocs.map(i => i.id)],
-  );
+  )).map((item) => {
+    const props = Object.entries(item).map(([key, val]) => {
+      if (val !== null && val != undefined) {
+        if (typeof(val) === "object") {
+          return `"${key}": "${(val as Date).toLocaleDateString()}"`;
+        }
+        else if (typeof(val) === "string") {
+          const intVal = parseInt(val);
+
+          if (val.includes(':') || isNaN(intVal)) {
+            return `"${key}": "${val}"`;
+          }
+          else if (val.includes('.')) {
+            return `"${key}": ${parseFloat(val)}`;
+          }
+          return `"${key}": ${intVal}`;
+        }
+      }
+      return `"${key}": null`;
+    }).join(',');
+    return JSON.parse(`{ ${props} }`);
+  });
 
   columnList = columns.map(i =>
     JSON.parse(`{ "label": "${i.columnlabel}", "value": "${i.columnalias}" }`),
