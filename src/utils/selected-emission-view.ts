@@ -69,3 +69,27 @@ export async function getSelectedView(
 
   return viewData;
 }
+
+export async function getFileName(
+  viewCode: string,
+  params: EmissionsViewParamsDTO,
+) {
+  const mgr = getManager();
+  const monitorPlanId = params.monitorPlanId;
+  const facility = await mgr
+    .createQueryBuilder()
+    .select('p.name AS name')
+    .from('camdecmps.monitor_plan', 'mp')
+    .innerJoin('mp.plant', 'p')
+    .where('mp.id = :monitorPlanId', { monitorPlanId })
+    .getRawOne();
+
+  const unitIds = params.unitIds ? ` ${params.unitIds}` : '';
+  const stackPipeIds = params.stackPipeIds ? ` ${params.stackPipeIds}` : '';
+  let name = `${facility?.name}${unitIds}${stackPipeIds} ${
+    params.reportingPeriod
+  } ${viewCode?.toUpperCase()} emissions`;
+  const nameSplit = name.split('|');
+  const formatedName = nameSplit.join(',');
+  return formatedName;
+}
