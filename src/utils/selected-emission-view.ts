@@ -83,9 +83,12 @@ export async function getFileName(
     .innerJoin('mp.plant', 'p')
     .where('mp.id = :monitorPlanId', { monitorPlanId })
     .getRawOne();
-  let name = `${facility?.name}${params.unitIds ? ` ${params.unitIds}` : ''}${
-    params.stackPipeIds ? ` ${params.stackPipeIds}` : ''
-  } ${params.reportingPeriod} ${viewCode?.toUpperCase()} emissions`;
+
+  const unitIds = params.unitIds ? ` ${params.unitIds}` : '';
+  const stackPipeIds = params.stackPipeIds ? ` ${params.stackPipeIds}` : '';
+  let name = `${facility?.name}${unitIds}${stackPipeIds} ${
+    params.reportingPeriod
+  } ${viewCode?.toUpperCase()} emissions`;
   const nameSplit = name.split('|');
   const formatedName = nameSplit.join(',');
   return formatedName;
