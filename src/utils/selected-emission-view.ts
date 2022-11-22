@@ -75,7 +75,7 @@ export async function getFileName(
   params: EmissionsViewParamsDTO,
 ) {
   const mgr = getManager();
-  const monitorPlanId = params.monitorPlanId;
+  const monitorPlanId = params.monitorPlanId.trim();
   const facility = await mgr
     .createQueryBuilder()
     .select('p.name AS name')
@@ -88,7 +88,7 @@ export async function getFileName(
   const stackPipeIds = params.stackPipeIds ? ` ${params.stackPipeIds}` : '';
   let name = `${facility?.name}${unitIds}${stackPipeIds} ${
     params.reportingPeriod
-  } ${viewCode?.toUpperCase()} emissions`;
+  } ${viewCode?.toUpperCase().trim()} emissions`;
   const nameSplit = name.split('|');
   const formatedName = nameSplit.join(',');
   return formatedName;

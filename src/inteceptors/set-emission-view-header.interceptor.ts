@@ -17,13 +17,14 @@ export class SetEmissionViewHeaderInterceptor implements NestInterceptor {
     const httpContext = context.switchToHttp();
     const req = httpContext.getRequest();
     const fileName = await getFileName(req.params.viewCode, req.query);
-
     return next.handle().pipe(
       map(data => {
-        req.res.setHeader(
-          'content-disposition',
-          `attachment; filename="${fileName}"`,
-        );
+        if (req.query.attachFile === "true") {
+          req.res.setHeader(
+            'content-disposition',
+            `attachment; filename="${fileName}"`,
+          );
+        }
 
         return data;
       }),
