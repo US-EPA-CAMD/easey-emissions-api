@@ -32,6 +32,7 @@ import { Nsps4tSummaryWorkspaceModule } from './nsps4t-summary-workspace/nsps4t-
 import { Nsps4tSummaryModule } from './nsps4t-summary/nsps4t-summary.module';
 import { Nsps4tCompliancePeriodModule } from './nsps4t-compliance-period/nsps4t-compliance-period.module';
 import { Nsps4tAnnualModule } from './nsps4t-annual/nsps4t-annual.module';
+import { ReviewSubmitModule } from './review-submit/ReviewSubmit.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { Nsps4tAnnualModule } from './nsps4t-annual/nsps4t-annual.module';
     Nsps4tSummaryModule,
     Nsps4tCompliancePeriodModule,
     Nsps4tAnnualModule,
+    ReviewSubmitModule,
   ],
 })
 export class AppModule {}
