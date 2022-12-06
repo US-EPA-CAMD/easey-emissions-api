@@ -7,6 +7,7 @@ import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { genHourUnitMatsDataView } from '../../../../test/object-generators/apportioned-emissions';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -50,30 +51,11 @@ describe('-- Hourly MATS Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls HourUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = HourUnitMatsDataView[0];
+      const expected = genHourUnitMatsDataView<HourUnitMatsDataView>(); ;
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
       expect(result).toEqual(expected);
     });
   });
-
-  // describe('streamEmissions', () => {
-  //   it('calls HourlyUnitMatsDataRepository.streamEmissions() and streams all emissions from the repository', async () => {
-  //     repository.getStreamQuery.mockResolvedValue('');
-
-  //     let filters = new HourlyMatsApportionedEmissionsParamsDTO();
-
-  //     req.headers.accept = '';
-
-  //     let result = await service.streamEmissions(req, filters);
-
-  //     expect(result).toEqual(
-  //       new StreamableFile(Buffer.from('stream'), {
-  //         type: req.headers.accept,
-  //         disposition: `attachment; filename="hourly-mats-emissions-${0}.json"`,
-  //       }),
-  //     );
-  //   });
-  // });
 });

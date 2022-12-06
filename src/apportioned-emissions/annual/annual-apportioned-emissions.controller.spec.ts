@@ -7,6 +7,12 @@ import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { AnnualApportionedEmissionsController } from './annual-apportioned-emissions.controller';
 import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
+import {
+  genAnnualApportionedEmissionsNationalDto,
+  genAnnualUnitData,
+  genAnnualApportionedEmissionsFacilityDto,
+  genAnnualApportionedEmissionsStateDto,
+} from '../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -40,52 +46,56 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult: AnnualUnitDataView[] = [];
+    it('calls AnnualApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
+      const mockedValues = genAnnualUnitData<AnnualUnitDataView>();
       const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(
-        expectedResult,
-      );
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(mockedValues);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(mockedValues);
     });
   });
 
   describe('* getEmissionsFacilityAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: AnnualUnitDataView[] = [];
+    it('calls AnnualApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
+      const mockedValues = genAnnualApportionedEmissionsFacilityDto();
       const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissionsFacilityAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsFacilityAggregation(
+        req,
+        paramsDto,
+      );
+      expect(results).toBe(mockedValues);
     });
   });
 
   describe('* getEmissionsStateAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: AnnualUnitDataView[] = [];
+    it('calls AnnualApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
+      const mockedValues = genAnnualApportionedEmissionsStateDto();
       const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissionsStateAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsStateAggregation(
+        req,
+        paramsDto,
+      );
+      expect(results).toBe(mockedValues);
     });
   });
 
   describe('* getEmissionsNationalAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: AnnualUnitDataView[] = [];
+    it('calls AnnualApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
+      const mockedValues = genAnnualApportionedEmissionsNationalDto();
       const paramsDto = new PaginatedAnnualApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')
-        .mockResolvedValue(expectedResult);
-      expect(
-        await controller.getEmissionsNationalAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsNationalAggregation(
+        req,
+        paramsDto,
+      );
+      expect(results).toBe(mockedValues);
     });
   });
 });

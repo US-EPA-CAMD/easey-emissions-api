@@ -3,10 +3,16 @@ import { ConfigService } from '@nestjs/config';
 
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import {
+  genAnnualApportionedEmissionsFacilityDto,
+  genAnnualApportionedEmissionsNationalDto,
+  genAnnualApportionedEmissionsStateDto,
+  genAnnualUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -53,7 +59,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls OzoneUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = OzoneUnitDataView[0];
+      const expected = genAnnualUnitData<AnnualUnitDataView>();
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
@@ -63,7 +69,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls OzoneUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ year: 2019 }];
+      const expected = genAnnualApportionedEmissionsFacilityDto();
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -73,7 +79,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls OzoneUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ year: 2019 }];
+      const expected = genAnnualApportionedEmissionsStateDto();
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -83,7 +89,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls OzoneUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ year: 2019 }];
+      const expected = genAnnualApportionedEmissionsNationalDto();
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedOzoneApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);
