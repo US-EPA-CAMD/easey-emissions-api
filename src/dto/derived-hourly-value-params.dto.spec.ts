@@ -19,6 +19,6 @@ describe('DerivedHourlyValueParamsDto', () => {
     const params = plainToClass(DerivedHourlyValueParamsDto, {});
     const errors = await validate(params);
 
-    expect(errors.length).toBe(3);
+    expect(errors.length).toBe(2);
   });
 });

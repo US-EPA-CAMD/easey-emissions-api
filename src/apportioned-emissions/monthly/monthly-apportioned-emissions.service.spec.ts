@@ -3,10 +3,16 @@ import { ConfigService } from '@nestjs/config';
 
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import { MonthUnitDataRepository } from './month-unit-data.repository';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
+import {
+  genMonthlyApportionedEmissionsFacilityDto,
+  genMonthlyApportionedEmissionsNationalDto,
+  genMonthlyApportionedEmissionsStateDto,
+  genMonthUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -53,7 +59,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls MonthUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = MonthUnitDataView[0];
+      const expected = genMonthUnitData<MonthUnitDataView>();
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
@@ -63,7 +69,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls MonthUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ month: 1 }];
+      const expected = genMonthlyApportionedEmissionsFacilityDto();
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -73,7 +79,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls MonthUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ month: 1 }];
+      const expected = genMonthlyApportionedEmissionsStateDto();
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -83,7 +89,7 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls MonthUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ month: 1 }];
+      const expected = genMonthlyApportionedEmissionsNationalDto();
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);
