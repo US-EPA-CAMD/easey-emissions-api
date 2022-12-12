@@ -3,17 +3,19 @@ export class EmissionsReviewSubmitDTO {
 
   facilityName: string;
 
-  monPlanIdentifier: string;
+  monPlanId: string;
 
   configuration: string;
 
-  periodAbbreviation: string;
-
-  emStatusCode: string;
+  evalStatusCode: string;
 
   submissionAvailabilityCode: string;
 
   userid: string;
 
   updateDate: string;
+
+  windowStatus: string;
+
+  periodAbbreviation: string;
 }

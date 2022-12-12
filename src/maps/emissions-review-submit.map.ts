@@ -14,13 +14,14 @@ export class EmissionsReviewSubmitMap extends BaseMap<
     return {
       orisCode: entity.orisCode,
       facilityName: entity.facilityName,
-      monPlanIdentifier: entity.monPlanIdentifier,
+      monPlanId: entity.monPlanId,
       configuration: entity.configuration,
-      periodAbbreviation: entity.periodAbbreviation,
-      emStatusCode: entity.emStatusCode,
+      evalStatusCode: entity.evalStatusCode,
       submissionAvailabilityCode: entity.submissionAvailabilityCode,
       userid: entity.userid,
       updateDate: entity.updateDate,
+      windowStatus: entity.windowStatus,
+      periodAbbreviation: entity.periodAbbreviation,
     };
   }
 }
