@@ -3,10 +3,16 @@ import { ConfigService } from '@nestjs/config';
 
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import {
+  genHourlyApportionedEmissionsFacilityDto,
+  genHourlyApportionedEmissionsNationalDto,
+  genHourlyApportionedEmissionsStateDto,
+  genHourUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
+import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -53,7 +59,8 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls HourUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = HourUnitDataView[0];
+      const expected = genHourUnitData<HourUnitDataView>();
+      console.log(expected)
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
@@ -63,7 +70,8 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls HourUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genHourlyApportionedEmissionsFacilityDto();
+      console.log(expected);
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -73,7 +81,7 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls HourUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genHourlyApportionedEmissionsStateDto();
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -83,7 +91,7 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls HourUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genHourlyApportionedEmissionsNationalDto();
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);
