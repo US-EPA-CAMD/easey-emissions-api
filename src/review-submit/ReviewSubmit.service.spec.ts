@@ -8,7 +8,7 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 
 const mockRepo = () => ({
   find: jest.fn().mockImplementation(args => {
-    if (args.where['monPlanIdentifier']) {
+    if (args.where['monPlanId']) {
       return [new EmissionsReviewSubmitDTO()];
     } else {
       return [new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()];
@@ -49,12 +49,16 @@ describe('ReviewSubmitService', () => {
 
   describe('getEmissionsRecords', () => {
     it('should call the service function given list of orisCodes', async () => {
-      const result = await service.getEmissionsRecords([3], [], []);
+      const result = await service.getEmissionsRecords([3], [], ['2022 Q2']);
       expect(result.length).toBe(2);
     });
 
     it('should call the service function given list of monPlanIds', async () => {
-      const result = await service.getEmissionsRecords([], ['MOCK'], []);
+      const result = await service.getEmissionsRecords(
+        [],
+        ['MOCK'],
+        ['2022 Q2'],
+      );
       expect(result.length).toBe(1);
     });
   });

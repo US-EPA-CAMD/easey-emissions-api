@@ -19,12 +19,16 @@ export class ReviewSubmitService {
     monPlanIds: string[],
     quarters: string[],
   ): Promise<EmissionsReviewSubmitDTO[]> {
+    if (!quarters || quarters.length === 0) {
+      return [];
+    }
+
     try {
       if (monPlanIds && monPlanIds.length > 0) {
         return this.map.many(
           await this.repository.find({
             where: {
-              monPlanIdentifier: In(monPlanIds),
+              monPlanId: In(monPlanIds),
               periodAbbreviation: In(quarters),
             },
           }),
