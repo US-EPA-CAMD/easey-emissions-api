@@ -15,6 +15,7 @@ import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewService } from './emissions-view.service';
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
+import { IsViewCode } from '../pipes/is-view-code.pipe';
 
 @Controller()
 @ApiTags('Emissions')
@@ -61,7 +62,7 @@ export class EmissionsViewController {
   @UseInterceptors(Json2CsvInterceptor)
   @UseInterceptors(SetEmissionViewHeaderInterceptor)
   getView(
-    @Param('viewCode') viewCode: string,
+    @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,
     @Query() params: EmissionsViewParamsDTO,
   ) {
