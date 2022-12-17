@@ -22,7 +22,7 @@ export class EmissionsChecksService {
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
-  private throwIfErrors(errorList: string[]) {
+  public throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
       throw new LoggingException(errorList, HttpStatus.BAD_REQUEST);
     }
