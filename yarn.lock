@@ -1148,7 +1148,7 @@
     "@typescript-eslint/types" "5.1.0"
     eslint-visitor-keys "^3.0.0"
 
-"@us-epa-camd/easey-common@^11.2.0":
+"@us-epa-camd/easey-common@11.2.0":
   version "11.2.0"
   resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/11.2.0/4d55aaf25ea41fa8edfae57f1ec321d9463f39ad#4d55aaf25ea41fa8edfae57f1ec321d9463f39ad"
   integrity sha512-VNmjbnP990KF+Ic/aTDjDv0wVoPngn0dzvyEmOnUw+Jm50XDDd/mQcUSSvhSkIa6EuN16T/GxPTmcrwa2RUg7g==
