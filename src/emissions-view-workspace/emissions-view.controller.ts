@@ -14,6 +14,7 @@ import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
+import { IsViewCode } from '../pipes/is-view-code.pipe';
 
 @Controller()
 @ApiTags('Emissions')
@@ -51,7 +52,7 @@ export class EmissionsViewWorkspaceController {
   @UseInterceptors(Json2CsvInterceptor)
   @UseInterceptors(SetEmissionViewHeaderInterceptor)
   getView(
-    @Param('viewCode') viewCode: string,
+    @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,
     @Query() params: EmissionsViewParamsDTO,
   ) {
