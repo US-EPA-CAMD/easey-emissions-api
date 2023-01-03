@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import * as typeorm_functions from 'typeorm/globals';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder, getManager, EntityManager } from 'typeorm';
 
 import {
   State,
@@ -15,6 +15,7 @@ import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 
 jest.mock('../../../utils/query-builder.helper');
 
@@ -51,9 +52,17 @@ jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue(({
     select: jest.fn().mockReturnThis() as unknown,
     getQuery: jest.fn().mockReturnThis() as unknown,
     setParameter: jest.fn().mockReturnThis() as unknown,
+    andWhere: jest.fn().mockReturnThis() as unknown,
+    innerJoin: jest.fn().mockReturnThis() as unknown,
+    distinctOn: jest.fn().mockReturnThis() as unknown,
     getMany: jest.fn().mockResolvedValue(new HourUnitMatsDataView()) as unknown,
+    getRawMany: jest.fn().mockResolvedValue([]) as unknown,
   })),
 } as unknown) as Repository<unknown>);
+
+jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
+  query: jest.fn().mockResolvedValue([])
+} as unknown) as EntityManager);
 
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
 filters.page = undefined;
@@ -142,4 +151,14 @@ describe('HourUnitMatsDataRepository', () => {
       expect(paginatedResult).toEqual('mockMatsEmissions');
     });
   });
+
+  describe('getApplicableEmissions', ()=>{
+    it('runs successfully and returns a mocked value of []', async ()=>{
+      let result = await repository.getApplicableEmissions(new ApplicableMatsApportionedEmissionsAttributesParamsDTO(), true, true);
+      expect(result).toEqual([])
+
+      result = await repository.getApplicableEmissions(new ApplicableMatsApportionedEmissionsAttributesParamsDTO(), true, false);
+      expect(result).toEqual([])
+    })
+  })
 });

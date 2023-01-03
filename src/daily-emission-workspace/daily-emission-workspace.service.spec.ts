@@ -8,10 +8,20 @@ import { DailyEmission } from '../entities/workspace/daily-emission.entity';
 import { faker } from '@faker-js/faker';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { DailyFuelDTO } from '../dto/daily-fuel.dto';
+import { DailyEmissionDTO } from '../dto/daily-emission.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
 
 describe('DailyEmissionWorkspaceService', () => {
   let service: DailyEmissionWorkspaceService;
   let repository: DailyEmissionWorkspaceRepository;
+  let exportModule: typeof import('../daily-emission-functions/export-daily-emission-data');
+
+  const mockDailyFuelWorkspaceService = {
+    export: () => Promise.resolve([new DailyFuelDTO()]),
+    import: () => Promise.resolve([new DailyFuel()])
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,8 +30,11 @@ describe('DailyEmissionWorkspaceService', () => {
         DailyEmissionMap,
         DailyEmissionWorkspaceService,
         DailyEmissionWorkspaceRepository,
-        DailyFuelWorkspaceService,
         DailyFuelWorkspaceRepository,
+        {
+          provide: DailyFuelWorkspaceService,
+          useValue: mockDailyFuelWorkspaceService,
+        }
       ],
     }).compile();
 
@@ -29,6 +42,9 @@ describe('DailyEmissionWorkspaceService', () => {
       DailyEmissionWorkspaceService,
     );
     repository = module.get(DailyEmissionWorkspaceRepository);
+    exportModule = await import(
+      '../daily-emission-functions/export-daily-emission-data'
+    );
   });
 
   it('should be defined', () => {
@@ -37,7 +53,7 @@ describe('DailyEmissionWorkspaceService', () => {
 
   describe('import', () => {
     it('should import a record', async function() {
-      const dailyEmission = genDailyEmission<DailyEmission>(1)[0];
+      const dailyEmission = genDailyEmission<DailyEmission>(1, {include:['dailyFuelData']})[0];
 
       // @ts-expect-error use as mock
       jest.spyOn(repository, 'create').mockResolvedValue(dailyEmission);
@@ -57,4 +73,14 @@ describe('DailyEmissionWorkspaceService', () => {
       ).resolves.toEqual(dailyEmission);
     });
   });
+
+  describe('export', ()=>{
+    it( 'should successfully export', async ()=>{
+      jest.spyOn(exportModule, 'exportDailyEmissionData').mockResolvedValue([new DailyEmissionDTO()]);
+      const result = await service.export([], new EmissionsParamsDTO());
+  
+      expect(result.length).toEqual(1)
+      expect(result[0].dailyFuelData.length).toEqual(1)
+    })
+  })
 });
