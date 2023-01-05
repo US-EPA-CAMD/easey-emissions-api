@@ -60,7 +60,7 @@ export async function getSelectedView(
     [rptPeriod.map(i => i.id), monLocs.map(i => i.id)],
   )).map((item) => {
     const props = Object.entries(item).map(([key, val]) => {
-      if (val !== null && val != undefined) {
+      if (val !== null && val !== undefined) {
         if (typeof(val) === "object") {
           return `"${key}": "${(val as Date).toLocaleDateString()}"`;
         }
