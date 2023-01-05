@@ -7,6 +7,12 @@ import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { QuarterlyApportionedEmissionsController } from './quarterly-apportioned-emissions.controller';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import {
+  genQuarterlyApportionedEmissionsFacilityDto,
+  genQuarterlyApportionedEmissionsNationalDto,
+  genQuarterlyApportionedEmissionsStateDto,
+  genQuarterUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -43,8 +49,8 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult: QuarterUnitDataView[] = [];
+    it('calls QuarterlyApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
+      const expectedResult = genQuarterUnitData<QuarterUnitDataView>();
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
       expect(await controller.getEmissions(req, paramsDto)).toBe(
@@ -54,8 +60,8 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsFacilityAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: QuarterUnitDataView[] = [];
+    it('calls QuarterlyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
+      const expectedResult = genQuarterlyApportionedEmissionsFacilityDto();
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
@@ -67,8 +73,8 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsStateAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: QuarterUnitDataView[] = [];
+    it('calls QuarterlyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
+      const expectedResult = genQuarterlyApportionedEmissionsStateDto();
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
@@ -80,8 +86,8 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsNationalAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: QuarterUnitDataView[] = [];
+    it('calls QuarterlyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
+      const expectedResult = genQuarterlyApportionedEmissionsNationalDto();
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')

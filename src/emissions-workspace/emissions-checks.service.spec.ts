@@ -106,6 +106,15 @@ describe('Emissions Checks Service Tests', () => {
 
       await expect(result).resolves.toEqual([]);
     });
+
+    it('should throw errors as array of strings', ()=>{
+      try{
+        service.throwIfErrors(['test']);
+      }catch(error){
+        expect(error?.response?.message).toStrictEqual(['test'])
+      };
+
+    })
   });
 
   describe('invalidDatesCheck', () => {

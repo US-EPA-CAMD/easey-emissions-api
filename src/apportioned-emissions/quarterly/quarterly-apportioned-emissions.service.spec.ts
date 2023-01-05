@@ -13,6 +13,12 @@ import { HourlyFuelFlowMap } from '../../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowRepository } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
 import { HourlyParameterFuelFlowMap } from '../../maps/hourly-parameter-fuel-flow.map';
+import {
+  genDailyApportionedEmissionsFacilityDto,
+  genDailyApportionedEmissionsNationalDto,
+  genDailyApportionedEmissionsStateDto,
+  genQuarterUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -65,7 +71,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls QuarterUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = QuarterUnitDataView[0];
+      const expected = genQuarterUnitData<QuarterUnitDataView>();
       repository.getEmissions.mockResolvedValue(expected);
       const filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       const result = await service.getEmissions(req, filters);
@@ -74,7 +80,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
     describe('getEmissionsFacilityAggregation', () => {
       it('calls AnnualUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-        const expected = [{ quarter: 1 }];
+        const expected = genDailyApportionedEmissionsFacilityDto();
         repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
         const filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
         const result = await service.getEmissionsFacilityAggregation(
@@ -88,7 +94,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls QuarterUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ quarter: 1 }];
+      const expected = genDailyApportionedEmissionsStateDto();
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       const filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       const result = await service.getEmissionsStateAggregation(req, filters);
@@ -98,7 +104,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls QuarterUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ quarter: 1 }];
+      const expected = genDailyApportionedEmissionsNationalDto();
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       const filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       const result = await service.getEmissionsNationalAggregation(

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsArray, Length } from 'class-validator';
 import { IsNotEmptyString } from '@us-epa-camd/easey-common/pipes';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import moment from 'moment/moment';
