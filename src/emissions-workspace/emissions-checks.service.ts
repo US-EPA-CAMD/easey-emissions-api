@@ -110,6 +110,7 @@ export class EmissionsChecksService {
         },
       );
 
+      const errorList: string[] = [];
       if (isUndefinedOrNull(monitorFormula)) {
         const errorMessage = CheckCatalogService.formatResultMessage(
           'IMPORT-28-A',
@@ -117,8 +118,8 @@ export class EmissionsChecksService {
             formulaID: formulaIdentifier,
           },
         );
-
-        throw new LoggingException(errorMessage, HttpStatus.BAD_REQUEST);
+        errorList.push(errorMessage);
+        this.throwIfErrors(errorList);
       }
     }
   }
