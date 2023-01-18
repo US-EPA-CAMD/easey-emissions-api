@@ -17,7 +17,7 @@ export const genHourlyFuelFlow = <RepoType>(
   for (let param = 0; param < amount; param++) {
     hourlyFuelFlows.push(({
       id: faker.datatype.string(),
-      hourlyId: faker.datatype.string(),
+      hourId: faker.datatype.string(),
       monitoringSystemId: optionalValue(faker.datatype.string()),
       fuelCode: optionalValue(faker.datatype.string()),
       fuelUsageTime: optionalValue(faker.datatype.number()),
