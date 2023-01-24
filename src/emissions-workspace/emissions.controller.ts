@@ -14,6 +14,7 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
   ApiSecurity,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import { User } from '@us-epa-camd/easey-common/decorators';
@@ -24,6 +25,9 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
+import { ReviewSubmitService } from './ReviewSubmit.service';
 
 @Controller()
 @ApiTags('Emissions')
@@ -31,6 +35,7 @@ import { EmissionsChecksService } from './emissions-checks.service';
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
+    private readonly submissionService: ReviewSubmitService,
     private readonly checksService: EmissionsChecksService,
   ) {}
 
@@ -55,5 +60,39 @@ export class EmissionsWorkspaceController {
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
+  }
+
+  @Get()
+  @ApiOkResponse({
+    isArray: true,
+    type: EmissionsReviewSubmitDTO,
+    description: 'Retrieves emissions review and submit records',
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'orisCodes',
+    required: true,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'monPlanIds',
+    required: false,
+    explode: false,
+  })
+  @ApiQuery({
+    style: 'pipeDelimited',
+    name: 'quarters',
+    required: true,
+    explode: false,
+  })
+  async getEmissions(
+    @Query() dto: ReviewAndSubmitMultipleParamsDTO,
+  ): Promise<EmissionsReviewSubmitDTO[]> {
+    return this.submissionService.getEmissionsRecords(
+      dto.orisCodes,
+      dto.monPlanIds,
+      dto.quarters,
+    );
   }
 }

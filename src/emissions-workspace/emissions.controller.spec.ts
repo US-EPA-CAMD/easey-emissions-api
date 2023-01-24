@@ -76,10 +76,16 @@ import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fue
 import { MatsDerivedHourlyValueWorkspaceRepository } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.repository';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
+import { ReviewSubmitService } from './ReviewSubmit.service';
+import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
+import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
   let service: EmissionsWorkspaceService;
+  let submissionService: ReviewSubmitService;
   let emissionsChecksService: EmissionsChecksService;
 
   beforeAll(async () => {
@@ -87,92 +93,96 @@ describe('-- Emissions Controller --', () => {
       imports: [LoggerModule, HttpModule],
       controllers: [EmissionsWorkspaceController],
       providers: [
-            DailyEmissionWorkspaceService,
-            DailyEmissionMap,
-            DailyFuelMap,
-            DailyFuelWorkspaceService,
-            DailyTestSummaryCheckService,
-            EmissionsMap,
-            EmissionsWorkspaceService,
-            EmissionsSubmissionsProgressMap,
-            EmissionsChecksService,
-            MonitorPlanChecksService,
-            SorbentTrapWorkspaceService,
-            SamplingTrainWorkspaceService,
-            Nsps4tAnnualWorkspaceService,
-            Nsps4tSummaryWorkspaceService,
-            Nsps4tCompliancePeriodWorkspaceService,
-            DailyEmissionWorkspaceRepository,
-            DailyFuelWorkspaceRepository,
-            EmissionsWorkspaceRepository,
-            PlantRepository,
-            MonitorFormulaRepository,
-            ComponentRepository,
-            MonitorSystemRepository,
-            MonitorPlanWorkspaceRepository,
-            SorbentTrapWorkspaceRepository,
-            SamplingTrainWorkspaceRepository,
-            Nsps4tSummaryWorkspaceRepository,
-            Nsps4tAnnualWorkspaceRepository,
-            Nsps4tCompliancePeriodWorkspaceRepository,
-            DailyTestSummaryWorkspaceService,
-            DailyTestSummaryMap,
-            DailyTestSummaryWorkspaceRepository,
-            HourlyOperatingWorkspaceService,
-            HourlyOperatingWorkspaceRepository,
-            HourlyOperatingMap,
-            DailyEmissionWorkspaceService,
-            DailyEmissionWorkspaceRepository,
-            DailyEmissionMap,
-            MonitorLocationChecksService,
-            MonitorPlanChecksService,
-            WeeklyTestSummaryWorkspaceService,
-            WeeklyTestSummaryWorkspaceRepository,
-            WeeklyTestSummaryMap,
-            HourlyFuelFlowWorkspaceService,
-            HourlyFuelFlowWorkspaceRepository,
-            HourlyFuelFlowMap,
-            SummaryValueWorkspaceService,
-            SummaryValueWorkspaceRepository,
-            SummaryValueMap,
-            WeeklyTestSummaryCheckService,
-            WeeklyTestSummaryWorkspaceService,
-            WeeklyTestSummaryWorkspaceRepository,
-            WeeklyTestSummaryMap,
-            DailyCalibrationWorkspaceService,
-            DailyCalibrationWorkspaceRepository,
-            DailyCalibrationMap,
-            MonitorHourlyValueWorkspaceService,
-            MonitorHourlyValueWorkspaceRepository,
-            MonitorHourlyValueMap,
-            DerivedHourlyValueWorkspaceService,
-            DerivedHourlyValueWorkspaceRepository,
-            DerivedHourlyValueMap,
-            MatsMonitorHourlyValueWorkspaceService,
-            MatsMonitorHourlyValueWorkspaceRepository,
-            MatsMonitorHourlyValueMap,
-            MatsDerivedHourlyValueWorkspaceService,
-            MatsDerivedHourlyValueMap,
-            HourlyGasFlowMeterWorkspaceService,
-            HourlyGasFlowMeterWorkspaceRepository,
-            HourlyGasFlowMeterMap,
-            HourlyGasFlowMeterWorkspaceService,
-            HourlyGasFlowMeterWorkspaceRepository,
-            HourlyGasFlowMeterMap,
-            MonitorLocationWorkspaceRepository,
-            WeeklySystemIntegrityWorkspaceService,
-            WeeklySystemIntegrityWorkspaceRepository,
-            WeeklySystemIntegrityMap,
-            HourlyParameterFuelFlowWorkspaceService,
-            HourlyParameterFuelFlowWorkspaceRepository,
-            HourlyParameterFuelFlowMap,
-            MatsDerivedHourlyValueWorkspaceRepository,
-            ConfigService,
-        ],
+        DailyEmissionWorkspaceService,
+        DailyEmissionMap,
+        DailyFuelMap,
+        DailyFuelWorkspaceService,
+        DailyTestSummaryCheckService,
+        EmissionsMap,
+        EmissionsWorkspaceService,
+        EmissionsSubmissionsProgressMap,
+        EmissionsChecksService,
+        MonitorPlanChecksService,
+        SorbentTrapWorkspaceService,
+        SamplingTrainWorkspaceService,
+        Nsps4tAnnualWorkspaceService,
+        Nsps4tSummaryWorkspaceService,
+        Nsps4tCompliancePeriodWorkspaceService,
+        DailyEmissionWorkspaceRepository,
+        DailyFuelWorkspaceRepository,
+        EmissionsWorkspaceRepository,
+        PlantRepository,
+        MonitorFormulaRepository,
+        ComponentRepository,
+        MonitorSystemRepository,
+        MonitorPlanWorkspaceRepository,
+        SorbentTrapWorkspaceRepository,
+        SamplingTrainWorkspaceRepository,
+        Nsps4tSummaryWorkspaceRepository,
+        Nsps4tAnnualWorkspaceRepository,
+        Nsps4tCompliancePeriodWorkspaceRepository,
+        DailyTestSummaryWorkspaceService,
+        DailyTestSummaryMap,
+        DailyTestSummaryWorkspaceRepository,
+        HourlyOperatingWorkspaceService,
+        HourlyOperatingWorkspaceRepository,
+        HourlyOperatingMap,
+        DailyEmissionWorkspaceService,
+        DailyEmissionWorkspaceRepository,
+        DailyEmissionMap,
+        MonitorLocationChecksService,
+        MonitorPlanChecksService,
+        WeeklyTestSummaryWorkspaceService,
+        WeeklyTestSummaryWorkspaceRepository,
+        WeeklyTestSummaryMap,
+        HourlyFuelFlowWorkspaceService,
+        HourlyFuelFlowWorkspaceRepository,
+        HourlyFuelFlowMap,
+        SummaryValueWorkspaceService,
+        SummaryValueWorkspaceRepository,
+        SummaryValueMap,
+        WeeklyTestSummaryCheckService,
+        WeeklyTestSummaryWorkspaceService,
+        WeeklyTestSummaryWorkspaceRepository,
+        WeeklyTestSummaryMap,
+        DailyCalibrationWorkspaceService,
+        DailyCalibrationWorkspaceRepository,
+        DailyCalibrationMap,
+        MonitorHourlyValueWorkspaceService,
+        MonitorHourlyValueWorkspaceRepository,
+        MonitorHourlyValueMap,
+        DerivedHourlyValueWorkspaceService,
+        DerivedHourlyValueWorkspaceRepository,
+        DerivedHourlyValueMap,
+        MatsMonitorHourlyValueWorkspaceService,
+        MatsMonitorHourlyValueWorkspaceRepository,
+        MatsMonitorHourlyValueMap,
+        MatsDerivedHourlyValueWorkspaceService,
+        MatsDerivedHourlyValueMap,
+        HourlyGasFlowMeterWorkspaceService,
+        HourlyGasFlowMeterWorkspaceRepository,
+        HourlyGasFlowMeterMap,
+        HourlyGasFlowMeterWorkspaceService,
+        HourlyGasFlowMeterWorkspaceRepository,
+        HourlyGasFlowMeterMap,
+        MonitorLocationWorkspaceRepository,
+        WeeklySystemIntegrityWorkspaceService,
+        WeeklySystemIntegrityWorkspaceRepository,
+        WeeklySystemIntegrityMap,
+        HourlyParameterFuelFlowWorkspaceService,
+        HourlyParameterFuelFlowWorkspaceRepository,
+        HourlyParameterFuelFlowMap,
+        MatsDerivedHourlyValueWorkspaceRepository,
+        ConfigService,
+        ReviewSubmitService,
+        EmissionsReviewSubmitRepository,
+        EmissionsReviewSubmitMap,
+      ],
     }).compile();
 
     controller = module.get(EmissionsWorkspaceController);
     service = module.get(EmissionsWorkspaceService);
+    submissionService = module.get(ReviewSubmitService);
     emissionsChecksService = module.get(EmissionsChecksService);
   });
 
@@ -189,23 +199,38 @@ describe('-- Emissions Controller --', () => {
     });
   });
 
-  describe("import", ()=>{
-    it('should import a record', async() =>{
-        const params = new EmissionsImportDTO();
-        const user = {
-            userId: "string",
-            sessionId: "string",
-            expiration: "string",
-            clientIp: "string",
-            isAdmin: true,
-            permissionSet: [],
-        }
+  describe('import', () => {
+    it('should import a record', async () => {
+      const params = new EmissionsImportDTO();
+      const user = {
+        userId: 'string',
+        sessionId: 'string',
+        expiration: 'string',
+        clientIp: 'string',
+        isAdmin: true,
+        permissionSet: [],
+      };
 
-        jest.spyOn(service, 'import').mockResolvedValue({message:"success"});
-        jest.spyOn(emissionsChecksService, 'runChecks').mockResolvedValue(null);
-        const result = await controller.import(params, user);
+      jest.spyOn(service, 'import').mockResolvedValue({ message: 'success' });
+      jest.spyOn(emissionsChecksService, 'runChecks').mockResolvedValue(null);
+      const result = await controller.import(params, user);
 
-        expect(result.message).toBe("success")
-    })
-  })
+      expect(result.message).toBe('success');
+    });
+  });
+
+  describe('getEmissions', () => {
+    it('should call the review and submit test summary controller function and return a list of dtos', async () => {
+      const dto = new EmissionsReviewSubmitDTO();
+      submissionService.getEmissionsRecords = jest
+        .fn()
+        .mockResolvedValue([dto]);
+
+      const result = await controller.getEmissions(
+        new ReviewAndSubmitMultipleParamsDTO(),
+      );
+
+      expect(result).toEqual([dto]);
+    });
+  });
 });
