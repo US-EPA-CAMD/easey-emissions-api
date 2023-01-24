@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
-import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
-import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
-import { EmissionsRepository } from './emissions.repository';
+import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
+import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
+import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 
 @Injectable()
-export class EmissionService {
+export class EmissionsService {
   constructor(
-    private readonly map: EmissionSubmissionsProgressMap,
-    private readonly repository: EmissionsRepository,
+    private readonly submissionProgressMap: EmissionsSubmissionsProgressMap,
+    private readonly submissionProgressRepo: EmissionsSubmissionsProgressRepository,
     private readonly configService: ConfigService,
   ) {}
 
   async getSubmissionProgress(
     periodDate: Date,
   ): Promise<EmissionsSubmissionsProgressDTO> {
-    let queryResult = await this.repository.getSubmissionProgress(
+    let queryResult = await this.submissionProgressRepo.getSubmissionProgress(
       periodDate,
       this.configService.get<number>('app.submissionDays'),
     );
@@ -33,7 +33,7 @@ export class EmissionService {
         ([1, 4, 7, 10].includes(month) ||
           ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
       ) {
-        queryResult = new EmissionSubmissionsProgress();
+        queryResult = new EmissionsSubmissionsProgress();
 
         let year = date.getUTCFullYear();
         if (month >= 1 && month <= 3) {
@@ -53,6 +53,6 @@ export class EmissionService {
       }
     }
 
-    return this.map.one(queryResult);
+    return this.submissionProgressMap.one(queryResult);
   }
 }

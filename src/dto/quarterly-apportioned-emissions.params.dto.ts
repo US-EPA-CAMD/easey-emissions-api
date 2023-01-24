@@ -1,13 +1,12 @@
-import { IsDefined, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsValidNumber,
-  IsInRange,
-  Min,
   IsInEnum,
   IsInResponse,
+  IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
+import { IsOptional } from 'class-validator';
 
 import {
   propertyMetadata,
@@ -15,8 +14,7 @@ import {
 } from '@us-epa-camd/easey-common/constants';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { OpYear } from '../utils/validator.const';
-import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
+import { OpYear, Page, PerPage } from '../utils/validator.const';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarter.pipe';
 import { fieldMappings } from '../constants/field-mappings';
@@ -27,7 +25,6 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     description: propertyMetadata.year.description,
   })
   @OpYear()
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 
@@ -35,7 +32,7 @@ export class QuarterlyApportionedEmissionsParamsDTO extends ApportionedEmissions
     isArray: true,
     description: propertyMetadata.quarter.description,
   })
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @IsValidNumber(4, {
     each: true,
     message: ErrorMessages.MultipleFormat(
@@ -59,19 +56,13 @@ export class PaginatedQuarterlyApportionedEmissionsParamsDTO extends QuarterlyAp
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 
@@ -85,7 +76,7 @@ export class StreamQuarterlyApportionedEmissionsParamsDTO extends QuarterlyAppor
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.quarterly, {
+  @IsInResponse(fieldMappings.emissions.quarterly.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

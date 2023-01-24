@@ -1,9 +1,9 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
+import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
 
-@EntityRepository(EmissionSubmissionsProgress)
-export class EmissionsRepository extends Repository<
-  EmissionSubmissionsProgress
+@EntityRepository(EmissionsSubmissionsProgress)
+export class EmissionsSubmissionsProgressRepository extends Repository<
+  EmissionsSubmissionsProgress
 > {
   async getSubmissionProgress(periodDate: Date, submissionDays: number) {
     return this.createQueryBuilder('submissions')

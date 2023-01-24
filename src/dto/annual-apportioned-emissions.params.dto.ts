@@ -1,5 +1,5 @@
-import { IsDefined, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -10,16 +10,15 @@ import {
 import {
   IsInDateRange,
   IsYearFormat,
-  IsInRange,
-  Min,
   IsInEnum,
   IsInResponse,
+  IsNotEmptyString,
 } from '@us-epa-camd/easey-common/pipes';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
 import { fieldMappings } from '../constants/field-mappings';
-import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
+import { Page, PerPage } from '../utils/validator.const';
 
 export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsParamsDTO {
   @ApiProperty({
@@ -30,7 +29,7 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
     each: true,
     message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
   })
-  @IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, true, {
+  @IsInDateRange(new Date(1995, 0), true, true, true, {
     each: true,
     message: ErrorMessages.DateRange(
       'year',
@@ -38,7 +37,7 @@ export class AnnualApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
       `1980, 1985, 1990, or to a year between 1995 and the quarter ending on ${ErrorMessages.ReportingQuarter()}`,
     ),
   })
-  @IsDefined({ message: ErrorMessages.RequiredProperty() })
+  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 }
@@ -47,19 +46,13 @@ export class PaginatedAnnualApportionedEmissionsParamsDTO extends AnnualApportio
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 
@@ -73,7 +66,7 @@ export class StreamAnnualApportionedEmissionsParamsDTO extends AnnualApportioned
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.annual, {
+  @IsInResponse(fieldMappings.emissions.annual.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

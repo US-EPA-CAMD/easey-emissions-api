@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-import { EmissionSubmissionsProgress } from '../entities/emissions-submission-progress.entity';
-import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submission-progress.dto';
+import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
+import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 
 @Injectable()
-export class EmissionSubmissionsProgressMap extends BaseMap<
-  EmissionSubmissionsProgress,
+export class EmissionsSubmissionsProgressMap extends BaseMap<
+  EmissionsSubmissionsProgress,
   EmissionsSubmissionsProgressDTO
 > {
   public async one(
-    entity: EmissionSubmissionsProgress,
+    entity: EmissionsSubmissionsProgress,
   ): Promise<EmissionsSubmissionsProgressDTO> {
     let quarterN;
     switch (entity.quarter) {

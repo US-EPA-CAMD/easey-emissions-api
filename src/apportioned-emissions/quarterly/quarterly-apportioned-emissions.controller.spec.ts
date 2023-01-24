@@ -52,4 +52,43 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
       );
     });
   });
+
+  describe('* getEmissionsFacilityAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: QuarterUnitDataView[] = [];
+      const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsFacilityAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsFacilityAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getEmissionsStateAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: QuarterUnitDataView[] = [];
+      const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsStateAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsStateAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
+
+  describe('* getEmissionsNationalAggregation', () => {
+    it('should return test 1', async () => {
+      const expectedResult: QuarterUnitDataView[] = [];
+      const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsNationalAggregation')
+        .mockResolvedValue(expectedResult);
+      expect(
+        await controller.getEmissionsNationalAggregation(req, paramsDto),
+      ).toBe(expectedResult);
+    });
+  });
 });

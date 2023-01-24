@@ -76,4 +76,10 @@ export class ApportionedEmissionsDTO extends UnitFactDTO {
     name: propertyMetadata.heatInput.fieldLabels.value,
   })
   heatInput?: number;
+
+  @ApiProperty({
+    description: propertyMetadata.heatInputMeasureFlg.description,
+    name: propertyMetadata.heatInputMeasureFlg.fieldLabels.value,
+  })
+  heatInputMeasureFlg: string;
 }

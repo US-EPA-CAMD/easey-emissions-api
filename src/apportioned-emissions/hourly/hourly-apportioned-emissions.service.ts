@@ -1,21 +1,31 @@
 import { Request } from 'express';
+import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 
 import { Logger } from '@us-epa-camd/easey-common/logger';
 
-import { fieldMappings } from '../../constants/field-mappings';
+import {
+  fieldMappings,
+  fieldMappingHeader,
+  excludableColumnHeader,
+} from '../../constants/field-mappings';
+
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
+import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
+import { HourlyApportionedEmissionsNationalAggregationDTO } from '../../dto/hourly-apportioned-emissions-national-aggregation.dto';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
-  
   constructor(
     private readonly logger: Logger,
     @InjectRepository(HourUnitDataRepository)
@@ -31,18 +41,121 @@ export class HourlyApportionedEmissionsService {
     try {
       entities = await this.repository.getEmissions(
         req,
-        fieldMappings.emissions.hourly,
-        params
+        fieldMappings.emissions.hourly.data.aggregation.unit,
+        params,
       );
     } catch (e) {
-      this.logger.error(InternalServerErrorException, e.message);
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.hourly),
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.unit),
+    );
+    req.res.setHeader(
+      excludableColumnHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.excludableColumns),
     );
 
     return entities;
+  }
+
+  async getEmissionsFacilityAggregation(
+    req: Request,
+    params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourlyApportionedEmissionsFacilityAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsFacilityAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.facility),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        HourlyApportionedEmissionsFacilityAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
+    });
+  }
+
+  async getEmissionsStateAggregation(
+    req: Request,
+    params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourlyApportionedEmissionsStateAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsStateAggregation(req, params);
+    } catch (e) {
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.state),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        HourlyApportionedEmissionsStateAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
+    });
+  }
+
+  async getEmissionsNationalAggregation(
+    req: Request,
+    params: PaginatedHourlyApportionedEmissionsParamsDTO,
+  ): Promise<HourlyApportionedEmissionsNationalAggregationDTO[]> {
+    let query;
+
+    try {
+      query = await this.repository.getEmissionsNationalAggregation(
+        req,
+        params,
+      );
+    } catch (e) {
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    req.res.setHeader(
+      fieldMappingHeader,
+      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.national),
+    );
+
+    return query.map(item => {
+      const dto = plainToClass(
+        HourlyApportionedEmissionsNationalAggregationDTO,
+        item,
+        {
+          enableImplicitConversion: true,
+        },
+      );
+      const date = new Date(dto.date);
+      dto.date = date.toISOString().split('T')[0];
+      return dto;
+    });
   }
 }

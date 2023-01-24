@@ -10,6 +10,9 @@ import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -54,6 +57,36 @@ describe('-- Monthly Apportioned Emissions Service --', () => {
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ month: 1 }];
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ month: 1 }];
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls MonthUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{ month: 1 }];
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedMonthlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
       expect(result).toEqual(expected);
     });
   });

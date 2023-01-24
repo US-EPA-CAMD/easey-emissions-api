@@ -10,6 +10,9 @@ import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-app
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -54,6 +57,36 @@ describe('-- Daily Apportioned Emissions Service --', () => {
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls DayUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls DayUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls DayUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
       expect(result).toEqual(expected);
     });
   });

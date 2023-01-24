@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { IsDefined } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
   IsInDateRange,
@@ -7,7 +7,11 @@ import {
   IsIsoFormat,
   IsDateGreaterThanEqualTo,
   IsYearFormat,
+  IsNotEmptyString,
+  IsInRange,
+  Min
 } from '@us-epa-camd/easey-common/pipes';
+import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 
 export function BeginDate(isMats = false) {
   let date;
@@ -17,7 +21,7 @@ export function BeginDate(isMats = false) {
     date = '1995-01-01';
   }
   return applyDecorators(
-    IsInDateRange([new Date(date), 'currentDate'], false, true, false, {
+    IsInDateRange(new Date(date), false, true, false, {
       message: ErrorMessages.DateRange(
         'beginDate',
         false,
@@ -33,7 +37,7 @@ export function BeginDate(isMats = false) {
     IsIsoFormat({
       message: ErrorMessages.SingleFormat('beginDate', 'YYYY-MM-DD format'),
     }),
-    IsDefined({
+    IsNotEmpty({
       message: ErrorMessages.RequiredProperty(),
     }),
   );
@@ -50,7 +54,7 @@ export function EndDate(isMats = false) {
     IsDateGreaterThanEqualTo('beginDate', {
       message: ErrorMessages.BeginEndDate('beginDate'),
     }),
-    IsInDateRange([new Date(date), 'currentDate'], false, true, false, {
+    IsInDateRange(new Date(date), false, true, false, {
       message: ErrorMessages.DateRange(
         'endDate',
         false,
@@ -66,13 +70,31 @@ export function EndDate(isMats = false) {
     IsIsoFormat({
       message: ErrorMessages.SingleFormat('endDate', 'YYYY-MM-DD format'),
     }),
-    IsDefined({ message: ErrorMessages.RequiredProperty() }),
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+  );
+}
+
+export function Page() {
+  return applyDecorators(
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+    Min(1, {
+      message: ErrorMessages.GreaterThanOrEqual('page', 1),
+    }),
+  );
+}
+
+export function PerPage() {
+  return applyDecorators(
+    IsNotEmpty({ message: ErrorMessages.RequiredProperty() }),
+    IsInRange(1, PAGINATION_MAX_PER_PAGE, {
+      message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
+    }),
   );
 }
 
 export function OpYear() {
   return applyDecorators(
-    IsInDateRange([new Date(1995, 0), 'currentDate'], true, true, false, {
+    IsInDateRange(new Date(1995, 0), true, true, false, {
       each: true,
       message: ErrorMessages.DateRange(
         'year',
@@ -84,6 +106,6 @@ export function OpYear() {
       each: true,
       message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
     }),
-    IsDefined({ message: ErrorMessages.RequiredProperty() }),
+    IsNotEmptyString({ message: ErrorMessages.RequiredProperty() }),
   );
 }

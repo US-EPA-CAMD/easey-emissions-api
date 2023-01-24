@@ -10,6 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { HourUnitMatsData } from './hour-unit-mats-data.entity';
 import { HourUnitMatsDataArch } from './hour-unit-mats-data-arch.entity';
+import { ProgramYearDim } from './program-year-dim.entity';
 
 @Entity({ name: 'camddmw.unit_fact' })
 export class UnitFact extends BaseEntity {
@@ -161,4 +162,10 @@ export class UnitFact extends BaseEntity {
     humd => humd.unitFact,
   )
   hourUnitMatsDataArch: HourUnitMatsDataArch[];
+
+  @OneToMany(
+    () => ProgramYearDim,
+    pyd => pyd.unitFact,
+  )
+  programYearDim: ProgramYearDim[];
 }

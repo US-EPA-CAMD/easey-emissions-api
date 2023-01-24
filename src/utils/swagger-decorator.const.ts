@@ -1,4 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
+
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -41,7 +42,7 @@ export function ApiQueryAnnually() {
 export function ApiQueryMonthly() {
   return applyDecorators(
     ApiQuery({ style: 'pipeDelimited', name: 'month', required: true, explode: false, }),
-    ApiQuery({ style: 'pipeDelimited', name: 'year', required: true, explode: false, }),
+    ApiQuery({ style: 'pipeDelimited', name: 'year', required: true, explode: false, })
   );
 }
 
@@ -50,6 +51,7 @@ export function ApiProgramQuery() {
     ApiQuery({ style: 'pipeDelimited', name: 'programCodeInfo', required: false, explode: false, })
   );
 }
+
 export function ExcludeQuery() {
   return applyDecorators(
     ApiQuery({ style: 'pipeDelimited', name: 'exclude', required: false, explode: false, })

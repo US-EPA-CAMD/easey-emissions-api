@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
-import { EmissionController } from './emissions.controller';
-import { EmissionService } from './emissions.service';
-import { EmissionSubmissionsProgressMap } from '../maps/emissions-submission-progress.map';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmissionsRepository } from './emissions.repository';
+
+import { EmissionsController } from './emissions.controller';
+import { EmissionsService } from './emissions.service';
+import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmissionsRepository])],
-  controllers: [EmissionController],
-  providers: [EmissionService, EmissionSubmissionsProgressMap],
+  imports: [
+    TypeOrmModule.forFeature([
+      EmissionsSubmissionsProgressRepository,
+    ]),
+  ],
+  controllers: [EmissionsController],
+  providers: [
+    EmissionsService,
+    EmissionsSubmissionsProgressMap,
+  ],
 })
 export class EmissionsModule {}

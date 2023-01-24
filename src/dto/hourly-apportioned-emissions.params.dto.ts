@@ -1,11 +1,6 @@
-import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Min,
-  IsInRange,
-  IsInEnum,
-  IsInResponse,
-} from '@us-epa-camd/easey-common/pipes';
+import { IsInEnum, IsInResponse } from '@us-epa-camd/easey-common/pipes';
+import { IsOptional } from 'class-validator';
 
 import {
   ErrorMessages,
@@ -14,8 +9,7 @@ import {
 import { Transform } from 'class-transformer';
 import { ExcludeHourlyApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { BeginDate, EndDate } from '../utils/validator.const';
-import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
+import { BeginDate, EndDate, Page, PerPage } from '../utils/validator.const';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { fieldMappings } from '../constants/field-mappings';
 
@@ -43,19 +37,13 @@ export class PaginatedHourlyApportionedEmissionsParamsDTO extends HourlyApportio
   @ApiProperty({
     description: propertyMetadata.page.description,
   })
-  @IsDefined()
-  @Min(1, {
-    message: ErrorMessages.GreaterThanOrEqual('page', 1),
-  })
+  @Page()
   page: number;
 
   @ApiProperty({
     description: propertyMetadata.perPage.description,
   })
-  @IsDefined()
-  @IsInRange(1, PAGINATION_MAX_PER_PAGE, {
-    message: ErrorMessages.Between('perPage', 1, PAGINATION_MAX_PER_PAGE),
-  })
+  @PerPage()
   perPage: number;
 }
 
@@ -69,7 +57,7 @@ export class StreamHourlyApportionedEmissionsParamsDTO extends HourlyApportioned
     each: true,
     message: ErrorMessages.RemovableParameter(),
   })
-  @IsInResponse(fieldMappings.emissions.hourly, {
+  @IsInResponse(fieldMappings.emissions.hourly.data.aggregation.unit, {
     each: true,
     message: ErrorMessages.ValidParameter(),
   })

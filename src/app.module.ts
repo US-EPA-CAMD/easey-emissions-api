@@ -25,8 +25,8 @@ import { ApportionedEmissionsModule } from './apportioned-emissions/apportioned-
     }),
     LoggerModule,
     CorsOptionsModule,
-    ApportionedEmissionsModule,
     EmissionsModule,
+    ApportionedEmissionsModule,
   ],
 })
 export class AppModule {}

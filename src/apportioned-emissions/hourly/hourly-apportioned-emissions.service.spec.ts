@@ -10,6 +10,9 @@ import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-a
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
+  getEmissionsFacilityAggregation: jest.fn(),
+  getEmissionsStateAggregation: jest.fn(),
+  getEmissionsNationalAggregation: jest.fn(),
 });
 
 const mockRequest = () => {
@@ -54,6 +57,36 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsFacilityAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsFacilityAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsStateAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsStateAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsStateAggregation(req, filters);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getEmissionsNationalAggregation', () => {
+    it('calls HourUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
+      const expected = [{date: '2019-01-01'}]
+      repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
+      let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      let result = await service.getEmissionsNationalAggregation(req, filters);
       expect(result).toEqual(expected);
     });
   });
