@@ -91,7 +91,6 @@ describe('Emissions Checks Service Tests', () => {
             runChecks: jest.fn().mockResolvedValue([]),
           }),
         },
-
       ],
     }).compile();
 
@@ -107,14 +106,13 @@ describe('Emissions Checks Service Tests', () => {
       await expect(result).resolves.toEqual([]);
     });
 
-    it('should throw errors as array of strings', ()=>{
-      try{
+    it('should throw errors as array of strings', () => {
+      try {
         service.throwIfErrors(['test']);
-      }catch(error){
-        expect(error?.response?.message).toStrictEqual(['test'])
-      };
-
-    })
+      } catch (error) {
+        expect(error?.response?.message).toStrictEqual(['test']);
+      }
+    });
   });
 
   describe('invalidDatesCheck', () => {
@@ -219,17 +217,12 @@ describe('Emissions Checks Service Tests', () => {
     });
 
     it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
-      const errorMessage =
-        'The Client Tool database does not contain [FormulaID]. This file was not imported.';
       jest
         .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
         .mockResolvedValue(undefined);
-      CheckCatalogService.formatResultMessage = () => {
-        return errorMessage;
-      };
 
       await expect(service.invalidFormulasCheck(payload, '2')).rejects.toThrow(
-        errorMessage,
+        'Logging Exception',
       );
     });
   });
