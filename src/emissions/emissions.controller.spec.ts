@@ -66,10 +66,12 @@ import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/ns
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValueMap } from '../maps/summary-value.map';
+import { ReviewSubmitService } from '../emissions-workspace/ReviewSubmit.service';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
   let service: EmissionsService;
+  let submissionService: ReviewSubmitService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({

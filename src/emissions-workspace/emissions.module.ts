@@ -42,6 +42,9 @@ import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-per
 import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
 import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
+import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
+import { ReviewSubmitService } from './ReviewSubmit.service';
+import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 
 @Module({
   imports: [
@@ -59,6 +62,7 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
       Nsps4tSummaryWorkspaceRepository,
       Nsps4tAnnualWorkspaceRepository,
       Nsps4tCompliancePeriodWorkspaceRepository,
+      EmissionsReviewSubmitRepository,
     ]),
     Logger,
     HttpModule,
@@ -69,7 +73,7 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
     MonitorPlanWorkspaceModule,
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
-    SummaryValueWorkspaceModule
+    SummaryValueWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
@@ -88,6 +92,8 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
     Nsps4tAnnualWorkspaceService,
     Nsps4tSummaryWorkspaceService,
     Nsps4tCompliancePeriodWorkspaceService,
+    ReviewSubmitService,
+    EmissionsReviewSubmitMap,
   ],
 })
 export class EmissionsWorkspaceModule {}
