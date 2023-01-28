@@ -7,25 +7,34 @@ import {
   UseInterceptors,
   Req,
 } from '@nestjs/common';
-
 import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
+import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
-import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 
 @Controller()
-@ApiTags('Emissions')
+@ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
 
+  @Get()
+  @ApiOkResponse({
+    isArray: true,
+    description: 'Retrieves a list of workspace Emissions data views that are available',
+  })
+  getAvailableViews(): Promise<EmissionsViewDTO[]> {
+    return this.service.getAvailableViews();
+  }
+
   @Get(':viewCode')
   @ApiOkResponse({
     description:
-      'Retrieves the specified view of Emissions data for the provided Monitor Plan & Reporting Period',
+      'Retrieves the specified view of workspace Emissions data for the provided Monitor Plan & Reporting Period',
     content: {
       'application/json': {},
       'text/csv': {},

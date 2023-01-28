@@ -18,7 +18,7 @@ import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-vi
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 
 @Controller()
-@ApiTags('Emissions')
+@ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
 export class EmissionsViewController {
   constructor(private readonly service: EmissionsViewService) {}
@@ -26,7 +26,7 @@ export class EmissionsViewController {
   @Get()
   @ApiOkResponse({
     isArray: true,
-    description: 'Retrieves a list of Emissions data views that are available',
+    description: 'Retrieves a list of official Emissions data views that are available',
   })
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();
@@ -35,7 +35,7 @@ export class EmissionsViewController {
   @Get(':viewCode')
   @ApiOkResponse({
     description:
-      'Retrieves the specified view of Emissions data for the provided Monitor Plan & Reporting Period',
+      'Retrieves the specified view of official Emissions data for the provided Monitor Plan & Reporting Period',
     content: {
       'application/json': {},
       'text/csv': {},
