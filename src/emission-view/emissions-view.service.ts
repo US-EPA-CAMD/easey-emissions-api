@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
+import { Injectable } from '@nestjs/common';
 
+import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewRepository } from './emissions-view.repository';
 import { getSelectedView } from '../utils/selected-emission-view';
-import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 
 @Injectable()
 export class EmissionsViewService {
@@ -12,7 +12,7 @@ export class EmissionsViewService {
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
     const results = await this.repository.find({
-      where: { templateCode: 'EMVIEW' },
+      where: { groupCode: 'EMVIEW' },
       order: { sortOrder: 'ASC' },
     });
 

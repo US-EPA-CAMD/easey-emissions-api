@@ -15,7 +15,7 @@ export class IsViewCode implements PipeTransform<string, Promise<string>> {
     const manager = getManager();
     const found = await manager.findOne(DataSet, {
       code: ILike(value),
-      templateCode: 'EMVIEW',
+      groupCode: 'EMVIEW',
     });
     if (found != null) {
       return value;
