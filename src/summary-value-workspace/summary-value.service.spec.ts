@@ -5,13 +5,12 @@ import {
 } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
-import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-import-dto';
+import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-dto';
 import { faker } from '@faker-js/faker';
 import { mockRepositoryFunctions } from '../../test/mocks/mock-repository-functions';
 import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { SummaryValue } from '../entities/workspace/summary-value.entity';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { util } from 'prettier';
 
 const mockRepository = {
   ...mockRepositoryFunctions,

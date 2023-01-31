@@ -10,6 +10,8 @@ import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
 import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
 import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
+import { HourlyOperatingParamsDto } from '../dto/hourly-operating.params.dto';
+import { exportSupplementaryHourlyOperatingData } from '../hourly-operating-functions/hourly-operating-export';
 
 @Injectable()
 export class HourlyOperatingService {
@@ -61,28 +63,34 @@ export class HourlyOperatingService {
         hourlyOperating?.forEach(hourlyOp => {
           hourlyOp.monitorHourlyValueData = values?.[0]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.derivedHourlyValueData = values?.[1]?.filter(
             derivedHourlyDatum => {
               return derivedHourlyDatum.hourId === hourlyOp.id;
             },
-          );
+          ) ?? [];
           hourlyOp.matsMonitorHourlyValueData = values?.[2]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.matsDerivedHourlyValueData = values?.[3]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.hourlyGFMData = values?.[4]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
           hourlyOp.hourlyFuelFlowData = values?.[5]?.filter(
             i => i.hourId === hourlyOp.id,
-          );
+          ) ?? [];
         });
       }
     }
 
     return hourlyOperating;
+  }
+
+  async supplementaryExport(
+    params: HourlyOperatingParamsDto,
+  ): Promise<HourlyOperatingDTO[]> {
+    return exportSupplementaryHourlyOperatingData(params, this.repository);
   }
 }

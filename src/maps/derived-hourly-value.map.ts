@@ -12,17 +12,21 @@ export class DerivedHourlyValueMap extends BaseMap<
   async one(
     entity: DerivedHrlyValue | DerivedHrlyValueWorkspace,
   ): Promise<DerivedHourlyValueDTO> {
+    const formulaIdentifier = entity.monitorFormula?.formulaId ?? null;
+    const monitoringSystemId = entity.monitorSystem?.monitoringSystemId ?? null;
+
     return {
       id: entity.id,
       hourId: entity.hourId,
+      monitoringSystemId: monitoringSystemId,
       monitoringSystemRecordId: entity.monSysId,
-      monitoringSystemId: entity.monitorSystem.monitoringSystemId,
       reportingPeriodId: entity.rptPeriodId,
       parameterCode: entity.parameterCode,
       unadjustedHourlyValue: entity.unadjustedHrlyValue,
       adjustedHourlyValue: entity.adjustedHrlyValue,
       modcCode: entity.modcCode,
-      formulaIdentifier: entity.monFormId,
+      formulaIdentifier: formulaIdentifier,
+      monitoringFormulaRecordId: entity.monFormId,
       percentAvailable: entity.pctAvailable,
       operatingConditionCode: entity.operatingConditionCode,
       segmentNumber: entity.segmentNum,

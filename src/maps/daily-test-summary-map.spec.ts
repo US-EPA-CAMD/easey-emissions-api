@@ -49,7 +49,7 @@ describe('DailyTestSummaryMap', () => {
         userId: mock.userId,
         addDate: mock.addDate,
         updateDate: mock.updateDate,
-        dailyCalibrationData: mock?.dailyCalibrations ?? null,
+        dailyCalibrationData: mock?.dailyCalibrations ?? [],
       });
     };
 

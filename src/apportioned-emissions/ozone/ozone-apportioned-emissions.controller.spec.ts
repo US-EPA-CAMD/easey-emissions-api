@@ -7,6 +7,12 @@ import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import {
+  genAnnualApportionedEmissionsFacilityDto,
+  genAnnualApportionedEmissionsNationalDto,
+  genAnnualApportionedEmissionsStateDto,
+  genAnnualUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -40,8 +46,8 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult: OzoneUnitDataView[] = [];
+    it('calls OzoneApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
+      const expectedResult = genAnnualUnitData<OzoneUnitDataView>();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
       jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
       expect(await controller.getEmissions(req, paramsDto)).toBe(
@@ -51,8 +57,8 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsFacilityAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: OzoneUnitDataView[] = [];
+    it('calls OzoneApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
+      const expectedResult = genAnnualApportionedEmissionsFacilityDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
@@ -64,8 +70,8 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsStateAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: OzoneUnitDataView[] = [];
+    it('calls OzoneApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
+      const expectedResult = genAnnualApportionedEmissionsStateDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
@@ -77,8 +83,8 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissionsNationalAggregation', () => {
-    it('should return test 1', async () => {
-      const expectedResult: OzoneUnitDataView[] = [];
+    it('calls OzoneApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
+      const expectedResult = genAnnualApportionedEmissionsNationalDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')

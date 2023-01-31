@@ -36,7 +36,7 @@ export class WeeklyTestSummaryMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate,
       updateDate: entity.updateDate,
-      weeklySystemIntegrityData: null,
+      weeklySystemIntegrityData: [],
     };
   }
 }

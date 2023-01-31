@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { EmissionsViewRepository } from './emissions-view.repository';
-import { EmissionsViewController } from './emissions-view.controller';
-import { EmissionsViewService } from './emissions-view.service';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
+import { EmissionsViewController } from './emissions-view.controller';
+import { EmissionsViewRepository } from './emissions-view.repository';
+import { EmissionsViewService } from './emissions-view.service';
 
 describe('EmissionsViewController', () => {
   let emissionsViewController: EmissionsViewController;
@@ -35,7 +35,11 @@ describe('EmissionsViewController', () => {
     jest.spyOn(emissionsViewService, 'getView').mockResolvedValue(undefined);
 
     await expect(
-      emissionsViewController.getView('code', new EmissionsViewParamsDTO()),
+      emissionsViewController.getView(
+        'code',
+        undefined,
+        new EmissionsViewParamsDTO(),
+      ),
     ).resolves.toEqual(undefined);
   });
 });

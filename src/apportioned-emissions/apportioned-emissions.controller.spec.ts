@@ -4,8 +4,8 @@ import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
-import { ProgramYearDimRepository } from './program-year-dim.repository';
-import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-apportioned-emissions-attributes.dto';
+import { UnitFactRepository } from './unit-fact.repository';
+import { genApplicableApportionedEmissionsAttributesDto } from '../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -25,7 +25,7 @@ describe('-- Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [ApportionedEmissionsController],
-      providers: [ApportionedEmissionsService, ProgramYearDimRepository],
+      providers: [ApportionedEmissionsService, UnitFactRepository],
     }).compile();
 
     controller = module.get(ApportionedEmissionsController);
@@ -40,7 +40,7 @@ describe('-- Apportioned Emissions Controller --', () => {
 
   describe('* getApplicableApportionedEmissionsAttributes', () => {
     it('should return a list of Applicable Apportioned Emissions Attributes', async () => {
-      const expectedResult: ApplicableApportionedEmissionsAttributesDTO[] = [];
+      const expectedResult = genApplicableApportionedEmissionsAttributesDto();
       jest
         .spyOn(service, 'getApplicableApportionedEmissionsAttributes')
         .mockResolvedValue(expectedResult);

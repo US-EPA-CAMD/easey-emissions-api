@@ -3,10 +3,16 @@ import { ConfigService } from '@nestjs/config';
 
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
+import {
+  genDailyApportionedEmissionsFacilityDto,
+  genDailyApportionedEmissionsNationalDto,
+  genDailyApportionedEmissionsStateDto,
+  genDayUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -53,7 +59,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissions', () => {
     it('calls DayUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
-      const expected = DayUnitDataView[0];
+      const expected = genDayUnitData<DayUnitDataView>();
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);
@@ -63,7 +69,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsFacilityAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsFacilityAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genDailyApportionedEmissionsFacilityDto();
       repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsFacilityAggregation(req, filters);
@@ -73,7 +79,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genDailyApportionedEmissionsStateDto();
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -83,7 +89,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls DayUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{date: '2019-01-01'}]
+      const expected = genDailyApportionedEmissionsNationalDto();
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedDailyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);

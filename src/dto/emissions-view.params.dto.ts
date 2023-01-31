@@ -1,16 +1,14 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmptyString,
-  IsValidNumber,
-  IsYearFormat,
-} from '@us-epa-camd/easey-common/pipes';
+import { IsNotEmptyString } from '@us-epa-camd/easey-common/pipes';
 import {
   ErrorMessages,
   propertyMetadata,
 } from '@us-epa-camd/easey-common/constants';
 import { OneOrMore } from '../pipes/one-or-more.pipe';
-import { IsInYearAndQuarterRange } from '../pipes/is-in-year-and-quarter-range.pipe';
+import { IsReportingPeriodFormat } from '../pipes/is-reporting-period-format.pipe';
+import { IsInReportingPeriodRange } from '../pipes/is-in-reporting-period.pipe';
+import { ArrayMaxLength } from '../pipes/array-max-length.pipe';
 
 export class EmissionsViewParamsDTO {
   @ApiProperty()
@@ -33,26 +31,29 @@ export class EmissionsViewParamsDTO {
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   stackPipeIds?: string[];
 
-  @ApiProperty()
-  @IsYearFormat({
-    each: true,
-    message: ErrorMessages.SingleFormat('year', 'YYYY format'),
+  @ApiProperty({
+    isArray: true,
   })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  @IsInYearAndQuarterRange('quarter', {
+  @IsReportingPeriodFormat({
+    each: true,
+    message: 'Year and Quarter must be specified in this format YYYY Q1',
+  })
+  @IsInReportingPeriodRange({
+    each: true,
     message:
       'The Year and Quarter cannot be before 2009 and cannot surpass the current date',
   })
-  year: number;
-
-  @ApiProperty()
-  @IsValidNumber(4, {
-    each: true,
-    message: ErrorMessages.SingleFormat(
-      'quarter',
-      'single digit format (ex.1,2,3,4)',
-    ),
+  @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  @ArrayMaxLength(4, {
+    message: 'You can only select a maximum of four reporting periods',
   })
-  @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  quarter: number;
+  reportingPeriod: string[];
+
+  @ApiProperty({
+    description:
+      'Attaches a file with data in the format specified by the Accept header',
+    default: false,
+  })
+  attachFile?: boolean;
 }

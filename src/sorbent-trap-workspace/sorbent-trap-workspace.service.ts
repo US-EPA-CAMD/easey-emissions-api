@@ -29,7 +29,7 @@ export class SorbentTrapWorkspaceService {
       for (const sorbentTrap of sorbentTrapData) {
         promises.push(
           this.samplingTrainService.export(sorbentTrap.id).then(data => {
-            sorbentTrap.samplingTrainData = data;
+            sorbentTrap.samplingTrainData = data ?? [];
           }),
         );
       }

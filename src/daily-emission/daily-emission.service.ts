@@ -24,7 +24,7 @@ export class DailyEmissionService {
       for (const dailyEmission of dailyEmissionData) {
         promises.push(
           this.dailyFuelService.export([dailyEmission.id]).then(dailyFuel => {
-            dailyEmission.dailyFuelData = dailyFuel;
+            dailyEmission.dailyFuelData = dailyFuel ?? [];
           }),
         );
       }

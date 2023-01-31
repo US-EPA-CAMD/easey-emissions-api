@@ -92,7 +92,6 @@ describe('location checks service tests', () => {
         payload,
       );
 
-      console.log(locations)
       expect(locations.length).toEqual(4);
       expect(locations.filter(e => e.unitId === 'u1').length).toEqual(1);
       expect(locations.filter(e => e.stackPipeId === 'sp1').length).toEqual(1);
@@ -102,7 +101,6 @@ describe('location checks service tests', () => {
         locations.find(e => e.unitId === 'u1').componentIds,
       );
       
-      console.log(u1ComponentIdList);
       expect(u1ComponentIdList.sort()).toEqual(['5']);
 
       const sp1ComponentIdList = Array.from(

@@ -22,9 +22,9 @@ export class EmissionsChecksService {
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {}
-  private throwIfErrors(errorList: string[]) {
+  public throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
-      throw new LoggingException(errorList.toString(), HttpStatus.BAD_REQUEST);
+      throw new LoggingException(errorList, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -110,6 +110,7 @@ export class EmissionsChecksService {
         },
       );
 
+      const errorList: string[] = [];
       if (isUndefinedOrNull(monitorFormula)) {
         const errorMessage = CheckCatalogService.formatResultMessage(
           'IMPORT-28-A',
@@ -117,8 +118,8 @@ export class EmissionsChecksService {
             formulaID: formulaIdentifier,
           },
         );
-
-        throw new LoggingException(errorMessage, HttpStatus.BAD_REQUEST);
+        errorList.push(errorMessage);
+        this.throwIfErrors(errorList);
       }
     }
   }

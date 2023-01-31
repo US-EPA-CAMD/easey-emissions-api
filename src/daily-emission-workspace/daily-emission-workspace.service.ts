@@ -38,7 +38,7 @@ export class DailyEmissionWorkspaceService {
           this.dailyFuelWorkspaceService
             .export([dailyEmission.id])
             .then(dailyFuel => {
-              dailyEmission.dailyFuelData = dailyFuel;
+              dailyEmission.dailyFuelData = dailyFuel ?? [];
             }),
         );
       }

@@ -54,7 +54,7 @@ export class WeeklyTestSummaryWorkspaceService {
         weeklyTestSum.weeklySystemIntegrityData =
           weeklySystemIntegrityData?.filter(
             i => i.weeklyTestSumId === weeklyTestSum.id,
-          ) ?? null;
+          ) ?? [];
       });
     }
     return weeklyTestSummaries;

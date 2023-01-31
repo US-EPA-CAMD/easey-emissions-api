@@ -26,6 +26,7 @@ export class Nsps4tSummaryWorkspaceService {
       repository: this.repository,
     });
 
+    if (hasArrayValues(nsps4tSummaryData)) {
     const promises = [];
     for (const nsps4tSummary of nsps4tSummaryData) {
       promises.push(
@@ -33,7 +34,7 @@ export class Nsps4tSummaryWorkspaceService {
           nsps4tSummary.nsps4tFourthQuarterData = arrayPushCreate(
             nsps4tSummary.nsps4tFourthQuarterData,
             data,
-          );
+          ) ?? [];
         }),
         this.nsps4tCompliancePeriodService
           .export([nsps4tSummary.id])
@@ -41,12 +42,12 @@ export class Nsps4tSummaryWorkspaceService {
             nsps4tSummary.nsps4tCompliancePeriodData = arrayPushCreate(
               nsps4tSummary.nsps4tCompliancePeriodData,
               data,
-            );
+            ) ?? [];
           }),
       );
     }
     await Promise.all(promises);
-
+    }
     return nsps4tSummaryData;
   }
 

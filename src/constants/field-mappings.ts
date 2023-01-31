@@ -145,6 +145,7 @@ hourly.push(
   { ...propertyMetadata.noxRate.fieldLabels },
   { ...propertyMetadata.noxRateMeasureFlg.fieldLabels },
   { ...propertyMetadata.heatInput.fieldLabels },
+  { ...propertyMetadata.heatInputMeasureFlg.fieldLabels },
   ...unitCharacteristics,
   ...controlInfoCharacteristics,
 );
@@ -302,6 +303,7 @@ excludableHourlyEmissionsColumns.push(
   { ...propertyMetadata.grossLoadHourly.fieldLabels },
   { ...propertyMetadata.noxMassMeasureFlg.fieldLabels },
   { ...propertyMetadata.noxRateMeasureFlg.fieldLabels },
+  { ...propertyMetadata.heatInputMeasureFlg.fieldLabels },
   { ...propertyMetadata.opTime.fieldLabels },
   { ...propertyMetadata.so2MassMeasureFlg.fieldLabels },
   { ...propertyMetadata.so2Rate.fieldLabels },

@@ -29,7 +29,7 @@ import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
-import { WeeklyTestSummaryDTO } from '../../src/dto/weekly-test-summary.dto';
+import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -95,7 +95,9 @@ export class EmissionsWorkspaceService {
       promises.push(this.dailyEmissionService.export(locationIds, params));
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
-      promises.push(this.summaryValueWorkspaceService.export(locationIds, params));
+      promises.push(
+        this.summaryValueWorkspaceService.export(locationIds, params),
+      );
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
@@ -104,13 +106,13 @@ export class EmissionsWorkspaceService {
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
       const results = new EmissionsDTO(mappedResults);
-      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES];
-      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING];
-      results.dailyEmissionData = promiseResult[DAILY_EMISSION];
-      results.sorbentTrapData = promiseResult[SORBENT_TRAP];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES];
-      results.summaryValueData = promiseResult[SUMMARY_VALUES];
-      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY];
+      results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] && [];
+      results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] && [];
+      results.dailyEmissionData = promiseResult[DAILY_EMISSION] && [];
+      results.sorbentTrapData = promiseResult[SORBENT_TRAP] && [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] && [];
+      results.summaryValueData = promiseResult[SUMMARY_VALUES] && [];
+      results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] && [];
 
       return results;
     }
@@ -140,8 +142,8 @@ export class EmissionsWorkspaceService {
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
       return (
-        plan.beginRptPeriod.year === params.year &&
-        plan.beginRptPeriod.quarter === params.quarter
+        plan.beginRptPeriod.year <= params.year &&
+        plan.beginRptPeriod.quarter <= params.quarter
       );
     });
 

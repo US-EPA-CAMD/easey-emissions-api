@@ -1,3 +1,3 @@
 export const mockEmissionsSubmissionsProgressRepository = {
-  getSubmissionProgress: () => undefined,
+  getSubmissionProgress: () => jest.fn(),
 };

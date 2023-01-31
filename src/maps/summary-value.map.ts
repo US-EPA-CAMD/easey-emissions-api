@@ -4,7 +4,6 @@ import { SummaryValue } from '../entities/summary-value.entity';
 import { SummaryValue as SummaryValueWorkspace } from '../entities/workspace/summary-value.entity';
 import { SummaryValueDTO } from '../dto/summary-value.dto';
 
-
 @Injectable()
 export class SummaryValueMap extends BaseMap<
   SummaryValue | SummaryValueWorkspace,
@@ -13,10 +12,9 @@ export class SummaryValueMap extends BaseMap<
   public async one(
     entity: SummaryValue | SummaryValueWorkspace,
   ): Promise<SummaryValueDTO> {
-
     const unitId = entity?.monitorLocation?.unit?.name ?? null;
 
-  const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
+    const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
 
     return {
       id: entity.id,

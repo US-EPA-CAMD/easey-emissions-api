@@ -7,6 +7,12 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
 import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import {
+  genHourlyApportionedEmissionsFacilityDto,
+  genHourlyApportionedEmissionsNationalDto,
+  genHourlyApportionedEmissionsStateDto,
+  genHourUnitData,
+} from '../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -40,13 +46,56 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
   });
 
   describe('* getEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult: HourUnitDataView[] = [];
+    it('calls HourlyApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
+      const mockedValues = genHourUnitData<HourUnitDataView>();
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(
-        expectedResult,
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(mockedValues);
+      expect(await controller.getEmissions(req, paramsDto)).toBe(mockedValues);
+    });
+  });
+
+  describe('* getEmissionsFacilityAggregation', () => {
+    it('calls HourlyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
+      const mockedValues = genHourlyApportionedEmissionsFacilityDto();
+      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsFacilityAggregation')
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsFacilityAggregation(
+        req,
+        paramsDto,
       );
+      expect(results).toBe(mockedValues);
+    });
+  });
+
+  describe('* getEmissionsStateAggregation', () => {
+    it('calls HourlyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
+      const mockedValues = genHourlyApportionedEmissionsStateDto();
+      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsStateAggregation')
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsStateAggregation(
+        req,
+        paramsDto,
+      );
+      expect(results).toBe(mockedValues);
+    });
+  });
+
+  describe('* getEmissionsNationalAggregation', () => {
+    it('calls HourlyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
+      const mockedValues = genHourlyApportionedEmissionsNationalDto();
+      const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
+      jest
+        .spyOn(service, 'getEmissionsNationalAggregation')
+        .mockResolvedValue(mockedValues);
+      const results = await controller.getEmissionsNationalAggregation(
+        req,
+        paramsDto,
+      );
+      expect(results).toBe(mockedValues);
     });
   });
 });

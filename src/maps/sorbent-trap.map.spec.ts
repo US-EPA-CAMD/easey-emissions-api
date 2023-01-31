@@ -59,7 +59,7 @@ describe('SorbentTrapMap', () => {
         userId: mock.userId,
         addDate: mock.addDate,
         updateDate: mock.updateDate,
-        samplingTrainData: null,
+        samplingTrainData: [],
       });
     };
 

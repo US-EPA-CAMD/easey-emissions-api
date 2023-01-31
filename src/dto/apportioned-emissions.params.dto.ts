@@ -1,6 +1,6 @@
-import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   State,
   UnitType,
@@ -21,9 +21,6 @@ import { IsControlTechnology } from '../pipes/is-control-technology.pipe';
 import { IsEmissionsProgram } from '../pipes/is-emissions-program.pipe';
 
 export class MatsApportionedEmissionsParamsDTO {
-  @ApiHideProperty()
-  currentDate: Date = this.getCurrentDate;
-
   @ApiProperty({
     enum: State,
     description: propertyMetadata.stateCode.description,
@@ -83,10 +80,6 @@ export class MatsApportionedEmissionsParamsDTO {
   })
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   controlTechnologies?: ControlTechnology[];
-
-  private get getCurrentDate(): Date {
-    return new Date();
-  }
 }
 
 export class ApportionedEmissionsParamsDTO extends MatsApportionedEmissionsParamsDTO {

@@ -4,7 +4,7 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
-  PrimaryColumn
+  PrimaryColumn,
 } from 'typeorm';
 
 import { DataTable } from './datatable.entity';
@@ -16,15 +16,20 @@ export class DataSet extends BaseEntity {
   })
   code: string;
 
-  @Column({
-    name: 'template_cd',
+  @PrimaryColumn({
+    name: 'group_cd',
   })
-  templateCode: string;
+  groupCode: string;  
 
   @Column({
     name: 'display_name',
   })
   displayName: string;
+
+  @Column({
+    name: 'sort_order',
+  })
+  sortOrder: number;
 
   @Column({
     name: 'no_results_msg',
