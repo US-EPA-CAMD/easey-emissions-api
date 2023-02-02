@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops
       - name: Setup & Configure Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
@@ -54,9 +54,9 @@ jobs:
       url: https://api.epa.gov/easey/test/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops
@@ -94,9 +94,9 @@ jobs:
       url: https://api.epa.gov/easey/perf/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops
@@ -134,9 +134,9 @@ jobs:
       url: https://api.epa.gov/easey/beta/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops
@@ -174,9 +174,9 @@ jobs:
       url: https://api.epa.gov/easey/staging/emissions-mgmt/swagger
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops

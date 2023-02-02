@@ -6,7 +6,6 @@ on:
     paths-ignore:
     - '**/*.md'
     - 'LICENSE'
-    - '.github/**'
     - '.gitignore'
 
 jobs:
@@ -14,16 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Checkout devops repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: US-EPA-CAMD/devops
           path: devops
       - name: Setup & Configure Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
