@@ -16,7 +16,7 @@ export class DataSet extends BaseEntity {
   })
   code: string;
 
-  @PrimaryColumn({
+  @Column({
     name: 'group_cd',
   })
   groupCode: string;  
