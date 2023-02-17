@@ -46,6 +46,7 @@ export class EmissionsWorkspaceController {
       'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @RoleGuard({ queryParam: 'monitorPlanId' }, LookupType.MonitorPlan)
   export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     return this.service.export(params);
   }
@@ -57,7 +58,7 @@ export class EmissionsWorkspaceController {
     type: EmissionsDTO,
     description: 'Imports Emissions data from JSON file into the workspace',
   })
-  ///@UseInterceptors(FormatValidationErrorsInterceptor)
+  @RoleGuard({ bodyParam: 'orisCode' }, LookupType.Facility)
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
@@ -87,7 +88,10 @@ export class EmissionsWorkspaceController {
     required: true,
     explode: false,
   })
-  @RoleGuard({pathParam: 'orisCodes'}, LookupType.Facility)
+  @RoleGuard(
+    { queryParam: 'orisCodes', isPipeDelimitted: true },
+    LookupType.Facility,
+  )
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
   ): Promise<EmissionsReviewSubmitDTO[]> {
