@@ -17,73 +17,62 @@ if (host === 'localhost') {
   uri = `http://localhost:${port}/${path}`;
 }
 
-const apiHost = getConfigValue('EASEY_API_GATEWAY_HOST', 'api.epa.gov/easey/dev');
+const apiHost = getConfigValue(
+  'EASEY_API_GATEWAY_HOST',
+  'api.epa.gov/easey/dev',
+);
 
 export const PAGINATION_MAX_PER_PAGE = getConfigValueNumber(
-  'EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE', 500,
+  'EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE',
+  500,
 );
 
 export default registerAs('app', () => ({
   name: 'emissions-api',
-  host, port, path, uri,
-  title: getConfigValue(
-    'EASEY_EMISSIONS_API_TITLE', 'Emissions Management',
-  ),
+  host,
+  port,
+  path,
+  uri,
+  title: getConfigValue('EASEY_EMISSIONS_API_TITLE', 'Emissions Management'),
   description: getConfigValue(
     'EASEY_EMISSIONS_API_DESCRIPTION',
     'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
   ),
-  env: getConfigValue(
-    'EASEY_EMISSIONS_API_ENV', 'local-dev',
+  env: getConfigValue('EASEY_EMISSIONS_API_ENV', 'local-dev'),
+  apiKey: getConfigValue('EASEY_EMISSIONS_API_KEY'),
+  enableApiKey: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_API_KEY'),
+  enableRoleGuard: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD',
+    true,
   ),
-  apiKey: getConfigValue(
-    'EASEY_EMISSIONS_API_KEY',
-  ),
-  enableApiKey: getConfigValueBoolean(
-    'EASEY_EMISSIONS_API_ENABLE_API_KEY',
-  ),
-  secretToken: getConfigValue(
-    'EASEY_EMISSIONS_API_SECRET_TOKEN',
-  ),
+  secretToken: getConfigValue('EASEY_EMISSIONS_API_SECRET_TOKEN'),
   enableSecretToken: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_SECRET_TOKEN',
   ),
-  enableCors: getConfigValueBoolean(
-    'EASEY_EMISSIONS_API_ENABLE_CORS', true,
-  ),
+  enableCors: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_CORS', true),
   enableAuthToken: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN',
+    true,
   ),
   enableGlobalValidationPipes: getConfigValueBoolean(
-    'EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE', true,
+    'EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE',
+    true,
   ),
-  version: getConfigValue(
-    'EASEY_EMISSIONS_API_VERSION', 'v0.0.0',
-  ),
-  published: getConfigValue(
-    'EASEY_EMISSIONS_API_PUBLISHED', 'local',
-  ),
+  version: getConfigValue('EASEY_EMISSIONS_API_VERSION', 'v0.0.0'),
+  published: getConfigValue('EASEY_EMISSIONS_API_PUBLISHED', 'local'),
   submissionDays: getConfigValueNumber(
-    'EASEY_EMISSIONS_API_SUBMISSION_DAYS', 38,
+    'EASEY_EMISSIONS_API_SUBMISSION_DAYS',
+    38,
   ),
-  reqSizeLimit: getConfigValue(
-    'EASEY_EMISSIONS_API_REQ_SIZE_LIMIT',
-    '30mb',
-  ),
+  reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '30mb'),
   // ENABLES DEBUG CONSOLE LOGS
-  enableDebug: getConfigValueBoolean(
-    'EASEY_EMISSIONS_API_ENABLE_DEBUG',
-  ),
+  enableDebug: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_DEBUG'),
   // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
   // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
-  currentUser: getConfigValue(
-    'EASEY_EMISSIONS_API_CURRENT_USER',
-  ),
+  currentUser: getConfigValue('EASEY_EMISSIONS_API_CURRENT_USER'),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   apiHost: apiHost,
   authApi: {
-    uri: getConfigValue(
-      'EASEY_AUTH_API', `https://${apiHost}/auth-mgmt`,
-    ),
+    uri: getConfigValue('EASEY_AUTH_API', `https://${apiHost}/auth-mgmt`),
   },
 }));

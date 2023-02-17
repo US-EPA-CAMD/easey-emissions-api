@@ -26,12 +26,12 @@ export async function bootstrap() {
   const server = await app.listen(appPort);
   server.setTimeout(1800000);
 
-  //if (enableDebug) {
-  console.log('config: ', configService.get('app'));
-  console.log(
-    `Application is running on: ${await app.getUrl()}/${appPath}/swagger`,
-  );
-  //}
+  if (enableDebug) {
+    console.log('config: ', configService.get('app'));
+    console.log(
+      `Application is running on: ${await app.getUrl()}/${appPath}/swagger`,
+    );
+  }
 }
 
 bootstrap();

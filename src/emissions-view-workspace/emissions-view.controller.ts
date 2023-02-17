@@ -9,12 +9,14 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
+import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
+import { LookupType } from '@us-epa-camd/easey-common/enums';
 
 @Controller()
 @ApiTags('Emissions Views')
@@ -25,7 +27,8 @@ export class EmissionsViewWorkspaceController {
   @Get()
   @ApiOkResponse({
     isArray: true,
-    description: 'Retrieves a list of workspace Emissions data views that are available',
+    description:
+      'Retrieves a list of workspace Emissions data views that are available',
   })
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();
@@ -60,6 +63,7 @@ export class EmissionsViewWorkspaceController {
   })
   @UseInterceptors(Json2CsvInterceptor)
   @UseInterceptors(SetEmissionViewHeaderInterceptor)
+  @RoleGuard({ queryParam: 'monitorPlanId' }, LookupType.MonitorPlan)
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

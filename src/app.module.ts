@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { RouterModule } from 'nest-router';
 import { ConfigModule } from '@nestjs/config';
@@ -32,7 +33,6 @@ import { Nsps4tSummaryWorkspaceModule } from './nsps4t-summary-workspace/nsps4t-
 import { Nsps4tSummaryModule } from './nsps4t-summary/nsps4t-summary.module';
 import { Nsps4tCompliancePeriodModule } from './nsps4t-compliance-period/nsps4t-compliance-period.module';
 import { Nsps4tAnnualModule } from './nsps4t-annual/nsps4t-annual.module';
-
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
@@ -67,6 +67,7 @@ import { Nsps4tAnnualModule } from './nsps4t-annual/nsps4t-annual.module';
     Nsps4tSummaryModule,
     Nsps4tCompliancePeriodModule,
     Nsps4tAnnualModule,
+    HttpModule,
   ],
 })
 export class AppModule {}
