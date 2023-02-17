@@ -27,7 +27,8 @@ export class EmissionsViewWorkspaceController {
   @Get()
   @ApiOkResponse({
     isArray: true,
-    description: 'Retrieves a list of workspace Emissions data views that are available',
+    description:
+      'Retrieves a list of workspace Emissions data views that are available',
   })
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();
@@ -62,7 +63,7 @@ export class EmissionsViewWorkspaceController {
   })
   @UseInterceptors(Json2CsvInterceptor)
   @UseInterceptors(SetEmissionViewHeaderInterceptor)
-  @RoleGuard({pathParam: 'monitorPlanId'}, LookupType.MonitorPlan)
+  @RoleGuard({ queryParam: 'monitorPlanId' }, LookupType.MonitorPlan)
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

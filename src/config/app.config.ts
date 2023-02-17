@@ -39,10 +39,7 @@ export default registerAs('app', () => ({
     'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
   ),
   env: getConfigValue('EASEY_EMISSIONS_API_ENV', 'local-dev'),
-  apiKey: getConfigValue(
-    'EASEY_EMISSIONS_API_KEY',
-    'PXPWlQGB3wKXotkWN1PbSwbSoM7CoWW0ZMPWYtfc',
-  ),
+  apiKey: getConfigValue('EASEY_EMISSIONS_API_KEY'),
   enableApiKey: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_API_KEY'),
   enableRoleGuard: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD',

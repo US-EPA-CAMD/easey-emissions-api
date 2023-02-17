@@ -8,12 +8,12 @@ export async function getSelectedView(
   params: EmissionsViewParamsDTO,
 ) {
   const mgr = getManager();
-  const reportingPeriods = params.reportingPeriod;
-  const monitorPlanId = params.monitorPlanId;
+  const groupCode = 'EMVIEW';
   const unitIds = params.unitIds ?? [{}];
+  const monitorPlanId = params.monitorPlanId;
+  const reportingPeriods = params.reportingPeriod;
   const stackPipeIds = params.stackPipeIds ?? [{}];
   const viewCodeUpperCase = viewCode.toUpperCase();
-  const templateCode = 'EMVIEW';
 
   const rptPeriod = await mgr
     .createQueryBuilder()
@@ -38,15 +38,14 @@ export async function getSelectedView(
     })
     .getRawMany();
 
-  const columns = await mgr
-    .createQueryBuilder()
+  const columns = await mgr.createQueryBuilder()
     .select(
       'ds.displayName AS viewName, col.name AS columnName, col.alias AS columnAlias, col.displayName AS columnLabel',
     )
     .from('camdaux.datacolumn', 'col')
     .innerJoin('col.dataTable', 'dt')
     .innerJoin('dt.dataSet', 'ds')
-    .where('ds.templateCode = :templateCode', { templateCode })
+    .where('ds.groupCode = :groupCode', { groupCode })
     .andWhere('ds.code = :viewCodeUpperCase ', { viewCodeUpperCase })
     .orderBy('col.columnOrder')
     .getRawMany();
