@@ -71,10 +71,10 @@ export class Nsps4tSummaryWorkspaceService {
               identifiers: data.identifiers,
             })
             .then(data => {
-              if (data && !hasArrayValues(nsps4tSummaryData.nsps4tAnnualData)) {
-                nsps4tSummaryData.nsps4tAnnualData = [data];
+              if (data && !hasArrayValues(nsps4tSummaryData.nsps4tFourthQuarterData)) {
+                nsps4tSummaryData.nsps4tFourthQuarterData = [data];
               } else if (data) {
-                nsps4tSummaryData.nsps4tAnnualData.push(data);
+                nsps4tSummaryData.nsps4tFourthQuarterData.push(data);
               }
             }),
         );

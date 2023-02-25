@@ -82,7 +82,7 @@ export class Nsps4tSummary extends BaseEntity {
     o => o.nsps4tSummary,
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
-  nsps4tAnnualData: Nsps4tAnnual[];
+  nsps4tFourthQuarterData: Nsps4tAnnual[];
 
   @OneToMany(
     () => Nsps4tCompliancePeriod,

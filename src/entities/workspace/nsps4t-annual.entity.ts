@@ -72,7 +72,7 @@ export class Nsps4tAnnual extends BaseEntity {
 
   @ManyToOne(
     () => Nsps4tSummary,
-    o => o.nsps4tAnnualData,
+    o => o.nsps4tFourthQuarterData,
   )
   @JoinColumn({ name: 'nsps4t_sum_id' })
   nsps4tSummary: Nsps4tSummary;
