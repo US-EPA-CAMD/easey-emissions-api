@@ -69,10 +69,10 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
   });
 
   it('should successfully import', async function () {
-    const importMock = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tFourthQuarterData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
+    const importMock = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tAnnualData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
 
     jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(importMock[0]);
-    jest.spyOn(annualService, 'import').mockResolvedValue(importMock[0].nsps4tFourthQuarterData[0]);
+    jest.spyOn(annualService, 'import').mockResolvedValue(importMock[0].nsps4tAnnualData[0]);
     jest.spyOn(compliancePeriodService, 'import').mockResolvedValue(importMock[0].nsps4tCompliancePeriodData[0]);
 
     await expect(

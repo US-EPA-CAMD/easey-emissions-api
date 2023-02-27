@@ -9,7 +9,7 @@ type GenNsps4tSummaryConfig = {
   include?: Array<
     | 'monitorLocation'
     | 'reportingPeriod'
-    | 'nsps4tFourthQuarterData'
+    | 'nsps4tAnnualData'
     | 'nsps4tCompliancePeriodData'
   >;
   nsps4tCompliancePeriodDataAmount?: number;
@@ -42,7 +42,7 @@ export const genNsps4tSummary = <RepoType>(
       reportingPeriod: config?.include.includes('reportingPeriod')
         ? genReportingPeriod()[0]
         : undefined,
-      nsps4tFourthQuarterData: config?.include.includes('nsps4tFourthQuarterData')
+        nsps4tAnnualData: config?.include.includes('nsps4tAnnualData')
         ? genNsps4tAnnual(config?.nsps4tAnnualDataAmount)
         : undefined,
       nsps4tCompliancePeriodData: config?.include.includes(
