@@ -69,17 +69,22 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
   });
 
   it('should successfully import', async function () {
-    const importMock = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tAnnualData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
+    const entityMocks = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tAnnualData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
 
-    jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(importMock[0]);
-    jest.spyOn(annualService, 'import').mockResolvedValue(importMock[0].nsps4tAnnualData[0]);
-    jest.spyOn(compliancePeriodService, 'import').mockResolvedValue(importMock[0].nsps4tCompliancePeriodData[0]);
+    // need to massage the data to make it look like import dto
+    const importMock = ({...entityMocks[0]}as unknown) as Nsps4tSummaryDataCreate;
+    delete importMock["nsps4tAnnualData"];
+    importMock.nsps4tFourthQuarterData = [{...entityMocks[0].nsps4tAnnualData[0]}]
+
+    jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(entityMocks[0]);
+    jest.spyOn(annualService, 'import').mockResolvedValue(entityMocks[0].nsps4tAnnualData[0]);
+    jest.spyOn(compliancePeriodService, 'import').mockResolvedValue(entityMocks[0].nsps4tCompliancePeriodData[0]);
 
     await expect(
       service.import(
-        (importMock[0] as unknown) as Nsps4tSummaryDataCreate,
+        importMock
       ),
-    ).resolves.toEqual(importMock[0]);
+    ).resolves.toEqual(entityMocks[0]);
   });
 
 
