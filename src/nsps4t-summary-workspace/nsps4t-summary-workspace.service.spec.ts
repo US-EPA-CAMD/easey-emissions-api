@@ -47,7 +47,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should export mapped data', async () =>{
+  it('should export mapped data', async () => {
     const nsps4tSummaryMock = genNsps4tSummary<Nsps4tSummary>();
     const mappedValues = await map.many(nsps4tSummaryMock);
 
@@ -68,8 +68,8 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     ).resolves.toEqual(mappedValues);
   });
 
-  it('should successfully import', async function() {
-    const importMock = genNsps4tSummary<Nsps4tSummary>(1, {include:["nsps4tFourthQuarterData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1});
+  it('should successfully import', async function () {
+    const importMock = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tFourthQuarterData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
 
     jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(importMock[0]);
     jest.spyOn(annualService, 'import').mockResolvedValue(importMock[0].nsps4tFourthQuarterData[0]);
