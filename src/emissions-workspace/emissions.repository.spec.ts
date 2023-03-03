@@ -26,6 +26,8 @@ describe('Emisions Workspace Repository Test', () => {
 
         repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
 
+        repository.query = jest.fn();
+
         queryBuilder.innerJoinAndSelect.mockReturnValue(queryBuilder);
         queryBuilder.where.mockReturnValue(queryBuilder);
         queryBuilder.andWhere.mockReturnValue(queryBuilder);
@@ -39,4 +41,11 @@ describe('Emisions Workspace Repository Test', () => {
             expect(result).toEqual(mockedResult);
         });
     });
+
+    describe('updateAllViews', ()=>{
+        it('successfully calls updateAllViews()', async ()=>{
+            await repository.updateAllViews()
+            expect(repository.query).toBeCalled();
+        })
+    })
 });
