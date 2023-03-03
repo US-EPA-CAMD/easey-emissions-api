@@ -230,8 +230,11 @@ export class EmissionsWorkspaceService {
         this.repository.create({
           monitorPlanId,
           reportingPeriodId,
+          evalStatusCd: 'EVAL'
         }),
       );
+        
+      await this.repository.updateAllViews(monitorPlanId, params.quarter, params.year);
     } catch (e) {
       throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
