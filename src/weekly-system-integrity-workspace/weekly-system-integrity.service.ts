@@ -47,6 +47,8 @@ export class WeeklySystemIntegrityWorkspaceService {
         measuredValue: data.measuredValue,
         apsIndicator: data.apsIndicator,
         systemIntegrityError: data.systemIntegrityError,
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
   }

@@ -58,6 +58,8 @@ describe('DailyEmissionWorkspaceService', () => {
       // @ts-expect-error use as mock
       jest.spyOn(repository, 'create').mockResolvedValue(dailyEmission);
       jest.spyOn(repository, 'save').mockResolvedValue(dailyEmission);
+      jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
+
 
       await expect(
         service.import({

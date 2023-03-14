@@ -63,6 +63,8 @@ export class HourlyFuelFlowWorkspaceService {
           identifiers.monitoringSystems?.[data.monitoringSystemId],
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
 

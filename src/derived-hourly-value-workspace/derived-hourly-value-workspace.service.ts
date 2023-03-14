@@ -45,6 +45,8 @@ export class DerivedHourlyValueWorkspaceService {
         hourId,
         rptPeriodId: reportingPeriodId,
         monitorLocationId: monitoringLocationId,
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
   }

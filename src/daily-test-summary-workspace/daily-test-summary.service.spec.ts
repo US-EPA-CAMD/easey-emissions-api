@@ -61,6 +61,7 @@ describe('Daily Summary Workspace Service', () => {
     const mappedValues = await Promise.all(promises);
 
     jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
+    jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
     await expect(
       dailyTestSummaryService.getDailyTestSummariesByLocationIds(
@@ -73,7 +74,7 @@ describe('Daily Summary Workspace Service', () => {
   });
 
   it('should delete a record', async function() {
-    await expect(dailyTestSummaryService.delete('123')).resolves.toEqual(
+    await expect(dailyTestSummaryService.delete({ monitoringLocationId: '123', reportingPeriodId: 2 })).resolves.toEqual(
       undefined,
     );
   });

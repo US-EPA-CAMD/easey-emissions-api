@@ -55,6 +55,7 @@ describe('SorbentTrapWorkspaceService', () => {
   });
 
   it('should successfully import', async function () {
+    jest.spyOn(service, 'delete').mockResolvedValue(undefined);
     const mockedValues = genSorbentTrap<SorbentTrap>(1, { include: ['samplingTrains'], samplingTrainAmount: 1 });
 
     // need to massage the data to make it look like import dto
@@ -72,5 +73,4 @@ describe('SorbentTrapWorkspaceService', () => {
       ),
     ).resolves.toEqual(mockedValues[0]);
   });
-
 });

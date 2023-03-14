@@ -36,7 +36,8 @@ export const importNsps4tCompliancePeriodData = async ({
       monitoringLocationId: data.monitoringLocationId,
       reportingPeriodId: data.reportingPeriodId,
       userId: data.identifiers?.userId,
-      addDate: new Date().toISOString(),
+      addDate: new Date(),
+      updateDate: new Date(),
     }),
   );
 };

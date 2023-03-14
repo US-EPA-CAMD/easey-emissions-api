@@ -41,6 +41,8 @@ export const importSamplingTrainData = async ({
       trainQaStatusCode: data.trainQaStatusCode,
       sampleDamageExplanation: data.sampleDamageExplanation,
       userId: data.identifiers?.userId,
+      addDate: new Date(),
+      updateDate: new Date(),
     }),
   );
 };

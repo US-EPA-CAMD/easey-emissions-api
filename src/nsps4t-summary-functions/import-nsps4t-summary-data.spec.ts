@@ -26,6 +26,7 @@ describe('ImportNsps4tSummaryData', () => {
     // @ts-expect-error force as undefined
     jest.spyOn(repository, 'create').mockResolvedValue(undefined);
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
     await Promise.all(
       imports.map(data => {

@@ -41,6 +41,8 @@ export class MatsMonitorHourlyValueWorkspaceService {
         hourId,
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
   }
