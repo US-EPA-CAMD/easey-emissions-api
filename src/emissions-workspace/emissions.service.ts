@@ -9,7 +9,6 @@ import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { PlantRepository } from '../plant/plant.repository';
-import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import {
@@ -30,6 +29,7 @@ import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-t
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
+import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -230,7 +230,8 @@ export class EmissionsWorkspaceService {
         this.repository.create({
           monitorPlanId,
           reportingPeriodId,
-          evalStatusCd: 'EVAL'
+          evalStatusCd: 'EVAL',
+          lastUpdated: new Date(),
         }),
       );
         

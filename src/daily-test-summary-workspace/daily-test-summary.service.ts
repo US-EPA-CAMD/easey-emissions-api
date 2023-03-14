@@ -7,12 +7,13 @@ import {
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindConditions } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { isUndefinedOrNull } from '../utils/utils';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -41,8 +42,10 @@ export class DailyTestSummaryWorkspaceService {
     return this.map.many(results);
   }
 
-  async delete(id: string): Promise<DeleteResult> {
-    return this.repository.delete({ id });
+  async delete(
+    criteria: FindConditions<DailyTestSummary>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
   }
 
   async export(
@@ -73,6 +76,7 @@ export class DailyTestSummaryWorkspaceService {
   async import(
     parameters: DailyTestSummaryCreate,
   ): Promise<DailyTestSummaryDTO> {
+    this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
     const result = await this.repository.save(
       this.repository.create({
         ...parameters,
@@ -83,6 +87,8 @@ export class DailyTestSummaryWorkspaceService {
           ],
         componentId:
           parameters?.identifiers?.components?.[parameters.componentId],
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
 

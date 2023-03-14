@@ -40,6 +40,8 @@ export class HourlyGasFlowMeterWorkspaceService {
         avgHourlySamplingRate: data.avgHourlySamplingRate,
         samplingRateUom: data.samplingRateUom,
         hourlySfsrRatio: data.hourlySfsrRatio,
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
   }

@@ -20,6 +20,7 @@ describe('ImportSorbentTrapData', () => {
     // @ts-expect-error force as undefined
     jest.spyOn(repository, 'create').mockResolvedValue(undefined);
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
     await Promise.all(
       importReturn.map(data => {

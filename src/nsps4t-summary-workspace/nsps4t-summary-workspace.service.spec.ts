@@ -79,6 +79,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(entityMocks[0]);
     jest.spyOn(annualService, 'import').mockResolvedValue(entityMocks[0].nsps4tAnnualData[0]);
     jest.spyOn(compliancePeriodService, 'import').mockResolvedValue(entityMocks[0].nsps4tCompliancePeriodData[0]);
+    jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
     await expect(
       service.import(

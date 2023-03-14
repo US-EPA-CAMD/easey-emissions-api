@@ -51,6 +51,8 @@ export class DailyCalibrationWorkspaceService {
       this.repository.create({
         ...parameters,
         id: randomUUID(),
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
 

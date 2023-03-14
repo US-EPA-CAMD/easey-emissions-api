@@ -35,6 +35,8 @@ export const importSorbentTrapData = async ({
     userId: data.identifiers?.userId,
     apsCode: data.apsCode,
     rataIndicator: data.rataIndicator,
+    addDate: new Date(),
+    updateDate: new Date(),
   });
 
   return repository.save(sorbentTrap);

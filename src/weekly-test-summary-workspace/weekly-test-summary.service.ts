@@ -10,6 +10,8 @@ import {
 } from '../dto/weekly-test-summary.dto';
 import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DeleteResult, FindConditions } from 'typeorm';
+import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
 
 export type WeeklyTestSummaryCreate = WeeklyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -24,6 +26,13 @@ export class WeeklyTestSummaryWorkspaceService {
     private readonly repository: WeeklyTestSummaryWorkspaceRepository,
     private readonly weeklySystemIntegrityService: WeeklySystemIntegrityWorkspaceService,
   ) {}
+
+  async delete(
+    criteria: FindConditions<WeeklyTestSummary>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
+  }
+  
   async getWeeklyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
@@ -61,11 +70,14 @@ export class WeeklyTestSummaryWorkspaceService {
   }
 
   async import(data: WeeklyTestSummaryCreate): Promise<WeeklyTestSummaryDTO> {
+    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const weeklyTestSummary = await this.repository.save(
       this.repository.create({
         ...data,
         id: randomUUID(),
         componentId: data.identifiers?.components?.[data.componentId],
+        addDate: new Date(),
+        updateDate: new Date(),
       }),
     );
 
