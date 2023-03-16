@@ -57,7 +57,7 @@ export class DailyEmissionWorkspaceService {
   }
 
   async import(data: DailyEmissionWorkspaceCreate) {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+   await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const dailyEmission = await this.repository.save(
       this.repository.create({
         id: randomUUID(),

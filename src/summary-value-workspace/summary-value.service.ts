@@ -43,7 +43,7 @@ export class SummaryValueWorkspaceService {
   }
 
   async import(data: SummaryValueCreate): Promise<SummaryValueDTO> {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const uniqueResults = await this.repository.find({
       where: {
         reportingPeriodId: data.reportingPeriodId,
