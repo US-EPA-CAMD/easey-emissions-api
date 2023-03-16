@@ -70,7 +70,7 @@ export class WeeklyTestSummaryWorkspaceService {
   }
 
   async import(data: WeeklyTestSummaryCreate): Promise<WeeklyTestSummaryDTO> {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const weeklyTestSummary = await this.repository.save(
       this.repository.create({
         ...data,

@@ -115,7 +115,7 @@ export class HourlyOperatingWorkspaceService {
     emissionsImport: EmissionsImportDTO,
     data: HourlyOperatingCreate,
   ): Promise<HourlyOperatingDTO> {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const result = await this.repository.save(
       this.repository.create({
         ...data,

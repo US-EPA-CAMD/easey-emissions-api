@@ -76,7 +76,7 @@ export class DailyTestSummaryWorkspaceService {
   async import(
     parameters: DailyTestSummaryCreate,
   ): Promise<DailyTestSummaryDTO> {
-    this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
+    await this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
     const result = await this.repository.save(
       this.repository.create({
         ...parameters,
