@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto';
 
 export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
   dailyTestSummaryId: string;
+  reportingPeriodId: number;
 };
 
 @Injectable()
