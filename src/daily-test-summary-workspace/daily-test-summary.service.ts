@@ -76,7 +76,7 @@ export class DailyTestSummaryWorkspaceService {
   async import(
     parameters: DailyTestSummaryCreate,
   ): Promise<DailyTestSummaryDTO> {
-    this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
+    await this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
     const result = await this.repository.save(
       this.repository.create({
         ...parameters,
@@ -95,6 +95,7 @@ export class DailyTestSummaryWorkspaceService {
     if (Array.isArray(parameters.dailyCalibrationData)) {
       await this.importDailyCalibrations(
         parameters.dailyCalibrationData,
+        parameters.reportingPeriodId,
         result.id,
       );
     }
@@ -104,6 +105,7 @@ export class DailyTestSummaryWorkspaceService {
 
   async importDailyCalibrations(
     dailyCalibrations: Array<DailyCalibrationImportDTO>,
+    reportingPeriodId: number,
     dailyTestSummaryId: string,
   ) {
     const dailyCalibrationImports = dailyCalibrations?.map(
@@ -111,6 +113,7 @@ export class DailyTestSummaryWorkspaceService {
         return this.dailyCalibrationService.import({
           ...dailyCalibrationDatum,
           dailyTestSummaryId,
+          reportingPeriodId,
         });
       },
     );
