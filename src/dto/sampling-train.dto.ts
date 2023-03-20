@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SamplingTrainBaseDTO {
   @IsString()
@@ -70,10 +70,10 @@ export class SamplingTrainRecordDTO extends SamplingTrainBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsDate()
+  @IsString()
   addDate?: Date;
   @IsOptional()
-  @IsDate()
+  @IsString()
   updateDate?: Date;
 }
 

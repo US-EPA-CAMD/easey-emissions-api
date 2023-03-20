@@ -1,5 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import { IsDate, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import moment from 'moment';
 import {
   DailyCalibrationDTO,
@@ -15,7 +15,7 @@ export class DailyTestSummaryBaseDTO {
   @IsString()
   unitId?: string;
 
-  @IsDate()
+  @IsString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
 
@@ -70,11 +70,11 @@ export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
   userId?: string;
 
   @IsOptional()
-  @IsDate()
+  @IsString()
   addDate?: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsString()
   updateDate?: Date;
 }
 

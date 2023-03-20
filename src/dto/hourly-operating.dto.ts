@@ -1,5 +1,5 @@
 import {Transform, Type } from 'class-transformer';
-import { IsDate, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import {
   MonitorHourlyValueImportDTO,
@@ -34,7 +34,7 @@ export class HourlyOperatingBaseDTO {
   @IsOptional()
   @IsString()
   unitId?: string;
-  @IsDate()
+  @IsString()
   @Transform(({value})=>moment(value).format('YYYY-MM-DD'), {toPlainOnly:true})
   date: Date;
   @IsNumber()
@@ -86,10 +86,10 @@ export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsDate()
+  @IsString()
   addDate?: Date;
   @IsOptional()
-  @IsDate()
+  @IsString()
   updateDate?: Date;
   @IsOptional()
   @IsString()

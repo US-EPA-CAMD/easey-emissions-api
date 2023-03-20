@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SummaryValueBaseDTO {
   @IsOptional()
@@ -40,10 +40,10 @@ export class SummaryValueRecordDTO extends SummaryValueBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsDate()
+  @IsString()
   addDate?: Date;
   @IsOptional()
-  @IsDate()
+  @IsString()
   updateDate?: Date;
 }
 

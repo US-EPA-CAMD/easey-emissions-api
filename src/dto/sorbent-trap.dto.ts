@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString, ValidateNested, IsNumber } from 'class-validator';
+import { IsOptional, IsString, ValidateNested, IsNumber } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
 import moment from 'moment';
@@ -10,12 +10,12 @@ export class SorbentTrapBaseDTO {
   @IsOptional()
   @IsString()
   unitId?: string;
-  @IsDate()
+  @IsString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   beginDate: Date;
   @IsNumber()
   beginHour: number;
-  @IsDate()
+  @IsString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   endDate: Date;
   @IsNumber()
@@ -64,10 +64,10 @@ export class SorbentTrapRecordDTO extends SorbentTrapBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsDate()
+  @IsString()
   addDate?: Date;
   @IsOptional()
-  @IsDate()
+  @IsString()
   updateDate?: Date;
 }
 
