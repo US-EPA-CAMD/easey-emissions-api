@@ -60,7 +60,7 @@ export class Nsps4tSummaryWorkspaceService {
   }
 
   async import(data: Nsps4tSummaryDataCreate) {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const nsps4tSummaryData = await importNsps4tSummaryData({
       data,
       repository: this.repository,

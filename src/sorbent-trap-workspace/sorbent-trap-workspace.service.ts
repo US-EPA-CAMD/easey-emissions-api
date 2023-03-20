@@ -49,7 +49,7 @@ export class SorbentTrapWorkspaceService {
 
   async import(data: SorbentTrapWorkspaceCreate) 
   {
-    this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const sorbentTrap = await importSorbentTrapData({
       data,
       repository: this.repository,
