@@ -1,5 +1,5 @@
 import {Transform, Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import {
   MonitorHourlyValueImportDTO,
@@ -28,33 +28,77 @@ import {
 import moment from 'moment';
 
 export class HourlyOperatingBaseDTO {
+  @IsOptional()
+  @IsString()
   stackPipeId?: string;
+  @IsOptional()
+  @IsString()
   unitId?: string;
+  @IsDate()
   @Transform(({value})=>moment(value).format('YYYY-MM-DD'), {toPlainOnly:true})
   date: Date;
+  @IsNumber()
   hour: number;
+  @IsOptional()
+  @IsNumber()
   operatingTime?: number;
+  @IsOptional()
+  @IsNumber()
   hourLoad?: number;
+  @IsOptional()
+  @IsString()
   loadUnitsOfMeasureCode?: string;
+  @IsOptional()
+  @IsNumber()
   matsHourLoad?: number;
+  @IsOptional()
+  @IsNumber()
   loadRange?: number;
+  @IsOptional()
+  @IsNumber()
   commonStackLoadRange?: number;
+  @IsOptional()
+  @IsNumber()
   fcFactor?: number;
+  @IsOptional()
+  @IsNumber()
   fdFactor?: number;
+  @IsOptional()
+  @IsNumber()
   fwFactor?: number;
+  @IsOptional()
+  @IsString()
   fuelCode?: string;
+  @IsOptional()
+  @IsString()
   matsStartupShutdownFlag?: string;
 }
 export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   id: string;
+  @IsNumber()
   reportingPeriodId: number;
+  @IsString()
   monitoringLocationId: string;
+  @IsOptional()
+  @IsString()
   multiFuelFlg?: string;
+  @IsOptional()
+  @IsString()
   userId?: string;
+  @IsOptional()
+  @IsDate()
   addDate?: Date;
+  @IsOptional()
+  @IsDate()
   updateDate?: Date;
+  @IsOptional()
+  @IsString()
   operatingConditionCode?: string;
+  @IsOptional()
+  @IsString()
   fuelCdList?: string;
+  @IsOptional()
+  @IsNumber()
   mhhiIndicator?: number;
 }
 

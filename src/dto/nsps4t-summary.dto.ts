@@ -1,4 +1,4 @@
-import { ValidateNested } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   Nsps4tCompliancePeriodDTO,
@@ -7,22 +7,45 @@ import {
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
 
 export class Nsps4tSummaryBaseDTO {
+  @IsOptional()
+  @IsString()
   stackPipeId?: string;
+  @IsOptional()
+  @IsString()
   unitId?: string;
+  @IsOptional()
+  @IsString()
   co2EmissionStandardCode?: string;
+  @IsOptional()
+  @IsNumber()
   modusValue?: number;
+  @IsOptional()
+  @IsString()
   modusUomCode?: string;
+  @IsOptional()
+  @IsString()
   electricalLoadCode?: string;
+  @IsOptional()
+  @IsNumber()
   noCompliancePeriodEndedIndicator?: number;
+  @IsOptional()
+  @IsString()
   noCompliancePeriodEndedComment?: string;
 }
 
 export class Nsps4tSummaryRecordDTO extends Nsps4tSummaryBaseDTO {
+  @IsString()
   id: string;
+  @IsString()
   monitoringLocationId: string;
+  @IsNumber()
   reportingPeriodId: number;
+  @IsString()
   userId: string;
+  @IsDate()
   addDate: Date;
+  @IsOptional()
+  @IsDate()
   updateDate?: Date;
 }
 
