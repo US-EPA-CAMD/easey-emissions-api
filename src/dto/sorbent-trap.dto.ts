@@ -15,6 +15,7 @@ export class SorbentTrapBaseDTO {
   beginDate: Date;
   @IsNumber()
   beginHour: number;
+  @IsDate()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   endDate: Date;
   @IsNumber()
@@ -48,6 +49,7 @@ export class SorbentTrapRecordDTO extends SorbentTrapBaseDTO {
   monitoringLocationId: string;
   @IsNumber()
   reportingPeriodId: number;
+  @IsOptional()
   @IsString()
   monitoringSystemRecordId: string;
   @IsNumber()
