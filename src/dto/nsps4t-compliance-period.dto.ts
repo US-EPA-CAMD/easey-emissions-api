@@ -1,12 +1,32 @@
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
 export class Nsps4tCompliancePeriodBaseDTO {
+  @IsOptional()
+  @IsNumber()
   beginYear?: number;
+  @IsOptional()
+  @IsNumber()
   beginMonth?: number;
+  @IsOptional()
+  @IsNumber()
   endYear?: number;
+  @IsOptional()
+  @IsNumber()
   endMonth?: number;
+  @IsOptional()
+  @IsNumber()
   averageCo2EmissionRate?: number;
+  @IsOptional()
+  @IsString()
   co2EmissionRateUomCode?: string;
+  @IsOptional()
+  @IsNumber()
   percentValidOpHours?: number;
+  @IsOptional()
+  @IsNumber()
   violationOfCo2StandardIndicator?: number;
+  @IsOptional()
+  @IsString()
   violationOfCo2StandardComment?: string;
 }
 

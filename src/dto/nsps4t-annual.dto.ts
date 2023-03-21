@@ -1,8 +1,14 @@
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class Nsps4tAnnualBaseDTO {
+  @IsOptional()
+  @IsNumber()
   annualEnergySold?: number;
+  @IsOptional()
+  @IsString()
   annualEnergySoldTypeCode?: string;
+  @IsOptional()
+  @IsNumber()
   annualPotentialElectricOutput?: number;
 }
 
