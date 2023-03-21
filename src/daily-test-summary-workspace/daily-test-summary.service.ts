@@ -96,6 +96,7 @@ export class DailyTestSummaryWorkspaceService {
     if (Array.isArray(parameters.dailyCalibrationData)) {
       await this.importDailyCalibrations(
         parameters.dailyCalibrationData,
+        parameters.reportingPeriodId,
         result.id,
         parameters.identifiers
       );
@@ -106,6 +107,7 @@ export class DailyTestSummaryWorkspaceService {
 
   async importDailyCalibrations(
     dailyCalibrations: Array<DailyCalibrationImportDTO>,
+    reportingPeriodId: number,
     dailyTestSummaryId: string,
     identifiers: ImportIdentifiers
   ) {
@@ -114,6 +116,7 @@ export class DailyTestSummaryWorkspaceService {
         return this.dailyCalibrationService.import({
           ...dailyCalibrationDatum,
           dailyTestSummaryId,
+          reportingPeriodId,
           identifiers: identifiers
           
         });

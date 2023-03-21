@@ -12,7 +12,8 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
   dailyTestSummaryId: string;
-  identifiers: ImportIdentifiers
+  reportingPeriodId: number;
+  identifiers: ImportIdentifiers;
 };
 
 @Injectable()
