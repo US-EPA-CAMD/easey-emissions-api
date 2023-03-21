@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class WeeklySystemIntegrityBaseDTO {
   @IsOptional()
@@ -33,10 +33,10 @@ export class WeeklySystemIntegrityRecordDTO extends WeeklySystemIntegrityBaseDTO
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   addDate?: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
   @IsNumber()
   reportingPeriodId: number;

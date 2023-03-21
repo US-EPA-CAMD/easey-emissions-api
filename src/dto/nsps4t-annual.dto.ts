@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
@@ -23,10 +23,10 @@ export class Nsps4tAnnualRecordDTO extends Nsps4tAnnualBaseDTO {
   reportingPeriodId: number;
   @IsString()
   userId: string;
-  @IsString()
+  @IsDateString()
   addDate: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
 }
 

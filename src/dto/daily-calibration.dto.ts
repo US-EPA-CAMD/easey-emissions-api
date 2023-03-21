@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 import moment from "moment";
 
 export class DailyCalibrationBaseDTO {
@@ -12,7 +12,7 @@ export class DailyCalibrationBaseDTO {
   upscaleGasCode?: string;
   
   @IsOptional()
-  @IsString()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   zeroInjectionDate?: Date;
 
@@ -25,7 +25,7 @@ export class DailyCalibrationBaseDTO {
   zeroInjectionMinute?: number;
 
   @IsOptional()
-  @IsString()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   upscaleInjectionDate?: Date;
 
@@ -82,7 +82,7 @@ export class DailyCalibrationBaseDTO {
   vendorIdentifier?: string;
 
   @IsOptional()
-  @IsString()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   expirationDate?: Date;
 

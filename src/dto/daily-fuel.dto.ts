@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class DailyFuelBaseDTO {
   @IsString()
@@ -23,10 +23,10 @@ export class DailyFuelRecordDTO extends DailyFuelBaseDTO {
   calcFuelCarbonBurned?: number;
   @IsString()
   userId: string;
-  @IsString()
+  @IsDateString()
   addDate: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
   @IsNumber()
   reportingPeriodId: number;
