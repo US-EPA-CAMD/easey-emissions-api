@@ -1,4 +1,4 @@
-import { IsOptional, IsString, ValidateNested, IsNumber } from 'class-validator';
+import { IsOptional, IsString, ValidateNested, IsNumber, IsDateString } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 import moment from 'moment';
@@ -12,7 +12,7 @@ export class DailyEmissionBaseDTO {
   unitId?: string;
   @IsString()
   parameterCode: string;
-  @IsString()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
   @IsOptional()
@@ -43,10 +43,10 @@ export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   addDate?: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
   @IsOptional()
   @IsNumber()

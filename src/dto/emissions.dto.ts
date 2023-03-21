@@ -1,6 +1,6 @@
 import { FindOneOptions } from 'typeorm';
 import { Transform, Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
@@ -61,7 +61,7 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   @IsNumber()
   reportingPeriodId: number;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   lastUpdated?: Date;
   @IsOptional()
   @IsString()

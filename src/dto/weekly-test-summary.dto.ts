@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import {
   WeeklySystemIntegrityDTO,
@@ -14,7 +14,7 @@ export class WeeklyTestSummaryBaseDTO {
   @IsString()
   unitId?: string;
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
-  @IsString()
+  @IsDateString()
   date: Date;
   @IsNumber()
   hour: number;
@@ -52,10 +52,10 @@ export class WeeklyTestSummaryRecordDTO extends WeeklyTestSummaryBaseDTO {
   @IsString()
   userId?: string;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   addDate?: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
 }
 

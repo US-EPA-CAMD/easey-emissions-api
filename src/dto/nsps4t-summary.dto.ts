@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   Nsps4tCompliancePeriodDTO,
@@ -42,10 +42,10 @@ export class Nsps4tSummaryRecordDTO extends Nsps4tSummaryBaseDTO {
   reportingPeriodId: number;
   @IsString()
   userId: string;
-  @IsString()
+  @IsDateString()
   addDate: Date;
   @IsOptional()
-  @IsString()
+  @IsDateString()
   updateDate?: Date;
 }
 
