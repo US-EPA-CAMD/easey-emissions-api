@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 
 export class ReviewAndSubmitMultipleParamsDTO {
   @ApiProperty({
@@ -17,6 +18,7 @@ export class ReviewAndSubmitMultipleParamsDTO {
   })
   @ApiPropertyOptional()
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  @IsOptional()
   monPlanIds: string[];
 
   @ApiProperty({
