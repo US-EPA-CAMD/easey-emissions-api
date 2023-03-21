@@ -42,6 +42,7 @@ export class HourlyGasFlowMeterWorkspaceService {
         hourlySfsrRatio: data.hourlySfsrRatio,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }

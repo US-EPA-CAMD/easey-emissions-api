@@ -89,6 +89,7 @@ export class DailyTestSummaryWorkspaceService {
           parameters?.identifiers?.components?.[parameters.componentId],
         addDate: new Date(),
         updateDate: new Date(),
+        userId: parameters.identifiers?.userId,
       }),
     );
 
@@ -96,6 +97,7 @@ export class DailyTestSummaryWorkspaceService {
       await this.importDailyCalibrations(
         parameters.dailyCalibrationData,
         result.id,
+        parameters.identifiers
       );
     }
 
@@ -105,12 +107,15 @@ export class DailyTestSummaryWorkspaceService {
   async importDailyCalibrations(
     dailyCalibrations: Array<DailyCalibrationImportDTO>,
     dailyTestSummaryId: string,
+    identifiers: ImportIdentifiers
   ) {
     const dailyCalibrationImports = dailyCalibrations?.map(
       dailyCalibrationDatum => {
         return this.dailyCalibrationService.import({
           ...dailyCalibrationDatum,
           dailyTestSummaryId,
+          identifiers: identifiers
+          
         });
       },
     );

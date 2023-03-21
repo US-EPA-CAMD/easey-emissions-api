@@ -8,9 +8,11 @@ import {
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceRepository } from './daily-calibration.repository';
 import { randomUUID } from 'crypto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
   dailyTestSummaryId: string;
+  identifiers: ImportIdentifiers
 };
 
 @Injectable()
@@ -53,6 +55,7 @@ export class DailyCalibrationWorkspaceService {
         id: randomUUID(),
         addDate: new Date(),
         updateDate: new Date(),
+        userId: parameters.identifiers?.userId,
       }),
     );
 

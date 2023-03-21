@@ -42,7 +42,14 @@ describe('Daily Calibration Workspace Spervice', () => {
 
   it('should successfully import', async function() {
     await expect(
-      dailyCalibrationService.import({ dailyTestSummaryId: '123' }),
+      dailyCalibrationService.import({
+        dailyTestSummaryId: '123',
+        identifiers: {
+          monitorFormulas: {},
+          components: {},
+          monitoringSystems: {},
+        },
+      }),
     ).resolves.toEqual({
       addDate: undefined,
       calcOnlineOfflineIndicator: undefined,

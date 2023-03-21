@@ -50,6 +50,12 @@ describe('Summary Value Workspace Service Test', () => {
         ...generatedData,
         monitoringLocationId: faker.datatype.string(5),
         reportingPeriodId: faker.datatype.number(),
+        identifiers: {
+          components: {},
+          monitoringSystems: {},
+          monitorFormulas: {},
+          userId: 'test'
+        },
       };
 
       const r = await service.import(importData);
