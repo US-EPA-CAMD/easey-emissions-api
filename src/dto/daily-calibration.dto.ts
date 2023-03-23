@@ -1,50 +1,93 @@
 import { Transform } from "class-transformer";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 import moment from "moment";
 
 export class DailyCalibrationBaseDTO {
+  @IsOptional()
+  @IsNumber()
   onLineOffLineIndicator?: number;
 
+  @IsOptional()
+  @IsString()
   upscaleGasCode?: string;
   
+  @IsOptional()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   zeroInjectionDate?: Date;
 
+  @IsOptional()
+  @IsNumber()
   zeroInjectionHour?: number;
 
+  @IsOptional()
+  @IsNumber()
   zeroInjectionMinute?: number;
 
+  @IsOptional()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   upscaleInjectionDate?: Date;
 
+  @IsOptional()
+  @IsNumber()
   upscaleInjectionHour?: number;
 
+  @IsOptional()
+  @IsNumber()
   upscaleInjectionMinute?: number;
 
+  @IsOptional()
+  @IsNumber()
   zeroMeasuredValue?: number;
 
+  @IsOptional()
+  @IsNumber()
   upscaleMeasuredValue?: number;
 
+  @IsOptional()
+  @IsNumber()
   zeroAPSIndicator?: number;
 
+  @IsOptional()
+  @IsNumber()
   upscaleAPSIndicator?: number;
 
+  @IsOptional()
+  @IsNumber()
   zeroCalibrationError?: number;
 
+  @IsOptional()
+  @IsNumber()
   upscaleCalibrationError?: number;
 
+  @IsOptional()
+  @IsNumber()
   zeroReferenceValue?: number;
 
+  @IsOptional()
+  @IsNumber()
   upscaleReferenceValue?: number;
 
+  @IsOptional()
+  @IsString()
   upscaleGasTypeCode?: string;
 
+  @IsOptional()
+  @IsString()
   cylinderIdentifier?: string;
 
+  @IsOptional()
+  @IsString()
   vendorIdentifier?: string;
 
+  @IsOptional()
+  @IsDateString()
   @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   expirationDate?: Date;
 
+  @IsOptional()
+  @IsString()
   injectionProtocolCode?: string;
 }
 

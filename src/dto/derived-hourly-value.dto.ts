@@ -1,13 +1,25 @@
+import { IsNumber, IsString } from "class-validator";
+
 export class DerivedHourlyValueBaseDTO {
+  @IsString()
   parameterCode: string;
+  @IsNumber()
   unadjustedHourlyValue: number;
+  @IsNumber()
   adjustedHourlyValue: number;
+  @IsString()
   modcCode: string;
+  @IsString()
   monitoringSystemId: string;
+  @IsString()
   formulaIdentifier: string;
+  @IsNumber()
   percentAvailable: number;
+  @IsString()
   operatingConditionCode: string;
+  @IsNumber()
   segmentNumber: number;
+  @IsString()
   fuelCode: string;
 }
 

@@ -1,11 +1,28 @@
+import { IsNumber, IsOptional, IsString,  } from "class-validator";
+
 export class HourlyParamFuelFlowBaseDTO {
+  @IsString()
   parameterCode: string;
+  @IsOptional()
+  @IsNumber()
   parameterValueForFuel?: number;
+  @IsOptional()
+  @IsString()
   formulaIdentifier?: string;
+  @IsOptional()
+  @IsString()
   sampleTypeCode?: string;
+  @IsOptional()
+  @IsString()
   monitoringSystemId?: string;
+  @IsOptional()
+  @IsString()
   operatingConditionCode?: string;
+  @IsOptional()
+  @IsNumber()
   segmentNumber?: number;
+  @IsOptional()
+  @IsString()
   parameterUomCode?: string;
 }
 

@@ -1,9 +1,22 @@
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
 export class MatsMonitorHourlyValueBaseDTO {
+  @IsString()
   parameterCode: string;
+  @IsOptional()
+  @IsString()
   unadjustedHourlyValue?: string;
+  @IsOptional()
+  @IsString()
   modcCode?: string;
+  @IsOptional()
+  @IsString()
   monitoringSystemId?: string;
+  @IsOptional()
+  @IsString()
   componentId?: string;
+  @IsOptional()
+  @IsNumber()
   percentAvailable?: number;
 }
 

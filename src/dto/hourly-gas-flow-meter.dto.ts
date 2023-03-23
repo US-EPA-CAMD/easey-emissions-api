@@ -1,9 +1,22 @@
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
 export class HourlyGasFlowMeterBaseDTO {
+  @IsString()
   componentId: string;
+  @IsOptional()
+  @IsString()
   beginEndHourFlag?: string;
+  @IsOptional()
+  @IsNumber()
   hourlyGfmReading?: number;
+  @IsOptional()
+  @IsNumber()
   avgHourlySamplingRate?: number;
+  @IsOptional()
+  @IsString()
   samplingRateUom?: string;
+  @IsOptional()
+  @IsNumber()
   hourlySfsrRatio?: number;
 }
 
