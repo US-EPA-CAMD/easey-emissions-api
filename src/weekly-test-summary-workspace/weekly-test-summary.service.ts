@@ -78,6 +78,7 @@ export class WeeklyTestSummaryWorkspaceService {
         componentId: data.identifiers?.components?.[data.componentId],
         addDate: new Date(),
         updateDate: new Date(),
+        userId: data.identifiers?.userId,
       }),
     );
 
@@ -89,6 +90,7 @@ export class WeeklyTestSummaryWorkspaceService {
             weeklyTestSummary.id,
             data.monitoringLocationId,
             data.reportingPeriodId,
+            data.identifiers,
           )
           .then(data => {
             weeklyTestSummary.weeklySystemIntegrity = data;

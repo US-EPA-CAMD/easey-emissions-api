@@ -8,6 +8,7 @@ import {
   WeeklySystemIntegrityImportDTO,
 } from '../dto/weekly-system-integrity.dto';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 @Injectable()
 export class WeeklySystemIntegrityWorkspaceService {
@@ -34,6 +35,7 @@ export class WeeklySystemIntegrityWorkspaceService {
     weeklyTestSumId: string,
     monitoringLocationId: string,
     reportingPeriodId: number,
+    identifiers: ImportIdentifiers
   ) {
     return this.repository.save(
       this.repository.create({
@@ -49,6 +51,7 @@ export class WeeklySystemIntegrityWorkspaceService {
         systemIntegrityError: data.systemIntegrityError,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }

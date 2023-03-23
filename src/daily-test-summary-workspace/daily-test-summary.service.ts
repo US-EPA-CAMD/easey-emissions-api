@@ -89,6 +89,7 @@ export class DailyTestSummaryWorkspaceService {
           parameters?.identifiers?.components?.[parameters.componentId],
         addDate: new Date(),
         updateDate: new Date(),
+        userId: parameters.identifiers?.userId,
       }),
     );
 
@@ -97,6 +98,7 @@ export class DailyTestSummaryWorkspaceService {
         parameters.dailyCalibrationData,
         parameters.reportingPeriodId,
         result.id,
+        parameters.identifiers
       );
     }
 
@@ -107,6 +109,7 @@ export class DailyTestSummaryWorkspaceService {
     dailyCalibrations: Array<DailyCalibrationImportDTO>,
     reportingPeriodId: number,
     dailyTestSummaryId: string,
+    identifiers: ImportIdentifiers
   ) {
     const dailyCalibrationImports = dailyCalibrations?.map(
       dailyCalibrationDatum => {
@@ -114,6 +117,8 @@ export class DailyTestSummaryWorkspaceService {
           ...dailyCalibrationDatum,
           dailyTestSummaryId,
           reportingPeriodId,
+          identifiers: identifiers
+          
         });
       },
     );

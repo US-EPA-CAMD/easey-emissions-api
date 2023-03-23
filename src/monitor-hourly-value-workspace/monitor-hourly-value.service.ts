@@ -44,6 +44,7 @@ export class MonitorHourlyValueWorkspaceService {
         hourId,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }
