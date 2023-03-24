@@ -72,6 +72,7 @@ export class DailyEmissionWorkspaceService {
         totalCarbonBurned: data.totalCarbonBurned,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: data.identifiers?.userId,
       }),
     );
 

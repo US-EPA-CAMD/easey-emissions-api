@@ -193,7 +193,12 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
-      this.importSummaryValue(params, monitoringLocationId, reportingPeriodId),
+      this.importSummaryValue(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
       this.importSorbentTrap(
         params,
         reportingPeriodId,
@@ -318,6 +323,7 @@ export class EmissionsWorkspaceService {
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
     reportingPeriodId,
+    identifiers: ImportIdentifiers,
   ) {
     const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
 
@@ -328,6 +334,7 @@ export class EmissionsWorkspaceService {
             ...summaryValueDatum,
             monitoringLocationId,
             reportingPeriodId,
+            identifiers
           }),
         );
       }

@@ -122,6 +122,7 @@ export class HourlyOperatingWorkspaceService {
         id: randomUUID(),
         addDate: new Date(),
         updateDate: new Date(),
+        userId: data.identifiers?.userId,
       }),
     );
 

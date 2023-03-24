@@ -72,6 +72,7 @@ export class HourlyFuelFlowWorkspaceService {
         reportingPeriodId: reportingPeriodId,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
 

@@ -47,6 +47,7 @@ export class DerivedHourlyValueWorkspaceService {
         monitorLocationId: monitoringLocationId,
         addDate: new Date(),
         updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }
