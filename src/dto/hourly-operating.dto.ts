@@ -1,5 +1,11 @@
-import {Transform, Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 import {
   MonitorHourlyValueImportDTO,
@@ -25,7 +31,6 @@ import {
   MatsDerivedHourlyValueDTO,
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
-import moment from 'moment';
 
 export class HourlyOperatingBaseDTO {
   @IsOptional()

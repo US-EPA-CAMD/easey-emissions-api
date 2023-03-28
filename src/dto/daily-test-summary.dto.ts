@@ -1,6 +1,11 @@
-import { Transform, Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import moment from 'moment';
+import { Type } from 'class-transformer';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import {
   DailyCalibrationDTO,
   DailyCalibrationImportDTO,
@@ -34,7 +39,7 @@ export class DailyTestSummaryBaseDTO {
 
   @IsString()
   testTypeCode: string;
-  
+
   @IsString()
   testResultCode: string;
 
