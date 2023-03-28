@@ -1,10 +1,15 @@
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import {
   WeeklySystemIntegrityDTO,
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
-import moment from 'moment';
 
 export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
@@ -13,7 +18,6 @@ export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
   @IsString()
   unitId?: string;
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   @IsDateString()
   date: Date;
   @IsNumber()
