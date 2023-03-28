@@ -13,7 +13,6 @@ export class DailyEmissionBaseDTO {
   @IsString()
   parameterCode: string;
   @IsDateString()
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
   @IsOptional()
   @IsNumber()

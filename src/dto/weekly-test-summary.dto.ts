@@ -13,7 +13,6 @@ export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
   @IsString()
   unitId?: string;
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   @IsDateString()
   date: Date;
   @IsNumber()

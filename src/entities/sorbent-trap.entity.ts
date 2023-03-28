@@ -24,7 +24,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({ nullable: false, name: 'rpt_period_id' })
   reportingPeriodId: number;
 
-  @Column({ nullable: false, name: 'begin_date' })
+  @Column({ nullable: false, type: 'date', name: 'begin_date' })
   beginDate: Date;
 
   @Column({
@@ -34,7 +34,7 @@ export class SorbentTrap extends BaseEntity {
   })
   beginHour: number;
 
-  @Column({ nullable: false, name: 'end_date' })
+  @Column({ nullable: false, type: 'date', name: 'end_date' })
   endDate: Date;
 
   @Column({

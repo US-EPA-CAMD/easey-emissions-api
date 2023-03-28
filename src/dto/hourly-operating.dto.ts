@@ -35,7 +35,6 @@ export class HourlyOperatingBaseDTO {
   @IsString()
   unitId?: string;
   @IsDateString()
-  @Transform(({value})=>moment(value).format('YYYY-MM-DD'), {toPlainOnly:true})
   date: Date;
   @IsNumber()
   hour: number;

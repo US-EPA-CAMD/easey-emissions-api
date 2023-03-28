@@ -13,7 +13,6 @@ export class DailyCalibrationBaseDTO {
   
   @IsOptional()
   @IsDateString()
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   zeroInjectionDate?: Date;
 
   @IsOptional()
@@ -26,7 +25,6 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsDateString()
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   upscaleInjectionDate?: Date;
 
   @IsOptional()
@@ -83,7 +81,6 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsDateString()
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   expirationDate?: Date;
 
   @IsOptional()

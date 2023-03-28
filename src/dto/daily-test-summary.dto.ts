@@ -16,7 +16,6 @@ export class DailyTestSummaryBaseDTO {
   unitId?: string;
 
   @IsDateString()
-  @Transform(date => moment(date.value).format('YYYY-MM-DD'))
   date: Date;
 
   @IsNumber()
