@@ -32,7 +32,7 @@ export class DailyTestSummary extends BaseEntity {
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
-  @Column({ nullable: false, name: 'daily_test_date' })
+  @Column({ nullable: false, type: 'date', name: 'daily_test_date' })
   date: Date;
 
   @Column({

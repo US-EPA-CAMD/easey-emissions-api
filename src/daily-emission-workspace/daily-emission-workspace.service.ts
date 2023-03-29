@@ -8,6 +8,8 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyEmissionImportDTO } from '../dto/daily-emission.dto';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { hasArrayValues } from '../utils/utils';
+import { DeleteResult, FindConditions } from 'typeorm';
+import { DailyEmission } from '../entities/workspace/daily-emission.entity';
 
 export type DailyEmissionWorkspaceCreate = DailyEmissionImportDTO & {
   reportingPeriodId: number;
@@ -22,6 +24,12 @@ export class DailyEmissionWorkspaceService {
     private readonly repository: DailyEmissionWorkspaceRepository,
     private readonly dailyFuelWorkspaceService: DailyFuelWorkspaceService,
   ) {}
+
+  async delete(
+    criteria: FindConditions<DailyEmission>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
+  }
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
     const dailyEmissionData = await exportDailyEmissionData({
@@ -49,6 +57,7 @@ export class DailyEmissionWorkspaceService {
   }
 
   async import(data: DailyEmissionWorkspaceCreate) {
+   await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const dailyEmission = await this.repository.save(
       this.repository.create({
         id: randomUUID(),
@@ -61,6 +70,9 @@ export class DailyEmissionWorkspaceService {
         sorbentRelatedMassEmissions: data.sorbentRelatedMassEmissions,
         unadjustedDailyEmissions: data.unadjustedDailyEmissions,
         totalCarbonBurned: data.totalCarbonBurned,
+        addDate: new Date(),
+        updateDate: new Date(),
+        userId: data.identifiers?.userId,
       }),
     );
 

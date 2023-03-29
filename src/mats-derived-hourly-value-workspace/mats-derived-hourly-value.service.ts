@@ -36,6 +36,9 @@ export class MatsDerivedHourlyValueWorkspaceService {
       hourId,
       monitoringLocationId,
       reportingPeriodId,
+      addDate: new Date(),
+      updateDate: new Date(),
+      userId: identifiers?.userId,
     };
     return this.repository.save(this.repository.create(o));
   }

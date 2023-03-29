@@ -1,6 +1,6 @@
 import { FindOneOptions } from 'typeorm';
 import { Transform, Type } from 'class-transformer';
-import { ValidateNested, ValidationArguments } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
@@ -39,9 +39,14 @@ export class EmissionsBaseDTO {
       },
     },
   )
+  @IsNumber()
   orisCode: number;
+  @IsNumber()
   year: number;
+  @IsNumber()
   quarter: number;
+  @IsOptional()
+  @IsString()
   submissionComment?: string;
 
   constructor(values: Object = {}) {
@@ -51,13 +56,27 @@ export class EmissionsBaseDTO {
 }
 
 export class EmissionsRecordDTO extends EmissionsBaseDTO {
+  @IsString()
   monitorPlanId: string;
+  @IsNumber()
   reportingPeriodId: number;
+  @IsOptional()
+  @IsDateString()
   lastUpdated?: Date;
+  @IsOptional()
+  @IsString()
   updatedStatusFlg?: string;
+  @IsOptional()
+  @IsString()
   needsEvalFlag?: string;
+  @IsOptional()
+  @IsString()
   chkSessionId?: string;
+  @IsOptional()
+  @IsNumber()
   submissionId?: number;
+  @IsOptional()
+  @IsString()
   submissionAvailabilityCd?: string;
 
   constructor(values: Object = {}) {

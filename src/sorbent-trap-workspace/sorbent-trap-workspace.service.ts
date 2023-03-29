@@ -8,6 +8,8 @@ import {
   importSorbentTrapData,
   SorbentTrapWorkspaceCreate,
 } from '../sorbent-trap-functions/import-sorbent-trap-data';
+import { DeleteResult, FindConditions } from 'typeorm';
+import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
 
 @Injectable()
 export class SorbentTrapWorkspaceService {
@@ -15,6 +17,12 @@ export class SorbentTrapWorkspaceService {
     private readonly repository: SorbentTrapWorkspaceRepository,
     private readonly samplingTrainService: SamplingTrainWorkspaceService,
   ) {}
+
+  async delete(
+    criteria: FindConditions<SorbentTrap>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
+  }
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
     const sorbentTrapData = await exportSorbentTrapData({
@@ -39,7 +47,9 @@ export class SorbentTrapWorkspaceService {
     return sorbentTrapData;
   }
 
-  async import(data: SorbentTrapWorkspaceCreate) {
+  async import(data: SorbentTrapWorkspaceCreate) 
+  {
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const sorbentTrap = await importSorbentTrapData({
       data,
       repository: this.repository,

@@ -38,7 +38,8 @@ export class DailyFuelWorkspaceService {
         fuelCarbonBurned: data.fuelCarbonBurned,
         reportingPeriodId: data.reportingPeriodId,
         monitoringLocationId: data.monitoringLocationId,
-        addDate: new Date().toISOString(),
+        addDate: new Date(),
+        updateDate: new Date(),
         userId: data.identifiers.userId,
       }),
     );

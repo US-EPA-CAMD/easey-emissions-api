@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindConditions } from 'typeorm';
 import { randomUUID } from 'crypto';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
@@ -19,6 +19,7 @@ import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-wor
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
+import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
   reportingPeriodId: number;
@@ -104,18 +105,24 @@ export class HourlyOperatingWorkspaceService {
     return hourlyOperating;
   }
 
-  async delete(id: string): Promise<DeleteResult> {
-    return this.repository.delete({ id });
+  async delete(
+    criteria: FindConditions<HrlyOpData>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
   }
 
   async import(
     emissionsImport: EmissionsImportDTO,
     data: HourlyOperatingCreate,
   ): Promise<HourlyOperatingDTO> {
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const result = await this.repository.save(
       this.repository.create({
         ...data,
         id: randomUUID(),
+        addDate: new Date(),
+        updateDate: new Date(),
+        userId: data.identifiers?.userId,
       }),
     );
 

@@ -44,6 +44,9 @@ export class HourlyParameterFuelFlowWorkspaceService {
         parameterUomCode: data.parameterUomCode,
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
+        addDate: new Date(),
+        updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }

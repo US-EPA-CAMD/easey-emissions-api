@@ -1,11 +1,28 @@
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
 export class MonitorHourlyValueBaseDTO {
+  @IsString()
   parameterCode: string;
+  @IsOptional()
+  @IsNumber()
   unadjustedHourlyValue?: number;
+  @IsOptional()
+  @IsNumber()
   adjustedHourlyValue?: number;
+  @IsOptional()
+  @IsString()
   modcCode?: string;
+  @IsOptional()
+  @IsString()
   monitoringSystemId?: string;
+  @IsOptional()
+  @IsString()
   componentId?: string;
+  @IsOptional()
+  @IsNumber()
   percentAvailable?: number;
+  @IsOptional()
+  @IsString()
   moistureBasis?: string;
 }
 

@@ -31,13 +31,20 @@ export class HourlyFuelFlowWorkspaceService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
+    const promises = [];
     for (const fuelFlow of mapped) {
-      fuelFlow.hourlyParameterFuelFlowData = await this.hourlyParameterFuelFlow.export(
-        fuelFlow.id,
-      ) ?? [];
+      promises.push(
+        this.hourlyParameterFuelFlow.export(fuelFlow.id).then(data => {
+          if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
+            fuelFlow.hourlyParameterFuelFlowData = []
+          }
+          fuelFlow.hourlyParameterFuelFlowData.push(...data);
+        })
+      );
     }
-
-    return this.map.many(hourlyFuelFlow);
+   
+    await Promise.all(promises);
+    return mapped;
   }
 
   async import(
@@ -63,6 +70,9 @@ export class HourlyFuelFlowWorkspaceService {
           identifiers.monitoringSystems?.[data.monitoringSystemId],
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
+        addDate: new Date(),
+        updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
 

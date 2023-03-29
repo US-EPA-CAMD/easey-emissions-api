@@ -3,6 +3,8 @@ import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
 import { EmissionsViewWorkspaceController } from './emissions-view.controller';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
+import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 describe('EmissionsViewWorkspaceController', () => {
   let emissionsViewController: EmissionsViewWorkspaceController;
@@ -10,10 +12,12 @@ describe('EmissionsViewWorkspaceController', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
+      imports: [HttpModule],
       providers: [
         EmissionsViewWorkspaceRepository,
         EmissionsViewWorkspaceController,
         EmissionsViewWorkspaceService,
+        ConfigService,
       ],
     }).compile();
 

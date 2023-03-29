@@ -42,6 +42,9 @@ export class MonitorHourlyValueWorkspaceService {
         monitoringLocationId: monitoringLocationId,
         reportingPeriodId: reportingPeriodId,
         hourId,
+        addDate: new Date(),
+        updateDate: new Date(),
+        userId: identifiers?.userId,
       }),
     );
   }

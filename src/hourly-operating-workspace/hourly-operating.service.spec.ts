@@ -201,6 +201,7 @@ describe('HourlyOperatingWorskpaceService', () => {
 
       const mappedMock = await map.one(hourlyOpImport[0]);
       jest.spyOn(repository, 'save').mockResolvedValue(hourlyOpImport[0]);
+      jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
       await expect(
         service.import(

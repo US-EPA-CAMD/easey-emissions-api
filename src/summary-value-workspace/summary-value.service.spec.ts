@@ -44,11 +44,18 @@ describe('Summary Value Workspace Service Test', () => {
 
   describe('Summary Value Import', () => {
     it('should successfully import a summary value record', async () => {
+      jest.spyOn(service, 'delete').mockResolvedValue(undefined);
       const generatedData = genSummaryValueImportDto(1)[0];
       const importData: SummaryValueCreate = {
         ...generatedData,
         monitoringLocationId: faker.datatype.string(5),
         reportingPeriodId: faker.datatype.number(),
+        identifiers: {
+          components: {},
+          monitoringSystems: {},
+          monitorFormulas: {},
+          userId: 'test'
+        },
       };
 
       const r = await service.import(importData);

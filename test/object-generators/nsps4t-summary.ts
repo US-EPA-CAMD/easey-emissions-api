@@ -42,7 +42,7 @@ export const genNsps4tSummary = <RepoType>(
       reportingPeriod: config?.include.includes('reportingPeriod')
         ? genReportingPeriod()[0]
         : undefined,
-      nsps4tAnnualData: config?.include.includes('nsps4tAnnualData')
+        nsps4tAnnualData: config?.include.includes('nsps4tAnnualData')
         ? genNsps4tAnnual(config?.nsps4tAnnualDataAmount)
         : undefined,
       nsps4tCompliancePeriodData: config?.include.includes(

@@ -81,6 +81,7 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
       const mappedMock = await map.one(generatedData[0]);
 
       jest.spyOn(repository, 'save').mockResolvedValue(generatedData[0]);
+      jest.spyOn(service, 'delete').mockResolvedValue(undefined);
       await expect(
         service.import(
           (generatedData[0] as unknown) as WeeklyTestSummaryCreate,

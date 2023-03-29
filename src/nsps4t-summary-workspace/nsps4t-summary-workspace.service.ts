@@ -9,6 +9,8 @@ import { Injectable } from '@nestjs/common';
 import { arrayPushCreate, hasArrayValues } from '../utils/utils';
 import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { DeleteResult, FindConditions } from 'typeorm';
+import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
 
 @Injectable()
 export class Nsps4tSummaryWorkspaceService {
@@ -17,6 +19,12 @@ export class Nsps4tSummaryWorkspaceService {
     private readonly nsps4tAnnualService: Nsps4tAnnualWorkspaceService,
     private readonly nsps4tCompliancePeriodService: Nsps4tCompliancePeriodWorkspaceService,
   ) {}
+
+  async delete(
+    criteria: FindConditions<Nsps4tSummary>,
+  ): Promise<DeleteResult> {
+    return this.repository.delete(criteria);
+  }
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
     const nsps4tSummaryData = await exportNsps4tSummaryData({
@@ -52,6 +60,7 @@ export class Nsps4tSummaryWorkspaceService {
   }
 
   async import(data: Nsps4tSummaryDataCreate) {
+    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
     const nsps4tSummaryData = await importNsps4tSummaryData({
       data,
       repository: this.repository,
