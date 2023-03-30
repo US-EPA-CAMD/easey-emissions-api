@@ -27,6 +27,7 @@ export class DailyTestSummaryBaseDTO {
   hour: number;
 
   @IsNumber()
+  @IsOptional()
   minute: number;
 
   @IsOptional()
@@ -49,36 +50,14 @@ export class DailyTestSummaryBaseDTO {
 }
 
 export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
-  @IsString()
   id: string;
-
-  @IsNumber()
   reportingPeriodId: number;
-
-  @IsString()
   monitoringLocationId: string;
-
-  @IsOptional()
-  @IsString()
   monitoringSystemRecordId?: string;
-
-  @IsOptional()
-  @IsString()
   componentRecordId?: string;
-
-  @IsString()
   calcTestResultCode: string;
-
-  @IsOptional()
-  @IsString()
   userId?: string;
-
-  @IsOptional()
-  @IsDateString()
   addDate?: Date;
-
-  @IsOptional()
-  @IsDateString()
   updateDate?: Date;
 }
 

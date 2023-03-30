@@ -2,17 +2,44 @@ import {
   HourlyParamFuelFlowDTO,
   HourlyParamFuelFlowImportDTO,
 } from './hourly-param-fuel-flow.dto';
-import { ValidateNested } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class HourlyFuelFlowBaseDTO {
+  @IsString()
   fuelCode: string;
+
+  @IsNumber()
+  @IsOptional()
   fuelUsageTime?: number;
+
+  @IsNumber()
+  @IsOptional()
   volumetricFlowRate?: number;
+
+  @IsString()
+  @IsOptional()
   volumetricUnitsOfMeasureCode?: string;
+
+  @IsString()
+  @IsOptional()
   sourceOfDataVolumetricCode?: string;
+
+  @IsNumber()
+  @IsOptional()
   massFlowRate?: number;
+
+  @IsString()
+  @IsOptional()
   sourceOfDataMassCode?: string;
+
+  @IsString()
+  @IsOptional()
   monitoringSystemId?: string;
 }
 

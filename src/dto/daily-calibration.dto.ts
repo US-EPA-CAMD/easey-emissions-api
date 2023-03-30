@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
@@ -8,7 +8,7 @@ export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsString()
   upscaleGasCode?: string;
-  
+
   @IsOptional()
   @IsDateString()
   zeroInjectionDate?: Date;
@@ -88,25 +88,15 @@ export class DailyCalibrationBaseDTO {
 
 export class DailyCalibrationRecordDTO extends DailyCalibrationBaseDTO {
   id: string;
-
   dailyTestSumId: string;
-
   calcOnlineOfflineIndicator?: number;
-
   calcZeroApsIndicator?: number;
-
   calcUpscaleApsIndicator?: number;
-
   calcZeroCalibrationError?: number;
-
   calcUpscaleCalibrationError?: number;
-
   userId?: string;
-
   addDate?: Date;
-
   updateDate?: Date;
-
   reportingPeriodId?: number;
 }
 

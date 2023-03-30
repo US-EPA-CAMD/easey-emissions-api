@@ -15,51 +15,43 @@ export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
   @IsString()
   stackPipeId?: string;
+
   @IsOptional()
   @IsString()
   unitId?: string;
+
   @IsDateString()
   date: Date;
+
   @IsNumber()
   hour: number;
-  @IsOptional()
+
   @IsNumber()
   minute?: number;
-  @IsOptional()
+
   @IsString()
   componentId?: string;
+
   @IsString()
   testTypeCode: string;
+
   @IsString()
   testResultCode: string;
+
   @IsString()
+  @IsOptional()
   spanScaleCode: string;
 }
 
 export class WeeklyTestSummaryRecordDTO extends WeeklyTestSummaryBaseDTO {
-  @IsString()
   id: string;
-  @IsNumber()
   reportingPeriodId: number;
-  @IsString()
   monitoringLocationId: string;
-  @IsOptional()
-  @IsString()
   monitoringSystemRecordId?: string;
-  @IsOptional()
-  @IsString()
   componentRecordId?: string;
-  @IsOptional()
-  @IsString()
   calcTestResultCode?: string;
-  @IsOptional()
-  @IsString()
   userId?: string;
-  @IsOptional()
-  @IsDateString()
   addDate?: Date;
-  @IsOptional()
-  @IsDateString()
   updateDate?: Date;
 }
 
