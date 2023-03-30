@@ -1,46 +1,31 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsString } from 'class-validator';
 
 export class WeeklySystemIntegrityBaseDTO {
-  @IsOptional()
   @IsString()
   gasLevelCode?: string;
-  @IsOptional()
+
   @IsNumber()
   referenceValue?: number;
-  @IsOptional()
+
   @IsNumber()
   measuredValue?: number;
-  @IsOptional()
+
   @IsNumber()
   apsIndicator?: number;
-  @IsOptional()
+
   @IsNumber()
   systemIntegrityError?: number;
 }
 
 export class WeeklySystemIntegrityRecordDTO extends WeeklySystemIntegrityBaseDTO {
-  @IsString()
   id: string;
-  @IsString()
   weeklyTestSumId: string;
-  @IsOptional()
-  @IsNumber()
   calcSystemIntegrityError?: number;
-  @IsOptional()
-  @IsNumber()
   calcApsInd?: number;
-  @IsOptional()
-  @IsString()
   userId?: string;
-  @IsOptional()
-  @IsDateString()
   addDate?: Date;
-  @IsOptional()
-  @IsDateString()
   updateDate?: Date;
-  @IsNumber()
   reportingPeriodId: number;
-  @IsString()
   monitoringLocationId: string;
 }
 
