@@ -81,6 +81,8 @@ import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multi
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -177,6 +179,8 @@ describe('-- Emissions Controller --', () => {
         ReviewSubmitService,
         EmissionsReviewSubmitRepository,
         EmissionsReviewSubmitMap,
+        LongTermFuelFlowWorkspaceRepository,
+        LongTermFuelFlowWorkspaceService,
       ],
     }).compile();
 

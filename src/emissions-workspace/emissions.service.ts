@@ -30,6 +30,7 @@ import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-worksp
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -63,6 +64,7 @@ export class EmissionsWorkspaceService {
     private readonly weeklyTestSummaryService: WeeklyTestSummaryWorkspaceService,
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
+    private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
   ) {}
 
   async delete(
@@ -80,6 +82,8 @@ export class EmissionsWorkspaceService {
     const WEEKLY_TEST_SUMMARIES = 4;
     const SUMMARY_VALUES = 5;
     const NSPS4T_SUMMARY = 6;
+    const LONG_TERM_FUEL_FLOW = 7;
+
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -101,6 +105,7 @@ export class EmissionsWorkspaceService {
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
+      promises.push(this.longTermFuelFlowWorkspaceService.export());
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -113,6 +118,7 @@ export class EmissionsWorkspaceService {
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
+      results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
       return results;
     }

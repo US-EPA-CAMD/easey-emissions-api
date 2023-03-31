@@ -89,6 +89,9 @@ import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -166,6 +169,11 @@ describe('Emissions Workspace Service', () => {
         WeeklySystemIntegrityRepository,
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityMap,
+        LongTermFuelFlowWorkspaceService,
+        {
+          provide: LongTermFuelFlowWorkspaceRepository,
+          useValue: mockLongTermFuelFlowWorkspaceRepository,
+        },
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,

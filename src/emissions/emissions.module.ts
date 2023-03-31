@@ -32,7 +32,10 @@ import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4
 import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 import { EmissionsViewModule } from '../emission-view/emissions-view.module';
-import { EmissionsViewWorkspaceModule } from 'src/emissions-view-workspace/emissions-view.module';
+import { EmissionsViewWorkspaceModule } from '../emissions-view-workspace/emissions-view.module';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { LongTermFuelFlowModule } from '../long-term-fuel-flow/long-term-fuel-flow.module';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 
 @Module({
   imports: [
@@ -46,6 +49,7 @@ import { EmissionsViewWorkspaceModule } from 'src/emissions-view-workspace/emiss
       Nsps4tSummaryRepository,
       SamplingTrainRepository,
       SorbentTrapRepository,
+      LongTermFuelFlowRepository,
     ]),
     EmissionsViewWorkspaceModule,
     EmissionsViewModule,
@@ -55,6 +59,7 @@ import { EmissionsViewWorkspaceModule } from 'src/emissions-view-workspace/emiss
     WeeklyTestSummaryModule,
     HourlyParameterFuelFlowModule,
     SummaryValueModule,
+    LongTermFuelFlowModule,
   ],
   controllers: [EmissionsController],
   providers: [
@@ -70,6 +75,7 @@ import { EmissionsViewWorkspaceModule } from 'src/emissions-view-workspace/emiss
     Nsps4tSummaryService,
     SamplingTrainService,
     SorbentTrapService,
+    LongTermFuelFlowService,
   ],
 })
 export class EmissionsModule {}
