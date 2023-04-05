@@ -108,7 +108,6 @@ export class EmissionsImportDTO extends EmissionsBaseDTO {
 
   @ValidateNested({ each: true })
   @Type(() => LongTermFuelFlowImportDTO)
-  // @Transform(d=> d=== null ? [] : d, {toPlainOnly: true})
   longTermFuelFlowData: LongTermFuelFlowImportDTO[];
 
   @ValidateNested({ each: true })

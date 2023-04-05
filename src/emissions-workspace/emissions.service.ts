@@ -154,8 +154,6 @@ export class EmissionsWorkspaceService {
       );
     });
 
-    console.log(plantLocation.monitorPlans)
-
     if (isUndefinedOrNull(filteredMonitorPlans[0])) {
       throw new NotFoundException('Monitor plan not found.');
     }
