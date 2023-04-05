@@ -31,6 +31,7 @@ import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4
 import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -65,7 +66,7 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-  ) {}
+  ) { }
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -153,6 +154,8 @@ export class EmissionsWorkspaceService {
       );
     });
 
+    console.log(plantLocation.monitorPlans)
+
     if (isUndefinedOrNull(filteredMonitorPlans[0])) {
       throw new NotFoundException('Monitor plan not found.');
     }
@@ -223,6 +226,12 @@ export class EmissionsWorkspaceService {
         reportingPeriodId,
         identifiers,
       ),
+      this.importLongTermFuelFlow(
+        params,
+        monitoringLocationId,
+        reportingPeriodId,
+        identifiers,
+      ),
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -245,7 +254,7 @@ export class EmissionsWorkspaceService {
           lastUpdated: new Date(),
         }),
       );
-        
+
       await this.repository.updateAllViews(monitorPlanId, params.quarter, params.year);
     } catch (e) {
       throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -417,6 +426,30 @@ export class EmissionsWorkspaceService {
     }
     return Promise.all(weeklyTestSummaryImports);
   }
+
+  async importLongTermFuelFlow(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+  ) {
+    const longTermFuelFlowImports: Array<Promise<LongTermFuelFlowDTO>> = [];
+
+    if (Array.isArray(emissionsImport.longTermFuelFlowData)) {
+      for (const longTermFuelFlow of emissionsImport.longTermFuelFlowData) {
+        longTermFuelFlowImports.push(
+          this.longTermFuelFlowWorkspaceService.import({
+            ...longTermFuelFlow,
+            reportingPeriodId,
+            monitoringLocationId,
+            identifiers,
+          }),
+        );
+      }
+    }
+    return Promise.all(longTermFuelFlowImports);
+  }
+
   async getIdentifiers(
     emissionsImport: EmissionsImportDTO,
     monitoringLocationId: string,
