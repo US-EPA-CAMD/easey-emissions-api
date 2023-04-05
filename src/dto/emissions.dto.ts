@@ -51,7 +51,7 @@ export class EmissionsBaseDTO {
 
   constructor(values: Object = {}) {
     Object.assign(this, values);
-  }https://github.com/US-EPA-CAMD/easey-emissions-api/pull/334
+  }
 
 }
 
