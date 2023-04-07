@@ -63,7 +63,7 @@ export class EmissionsService {
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
       promises.push(this.summaryValueService.export(locationIds, params));
       promises.push(this.nsps4tSummaryService.export(locationIds, params));
-      promises.push(this.longTermFuelFlowService.export());
+      promises.push(this.longTermFuelFlowService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);

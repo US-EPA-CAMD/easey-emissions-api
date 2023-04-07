@@ -83,6 +83,7 @@ import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -181,6 +182,7 @@ describe('-- Emissions Controller --', () => {
         EmissionsReviewSubmitMap,
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
+        LongTermFuelFlowMap
       ],
     }).compile();
 

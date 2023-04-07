@@ -92,6 +92,7 @@ import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -169,6 +170,7 @@ describe('Emissions Workspace Service', () => {
         WeeklySystemIntegrityRepository,
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityMap,
+        LongTermFuelFlowMap,
         LongTermFuelFlowWorkspaceService,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
