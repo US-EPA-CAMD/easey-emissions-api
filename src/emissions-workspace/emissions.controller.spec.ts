@@ -214,6 +214,7 @@ describe('-- Emissions Controller --', () => {
         expiration: 'string',
         clientIp: 'string',
         facilities: [],
+        roles: [],
         isAdmin: true,
         permissionSet: [],
       };
