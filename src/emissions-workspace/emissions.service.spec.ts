@@ -93,9 +93,11 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
+  let longTermFuelFlowService: LongTermFuelFlowWorkspaceService;
   let emissionsRepository: EmissionsWorkspaceRepository;
   let emissionsService: EmissionsWorkspaceService;
   let emissionsMap: EmissionsMap;
@@ -227,6 +229,7 @@ describe('Emissions Workspace Service', () => {
       ],
     }).compile();
 
+    longTermFuelFlowService = module.get(LongTermFuelFlowWorkspaceService);
     dailyTestsummaryService = module.get(DailyTestSummaryWorkspaceService);
     emissionsRepository = module.get(EmissionsWorkspaceRepository);
     emissionsService = module.get(EmissionsWorkspaceService);
@@ -262,7 +265,10 @@ describe('Emissions Workspace Service', () => {
   });
 
   it('should successfully import', async function() {
-    const emissionsDtoMock = genEmissionsImportDto();
+
+    jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
+
+    const emissionsDtoMock = genEmissionsImportDto(1,{"include":["longTermFuelFlowData"]});
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
       monitorPlanAmount: 3,

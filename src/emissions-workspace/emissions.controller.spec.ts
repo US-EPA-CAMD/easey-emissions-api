@@ -182,7 +182,7 @@ describe('-- Emissions Controller --', () => {
         EmissionsReviewSubmitMap,
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
-        LongTermFuelFlowMap
+        LongTermFuelFlowMap,
       ],
     }).compile();
 
@@ -213,6 +213,7 @@ describe('-- Emissions Controller --', () => {
         sessionId: 'string',
         expiration: 'string',
         clientIp: 'string',
+        facilities: [],
         isAdmin: true,
         permissionSet: [],
       };
