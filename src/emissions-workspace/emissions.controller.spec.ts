@@ -215,8 +215,6 @@ describe('-- Emissions Controller --', () => {
         clientIp: 'string',
         facilities: [],
         roles: [],
-        isAdmin: true,
-        permissionSet: [],
       };
 
       jest.spyOn(service, 'import').mockResolvedValue({ message: 'success' });
