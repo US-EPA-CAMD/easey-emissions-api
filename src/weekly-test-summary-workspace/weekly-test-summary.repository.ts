@@ -11,6 +11,7 @@ export class WeeklyTestSummaryWorkspaceRepository extends Repository<
       .innerJoinAndSelect('wts.reportingPeriod', 'r')
       .leftJoinAndSelect('l.unit', 'u')
       .leftJoinAndSelect('l.stackPipe', 'sp')
+      .leftJoinAndSelect('wts.component', 'c')
       .where(`wts.monitoringLocationId IN (:...monitoringLocationIds)`, {
         monitoringLocationIds: monitoringLocationIds,
       })
