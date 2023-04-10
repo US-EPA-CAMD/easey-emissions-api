@@ -36,6 +36,8 @@ import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -69,6 +71,8 @@ describe('Emissions Checks Service Tests', () => {
         WeeklySystemIntegrityWorkspaceRepository,
         WeeklyTestSummaryMap,
         LongTermFuelFlowService,
+        LongTermFuelFlowMap,
+        LongTermFuelFlowRepository,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository

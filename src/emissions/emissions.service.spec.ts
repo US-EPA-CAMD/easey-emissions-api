@@ -79,6 +79,7 @@ import moment from 'moment';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
@@ -150,6 +151,7 @@ describe('Emissions Service', () => {
         SummaryValueService,
         SummaryValueRepository,
         SummaryValueMap,
+        LongTermFuelFlowMap,
         LongTermFuelFlowService,
         {
 
@@ -255,6 +257,7 @@ describe('Emissions Service', () => {
       jest.spyOn(weeklyTestSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(summaryValueService, 'export').mockResolvedValue(null);
+      jest.spyOn(longTermFuelFlowService, 'export').mockResolvedValue(null);
       jest.spyOn(configService, 'get').mockReturnValue("test");
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(

@@ -5,10 +5,13 @@ import { LongTermFuelFlowWorkspaceService } from './long-term-fuel-flow.service'
 import { LongTermFuelFlow } from '../entities/workspace/long-term-fuel-flow.entity';
 import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { genLongTermFuelFlow } from '../../test/object-generators/long-term-fuel-flow';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 describe('--LongTermFuelFlowWorkspaceService--', () => {
   let repository: LongTermFuelFlowWorkspaceRepository;
   let service: LongTermFuelFlowWorkspaceService;
+  let map;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -24,6 +27,7 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
 
     repository = module.get(LongTermFuelFlowWorkspaceRepository);
     service = module.get(LongTermFuelFlowWorkspaceService);
+    map = module.get(LongTermFuelFlowMap);
   });
 
   it('should be defined', () => {
@@ -48,4 +52,23 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
 
     expect(result.id).toBe("123")
   })
+  it('should get long term fuel flow by location ids', async function() {
+    const genLongTermFuelFlowValues = genLongTermFuelFlow<LongTermFuelFlow>(1);
+    const promises = [];
+    genLongTermFuelFlowValues.forEach(value => {
+      promises.push(map.one(value));
+    });
+    const mappedValues = await Promise.all(promises);
+    const params = new EmissionsParamsDTO();
+
+    jest
+      .spyOn(repository, 'export')
+      .mockResolvedValue(genLongTermFuelFlowValues as LongTermFuelFlow[]);
+
+    const result = await service.export(
+      genLongTermFuelFlowValues.map(value => value.monitoringLocationId),
+      params,
+    );
+    expect(result).toEqual(mappedValues);
+  });
 });

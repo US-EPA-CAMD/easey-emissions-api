@@ -106,7 +106,7 @@ export class EmissionsWorkspaceService {
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
-      promises.push(this.longTermFuelFlowWorkspaceService.export());
+      promises.push(this.longTermFuelFlowWorkspaceService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);

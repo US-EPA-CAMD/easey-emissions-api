@@ -3,6 +3,7 @@ import { LongTermFuelFlowDTO, LongTermFuelFlowImportDTO } from '../dto/long-term
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { LongTermFuelFlow } from '../entities/workspace/long-term-fuel-flow.entity';
 import { DeleteResult, FindConditions } from 'typeorm';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
 import { randomUUID } from 'crypto';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
@@ -26,7 +27,17 @@ export class LongTermFuelFlowWorkspaceService {
     return this.repository.delete(criteria);
   }
 
-  async export() {}
+  async export(
+    monitoringLocationIds: string[],
+    params: EmissionsParamsDTO,
+  ): Promise<LongTermFuelFlowDTO[]> {
+    const result = await this.repository.export(
+      monitoringLocationIds,
+      params.year,
+      params.quarter,
+    );
+    return this.map.many(result);
+  }
 
   async import(params: LongTermFuelFlowCreate): Promise<LongTermFuelFlowDTO> {
     await this.delete({monitoringLocationId: params.monitoringLocationId, reportingPeriodId: params.reportingPeriodId})
