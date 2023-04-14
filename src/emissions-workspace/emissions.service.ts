@@ -156,9 +156,6 @@ export class EmissionsWorkspaceService {
       // );
     });
 
-    console.log("MonitorPlans")
-    console.log(plantLocation.monitorPlans)
-
     if (filteredMonitorPlans.length === 0) {
       throw new NotFoundException('Monitor plan not found.');
     }
@@ -176,8 +173,6 @@ export class EmissionsWorkspaceService {
       }
     })
 
-    console.log("reportingPeriod")
-    console.log(reportingPeriod)
     if( !reportingPeriod ){
       throw new NotFoundException('Reporting period not found.');
     }
