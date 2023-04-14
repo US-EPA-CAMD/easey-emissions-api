@@ -1166,10 +1166,10 @@
     "@typescript-eslint/types" "5.1.0"
     eslint-visitor-keys "^3.0.0"
 
-"@us-epa-camd/easey-common@15.4.2":
-  version "15.4.2"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/15.4.2/06728ada432a7142fc94f4a1fc5f45ca558af842#06728ada432a7142fc94f4a1fc5f45ca558af842"
-  integrity sha512-6TxoYq42PwDJcPLnMYNfKm39zHy8NOudzMSh5EMxH7XHaEvvUBLO03zKspwK79KOPD+YujvVJZv6LglNsKgMwA==
+"@us-epa-camd/easey-common@15.5.0":
+  version "15.5.0"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/15.5.0/a207b8d1297062f7f4f5746916f1334b431f5acb#a207b8d1297062f7f4f5746916f1334b431f5acb"
+  integrity sha512-XGMPqorvAHcanbypH7ZRZDifOl49zG3j1X9P7t5ScC9XIAsmqsxTRCBY2Csf/aSnzfPaQsH7MRzRkG4HWZK4Fw==
   dependencies:
     "@golevelup/ts-jest" "^0.3.4"
     "@nestjs/axios" "0.0.3"
@@ -1182,6 +1182,7 @@
     express "^4.17.3"
     helmet "^4.6.0"
     json2csv "^5.0.6"
+    pg-copy-streams "^6.0.5"
     reflect-metadata "^0.1.13"
     rxjs "^7.8.0"
     typeorm "0.2.45"
@@ -4586,6 +4587,11 @@ object.values@^1.1.6:
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
 
+obuf@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
+  integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
+
 on-finished@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.4.1.tgz#58c8c44116e54845ad57f14ab10b03533184ac3f"
@@ -4795,6 +4801,13 @@ pg-connection-string@^2.5.0:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
   integrity sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==
 
+pg-copy-streams@^6.0.5:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/pg-copy-streams/-/pg-copy-streams-6.0.5.tgz#20065eefe2ae789857a72a275e95afa6a6c82c1b"
+  integrity sha512-HcjUCaeEputOnSTgRQrkUkOKEBtyfcXsrrf6FA7z6AgesRxR35GRovk5Akw1LYRNwSFYpc9XVVxLrxYCWwNHMg==
+  dependencies:
+    obuf "^1.1.2"
+
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
@@ -4804,6 +4817,11 @@ pg-pool@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.5.2.tgz#ed1bed1fb8d79f1c6fd5fb1c99e990fbf9ddf178"
   integrity sha512-His3Fh17Z4eg7oANLob6ZvH8xIVen3phEZh2QuyrIl4dQSDVEabNducv6ysROKpDNPSD+12tONZVWfSgMvDD9w==
+
+pg-pool@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.6.0.tgz#3190df3e4747a0d23e5e9e8045bcd99bda0a712e"
+  integrity sha512-clFRf2ksqd+F497kWFyM21tMjeikn60oGDmqMT8UBrynEwVEX/5R5xd2sdvdo1cZCFlguORNpVuqxIj+aK4cfQ==
 
 pg-protocol@*, pg-protocol@^1.6.0:
   version "1.6.0"

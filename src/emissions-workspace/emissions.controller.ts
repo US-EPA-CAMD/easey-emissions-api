@@ -29,6 +29,11 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+let Pool = require('pg-pool');
+import { from as copyFrom } from 'pg-copy-streams';
+import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Controller()
 @ApiTags('Emissions')
@@ -38,6 +43,8 @@ export class EmissionsWorkspaceController {
     private readonly service: EmissionsWorkspaceService,
     private readonly submissionService: ReviewSubmitService,
     private readonly checksService: EmissionsChecksService,
+    private readonly configService: ConfigService,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   @Get('export')
@@ -62,6 +69,24 @@ export class EmissionsWorkspaceController {
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
+  }
+
+  @Get('copy')
+  async copy() {
+    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+      'camd.test_copy',
+      ['primary', 'sixth', 'seventh'],
+    );
+
+    for (let i = 0; i < 100000; i++) {
+      bulkLoadStream.writeObject({
+        primary: 'hello there',
+        sixth: null,
+        secondary: new Date().toISOString(),
+      });
+    }
+
+    bulkLoadStream.complete();
   }
 
   @Get()

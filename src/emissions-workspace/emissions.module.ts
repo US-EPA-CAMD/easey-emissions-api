@@ -48,6 +48,7 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.module';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
     HourlyFuelFlowWorkspaceModule,
     SummaryValueWorkspaceModule,
     LongTermFuelFlowWorkspaceModule,
+    BulkLoadModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
@@ -99,7 +101,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
     Nsps4tCompliancePeriodWorkspaceService,
     ReviewSubmitService,
     EmissionsReviewSubmitMap,
-    LongTermFuelFlowWorkspaceService
+    LongTermFuelFlowWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

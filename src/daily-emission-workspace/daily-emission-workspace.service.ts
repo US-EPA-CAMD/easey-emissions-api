@@ -25,9 +25,7 @@ export class DailyEmissionWorkspaceService {
     private readonly dailyFuelWorkspaceService: DailyFuelWorkspaceService,
   ) {}
 
-  async delete(
-    criteria: FindConditions<DailyEmission>,
-  ): Promise<DeleteResult> {
+  async delete(criteria: FindConditions<DailyEmission>): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 
@@ -57,7 +55,10 @@ export class DailyEmissionWorkspaceService {
   }
 
   async import(data: DailyEmissionWorkspaceCreate) {
-   await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
+    await this.delete({
+      monitoringLocationId: data.monitoringLocationId,
+      reportingPeriodId: data.reportingPeriodId,
+    });
     const dailyEmission = await this.repository.save(
       this.repository.create({
         id: randomUUID(),

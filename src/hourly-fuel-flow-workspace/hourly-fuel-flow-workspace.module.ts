@@ -6,6 +6,7 @@ import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.m
 import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fue
       HourlyFuelFlowWorkspaceRepository,
       HourlyParameterFuelFlowWorkspaceRepository,
     ]),
+    BulkLoadModule,
   ],
   providers: [
     HourlyFuelFlowWorkspaceService,

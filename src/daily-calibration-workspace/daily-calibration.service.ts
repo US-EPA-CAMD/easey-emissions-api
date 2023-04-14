@@ -47,10 +47,8 @@ export class DailyCalibrationWorkspaceService {
     return this.dailyCalibrationByTestSumId(dailyTestSummaryIds);
   }
 
-  async import(
-    parameters: DailyCalibrationCreate,
-  ): Promise<DailyCalibrationDTO> {
-    const result = await this.repository.save(
+  async import(parameters: DailyCalibrationCreate): Promise<void> {
+    await this.repository.save(
       this.repository.create({
         ...parameters,
         id: randomUUID(),
@@ -59,7 +57,5 @@ export class DailyCalibrationWorkspaceService {
         userId: parameters.identifiers?.userId,
       }),
     );
-
-    return this.map.one(result);
   }
 }
