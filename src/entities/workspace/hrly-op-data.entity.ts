@@ -32,7 +32,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({ name: 'mon_loc_id', nullable: false })
   monitoringLocationId: string;
 
-  @Column({ name: 'begin_date', nullable: false })
+  @Column({ name: 'begin_date', type: 'date', nullable: false })
   date: Date;
 
   @Column({
