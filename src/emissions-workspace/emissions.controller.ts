@@ -71,24 +71,6 @@ export class EmissionsWorkspaceController {
     return this.service.import(payload, user.userId);
   }
 
-  @Get('copy')
-  async copy() {
-    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
-      'camd.test_copy',
-      ['primary', 'sixth', 'seventh'],
-    );
-
-    for (let i = 0; i < 100000; i++) {
-      bulkLoadStream.writeObject({
-        primary: 'hello there',
-        sixth: null,
-        secondary: new Date().toISOString(),
-      });
-    }
-
-    bulkLoadStream.complete();
-  }
-
   @Get()
   @ApiOkResponse({
     isArray: true,

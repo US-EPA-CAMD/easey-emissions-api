@@ -31,6 +31,7 @@ import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.en
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { ReportingPeriod } from '../entities/reporting-period.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -162,7 +163,11 @@ export class EmissionsWorkspaceService {
 
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
-    const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
+    const reportingPeriodId = (
+      await getManager().findOne(ReportingPeriod, {
+        where: { year: params.year, quarter: params.quarter },
+      })
+    ).id;
     const identifiers = await this.getIdentifiers(
       params,
       monitoringLocationId,
@@ -175,7 +180,7 @@ export class EmissionsWorkspaceService {
     for (const monitorPlan of filteredMonitorPlans) {
       await getManager().query(
         'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
-        [monitorPlan.id, monitorPlan.beginRptPeriod.id],
+        [monitorPlan.id, reportingPeriodId],
       );
     }
 
