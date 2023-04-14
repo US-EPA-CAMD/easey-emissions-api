@@ -35,7 +35,7 @@ export class WeeklyTestSummary extends BaseEntity {
   @Column({ name: 'component_id', nullable: true })
   componentId: string;
 
-  @Column({ nullable: false, name: 'test_date' })
+  @Column({ type: 'date', nullable: false, name: 'test_date' })
   date: Date;
 
   @Column({
