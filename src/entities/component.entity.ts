@@ -89,14 +89,12 @@ export class Component extends BaseEntity {
   userId: string;
 
   @Column({
-    type: 'date',
     nullable: true,
     name: 'add_date',
   })
   addDate: Date;
 
   @Column({
-    type: 'date',
     nullable: true,
     name: 'update_date',
   })
@@ -159,5 +157,4 @@ export class Component extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorLocation: MonitorLocation;
-
 }
