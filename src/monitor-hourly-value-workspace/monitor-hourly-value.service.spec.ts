@@ -1,9 +1,10 @@
 import { Test } from '@nestjs/testing';
-import { genMonitorHourlyValueImportDto } from '../../test/object-generators/montior-hourly-value-dto';
 
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueWorkspaceService } from './monitor-hourly-value.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { MonitorHourlyValueImportDTO } from '../dto/monitor-hourly-value.dto';
 
 const mockRepository = {
   export: () => null,
@@ -12,6 +13,8 @@ const mockRepository = {
 const mockMap = {
   many: () => null,
 };
+
+const writeObjectMock = jest.fn();
 
 describe('MonitorHourlyValueWorkspaceService', () => {
   let service: MonitorHourlyValueWorkspaceService;
@@ -29,6 +32,16 @@ describe('MonitorHourlyValueWorkspaceService', () => {
         {
           provide: MonitorHourlyValueWorkspaceRepository,
           useValue: mockRepository,
+        },
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
         },
       ],
     }).compile();
@@ -50,18 +63,20 @@ describe('MonitorHourlyValueWorkspaceService', () => {
   });
 
   describe('import', () => {
-    it('should import record', async () => {
-      const monitorImport = genMonitorHourlyValueImportDto()[0];
+    it('should simulate the import of 2 new records', async () => {
+      const params = [
+        new MonitorHourlyValueImportDTO(),
+        new MonitorHourlyValueImportDTO(),
+      ];
 
-      jest.spyOn(service, 'import').mockResolvedValue(undefined);
+      await service.import(params, '', '', 1, {
+        components: {},
+        userId: '',
+        monitorFormulas: {},
+        monitoringSystems: {},
+      });
 
-      await expect(
-        service.import(monitorImport, '12345', '123', 150, {
-          components: {},
-          monitoringSystems: {},
-          monitorFormulas: {}
-        }),
-      ).resolves;
+      expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
 });

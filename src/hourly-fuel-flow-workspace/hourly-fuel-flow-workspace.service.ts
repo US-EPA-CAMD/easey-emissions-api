@@ -8,7 +8,7 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
-import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class HourlyFuelFlowWorkspaceService {
@@ -16,6 +16,7 @@ export class HourlyFuelFlowWorkspaceService {
     private readonly repository: HourlyFuelFlowWorkspaceRepository,
     private readonly map: HourlyFuelFlowMap,
     private readonly hourlyParameterFuelFlow: HourlyParameterFuelFlowWorkspaceService,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
@@ -36,62 +37,92 @@ export class HourlyFuelFlowWorkspaceService {
       promises.push(
         this.hourlyParameterFuelFlow.export(fuelFlow.id).then(data => {
           if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
-            fuelFlow.hourlyParameterFuelFlowData = []
+            fuelFlow.hourlyParameterFuelFlowData = [];
           }
           fuelFlow.hourlyParameterFuelFlowData.push(...data);
-        })
+        }),
       );
     }
-   
+
     await Promise.all(promises);
     return mapped;
   }
 
   async import(
-    data: HourlyFuelFlowImportDTO,
-    hourlyOperatingImport: HourlyOperatingImportDTO,
+    data: HourlyFuelFlowImportDTO[],
     hourId: string,
-    monitoringLocationId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    const result = await this.repository.save(
-      this.repository.create({
-        id: randomUUID(),
-        hourId,
-        fuelCode: data.fuelCode,
-        fuelUsageTime: data.fuelUsageTime,
-        volumetricFlowRate: data.volumetricFlowRate,
-        volumetricUnitsOfMeasureCode: data.volumetricUnitsOfMeasureCode,
-        sourceOfDataVolumetricCode: data.sourceOfDataVolumetricCode,
-        massFlowRate: data.massFlowRate,
-        sourceOfDataMassCode: data.sourceOfDataMassCode,
-        monitoringSystemId:
-          identifiers.monitoringSystems?.[data.monitoringSystemId],
-        monitoringLocationId: monitoringLocationId,
-        reportingPeriodId: reportingPeriodId,
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: identifiers?.userId,
-      }),
-    );
+  ): Promise<void> {
+    if (data && data.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.hrly_fuel_flow',
+        [
+          'hrly_fuel_flow_id',
+          'hour_id',
+          'fuel_cd',
+          'fuel_usage_time',
+          'volumetric_flow_rate',
+          'volumetric_uom_cd',
+          'sod_volumetric_cd',
+          'mass_flow_rate',
+          'sod_mass_cd',
+          'mon_sys_id',
+          'mon_loc_id',
+          'rpt_period_id',
+          'add_date',
+          'update_date',
+          'userid',
+        ],
+      );
 
-    if (
-      Array.isArray(hourlyOperatingImport.hourlyFuelFlowData) &&
-      hourlyOperatingImport.hourlyFuelFlowData.length > 0
-    ) {
-      for (const fuelFlowDatum of hourlyOperatingImport.hourlyFuelFlowData) {
-        for (const paramFuelFlow of fuelFlowDatum.hourlyParameterFuelFlowData) {
-          await this.hourlyParameterFuelFlow.import(
-            paramFuelFlow,
-            result.id,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
+      for (const dataChunk of data) {
+        const uid = randomUUID();
+        dataChunk['id'] = uid;
+
+        bulkLoadStream.writeObject({
+          id: uid,
+          hourId,
+          fuelCode: dataChunk.fuelCode,
+          fuelUsageTime: dataChunk.fuelUsageTime,
+          volumetricFlowRate: dataChunk.volumetricFlowRate,
+          volumetricUnitsOfMeasureCode: dataChunk.volumetricUnitsOfMeasureCode,
+          sourceOfDataVolumetricCode: dataChunk.sourceOfDataVolumetricCode,
+          massFlowRate: dataChunk.massFlowRate,
+          sourceOfDataMassCode: dataChunk.sourceOfDataMassCode,
+          monitoringSystemId:
+            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
+            null,
+          monitoringLocationId: monitorLocationId,
+          reportingPeriodId: reportingPeriodId,
+          addDate: new Date().toISOString(),
+          updateDate: new Date().toISOString(),
+          userId: identifiers?.userId,
+        });
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+
+      if (bulkLoadStream.status === 'Complete') {
+        const promises = [];
+
+        for (const dataChunk of data) {
+          // Load children hourly param fuel flow records
+          promises.push(
+            this.hourlyParameterFuelFlow.import(
+              dataChunk.hourlyParameterFuelFlowData,
+              dataChunk['id'],
+              monitorLocationId,
+              reportingPeriodId,
+              identifiers,
+            ),
           );
         }
+
+        await Promise.all(promises);
       }
     }
-    return this.map.one(result);
   }
 }

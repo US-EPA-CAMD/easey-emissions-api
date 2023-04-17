@@ -39,6 +39,8 @@ import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-
 import { genEmissionEvaluation } from '../../test/object-generators/emission-evaluation';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
 
 const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   include: [
@@ -59,10 +61,12 @@ const mockRepository = {
 
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
+  import: jest.fn().mockResolvedValue(true),
 };
 
 const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
+  import: jest.fn().mockResolvedValue(true),
 };
 
 const mockDerivedHourlyValueService = () => {
@@ -72,16 +76,21 @@ const mockDerivedHourlyValueService = () => {
   });
   return {
     export: () => Promise.resolve(generatedDerivedHrlyValues),
+    import: jest.fn().mockResolvedValue(true),
   };
 };
 
 const mockMatsMonitorHourlyValueService = {
   export: () => Promise.resolve([new MatsMonitorHourlyValueDTO()]),
+  import: jest.fn().mockResolvedValue(true),
 };
 
 const mockMatsDerivedHourlyValueService = {
   export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
+  import: jest.fn().mockResolvedValue(true),
 };
+
+const writeObjectMock = jest.fn();
 
 describe('HourlyOperatingWorskpaceService', () => {
   let service: HourlyOperatingWorkspaceService;
@@ -117,6 +126,16 @@ describe('HourlyOperatingWorskpaceService', () => {
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyOperatingWorkspaceRepository,
         DerivedHourlyValueWorkspaceRepository,
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
+        },
         {
           provide: MonitorHourlyValueWorkspaceService,
           useValue: mockMonitorHourlyValueService,
@@ -194,21 +213,23 @@ describe('HourlyOperatingWorskpaceService', () => {
       expect(result[0].derivedHourlyValueData.length).toBeGreaterThan(0);
     });
   });
+
   describe('import', () => {
-    it('should import a record', async () => {
-      const hourlyOpImport = genHourlyOpValues<HrlyOpData>(1);
-      const emissionsImport = genEmissionEvaluation<EmissionEvaluation>(1);
+    it('should simulate the import of 2 new records', async () => {
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        new HourlyOperatingImportDTO(),
+        new HourlyOperatingImportDTO(),
+      ];
 
-      const mappedMock = await map.one(hourlyOpImport[0]);
-      jest.spyOn(repository, 'save').mockResolvedValue(hourlyOpImport[0]);
-      jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
+      await service.import(dto, '', 1, {
+        components: {},
+        userId: '',
+        monitorFormulas: {},
+        monitoringSystems: {},
+      });
 
-      await expect(
-        service.import(
-          (emissionsImport[0] as unknown) as EmissionsImportDTO,
-          (hourlyOpImport[0] as unknown) as HourlyOperatingCreate,
-        ),
-      ).resolves.toEqual(mappedMock);
+      expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
 });

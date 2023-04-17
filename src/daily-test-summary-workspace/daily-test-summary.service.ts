@@ -73,10 +73,11 @@ export class DailyTestSummaryWorkspaceService {
     return summaries;
   }
 
-  async import(
-    parameters: DailyTestSummaryCreate,
-  ): Promise<DailyTestSummaryDTO> {
-    await this.delete({monitoringLocationId: parameters.monitoringLocationId, reportingPeriodId: parameters.reportingPeriodId})
+  async import(parameters: DailyTestSummaryCreate): Promise<void> {
+    await this.delete({
+      monitoringLocationId: parameters.monitoringLocationId,
+      reportingPeriodId: parameters.reportingPeriodId,
+    });
     const result = await this.repository.save(
       this.repository.create({
         ...parameters,
@@ -98,18 +99,16 @@ export class DailyTestSummaryWorkspaceService {
         parameters.dailyCalibrationData,
         parameters.reportingPeriodId,
         result.id,
-        parameters.identifiers
+        parameters.identifiers,
       );
     }
-
-    return this.map.one(result);
   }
 
   async importDailyCalibrations(
     dailyCalibrations: Array<DailyCalibrationImportDTO>,
     reportingPeriodId: number,
     dailyTestSummaryId: string,
-    identifiers: ImportIdentifiers
+    identifiers: ImportIdentifiers,
   ) {
     const dailyCalibrationImports = dailyCalibrations?.map(
       dailyCalibrationDatum => {
@@ -117,8 +116,7 @@ export class DailyTestSummaryWorkspaceService {
           ...dailyCalibrationDatum,
           dailyTestSummaryId,
           reportingPeriodId,
-          identifiers: identifiers
-          
+          identifiers: identifiers,
         });
       },
     );

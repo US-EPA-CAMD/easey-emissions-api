@@ -5,7 +5,10 @@ import { HrlyGasFlowMeter } from '../entities/workspace/hrly-gas-flow-meter.enti
 import { HourlyGasFlowMeterWorkspaceRepository } from './hourly-gas-flow-meter.repository';
 import { HourlyGasFlowMeterWorkspaceService } from './hourly-gas-flow-meter.service';
 import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
-import { genHourlyGasFlowDto } from '../../test/object-generators/hourly-gas-flow-dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { HourlyGasFlowMeterImportDTO } from '../dto/hourly-gas-flow-meter.dto';
+
+const writeObjectMock = jest.fn();
 
 describe('--HourlyGasFlowMeterService--', () => {
   let map: HourlyGasFlowMeterMap;
@@ -20,6 +23,16 @@ describe('--HourlyGasFlowMeterService--', () => {
         {
           provide: HourlyGasFlowMeterWorkspaceRepository,
           useValue: mockHourlyGasFlowMeterWorkspaceRepository,
+        },
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
         },
       ],
     }).compile();
@@ -55,18 +68,20 @@ describe('--HourlyGasFlowMeterService--', () => {
   });
 
   describe('import', () => {
-    it('should import data given correct import', async function() {
-      const mockedValues = genHourlyGasFlowDto()[0];
+    it('should simulate the import of 2 new records', async () => {
+      const params = [
+        new HourlyGasFlowMeterImportDTO(),
+        new HourlyGasFlowMeterImportDTO(),
+      ];
 
-      jest.spyOn(service, 'import').mockResolvedValue(null);
+      await service.import(params, '', '', 1, {
+        components: {},
+        userId: '',
+        monitorFormulas: {},
+        monitoringSystems: {},
+      });
 
-      await expect(
-        service.import(mockedValues, '123', '123', 123, {
-          components: {},
-          monitoringSystems: {},
-          monitorFormulas: {}
-        }),
-      ).resolves;
+      expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
 });
