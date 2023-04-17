@@ -235,7 +235,5 @@ export class HourlyOperatingWorkspaceService {
         }
       }
     }
-
-    console.log('All hourly op data imported successfully');
   }
 }

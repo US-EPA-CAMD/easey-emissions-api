@@ -330,7 +330,6 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ): Promise<void> {
-    console.log('Importing hourly op data from file');
     await this.hourlyOperatingService.import(
       emissionsImport,
       monitoringLocationId,
