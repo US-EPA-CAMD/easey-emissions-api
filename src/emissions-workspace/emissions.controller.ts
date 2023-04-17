@@ -29,11 +29,6 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
-let Pool = require('pg-pool');
-import { from as copyFrom } from 'pg-copy-streams';
-import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Controller()
 @ApiTags('Emissions')
@@ -43,8 +38,6 @@ export class EmissionsWorkspaceController {
     private readonly service: EmissionsWorkspaceService,
     private readonly submissionService: ReviewSubmitService,
     private readonly checksService: EmissionsChecksService,
-    private readonly configService: ConfigService,
-    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   @Get('export')

@@ -93,7 +93,8 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
-import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { ReportingPeriod } from '../entities/reporting-period.entity';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -105,6 +106,7 @@ describe('Emissions Workspace Service', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [BulkLoadModule],
       providers: [
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
@@ -265,10 +267,16 @@ describe('Emissions Workspace Service', () => {
   });
 
   it('should successfully import', async function() {
+    jest.spyOn(emissionsService, 'returnManager').mockReturnValue({
+      query: jest.fn(),
+      findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
+    });
 
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
 
-    const emissionsDtoMock = genEmissionsImportDto(1,{"include":["longTermFuelFlowData"]});
+    const emissionsDtoMock = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
       monitorPlanAmount: 3,

@@ -30,7 +30,6 @@ import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ReportingPeriod } from '../entities/reporting-period.entity';
 
 // Import Identifier: Table Id
@@ -66,7 +65,6 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async delete(
@@ -133,6 +131,10 @@ export class EmissionsWorkspaceService {
     return this.repository.findOne();
   }
 
+  returnManager(): any {
+    return getManager();
+  }
+
   async import(
     params: EmissionsImportDTO,
     userId?: string,
@@ -164,7 +166,7 @@ export class EmissionsWorkspaceService {
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
     const reportingPeriodId = (
-      await getManager().findOne(ReportingPeriod, {
+      await this.returnManager().findOne(ReportingPeriod, {
         where: { year: params.year, quarter: params.quarter },
       })
     ).id;
@@ -178,7 +180,7 @@ export class EmissionsWorkspaceService {
     await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
 
     for (const monitorPlan of filteredMonitorPlans) {
-      await getManager().query(
+      await this.returnManager().query(
         'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
         [monitorPlan.id, reportingPeriodId],
       );

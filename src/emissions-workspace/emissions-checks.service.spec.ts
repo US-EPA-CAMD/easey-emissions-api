@@ -38,6 +38,7 @@ import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-l
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -45,7 +46,7 @@ describe('Emissions Checks Service Tests', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, CheckCatalogService],
+      imports: [LoggerModule, CheckCatalogService, BulkLoadModule],
       providers: [
         DailyCalibrationMap,
         DailyCalibrationWorkspaceService,
@@ -75,7 +76,7 @@ describe('Emissions Checks Service Tests', () => {
         LongTermFuelFlowRepository,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
-          useValue: mockLongTermFuelFlowWorkspaceRepository
+          useValue: mockLongTermFuelFlowWorkspaceRepository,
         },
         {
           provide: DailyCalibrationWorkspaceRepository,
