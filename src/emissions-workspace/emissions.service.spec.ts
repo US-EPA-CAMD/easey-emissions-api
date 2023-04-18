@@ -269,7 +269,8 @@ describe('Emissions Workspace Service', () => {
 
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
     jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
-      findOne: jest.fn().mockResolvedValue(new ReportingPeriod())
+      findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
+      query: jest.fn(),
     } as unknown) as EntityManager);
 
     const emissionsDtoMock = genEmissionsImportDto(1, {
