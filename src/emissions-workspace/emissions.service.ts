@@ -172,7 +172,6 @@ export class EmissionsWorkspaceService {
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
 
-    // const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
     const reportingPeriodId = reportingPeriod.id;
     const identifiers = await this.getIdentifiers(
       params,
