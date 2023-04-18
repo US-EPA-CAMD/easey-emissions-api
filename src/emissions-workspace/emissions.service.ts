@@ -30,7 +30,7 @@ import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
-import { ReportingPeriod } from '../entities/reporting-period.entity';
+import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -127,14 +127,6 @@ export class EmissionsWorkspaceService {
     return new EmissionsDTO();
   }
 
-  async findOne() {
-    return this.repository.findOne();
-  }
-
-  returnManager(): any {
-    return getManager();
-  }
-
   async import(
     params: EmissionsImportDTO,
     userId?: string,
@@ -153,23 +145,34 @@ export class EmissionsWorkspaceService {
     }
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-      return (
-        plan.beginRptPeriod.year <= params.year &&
-        plan.beginRptPeriod.quarter <= params.quarter
-      );
+      return isUndefinedOrNull(plan.endRptPeriod)
     });
 
-    if (isUndefinedOrNull(filteredMonitorPlans[0])) {
+    if (filteredMonitorPlans.length === 0) {
       throw new NotFoundException('Monitor plan not found.');
+    }
+
+    if (filteredMonitorPlans.length > 1) {
+      throw new NotFoundException('Multiple active monitor plans found.');
+    }
+
+
+    const manager = getManager();
+    const reportingPeriod = await manager.findOne(ReportingPeriod, {
+      where:{
+        year: params.year,
+        quarter: params.quarter,
+      }
+    })
+
+    if( !reportingPeriod ){
+      throw new NotFoundException('Reporting period not found.');
     }
 
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
-    const reportingPeriodId = (
-      await this.returnManager().findOne(ReportingPeriod, {
-        where: { year: params.year, quarter: params.quarter },
-      })
-    ).id;
+
+    const reportingPeriodId = reportingPeriod.id;
     const identifiers = await this.getIdentifiers(
       params,
       monitoringLocationId,
@@ -180,7 +183,7 @@ export class EmissionsWorkspaceService {
     await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
 
     for (const monitorPlan of filteredMonitorPlans) {
-      await this.returnManager().query(
+      await manager.query(
         'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
         [monitorPlan.id, reportingPeriodId],
       );
