@@ -8,12 +8,14 @@ import {
 import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class HourlyGasFlowMeterWorkspaceService {
   constructor(
     private readonly map: HourlyGasFlowMeterMap,
     private readonly repository: HourlyGasFlowMeterWorkspaceRepository,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
@@ -22,28 +24,52 @@ export class HourlyGasFlowMeterWorkspaceService {
   }
 
   async import(
-    data: HourlyGasFlowMeterImportDTO,
+    data: HourlyGasFlowMeterImportDTO[],
     hourId: string,
-    monitoringLocationId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    return this.repository.save(
-      this.repository.create({
-        id: randomUUID(),
-        hourId,
-        componentId: identifiers?.components?.[data.componentId],
-        monitoringLocationId,
-        reportingPeriodId,
-        beginEndHourFlag: data.beginEndHourFlag,
-        hourlyGfmReading: data.hourlyGfmReading,
-        avgHourlySamplingRate: data.avgHourlySamplingRate,
-        samplingRateUom: data.samplingRateUom,
-        hourlySfsrRatio: data.hourlySfsrRatio,
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: identifiers?.userId,
-      }),
-    );
+  ): Promise<void> {
+    if (data && data.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.hrly_gas_flow_meter',
+        [
+          'hrly_gas_flow_meter_id',
+          'hour_id',
+          'component_id',
+          'mon_loc_id',
+          'rpt_period_id',
+          'begin_end_hour_flg',
+          'gfm_reading',
+          'avg_sampling_rate',
+          'sampling_rate_uom',
+          'flow_to_sampling_ratio',
+          'add_date',
+          'update_date',
+          'userid',
+        ],
+      );
+
+      for (const dataChunk of data) {
+        bulkLoadStream.writeObject({
+          id: randomUUID(),
+          hourId,
+          componentId: identifiers?.components?.[dataChunk.componentId],
+          monitorLocationId,
+          reportingPeriodId,
+          beginEndHourFlag: dataChunk.beginEndHourFlag,
+          hourlyGfmReading: dataChunk.hourlyGfmReading,
+          avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
+          samplingRateUom: dataChunk.samplingRateUom,
+          hourlySfsrRatio: dataChunk.hourlySfsrRatio,
+          addDate: new Date().toISOString(),
+          updateDate: new Date().toISOString(),
+          userId: identifiers?.userId,
+        });
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

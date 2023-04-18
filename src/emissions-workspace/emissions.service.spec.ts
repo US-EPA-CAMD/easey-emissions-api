@@ -97,6 +97,7 @@ import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-f
 import * as typeorm_functions from 'typeorm/globals';
 import { EntityManager } from 'typeorm';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -108,6 +109,7 @@ describe('Emissions Workspace Service', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [BulkLoadModule],
       providers: [
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
@@ -263,15 +265,16 @@ describe('Emissions Workspace Service', () => {
     );
   });
 
-  it('should find one record from the repository', async function() {
-    await expect(emissionsService.findOne()).resolves.toEqual(undefined);
-  });
-
   it('should successfully import', async function() {
 
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
+    jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
+      findOne: jest.fn().mockResolvedValue(new ReportingPeriod())
+    } as unknown) as EntityManager);
 
-    const emissionsDtoMock = genEmissionsImportDto(1,{"include":["longTermFuelFlowData"]});
+    const emissionsDtoMock = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
       monitorPlanAmount: 2,
@@ -280,9 +283,6 @@ describe('Emissions Workspace Service', () => {
 
       },
     });
-    jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
-      findOne: jest.fn().mockResolvedValue(new ReportingPeriod())
-    } as unknown) as EntityManager);
     
     plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
     plantMock[0].monitorPlans[0].beginRptPeriod.quarter =

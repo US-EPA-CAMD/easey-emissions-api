@@ -2,11 +2,14 @@ import { Test } from '@nestjs/testing';
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
 import { MatsMonitorHourlyValueWorkspaceRepository } from './mats-monitor-hourly-value.repository';
 import { MatsMonitorHourlyValueWorkspaceService } from './mats-monitor-hourly-value.service';
-import { genMatsMonitorHourlyValueImportDto } from '../../test/object-generators/mats-monitor-hourly-value-dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { MatsMonitorHourlyValueImportDTO } from '../dto/mats-monitor-hourly-value.dto';
 
 const mockMap = {
   many: () => null,
 };
+
+const writeObjectMock = jest.fn();
 
 describe('MatsMonitorHourlyValueWorkspaceService', () => {
   let service: MatsMonitorHourlyValueWorkspaceService;
@@ -21,6 +24,16 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
         {
           provide: MatsMonitorHourlyValueMap,
           useValue: mockMap,
+        },
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
         },
       ],
     }).compile();
@@ -44,18 +57,20 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
   });
 
   describe('import', () => {
-    it('should import given the correct data', async () => {
-      const matsMonitorImport = genMatsMonitorHourlyValueImportDto()[0];
+    it('should simulate the import of 2 new records', async () => {
+      const params = [
+        new MatsMonitorHourlyValueImportDTO(),
+        new MatsMonitorHourlyValueImportDTO(),
+      ];
 
-      jest.spyOn(service, 'import').mockResolvedValue(undefined);
+      await service.import(params, '', '', 1, {
+        components: {},
+        userId: '',
+        monitorFormulas: {},
+        monitoringSystems: {},
+      });
 
-      await expect(
-        service.import(matsMonitorImport, '123', '123', 123, {
-          components: {},
-          monitorFormulas: {},
-          monitoringSystems: {},
-        }),
-      ).resolves;
+      expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
 });
