@@ -99,7 +99,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
     Nsps4tCompliancePeriodWorkspaceService,
     ReviewSubmitService,
     EmissionsReviewSubmitMap,
-    LongTermFuelFlowWorkspaceService
+    LongTermFuelFlowWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

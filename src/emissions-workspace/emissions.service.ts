@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
-import { DeleteResult, FindConditions } from 'typeorm';
+import { DeleteResult, FindConditions, getManager } from 'typeorm';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
@@ -9,7 +9,6 @@ import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { PlantRepository } from '../plant/plant.repository';
-import { DailyTestSummaryDTO } from '../dto/daily-test-summary.dto';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
 import {
   arrayFilterUndefinedNull,
@@ -21,7 +20,6 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
-import { HourlyOperatingDTO } from '../dto/hourly-operating.dto';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
@@ -32,6 +30,7 @@ import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
+import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -66,7 +65,7 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-  ) { }
+  ) {}
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -84,7 +83,6 @@ export class EmissionsWorkspaceService {
     const SUMMARY_VALUES = 5;
     const NSPS4T_SUMMARY = 6;
     const LONG_TERM_FUEL_FLOW = 7;
-
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -106,7 +104,9 @@ export class EmissionsWorkspaceService {
       promises.push(
         this.nsps4tSummaryWorkspaceService.export(locationIds, params),
       );
-      promises.push(this.longTermFuelFlowWorkspaceService.export(locationIds, params));
+      promises.push(
+        this.longTermFuelFlowWorkspaceService.export(locationIds, params),
+      );
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -116,7 +116,8 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData =
+        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
@@ -124,10 +125,6 @@ export class EmissionsWorkspaceService {
       return results;
     }
     return new EmissionsDTO();
-  }
-
-  async findOne() {
-    return this.repository.findOne();
   }
 
   async import(
@@ -148,19 +145,34 @@ export class EmissionsWorkspaceService {
     }
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-      return (
-        plan.beginRptPeriod.year <= params.year &&
-        plan.beginRptPeriod.quarter <= params.quarter
-      );
+      return isUndefinedOrNull(plan.endRptPeriod)
     });
 
-    if (isUndefinedOrNull(filteredMonitorPlans[0])) {
+    if (filteredMonitorPlans.length === 0) {
       throw new NotFoundException('Monitor plan not found.');
+    }
+
+    if (filteredMonitorPlans.length > 1) {
+      throw new NotFoundException('Multiple active monitor plans found.');
+    }
+
+
+    const manager = getManager();
+    const reportingPeriod = await manager.findOne(ReportingPeriod, {
+      where:{
+        year: params.year,
+        quarter: params.quarter,
+      }
+    })
+
+    if( !reportingPeriod ){
+      throw new NotFoundException('Reporting period not found.');
     }
 
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
-    const reportingPeriodId = filteredMonitorPlans[0].beginRptPeriod.id;
+
+    const reportingPeriodId = reportingPeriod.id;
     const identifiers = await this.getIdentifiers(
       params,
       monitoringLocationId,
@@ -170,16 +182,12 @@ export class EmissionsWorkspaceService {
     // Import-28 Valid formulaIdentifiers for location
     await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
 
-    const evaluationDeletes: Array<Promise<DeleteResult>> = [];
     for (const monitorPlan of filteredMonitorPlans) {
-      evaluationDeletes.push(
-        this.delete({
-          monitorPlanId: monitorPlan.id,
-          reportingPeriodId: monitorPlan.beginRptPeriod.id,
-        }),
+      await manager.query(
+        'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
+        [monitorPlan.id, reportingPeriodId],
       );
     }
-    await Promise.all(evaluationDeletes);
 
     const importPromises = [
       this.importDailyEmissions(
@@ -188,18 +196,21 @@ export class EmissionsWorkspaceService {
         monitoringLocationId,
         identifiers,
       ),
+
       this.importDailyTestSummaries(
         params,
         reportingPeriodId,
         monitoringLocationId,
         identifiers,
       ),
+
       this.importHourlyOperating(
         params,
         monitoringLocationId,
         reportingPeriodId,
         identifiers,
       ),
+
       this.importSummaryValue(
         params,
         monitoringLocationId,
@@ -253,10 +264,18 @@ export class EmissionsWorkspaceService {
         }),
       );
 
-      await this.repository.updateAllViews(monitorPlanId, params.quarter, params.year);
+      await this.repository.updateAllViews(
+        monitorPlanId,
+        params.quarter,
+        params.year,
+      );
     } catch (e) {
       throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    console.log(
+      `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
+    );
 
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
@@ -291,7 +310,7 @@ export class EmissionsWorkspaceService {
     monitoringLocationId: string,
     identifiers: ImportIdentifiers,
   ) {
-    const dailyTestSummaryImports: Array<Promise<DailyTestSummaryDTO>> = [];
+    const dailyTestSummaryImports: Array<Promise<void>> = [];
 
     if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
       for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
@@ -313,23 +332,13 @@ export class EmissionsWorkspaceService {
     monitoringLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    const hourlyOperatingImports: Array<Promise<HourlyOperatingDTO>> = [];
-
-    if (Array.isArray(emissionsImport.hourlyOperatingData)) {
-      for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-        hourlyOperatingImports.push(
-          this.hourlyOperatingService.import(emissionsImport, {
-            ...hourlyOperatingDatum,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-    }
-
-    return Promise.all(hourlyOperatingImports);
+  ): Promise<void> {
+    await this.hourlyOperatingService.import(
+      emissionsImport,
+      monitoringLocationId,
+      reportingPeriodId,
+      identifiers,
+    );
   }
 
   async importSummaryValue(
@@ -347,7 +356,7 @@ export class EmissionsWorkspaceService {
             ...summaryValueDatum,
             monitoringLocationId,
             reportingPeriodId,
-            identifiers
+            identifiers,
           }),
         );
       }
