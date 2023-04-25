@@ -63,7 +63,10 @@ export class EmissionsViewWorkspaceController {
   })
   @UseInterceptors(Json2CsvInterceptor)
   @UseInterceptors(SetEmissionViewHeaderInterceptor)
-  @RoleGuard({ queryParam: 'monitorPlanId' }, LookupType.MonitorPlan)
+  @RoleGuard(
+    { enforceCheckout: false, queryParam: 'monitorPlanId' },
+    LookupType.MonitorPlan,
+  )
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

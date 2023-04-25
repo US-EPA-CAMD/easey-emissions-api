@@ -70,6 +70,10 @@ export default registerAs('app', () => ({
   // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
   // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
   currentUser: getConfigValue('EASEY_EMISSIONS_API_CURRENT_USER'),
+  enableRoleGuardCheckoutCheck: getConfigValueBoolean(
+    'EASEY_MONITOR_PLAN_API_ENABLE_ROLE_GUARD_CHECKOUT',
+    true,
+  ),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   apiHost: apiHost,
   authApi: {
