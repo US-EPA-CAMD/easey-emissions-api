@@ -95,6 +95,7 @@ export class DailyTestSummaryWorkspaceService {
     );
 
     if (Array.isArray(parameters.dailyCalibrationData)) {
+      console.log(result.id);
       await this.importDailyCalibrations(
         parameters.dailyCalibrationData,
         parameters.reportingPeriodId,

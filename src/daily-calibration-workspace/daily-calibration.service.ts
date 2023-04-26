@@ -48,6 +48,7 @@ export class DailyCalibrationWorkspaceService {
   }
 
   async import(parameters: DailyCalibrationCreate): Promise<void> {
+    console.log(parameters);
     await this.repository.save(
       this.repository.create({
         ...parameters,

@@ -31,6 +31,7 @@ export class PlantRepository extends Repository<Plant> {
       .innerJoinAndSelect('plant.monitorPlans', 'monitorPlans')
       .innerJoinAndSelect('monitorPlans.locations', 'monitorLocation')
       .innerJoinAndSelect('monitorPlans.beginRptPeriod', 'reportingPeriod')
+      .leftJoinAndSelect('monitorPlans.endRptPeriod', 'endReportingPeriod')
       .leftJoin('monitorLocation.unit', 'locationUnit')
       .leftJoin('monitorLocation.stackPipe', 'locationStack')
       .where('plant.oris_code = :orisCode', { orisCode })

@@ -31,6 +31,7 @@ import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.en
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -134,6 +135,9 @@ export class EmissionsWorkspaceService {
     const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
     const unitIds = objectValuesByKey<string>('unitId', params, true);
 
+    //console.log(stackPipeIds);
+    //console.log(unitIds);
+
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
       stackIds: stackPipeIds,
@@ -145,7 +149,7 @@ export class EmissionsWorkspaceService {
     }
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-      return isUndefinedOrNull(plan.endRptPeriod)
+      return isUndefinedOrNull(plan.endRptPeriod);
     });
 
     if (filteredMonitorPlans.length === 0) {
@@ -156,21 +160,21 @@ export class EmissionsWorkspaceService {
       throw new NotFoundException('Multiple active monitor plans found.');
     }
 
-
     const manager = getManager();
     const reportingPeriod = await manager.findOne(ReportingPeriod, {
-      where:{
+      where: {
         year: params.year,
         quarter: params.quarter,
-      }
-    })
+      },
+    });
 
-    if( !reportingPeriod ){
+    if (!reportingPeriod) {
       throw new NotFoundException('Reporting period not found.');
     }
 
     const monitorPlanId = filteredMonitorPlans[0].id;
-    const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
+    const monitoringLocations = filteredMonitorPlans[0].locations;
+    const monitoringLocationId = monitoringLocations[0].id;
 
     const reportingPeriodId = reportingPeriod.id;
     const identifiers = await this.getIdentifiers(
@@ -180,7 +184,7 @@ export class EmissionsWorkspaceService {
     );
 
     // Import-28 Valid formulaIdentifiers for location
-    await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
+    //await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
 
     for (const monitorPlan of filteredMonitorPlans) {
       await manager.query(
@@ -193,53 +197,53 @@ export class EmissionsWorkspaceService {
       this.importDailyEmissions(
         params,
         reportingPeriodId,
-        monitoringLocationId,
-        identifiers,
+        monitoringLocations,
+        userId,
       ),
 
       this.importDailyTestSummaries(
         params,
         reportingPeriodId,
-        monitoringLocationId,
-        identifiers,
+        monitoringLocations,
+        userId
       ),
 
       this.importHourlyOperating(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
-        identifiers,
+        identifiers
       ),
 
       this.importSummaryValue(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
-        identifiers,
+        userId
       ),
       this.importSorbentTrap(
         params,
         reportingPeriodId,
-        monitoringLocationId,
-        identifiers,
+        monitoringLocations,
+        userId
       ),
       this.importNsps4tSummaries(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
-        identifiers,
+        userId
       ),
       this.importWeeklyTestSummary(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
-        identifiers,
+        userId
       ),
       this.importLongTermFuelFlow(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
-        identifiers,
+        userId
       ),
     ];
 
@@ -285,12 +289,18 @@ export class EmissionsWorkspaceService {
   async importDailyEmissions(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
-    monitoringLocationId: string,
-    identifiers: ImportIdentifiers,
+    monitoringLocations: MonitorLocation[],
+    userId:string
   ) {
-    if (hasArrayValues(emissionsImport.dailyEmissionData)) {
+  if (hasArrayValues(emissionsImport.dailyEmissionData)) {
       const promises = [];
       for (const dailyEmission of emissionsImport.dailyEmissionData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, dailyEmission)
+        const identifiers = await this.getIdentifiers(
+          emissionsImport,
+          monitoringLocationId,
+          userId,
+        );
         promises.push(
           this.dailyEmissionService.import({
             ...dailyEmission,
@@ -307,13 +317,25 @@ export class EmissionsWorkspaceService {
   async importDailyTestSummaries(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
-    monitoringLocationId: string,
-    identifiers: ImportIdentifiers,
+    monitoringLocations: MonitorLocation[],
+    userId: string,
   ) {
     const dailyTestSummaryImports: Array<Promise<void>> = [];
 
     if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
       for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
+      const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, dailyTestSummaryDatum);
+        const identifiers = await this.getIdentifiers(
+          emissionsImport,
+          monitoringLocationId,
+          userId,
+        );
+        //console.log(monitoringLocations);
+        if (dailyTestSummaryDatum.unitId === null && dailyTestSummaryDatum.stackPipeId ===null){
+          console.log('hi');
+        }
+
+      
         dailyTestSummaryImports.push(
           this.dailyTestSummaryService.import({
             ...dailyTestSummaryDatum,
@@ -329,13 +351,13 @@ export class EmissionsWorkspaceService {
 
   async importHourlyOperating(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     await this.hourlyOperatingService.import(
       emissionsImport,
-      monitoringLocationId,
+      monitoringLocations,
       reportingPeriodId,
       identifiers,
     );
@@ -343,14 +365,24 @@ export class EmissionsWorkspaceService {
 
   async importSummaryValue(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId,
-    identifiers: ImportIdentifiers,
+    userId: string,
   ) {
     const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
 
     if (Array.isArray(emissionsImport.summaryValueData)) {
       for (const summaryValueDatum of emissionsImport.summaryValueData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, summaryValueDatum);
+
+
+          //console.log(monitoringLocationId)
+
+          const identifiers = await this.getIdentifiers(
+            emissionsImport,
+            monitoringLocationId,
+            userId,
+          );
         summaryValueImports.push(
           this.summaryValueService.import({
             ...summaryValueDatum,
@@ -368,12 +400,19 @@ export class EmissionsWorkspaceService {
   async importSorbentTrap(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
-    monitoringLocationId: string,
-    identifiers: ImportIdentifiers,
+    monitoringLocations: MonitorLocation[],
+    userId: string,
   ) {
     if (hasArrayValues(emissionsImport.sorbentTrapData)) {
       const promises = [];
       for (const sorbentTrap of emissionsImport.sorbentTrapData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, sorbentTrap);
+
+          const identifiers = await this.getIdentifiers(
+            emissionsImport,
+            monitoringLocationId,
+            userId,
+          );
         promises.push(
           this.sorbentTrapService.import({
             ...sorbentTrap,
@@ -389,14 +428,21 @@ export class EmissionsWorkspaceService {
 
   async importNsps4tSummaries(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
-    identifiers: ImportIdentifiers,
+    userId: string,
   ) {
     const nsps4tSummaryImports = [];
 
     if (Array.isArray(emissionsImport.nsps4tSummaryData)) {
       for (const nsps4tSummary of emissionsImport.nsps4tSummaryData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, nsps4tSummary);
+
+          const identifiers = await this.getIdentifiers(
+            emissionsImport,
+            monitoringLocationId,
+            userId,
+          );
         nsps4tSummaryImports.push(
           this.nsps4tSummaryWorkspaceService.import({
             ...nsps4tSummary,
@@ -413,14 +459,21 @@ export class EmissionsWorkspaceService {
 
   async importWeeklyTestSummary(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
-    identifiers: ImportIdentifiers,
+    userId: string,
   ) {
     const weeklyTestSummaryImports: Array<Promise<WeeklyTestSummaryDTO>> = [];
 
     if (Array.isArray(emissionsImport.weeklyTestSummaryData)) {
       for (const weeklyTestSummary of emissionsImport.weeklyTestSummaryData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, weeklyTestSummary);
+
+          const identifiers = await this.getIdentifiers(
+            emissionsImport,
+            monitoringLocationId,
+            userId,
+          );
         weeklyTestSummaryImports.push(
           this.weeklyTestSummaryService.import({
             ...weeklyTestSummary,
@@ -436,14 +489,21 @@ export class EmissionsWorkspaceService {
 
   async importLongTermFuelFlow(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
-    identifiers: ImportIdentifiers,
+    userId: string,
   ) {
     const longTermFuelFlowImports: Array<Promise<LongTermFuelFlowDTO>> = [];
 
     if (Array.isArray(emissionsImport.longTermFuelFlowData)) {
       for (const longTermFuelFlow of emissionsImport.longTermFuelFlowData) {
+        const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, longTermFuelFlow);
+
+          const identifiers = await this.getIdentifiers(
+            emissionsImport,
+            monitoringLocationId,
+            userId,
+          );
         longTermFuelFlowImports.push(
           this.longTermFuelFlowWorkspaceService.import({
             ...longTermFuelFlow,
@@ -534,4 +594,17 @@ export class EmissionsWorkspaceService {
 
     return identifiers;
   }
+
+  async getMonitoringLocationId(monitoringLocations, dataType){
+  const filteredLocations = monitoringLocations
+  .filter(location => {
+    return (
+      location.unitId === dataType.unitId ||
+      location.stackPipeId === dataType.stackPipeId
+    );
+  })[0].id
+
+  //console.log(filteredLocations);
+  return filteredLocations;
+}
 }

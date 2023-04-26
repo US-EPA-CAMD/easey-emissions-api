@@ -107,7 +107,7 @@ export class HourlyOperatingWorkspaceService {
 
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId,
+    monitoringLocations,
     reportingPeriodId,
     identifiers: ImportIdentifiers,
   ): Promise<void> {
@@ -122,6 +122,14 @@ export class HourlyOperatingWorkspaceService {
       'camdecmpswks.hrly_op_data',
     ); // Instantiate our stream object with the correct schema.tableName we want to load to
     for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
+      const monitoringLocationId = monitoringLocations
+      .filter(location => {
+        return (
+          location.unitId === hourlyOperatingDatum.unitId ||
+          location.stackPipeId === hourlyOperatingDatum.stackPipeId
+        );
+      })[0].id
+      .toString();
       //We must load the parent first because the children records require the parents uid
       const uid = randomUUID();
       hourlyOperatingDatum['id'] = uid; //Set the id on our dto object so we can access it again when loading the children
@@ -162,6 +170,14 @@ export class HourlyOperatingWorkspaceService {
       const promises = [];
 
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
+        const monitoringLocationId = monitoringLocations
+        .filter(location => {
+          return (
+            location.unitId === hourlyOperatingDatum.unitId ||
+            location.stackPipeId === hourlyOperatingDatum.stackPipeId
+          );
+        })[0].id
+        .toString();
         //Load children records in a bulk fashion as well
         promises.push(
           this.derivedHourlyValueService.import(
