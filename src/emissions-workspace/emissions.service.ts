@@ -135,9 +135,6 @@ export class EmissionsWorkspaceService {
     const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
     const unitIds = objectValuesByKey<string>('unitId', params, true);
 
-    //console.log(stackPipeIds);
-    //console.log(unitIds);
-
     const plantLocation = await this.plantRepository.getImportLocations({
       orisCode: params.orisCode,
       stackIds: stackPipeIds,
@@ -174,6 +171,7 @@ export class EmissionsWorkspaceService {
 
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocations = filteredMonitorPlans[0].locations;
+
     const monitoringLocationId = monitoringLocations[0].id;
 
     const reportingPeriodId = reportingPeriod.id;
@@ -330,11 +328,6 @@ export class EmissionsWorkspaceService {
           monitoringLocationId,
           userId,
         );
-        //console.log(monitoringLocations);
-        if (dailyTestSummaryDatum.unitId === null && dailyTestSummaryDatum.stackPipeId ===null){
-          console.log('hi');
-        }
-
       
         dailyTestSummaryImports.push(
           this.dailyTestSummaryService.import({
@@ -374,9 +367,6 @@ export class EmissionsWorkspaceService {
     if (Array.isArray(emissionsImport.summaryValueData)) {
       for (const summaryValueDatum of emissionsImport.summaryValueData) {
         const monitoringLocationId = await this.getMonitoringLocationId(monitoringLocations, summaryValueDatum);
-
-
-          //console.log(monitoringLocationId)
 
           const identifiers = await this.getIdentifiers(
             emissionsImport,
@@ -595,16 +585,16 @@ export class EmissionsWorkspaceService {
     return identifiers;
   }
 
-  async getMonitoringLocationId(monitoringLocations, dataType){
+  async getMonitoringLocationId(monitoringLocations: MonitorLocation[], dataType){
+
   const filteredLocations = monitoringLocations
   .filter(location => {
     return (
-      location.unitId === dataType.unitId ||
-      location.stackPipeId === dataType.stackPipeId
+      location.unit?.name === dataType.unitId ||
+      location.stackPipe?.name === dataType.stackPipeId
     );
-  })[0].id
+  })
 
-  //console.log(filteredLocations);
-  return filteredLocations;
+  return filteredLocations[0].id;
 }
 }

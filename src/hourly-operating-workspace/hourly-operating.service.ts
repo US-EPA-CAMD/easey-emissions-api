@@ -125,8 +125,8 @@ export class HourlyOperatingWorkspaceService {
       const monitoringLocationId = monitoringLocations
       .filter(location => {
         return (
-          location.unitId === hourlyOperatingDatum.unitId ||
-          location.stackPipeId === hourlyOperatingDatum.stackPipeId
+          location.unit?.name === hourlyOperatingDatum.unitId ||
+          location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
         );
       })[0].id
       .toString();
@@ -173,8 +173,8 @@ export class HourlyOperatingWorkspaceService {
         const monitoringLocationId = monitoringLocations
         .filter(location => {
           return (
-            location.unitId === hourlyOperatingDatum.unitId ||
-            location.stackPipeId === hourlyOperatingDatum.stackPipeId
+            location.unit?.name === hourlyOperatingDatum.unitId ||
+            location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
           );
         })[0].id
         .toString();
