@@ -23,6 +23,7 @@ applications:
       EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD: true
       EASEY_API_GATEWAY_HOST: ((apiHost))
       EASEY_AUTH_API: https://((apiHost))/auth-mgmt
+      EASEY_MONITOR_PLAN_API_ENABLE_ROLE_GUARD_CHECKOUT: true
     routes:
       - route: ((host))/((path))
     services:
