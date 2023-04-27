@@ -246,16 +246,16 @@ export class EmissionsWorkspaceService {
       ),
     ];
 
-    const importResults = await Promise.all(importPromises);
+    const importResults = await Promise.allSettled(importPromises);
 
-    // for (const importResult of importResults) {
-    //   if (importResult.status === 'rejected') {
-    //     throw new LoggingException(
-    //       importResult.reason.detail,
-    //       HttpStatus.INTERNAL_SERVER_ERROR,
-    //     );
-    //   }
-    // }
+    for (const importResult of importResults) {
+      if (importResult.status === 'rejected') {
+        throw new LoggingException(
+          importResult.reason.detail,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
 
     try {
       await this.repository.save(
