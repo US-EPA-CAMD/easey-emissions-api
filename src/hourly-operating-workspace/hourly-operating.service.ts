@@ -129,7 +129,6 @@ export class HourlyOperatingWorkspaceService {
           location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
         );
       })[0].id
-      .toString();
       //We must load the parent first because the children records require the parents uid
       const uid = randomUUID();
       hourlyOperatingDatum['id'] = uid; //Set the id on our dto object so we can access it again when loading the children
@@ -177,7 +176,6 @@ export class HourlyOperatingWorkspaceService {
             location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
           );
         })[0].id
-        .toString();
         //Load children records in a bulk fashion as well
         promises.push(
           this.derivedHourlyValueService.import(
