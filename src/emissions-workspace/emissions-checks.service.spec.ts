@@ -39,6 +39,11 @@ import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-work
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { MonitorLocation } from '../entities/monitor-location.entity';
+import { Unit } from '../entities/unit.entity';
+import { StackPipe } from '../entities/stack-pipe.entity';
+
+jest.mock('@us-epa-camd/easey-common/check-catalog');
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -213,10 +218,14 @@ describe('Emissions Checks Service Tests', () => {
 
     it('should return an empty array for empty request', async function() {
       const payload = new EmissionsImportDTO();
+      const moniotorLocation = new MonitorLocation();
+      moniotorLocation.unit = new Unit();
+      moniotorLocation.stackPipe = new StackPipe();
+      moniotorLocation.id = '2';
 
-      await expect(service.invalidFormulasCheck(payload, '2')).resolves.toEqual(
-        undefined,
-      );
+      await expect(
+        service.invalidFormulasCheck(payload, [moniotorLocation]),
+      ).resolves.toEqual(undefined);
     });
 
     it('should return an empty array given data with valid formulaIdentifiers', async function() {
@@ -224,19 +233,45 @@ describe('Emissions Checks Service Tests', () => {
         .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
         .mockResolvedValue(genMonitorFormula<MonitorFormula>()[0]);
 
-      await expect(service.invalidFormulasCheck(payload, '1')).resolves.toEqual(
-        undefined,
-      );
+      const moniotorLocations = []
+
+      for (let i = 0; i < 3; i++) {
+        const moniotorLocation = new MonitorLocation();
+        moniotorLocation.unit = new Unit();
+        moniotorLocation.stackPipe = new StackPipe();
+        moniotorLocation.id = '1';
+        moniotorLocation.unit.name = payload.hourlyOperatingData[i].unitId;
+        moniotorLocation.stackPipe.name =
+          payload.hourlyOperatingData[i].stackPipeId;
+        moniotorLocations.push(moniotorLocation)
+      }
+
+      await expect(
+        service.invalidFormulasCheck(payload, moniotorLocations),
+      ).resolves.toEqual(undefined);
     });
 
     it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
       jest
         .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
         .mockResolvedValue(undefined);
+      
+      const moniotorLocations = [];
+      
+      for (let i = 0; i < 3; i++) {
+        const moniotorLocation = new MonitorLocation();
+        moniotorLocation.unit = new Unit();
+        moniotorLocation.stackPipe = new StackPipe();
+        moniotorLocation.id = '1';
+        moniotorLocation.unit.name = payload.hourlyOperatingData[i].unitId;
+        moniotorLocation.stackPipe.name =
+          payload.hourlyOperatingData[i].stackPipeId;
+        moniotorLocations.push(moniotorLocation);
+      }
 
-      await expect(service.invalidFormulasCheck(payload, '2')).rejects.toThrow(
-        'Logging Exception',
-      );
+      await expect(
+        service.invalidFormulasCheck(payload, moniotorLocations),
+      ).rejects.toThrow('Logging Exception');
     });
   });
 });
