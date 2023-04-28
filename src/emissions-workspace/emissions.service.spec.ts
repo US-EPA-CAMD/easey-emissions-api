@@ -98,6 +98,7 @@ import * as typeorm_functions from 'typeorm/globals';
 import { EntityManager } from 'typeorm';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -289,6 +290,7 @@ describe('Emissions Workspace Service', () => {
     plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
       emissionsDtoMock[0].quarter;
     plantMock[0].monitorPlans[0].endRptPeriod = null;
+    plantMock[0].monitorPlans[0].locations = [new MonitorLocation]
 
     jest
       .spyOn(plantRepository, 'getImportLocations')
@@ -310,11 +312,12 @@ describe('Emissions Workspace Service', () => {
 
     jest.spyOn(dailyTestsummaryService, 'import').mockReturnValue(undefined);
 
+    const monitoringLocation = new MonitorLocation();
     await expect(
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
         faker.datatype.number(),
-        faker.datatype.string(),
+        [monitoringLocation],
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves.toBeUndefined();
@@ -323,7 +326,7 @@ describe('Emissions Workspace Service', () => {
       emissionsService.importDailyTestSummaries(
         dtoMockWithDailyTest[0],
         faker.datatype.number(),
-        faker.datatype.string(),
+        [monitoringLocation],
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves;
