@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceService } from './daily-calibration.service';
@@ -9,14 +10,10 @@ import { DailyCalibrationWorkspaceController } from './daily-calibration.control
 @Module({
   imports: [
     TypeOrmModule.forFeature([DailyCalibrationWorkspaceRepository]),
+    BulkLoadModule,
   ],
-  controllers: [
-    DailyCalibrationWorkspaceController
-  ],
-  providers: [
-    DailyCalibrationMap,
-    DailyCalibrationWorkspaceService,
-  ],
+  controllers: [DailyCalibrationWorkspaceController],
+  providers: [DailyCalibrationMap, DailyCalibrationWorkspaceService],
   exports: [
     TypeOrmModule,
     DailyCalibrationMap,

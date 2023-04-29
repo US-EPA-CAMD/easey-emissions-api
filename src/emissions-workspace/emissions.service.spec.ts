@@ -316,8 +316,8 @@ describe('Emissions Workspace Service', () => {
     await expect(
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
-        faker.datatype.number(),
         [monitoringLocation],
+        faker.datatype.number(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves.toBeUndefined();
@@ -325,8 +325,8 @@ describe('Emissions Workspace Service', () => {
     await expect(
       emissionsService.importDailyTestSummaries(
         dtoMockWithDailyTest[0],
-        faker.datatype.number(),
         [monitoringLocation],
+        faker.datatype.number(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
       ),
     ).resolves;

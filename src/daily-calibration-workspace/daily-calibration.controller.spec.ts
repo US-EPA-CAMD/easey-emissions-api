@@ -3,6 +3,7 @@ import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceController } from './daily-calibration.controller';
 import { DailyCalibrationWorkspaceRepository } from './daily-calibration.repository';
 import { DailyCalibrationWorkspaceService } from './daily-calibration.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 describe('DailyCalibrationController', () => {
   let dailyCalibrationController: DailyCalibrationWorkspaceController;
@@ -14,6 +15,7 @@ describe('DailyCalibrationController', () => {
         DailyCalibrationWorkspaceController,
         DailyCalibrationWorkspaceService,
         DailyCalibrationMap,
+        BulkLoadService
       ],
     }).compile();
 
