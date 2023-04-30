@@ -172,8 +172,6 @@ export class EmissionsWorkspaceService {
     const monitorPlanId = filteredMonitorPlans[0].id;
     const monitoringLocations = filteredMonitorPlans[0].locations;
 
-    const monitoringLocationId = monitoringLocations[0].id;
-
     const reportingPeriodId = reportingPeriod.id;
 
     const identifiers = await this.getUnifiedIdentifiers(
@@ -183,7 +181,7 @@ export class EmissionsWorkspaceService {
     );
 
     // Import-28 Valid formulaIdentifiers for location
-    await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
+    await this.checksService.invalidFormulasCheck(params, monitoringLocations);
 
     for (const monitorPlan of filteredMonitorPlans) {
       await manager.query(
@@ -202,8 +200,8 @@ export class EmissionsWorkspaceService {
 
       this.importDailyTestSummaries(
         params,
-        reportingPeriodId,
         monitoringLocations,
+        reportingPeriodId,
         identifiers,
       ),
 
@@ -314,31 +312,38 @@ export class EmissionsWorkspaceService {
 
   async importDailyTestSummaries(
     emissionsImport: EmissionsImportDTO,
-    reportingPeriodId: number,
     monitoringLocations: MonitorLocation[],
+    reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    const dailyTestSummaryImports: Array<Promise<void>> = [];
-
-    if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
-      for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-        const monitoringLocationId = await this.getMonitoringLocationId(
-          monitoringLocations,
-          dailyTestSummaryDatum,
-        );
-
-        dailyTestSummaryImports.push(
-          this.dailyTestSummaryService.import({
-            ...dailyTestSummaryDatum,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-      return Promise.all(dailyTestSummaryImports);
-    }
+  ): Promise<void> {
+    await this.dailyTestSummaryService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+    );
   }
+  // const dailyTestSummaryImports: Array<Promise<void>> = [];
+
+  // if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
+  //   for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
+  //     const monitoringLocationId = await this.getMonitoringLocationId(
+  //       monitoringLocations,
+  //       dailyTestSummaryDatum,
+  //     );
+
+  //     dailyTestSummaryImports.push(
+  //       this.dailyTestSummaryService.import({
+  //         ...dailyTestSummaryDatum,
+  //         reportingPeriodId,
+  //         monitoringLocationId,
+  //         identifiers,
+  //       }),
+  //     );
+  //   }
+  //   return Promise.all(dailyTestSummaryImports);
+  // }
+  //}
 
   async importHourlyOperating(
     emissionsImport: EmissionsImportDTO,
@@ -593,8 +598,14 @@ export class EmissionsWorkspaceService {
       );
 
       Object.assign(identifiers.components, partialIdentifiers.components);
-      Object.assign(identifiers.monitorFormulas, partialIdentifiers.monitorFormulas);
-      Object.assign(identifiers.monitoringSystems, partialIdentifiers.monitoringSystems);
+      Object.assign(
+        identifiers.monitorFormulas,
+        partialIdentifiers.monitorFormulas,
+      );
+      Object.assign(
+        identifiers.monitoringSystems,
+        partialIdentifiers.monitoringSystems,
+      );
     }
 
     return identifiers;
