@@ -4,15 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationService } from './daily-calibration.service';
 import { DailyCalibrationRepository } from './daily-calibration.repository';
-import { DailyCalibrationController } from './daily-calibration.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([DailyCalibrationRepository]),
   ],
-  controllers: [
-    DailyCalibrationController
-  ],
+  controllers: [],
   providers: [
     DailyCalibrationMap,
     DailyCalibrationService,
