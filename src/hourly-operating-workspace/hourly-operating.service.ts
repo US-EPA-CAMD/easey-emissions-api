@@ -122,8 +122,7 @@ export class HourlyOperatingWorkspaceService {
       'camdecmpswks.hrly_op_data',
     ); // Instantiate our stream object with the correct schema.tableName we want to load to
     for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-      const monitoringLocationId = monitoringLocations
-      .filter(location => {
+      const monitoringLocationId = monitoringLocations.filter(location => {
         return (
           location.unit?.name === hourlyOperatingDatum.unitId ||
           location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
@@ -169,8 +168,7 @@ export class HourlyOperatingWorkspaceService {
       const promises = [];
 
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-        const monitoringLocationId = monitoringLocations
-        .filter(location => {
+        const monitoringLocationId = monitoringLocations.filter(location => {
           return (
             location.unit?.name === hourlyOperatingDatum.unitId ||
             location.stackPipe?.name === hourlyOperatingDatum.stackPipeId

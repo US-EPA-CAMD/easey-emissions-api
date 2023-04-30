@@ -71,7 +71,7 @@ export default registerAs('app', () => ({
   // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
   currentUser: getConfigValue('EASEY_EMISSIONS_API_CURRENT_USER'),
   enableRoleGuardCheckoutCheck: getConfigValueBoolean(
-    'EASEY_MONITOR_PLAN_API_ENABLE_ROLE_GUARD_CHECKOUT',
+    'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD_CHECKOUT',
     true,
   ),
   perPageLimit: PAGINATION_MAX_PER_PAGE,

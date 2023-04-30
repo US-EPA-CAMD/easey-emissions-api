@@ -57,41 +57,7 @@ export class DailyCalibrationWorkspaceService {
   ): Promise<void> {
     if (data && data.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
-        'camdecmpswks.daily_calibration',
-        [
-          'cal_inj_id',
-          'daily_test_sum_id',
-          'online_offline_ind',
-          'calc_online_offline_ind',
-          'upscale_gas_level_cd',
-          'zero_injection_date',
-          'zero_injection_hour',
-          'zero_injection_min',
-          'upscale_injection_date',
-          'upscale_injection_hour',
-          'upscale_injection_min',
-          'zero_measured_value',
-          'upscale_measured_value',
-          'zero_aps_ind',
-          'calc_zero_aps_ind',
-          'upscale_aps_ind',
-          'calc_upscale_aps_ind',
-          'zero_cal_error',
-          'calc_zero_cal_error',
-          'upscale_cal_error',
-          'calc_upscale_cal_error',
-          'zero_ref_value',
-          'upscale_ref_value',
-          'userid',
-          'add_date',
-          'update_date',
-          'rpt_period_id',
-          'upscale_gas_type_cd',
-          'vendor_id',
-          'cylinder_identifier',
-          'expiration_date',
-          'injection_protocol_cd'
-        ],
+        'camdecmpswks.daily_calibration', null, '|',
       );
 
       for (const dataChunk of data) {
@@ -136,15 +102,3 @@ export class DailyCalibrationWorkspaceService {
     }
   }
 }
-
-// await this.repository.save(
-//   this.repository.create({
-//     ...parameters,
-//     id: randomUUID(),
-//     addDate: new Date(),
-//     updateDate: new Date(),
-//     userId: parameters.identifiers?.userId,
-//   }),
-// );
-//   }
-// }

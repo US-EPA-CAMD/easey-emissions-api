@@ -9,7 +9,7 @@ import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { DeleteResult, FindConditions } from 'typeorm';
+import { FindConditions } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { isUndefinedOrNull } from '../utils/utils';
@@ -129,7 +129,6 @@ export class DailyTestSummaryWorkspaceService {
 
     bulkLoadStream.complete();
     await bulkLoadStream.finished;
-    console.log(bulkLoadStream.status);
 
     if (bulkLoadStream.status === 'Complete') {
       const promises = [];
@@ -158,51 +157,3 @@ export class DailyTestSummaryWorkspaceService {
     }
   }
 }
-// await this.delete({
-//   monitoringLocationId: parameters.monitoringLocationId,
-//   reportingPeriodId: parameters.reportingPeriodId,
-// });
-// const result = await this.repository.save(
-//   this.repository.create({
-//     ...parameters,
-//     id: randomUUID(),
-//     monitoringSystemId:
-//       parameters?.identifiers?.monitoringSystems?.[
-//         parameters.monitoringSystemId
-//       ],
-//     componentId:
-//       parameters?.identifiers?.components?.[parameters.componentId],
-//     addDate: new Date(),
-//     updateDate: new Date(),
-//     userId: parameters.identifiers?.userId,
-//   }),
-// );
-
-// if (Array.isArray(parameters.dailyCalibrationData)) {
-
-//   await this.importDailyCalibrations(
-//     parameters.dailyCalibrationData,
-//     parameters.reportingPeriodId,
-//     result.id,
-//     parameters.identifiers,
-//   );
-// }
-
-//   async importDailyCalibrations(
-//     dailyCalibrations: Array<DailyCalibrationImportDTO>,
-//     reportingPeriodId: number,
-//     dailyTestSummaryId: string,
-//     identifiers: ImportIdentifiers,
-//   ) {
-//     const dailyCalibrationImports = dailyCalibrations?.map(
-//       dailyCalibrationDatum => {
-//         return this.dailyCalibrationService.import({
-//           ...dailyCalibrationDatum,
-//           dailyTestSummaryId,
-//           reportingPeriodId,
-//           identifiers: identifiers,
-//         });
-//       },    );
-//     await Promise.all(dailyCalibrationImports);
-//   }
-// }
