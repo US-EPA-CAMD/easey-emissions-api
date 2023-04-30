@@ -37,10 +37,15 @@ export class MonitorLocationChecksService {
     const locations: LocationIdentifiers[] = [];
 
     const addLocation = (i: ForLocationType) => {
-      const id = i?.unitId || i?.stackPipeId;
+      const unitId = i?.unitId;
+      const stackPipeId = i?.stackPipeId;
       let location = locations.find(l => {
-        const locationId = l?.unitId || l?.stackPipeId;
-        return locationId === id;
+        const locationUnitId = l?.unitId;
+        const locationStackPipeId = l?.stackPipeId;
+        if(unitId)
+          return locationUnitId === unitId;
+        if(stackPipeId)
+          return locationStackPipeId === stackPipeId;
       });
 
       if (!location) {
