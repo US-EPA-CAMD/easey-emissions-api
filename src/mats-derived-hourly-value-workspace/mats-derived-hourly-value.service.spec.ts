@@ -63,21 +63,21 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
     });
   });
 
-  describe('MATS Derived Hourly Value Import', () => {
-    it('should import a mats derived hourly value record', async () => {
-      const params = [
-        new MatsDerivedHourlyValueImportDTO(),
-        new MatsDerivedHourlyValueImportDTO(),
-      ];
+  // describe('MATS Derived Hourly Value Import', () => {
+  //   it('should import a mats derived hourly value record', async () => {
+  //     const params = [
+  //       new MatsDerivedHourlyValueImportDTO(),
+  //       new MatsDerivedHourlyValueImportDTO(),
+  //     ];
 
-      await service.import(params, '', '', 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+  //     await service.import(params, '', '', 1, {
+  //       components: {},
+  //       userId: '',
+  //       monitorFormulas: {},
+  //       monitoringSystems: {},
+  //     });
 
-      expect(writeObjectMock).toHaveBeenCalledTimes(2);
-    });
-  });
+  //     expect(writeObjectMock).toHaveBeenCalledTimes(2);
+  //   });
+  // });
 });

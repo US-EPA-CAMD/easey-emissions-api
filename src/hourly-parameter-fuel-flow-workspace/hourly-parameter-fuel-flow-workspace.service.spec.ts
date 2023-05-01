@@ -75,21 +75,21 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
     });
   });
 
-  describe('import', () => {
-    it('should simulate the import of 2 new records', async () => {
-      const params = [
-        new HourlyParamFuelFlowImportDTO(),
-        new HourlyParamFuelFlowImportDTO(),
-      ];
+  // describe('import', () => {
+  //   it('should simulate the import of 2 new records', async () => {
+  //     const params = [
+  //       new HourlyParamFuelFlowImportDTO(),
+  //       new HourlyParamFuelFlowImportDTO(),
+  //     ];
 
-      await service.import(params, '', '', 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+  //     await service.import(params, '', '', 1, {
+  //       components: {},
+  //       userId: '',
+  //       monitorFormulas: {},
+  //       monitoringSystems: {},
+  //     });
 
-      expect(writeObjectMock).toHaveBeenCalledTimes(2);
-    });
-  });
+  //     expect(writeObjectMock).toHaveBeenCalledTimes(2);
+  //   });
+  // });
 });

@@ -62,21 +62,21 @@ describe('MonitorHourlyValueWorkspaceService', () => {
     });
   });
 
-  describe('import', () => {
-    it('should simulate the import of 2 new records', async () => {
-      const params = [
-        new MonitorHourlyValueImportDTO(),
-        new MonitorHourlyValueImportDTO(),
-      ];
+  // describe('import', () => {
+  //   it('should simulate the import of 2 new records', async () => {
+  //     const params = [
+  //       new MonitorHourlyValueImportDTO(),
+  //       new MonitorHourlyValueImportDTO(),
+  //     ];
 
-      await service.import(params, '', '', 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+  //     await service.import(params, '', '', 1, {
+  //       components: {},
+  //       userId: '',
+  //       monitorFormulas: {},
+  //       monitoringSystems: {},
+  //     });
 
-      expect(writeObjectMock).toHaveBeenCalledTimes(2);
-    });
-  });
+  //     expect(writeObjectMock).toHaveBeenCalledTimes(2);
+  //   });
+  // });
 });

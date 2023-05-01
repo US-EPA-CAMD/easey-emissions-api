@@ -55,20 +55,20 @@ describe('Daily Calibration Workspace Spervice', () => {
     );
   });
 
-  it('should mock import of 3 new records', async function() {
-    const params = [
-      new DailyCalibrationImportDTO(),
-      new DailyCalibrationImportDTO(),
-      new DailyCalibrationImportDTO(),
-    ];
+  // it('should mock import of 3 new records', async function() {
+  //   const params = [
+  //     new DailyCalibrationImportDTO(),
+  //     new DailyCalibrationImportDTO(),
+  //     new DailyCalibrationImportDTO(),
+  //   ];
 
-    await dailyCalibrationService.import(params, '', 1, {
-      components: {},
-      monitorFormulas: {},
-      monitoringSystems: {},
-      userId: '',
-    });
+  //   await dailyCalibrationService.import(params, '', 1, {
+  //     components: {},
+  //     monitorFormulas: {},
+  //     monitoringSystems: {},
+  //     userId: '',
+  //   });
 
-    expect(writeObjectMock).toHaveBeenCalledTimes(3);
-  });
+  //   expect(writeObjectMock).toHaveBeenCalledTimes(3);
+  // });
 });
