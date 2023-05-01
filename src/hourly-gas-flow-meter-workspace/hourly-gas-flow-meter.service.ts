@@ -12,6 +12,8 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class HourlyGasFlowMeterWorkspaceService {
+  private importedData = [];
+
   constructor(
     private readonly map: HourlyGasFlowMeterMap,
     private readonly repository: HourlyGasFlowMeterWorkspaceRepository,
@@ -23,7 +25,7 @@ export class HourlyGasFlowMeterWorkspaceService {
     return this.map.many(results);
   }
 
-  async import(
+  async importPrep(
     data: HourlyGasFlowMeterImportDTO[],
     hourId: string,
     monitorLocationId: string,
@@ -31,6 +33,28 @@ export class HourlyGasFlowMeterWorkspaceService {
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     if (data && data.length > 0) {
+      for (const dataChunk of data) {
+        this.importedData.push({
+          id: randomUUID(),
+          hourId,
+          componentId: identifiers?.components?.[dataChunk.componentId],
+          monitorLocationId,
+          reportingPeriodId,
+          beginEndHourFlag: dataChunk.beginEndHourFlag,
+          hourlyGfmReading: dataChunk.hourlyGfmReading,
+          avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
+          samplingRateUom: dataChunk.samplingRateUom,
+          hourlySfsrRatio: dataChunk.hourlySfsrRatio,
+          addDate: new Date().toISOString(),
+          updateDate: new Date().toISOString(),
+          userId: identifiers?.userId,
+        });
+      }
+    }
+  }
+
+  async import(): Promise<void> {
+    if (this.importedData.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_gas_flow_meter',
         [
@@ -50,22 +74,8 @@ export class HourlyGasFlowMeterWorkspaceService {
         ],
       );
 
-      for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
-          id: randomUUID(),
-          hourId,
-          componentId: identifiers?.components?.[dataChunk.componentId],
-          monitorLocationId,
-          reportingPeriodId,
-          beginEndHourFlag: dataChunk.beginEndHourFlag,
-          hourlyGfmReading: dataChunk.hourlyGfmReading,
-          avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
-          samplingRateUom: dataChunk.samplingRateUom,
-          hourlySfsrRatio: dataChunk.hourlySfsrRatio,
-          addDate: new Date().toISOString(),
-          updateDate: new Date().toISOString(),
-          userId: identifiers?.userId,
-        });
+      for (const obj of this.importedData) {
+        bulkLoadStream.writeObject(obj);
       }
 
       bulkLoadStream.complete();

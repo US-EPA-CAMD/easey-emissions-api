@@ -12,6 +12,8 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class HourlyFuelFlowWorkspaceService {
+  private importedData = [];
+
   constructor(
     private readonly repository: HourlyFuelFlowWorkspaceRepository,
     private readonly map: HourlyFuelFlowMap,
@@ -48,7 +50,7 @@ export class HourlyFuelFlowWorkspaceService {
     return mapped;
   }
 
-  async import(
+  async importPrep(
     data: HourlyFuelFlowImportDTO[],
     hourId: string,
     monitorLocationId: string,
@@ -56,6 +58,52 @@ export class HourlyFuelFlowWorkspaceService {
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     if (data && data.length > 0) {
+      for (const dataChunk of data) {
+        const uid = randomUUID();
+        dataChunk['id'] = uid;
+
+        this.importedData.push({
+          id: uid,
+          hourId,
+          fuelCode: dataChunk.fuelCode,
+          fuelUsageTime: dataChunk.fuelUsageTime,
+          volumetricFlowRate: dataChunk.volumetricFlowRate,
+          volumetricUnitsOfMeasureCode: dataChunk.volumetricUnitsOfMeasureCode,
+          sourceOfDataVolumetricCode: dataChunk.sourceOfDataVolumetricCode,
+          massFlowRate: dataChunk.massFlowRate,
+          sourceOfDataMassCode: dataChunk.sourceOfDataMassCode,
+          monitoringSystemId:
+            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
+            null,
+          monitoringLocationId: monitorLocationId,
+          reportingPeriodId: reportingPeriodId,
+          addDate: new Date().toISOString(),
+          updateDate: new Date().toISOString(),
+          userId: identifiers?.userId,
+        });
+      }
+
+      const promises = [];
+
+      for (const dataChunk of data) {
+        // Load children hourly param fuel flow records
+        promises.push(
+          this.hourlyParameterFuelFlow.importPrep(
+            dataChunk.hourlyParameterFuelFlowData,
+            dataChunk['id'],
+            monitorLocationId,
+            reportingPeriodId,
+            identifiers,
+          ),
+        );
+      }
+
+      await Promise.all(promises);
+    }
+  }
+
+  async import(): Promise<void> {
+    if (this.importedData.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_fuel_flow',
         [
@@ -77,52 +125,13 @@ export class HourlyFuelFlowWorkspaceService {
         ],
       );
 
-      for (const dataChunk of data) {
-        const uid = randomUUID();
-        dataChunk['id'] = uid;
-
-        bulkLoadStream.writeObject({
-          id: uid,
-          hourId,
-          fuelCode: dataChunk.fuelCode,
-          fuelUsageTime: dataChunk.fuelUsageTime,
-          volumetricFlowRate: dataChunk.volumetricFlowRate,
-          volumetricUnitsOfMeasureCode: dataChunk.volumetricUnitsOfMeasureCode,
-          sourceOfDataVolumetricCode: dataChunk.sourceOfDataVolumetricCode,
-          massFlowRate: dataChunk.massFlowRate,
-          sourceOfDataMassCode: dataChunk.sourceOfDataMassCode,
-          monitoringSystemId:
-            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
-            null,
-          monitoringLocationId: monitorLocationId,
-          reportingPeriodId: reportingPeriodId,
-          addDate: new Date().toISOString(),
-          updateDate: new Date().toISOString(),
-          userId: identifiers?.userId,
-        });
+      for (const obj of this.importedData) {
+        bulkLoadStream.writeObject(obj);
       }
 
       bulkLoadStream.complete();
       await bulkLoadStream.finished;
-
-      if (bulkLoadStream.status === 'Complete') {
-        const promises = [];
-
-        for (const dataChunk of data) {
-          // Load children hourly param fuel flow records
-          promises.push(
-            this.hourlyParameterFuelFlow.import(
-              dataChunk.hourlyParameterFuelFlowData,
-              dataChunk['id'],
-              monitorLocationId,
-              reportingPeriodId,
-              identifiers,
-            ),
-          );
-        }
-
-        await Promise.all(promises);
-      }
+      await this.hourlyParameterFuelFlow.import();
     }
   }
 }

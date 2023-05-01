@@ -12,6 +12,8 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class MonitorHourlyValueWorkspaceService {
+  private importedData = [];
+
   constructor(
     private readonly map: MonitorHourlyValueMap,
     private readonly repository: MonitorHourlyValueWorkspaceRepository,
@@ -23,7 +25,7 @@ export class MonitorHourlyValueWorkspaceService {
     return this.map.many(results);
   }
 
-  async import(
+  async importPrep(
     data: MonitorHourlyValueImportDTO[],
     hourId: string,
     monitorLocationId: string,
@@ -31,6 +33,31 @@ export class MonitorHourlyValueWorkspaceService {
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     if (data && data.length > 0) {
+      for (const dataChunk of data) {
+        this.importedData.push({
+          id: randomUUID(),
+          monitoringSystemId:
+            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
+            null,
+          parameterCode: dataChunk.parameterCode,
+          unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+          modcCode: dataChunk.modcCode,
+          componentId: identifiers.components?.[dataChunk.componentId] || null,
+          percentAvailable: dataChunk.percentAvailable,
+          moistureBasis: dataChunk.moistureBasis,
+          monitoringLocationId: monitorLocationId,
+          reportingPeriodId: reportingPeriodId,
+          hourId,
+          addDate: new Date().toISOString(),
+          updateDate: new Date().toISOString(),
+          userId: identifiers?.userId,
+        });
+      }
+    }
+  }
+
+  async import(): Promise<void> {
+    if (this.importedData.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.monitor_hrly_value',
         [
@@ -51,25 +78,8 @@ export class MonitorHourlyValueWorkspaceService {
         ],
       );
 
-      for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
-          id: randomUUID(),
-          monitoringSystemId:
-            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
-            null,
-          parameterCode: dataChunk.parameterCode,
-          unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
-          modcCode: dataChunk.modcCode,
-          componentId: identifiers.components?.[dataChunk.componentId] || null,
-          percentAvailable: dataChunk.percentAvailable,
-          moistureBasis: dataChunk.moistureBasis,
-          monitoringLocationId: monitorLocationId,
-          reportingPeriodId: reportingPeriodId,
-          hourId,
-          addDate: new Date().toISOString(),
-          updateDate: new Date().toISOString(),
-          userId: identifiers?.userId,
-        });
+      for (const obj of this.importedData) {
+        bulkLoadStream.writeObject(obj);
       }
 
       bulkLoadStream.complete();

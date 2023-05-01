@@ -165,7 +165,7 @@ export class HourlyOperatingWorkspaceService {
 
     if (bulkLoadStream.status === 'Complete') {
       //Make sure we did not error in the data loading phase of the parent
-      const promises = [];
+      let promises = [];
 
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
         const monitoringLocationId = monitoringLocations.filter(location => {
@@ -176,7 +176,7 @@ export class HourlyOperatingWorkspaceService {
         })[0].id
         //Load children records in a bulk fashion as well
         promises.push(
-          this.derivedHourlyValueService.import(
+          this.derivedHourlyValueService.importPrep(
             hourlyOperatingDatum.derivedHourlyValueData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -186,7 +186,7 @@ export class HourlyOperatingWorkspaceService {
         );
 
         promises.push(
-          this.matsMonitorHourlyValueService.import(
+          this.matsMonitorHourlyValueService.importPrep(
             hourlyOperatingDatum.matsMonitorHourlyValueData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -196,7 +196,7 @@ export class HourlyOperatingWorkspaceService {
         );
 
         promises.push(
-          this.monitorHourlyValueService.import(
+          this.monitorHourlyValueService.importPrep(
             hourlyOperatingDatum.monitorHourlyValueData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -206,7 +206,7 @@ export class HourlyOperatingWorkspaceService {
         );
 
         promises.push(
-          this.matsDerivedHourlyValueService.import(
+          this.matsDerivedHourlyValueService.importPrep(
             hourlyOperatingDatum.matsDerivedHourlyValueData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -216,7 +216,7 @@ export class HourlyOperatingWorkspaceService {
         );
 
         promises.push(
-          this.hourlyFuelFlowService.import(
+          this.hourlyFuelFlowService.importPrep(
             hourlyOperatingDatum.hourlyFuelFlowData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -226,7 +226,7 @@ export class HourlyOperatingWorkspaceService {
         );
 
         promises.push(
-          this.hourlyGasFlowMeterService.import(
+          this.hourlyGasFlowMeterService.importPrep(
             hourlyOperatingDatum.hourlyGFMData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
@@ -236,7 +236,7 @@ export class HourlyOperatingWorkspaceService {
         );
       }
 
-      const settled = await Promise.allSettled(promises);
+      let settled = await Promise.allSettled(promises);
 
       for (const settledElement of settled) {
         if (settledElement.status === 'rejected') {
@@ -246,6 +246,25 @@ export class HourlyOperatingWorkspaceService {
           );
         }
       }
+
+      promises = [];
+      promises.push(this.derivedHourlyValueService.import());
+      promises.push(this.matsMonitorHourlyValueService.import());
+      promises.push(this.monitorHourlyValueService.import());
+      promises.push(this.matsDerivedHourlyValueService.import());
+      promises.push(this.hourlyFuelFlowService.import());
+      promises.push(this.hourlyGasFlowMeterService.import());
+
+      settled = await Promise.allSettled(promises);
+
+      for (const settledElement of settled) {
+        if (settledElement.status === 'rejected') {
+          throw new LoggingException(
+            settledElement.reason.detail,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }      
     }
   }
 }

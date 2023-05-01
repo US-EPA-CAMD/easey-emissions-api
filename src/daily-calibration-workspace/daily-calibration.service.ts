@@ -19,6 +19,8 @@ export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
 
 @Injectable()
 export class DailyCalibrationWorkspaceService {
+  private importedData = [];
+
   constructor(
     private readonly map: DailyCalibrationMap,
     private readonly repository: DailyCalibrationWorkspaceRepository,
@@ -49,23 +51,18 @@ export class DailyCalibrationWorkspaceService {
     return this.dailyCalibrationByTestSumId(dailyTestSummaryIds);
   }
 
-  async import(
+  async importPrep(
     data: DailyCalibrationImportDTO[],
     dailyTestSumId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     if (data && data.length > 0) {
-      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
-        'camdecmpswks.daily_calibration', null, '|',
-      );
-
       for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
+        this.importedData.push({
           id: randomUUID(),
           dailyTestSumId: dailyTestSumId,
           onlineOfflineInd: dataChunk.onLineOffLineIndicator,
-          calcOnlineOfflineInd: null,
           upscaleGasLevelCode: dataChunk.upscaleGasCode,
           zeroInjectionDate: dataChunk.zeroInjectionDate,
           zeroInjectionHour: dataChunk.zeroInjectionHour,
@@ -76,13 +73,9 @@ export class DailyCalibrationWorkspaceService {
           zeroMeasuredValue: dataChunk.zeroMeasuredValue,
           upscaleMeasuredValue: dataChunk.upscaleMeasuredValue,
           zeroApsInd: dataChunk.zeroAPSIndicator,
-          calcZeroApsInd: null,
           upscaleApsInd: dataChunk.upscaleAPSIndicator,
-          calcUpscaleApsInd: null,
           zeroCalError: dataChunk.zeroCalibrationError,
-          calcZeroCalError: null,
           upscaleCalError: dataChunk.upscaleCalibrationError,
-          calcUpscaleCalError: null,
           zeroRefValue: dataChunk.zeroReferenceValue,
           upscaleRefValue: dataChunk.upscaleReferenceValue,
           userId: identifiers?.userId,
@@ -95,6 +88,48 @@ export class DailyCalibrationWorkspaceService {
           expirationDate: dataChunk.expirationDate,
           injectionProtocolCd: dataChunk.injectionProtocolCode,
         });
+      }
+    }
+  }
+
+  async import(): Promise<void> {
+    if (this.importedData.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.daily_calibration',
+        [
+          'cal_inj_id',
+          'daily_test_sum_id',
+          'online_offline_ind',
+          'upscale_gas_level_cd',
+          'zero_injection_date',
+          'zero_injection_hour',
+          'zero_injection_min',
+          'upscale_injection_date',
+          'upscale_injection_hour',
+          'upscale_injection_min',
+          'zero_measured_value',
+          'upscale_measured_value',
+          'zero_aps_ind',
+          'upscale_aps_ind',
+          'zero_cal_error',
+          'upscale_cal_error',
+          'zero_ref_value',
+          'upscale_ref_value',
+          'userid',
+          'add_date',
+          'update_date',
+          'rpt_period_id',
+          'upscale_gas_type_cd',
+          'vendor_id',
+          'cylinder_identifier',
+          'expiration_date',
+          'injection_protocol_cd',
+        ],
+        '|',
+      );
+
+      for (const obj of this.importedData) {
+        bulkLoadStream.writeObject(obj);
       }
 
       bulkLoadStream.complete();

@@ -135,7 +135,7 @@ export class DailyTestSummaryWorkspaceService {
 
       for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
         promises.push(
-          this.dailyCalibrationService.import(
+          this.dailyCalibrationService.importPrep(
             dailyTestSummaryDatum.dailyCalibrationData,
             dailyTestSummaryDatum['id'],
             reportingPeriodId,
@@ -154,6 +154,8 @@ export class DailyTestSummaryWorkspaceService {
           );
         }
       }
+
+      await this.dailyCalibrationService.import();
     }
   }
 }

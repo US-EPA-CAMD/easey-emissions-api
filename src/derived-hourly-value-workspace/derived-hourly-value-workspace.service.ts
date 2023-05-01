@@ -8,6 +8,8 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Injectable()
 export class DerivedHourlyValueWorkspaceService {
+  private importedData = [];
+
   constructor(
     private readonly repository: DerivedHourlyValueWorkspaceRepository,
     private readonly map: DerivedHourlyValueMap,
@@ -24,7 +26,7 @@ export class DerivedHourlyValueWorkspaceService {
     return Promise.all(promises);
   }
 
-  async import(
+  async importPrep(
     data: DerivedHourlyValueImportDTO[],
     hourId: string,
     monitorLocationId: string,
@@ -32,12 +34,8 @@ export class DerivedHourlyValueWorkspaceService {
     identifiers: ImportIdentifiers,
   ): Promise<void> {
     if (data && data.length > 0) {
-      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
-        'camdecmpswks.derived_hrly_value',
-      );
-
       for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
+        this.importedData.push({
           id: randomUUID(),
           hourId: hourId,
           monSysId:
@@ -47,28 +45,49 @@ export class DerivedHourlyValueWorkspaceService {
             identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
           parameterCode: dataChunk.parameterCode,
           unadjustedHrlyValue: dataChunk.unadjustedHourlyValue,
-          applicableBiasAdj: null,
-          calcUnAdjHrlyValue: null,
           adjustedHourlyValue: dataChunk.adjustedHourlyValue,
-          calcAdjustedHourlyValue: null,
           modcCd: dataChunk.modcCode,
           opConditionCode: dataChunk.operatingConditionCode,
           pctAvailable: dataChunk.percentAvailable,
-          diluent: null,
           segmentNum: dataChunk.segmentNumber,
           fuelCd: dataChunk.fuelCode,
           userId: identifiers?.userId,
           addDate: new Date().toISOString(),
           updateDate: new Date().toISOString(),
-          calcPctDiluent: null,
-          calcPctMoisture: null,
-          calcRata: null,
-          calcAppe: null,
           rptPeriod: reportingPeriodId,
           monLocId: monitorLocationId,
-          calcFuelFlowTotal: null,
-          calcHourMEasureCd: null,
         });
+      }
+    }
+  }
+
+  async import(): Promise<void> {
+    if (this.importedData.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.derived_hrly_value',
+        [
+          'derv_id',
+          'hour_id',
+          'mon_sys_id',
+          'mon_form_id',
+          'parameter_cd',
+          'unadjusted_hrly_value',
+          'adjusted_hrly_value',
+          'modc_cd',
+          'operating_condition_cd',
+          'pct_available',
+          'segment_num',
+          'fuel_cd',
+          'userid',
+          'add_date',
+          'update_date',
+          'rpt_period_id',
+          'mon_loc_id',
+        ]
+      );
+
+      for (const obj of this.importedData) {
+        bulkLoadStream.writeObject(obj);
       }
 
       bulkLoadStream.complete();
