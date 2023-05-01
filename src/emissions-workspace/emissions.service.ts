@@ -323,27 +323,6 @@ export class EmissionsWorkspaceService {
       identifiers,
     );
   }
-  // const dailyTestSummaryImports: Array<Promise<void>> = [];
-
-  // if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
-  //   for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-  //     const monitoringLocationId = await this.getMonitoringLocationId(
-  //       monitoringLocations,
-  //       dailyTestSummaryDatum,
-  //     );
-
-  //     dailyTestSummaryImports.push(
-  //       this.dailyTestSummaryService.import({
-  //         ...dailyTestSummaryDatum,
-  //         reportingPeriodId,
-  //         monitoringLocationId,
-  //         identifiers,
-  //       }),
-  //     );
-  //   }
-  //   return Promise.all(dailyTestSummaryImports);
-  // }
-  //}
 
   async importHourlyOperating(
     emissionsImport: EmissionsImportDTO,
@@ -597,7 +576,9 @@ export class EmissionsWorkspaceService {
         location.id,
         userId,
       );
-
+      Object.keys(partialIdentifiers.components).forEach(key => partialIdentifiers.components[key] === undefined && delete partialIdentifiers.components[key])      
+      Object.keys(partialIdentifiers.monitorFormulas).forEach(key => partialIdentifiers.monitorFormulas[key] === undefined && delete partialIdentifiers.monitorFormulas[key])      
+      Object.keys(partialIdentifiers.monitoringSystems).forEach(key => partialIdentifiers.monitoringSystems[key] === undefined && delete partialIdentifiers.monitoringSystems[key])      
       Object.assign(identifiers.components, partialIdentifiers.components);
       Object.assign(
         identifiers.monitorFormulas,
