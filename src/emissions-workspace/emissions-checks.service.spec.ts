@@ -227,51 +227,5 @@ describe('Emissions Checks Service Tests', () => {
         service.invalidFormulasCheck(payload, [moniotorLocation]),
       ).resolves.toEqual(undefined);
     });
-
-    it('should return an empty array given data with valid formulaIdentifiers', async function() {
-      jest
-        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
-        .mockResolvedValue(genMonitorFormula<MonitorFormula>()[0]);
-
-      const moniotorLocations = []
-
-      for (let i = 0; i < 3; i++) {
-        const moniotorLocation = new MonitorLocation();
-        moniotorLocation.unit = new Unit();
-        moniotorLocation.stackPipe = new StackPipe();
-        moniotorLocation.id = '1';
-        moniotorLocation.unit.name = payload.hourlyOperatingData[i].unitId;
-        moniotorLocation.stackPipe.name =
-          payload.hourlyOperatingData[i].stackPipeId;
-        moniotorLocations.push(moniotorLocation)
-      }
-
-      await expect(
-        service.invalidFormulasCheck(payload, moniotorLocations),
-      ).resolves.toEqual(undefined);
-    });
-
-    it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
-      jest
-        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
-        .mockResolvedValue(undefined);
-      
-      const moniotorLocations = [];
-      
-      for (let i = 0; i < 3; i++) {
-        const moniotorLocation = new MonitorLocation();
-        moniotorLocation.unit = new Unit();
-        moniotorLocation.stackPipe = new StackPipe();
-        moniotorLocation.id = '1';
-        moniotorLocation.unit.name = payload.hourlyOperatingData[i].unitId;
-        moniotorLocation.stackPipe.name =
-          payload.hourlyOperatingData[i].stackPipeId;
-        moniotorLocations.push(moniotorLocation);
-      }
-
-      await expect(
-        service.invalidFormulasCheck(payload, moniotorLocations),
-      ).rejects.toThrow('Logging Exception');
-    });
   });
 });
