@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import {
-  DailyTestSummaryCreate,
   DailyTestSummaryWorkspaceService,
 } from './daily-test-summary.service';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
@@ -13,6 +12,12 @@ import { genDailyTestSummary } from '../../test/object-generators/daily-test-sum
 import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 import { mockDailyCalibrationWorkspaceRepository } from '../../test/mocks/mock-daily-calibration-workspace-repository';
 import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { MonitorLocation } from '../entities/monitor-location.entity';
+
+const writeObjectMock = jest.fn();
 
 describe('Daily Summary Workspace Service', () => {
   let dailyCalibrationWorkspaceRepository: DailyCalibrationWorkspaceRepository;
@@ -34,6 +39,16 @@ describe('Daily Summary Workspace Service', () => {
         {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: mockDailyCalibrationWorkspaceRepository,
+        },
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
         },
       ],
     }).compile();
@@ -96,22 +111,21 @@ describe('Daily Summary Workspace Service', () => {
     ).resolves.toEqual(mappedValues);
   });
 
-  /*
   it('should successfully import', async function() {
-    const importMock = genDailyTestSummary<DailyTestSummary>(1);
-    importMock[0]['dailyCalibrationData'] = [];
+    const emissionsDto = new EmissionsImportDTO();
+    emissionsDto.dailyTestSummaryData = [
+      new DailyTestSummaryImportDTO(),
+      new DailyTestSummaryImportDTO(),
+      new DailyTestSummaryImportDTO(),
+    ];
 
-    const mappedMock = await map.one(
-      (importMock[0] as unknown) as DailyTestSummary,
-    );
+    await dailyTestSummaryService.import(emissionsDto, [new MonitorLocation], 1, {
+      components: {},
+      monitorFormulas: {},
+      monitoringSystems: {},
+      userId: '',
+    });
 
-    jest.spyOn(repository, 'save').mockResolvedValue(importMock[0]);
-
-    await expect(
-      dailyTestSummaryService.import(
-        (importMock[0] as unknown) as DailyTestSummaryCreate,
-      ),
-    ).resolves.toEqual(mappedMock);
+    expect(writeObjectMock).toHaveBeenCalledTimes(3);
   });
-  */
 });

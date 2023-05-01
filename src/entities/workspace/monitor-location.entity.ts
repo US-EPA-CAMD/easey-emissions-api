@@ -29,6 +29,7 @@ import { Unit } from './unit.entity';
 import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
+import { MonitorFormula } from './monitor-formula.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -89,6 +90,13 @@ export class MonitorLocation extends BaseEntity {
     { eager: true },
   )
   monitorPlans: MonitorPlan[];
+
+  @OneToMany(
+    () => MonitorFormula,
+    c => c.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorFormulas: MonitorFormula[];
 
   @OneToMany(
     () => DailyEmission,

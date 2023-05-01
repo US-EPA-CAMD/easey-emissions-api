@@ -5,11 +5,13 @@ import {
   PrimaryColumn,
   OneToMany,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
 import { MatsDerivedHrlyValue } from './mats-derived-hrly-value.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
+import { MonitorLocation } from './monitor-location.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_formula' })
 export class MonitorFormula extends BaseEntity {
@@ -70,6 +72,13 @@ export class MonitorFormula extends BaseEntity {
   @Column({ nullable: true, name: 'update_date' })
   updateDate: Date;
 
+  @ManyToOne(
+    () => MonitorLocation,
+    o => o.monitorFormulas,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  monitorLocation: MonitorLocation;
+  
   @OneToMany(
     () => DerivedHrlyValue,
     c => c.monitorFormula,

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 import { DailyCalibrationWorkspaceModule } from '../daily-calibration-workspace/daily-calibration.module';
 
@@ -12,12 +13,13 @@ import { DailyTestSummaryCheckService } from './daily-test-summary-check.service
   imports: [
     TypeOrmModule.forFeature([DailyTestSummaryWorkspaceRepository]),
     DailyCalibrationWorkspaceModule,
+    BulkLoadModule,
   ],
   controllers: [],
   providers: [
     DailyTestSummaryMap,
     DailyTestSummaryWorkspaceService,
-    DailyTestSummaryCheckService
+    DailyTestSummaryCheckService,
   ],
   exports: [
     TypeOrmModule,

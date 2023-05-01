@@ -23,6 +23,7 @@ describe('Monitor plan repository tests', () => {
 
     queryBuilder.innerJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.leftJoin.mockReturnValue(queryBuilder);
+    queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.where.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
 

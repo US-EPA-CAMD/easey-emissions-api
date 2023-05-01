@@ -11,6 +11,7 @@ import { isUndefinedOrNull } from '../utils/utils';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import moment from 'moment';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -72,27 +73,46 @@ export class EmissionsChecksService {
 
   async invalidFormulasCheck(
     payload: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
   ): Promise<void> {
-    const formulaIdentifiers = new Set<string>();
+    const formulaIdentifiers = new Set<{
+      identifier: string;
+      monitoringLocationId: string;
+    }>();
 
     payload?.hourlyOperatingData?.forEach(hourlyOp => {
+      const monitoringLocationId = monitoringLocations.filter(location => {
+        return (
+          location.unit?.name === hourlyOp.unitId ||
+          location.stackPipe?.name === hourlyOp.stackPipeId
+        );
+      })[0].id;
+
       hourlyOp?.derivedHourlyValueData?.forEach(derived => {
         if (!isUndefinedOrNull(derived.formulaIdentifier)) {
-          formulaIdentifiers.add(derived.formulaIdentifier);
+          formulaIdentifiers.add({
+            identifier: derived.formulaIdentifier,
+            monitoringLocationId,
+          });
         }
       });
 
       hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
         if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
-          formulaIdentifiers.add(matsDerived.formulaIdentifier);
+          formulaIdentifiers.add({
+            identifier: matsDerived.formulaIdentifier,
+            monitoringLocationId,
+          });
         }
       });
 
       hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
         fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
           if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
-            formulaIdentifiers.add(paramFuelFlow.formulaIdentifier);
+            formulaIdentifiers.add({
+              identifier: paramFuelFlow.formulaIdentifier,
+              monitoringLocationId,
+            });
           }
         });
       });
@@ -105,8 +125,8 @@ export class EmissionsChecksService {
     for (const formulaIdentifier of formulaIdentifiers) {
       const monitorFormula = await this.monitorFormulaRepository.getOneFormulaIdsMonLocId(
         {
-          formulaIdentifier,
-          monitoringLocationId,
+          formulaIdentifier: formulaIdentifier.identifier,
+          monitoringLocationId: formulaIdentifier.monitoringLocationId,
         },
       );
 
