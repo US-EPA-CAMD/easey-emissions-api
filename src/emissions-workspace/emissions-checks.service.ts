@@ -75,10 +75,7 @@ export class EmissionsChecksService {
     payload: EmissionsImportDTO,
     monitoringLocations: MonitorLocation[],
   ): Promise<void> {
-    const formulaIdentifiers = new Set<{
-      identifier: string;
-      monitoringLocationId: string;
-    }>();
+    const identifierMap = new Map<string, Set<string>>();
 
     payload?.hourlyOperatingData?.forEach(hourlyOp => {
       const monitoringLocationId = monitoringLocations.filter(location => {
@@ -88,58 +85,64 @@ export class EmissionsChecksService {
         );
       })[0].id;
 
+      if (!identifierMap.has(monitoringLocationId)) {
+        identifierMap.set(monitoringLocationId, new Set());
+      }
+
       hourlyOp?.derivedHourlyValueData?.forEach(derived => {
         if (!isUndefinedOrNull(derived.formulaIdentifier)) {
-          formulaIdentifiers.add({
-            identifier: derived.formulaIdentifier,
+          identifierMap.set(
             monitoringLocationId,
-          });
+            identifierMap
+              .get(monitoringLocationId)
+              .add(derived.formulaIdentifier),
+          );
         }
       });
 
       hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
         if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
-          formulaIdentifiers.add({
-            identifier: matsDerived.formulaIdentifier,
+          identifierMap.set(
             monitoringLocationId,
-          });
+            identifierMap
+              .get(monitoringLocationId)
+              .add(matsDerived.formulaIdentifier),
+          );
         }
       });
 
       hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
         fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
           if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
-            formulaIdentifiers.add({
-              identifier: paramFuelFlow.formulaIdentifier,
+            identifierMap.set(
               monitoringLocationId,
-            });
+              identifierMap
+                .get(monitoringLocationId)
+                .add(paramFuelFlow.formulaIdentifier),
+            );
           }
         });
       });
     });
 
-    if (formulaIdentifiers.size === 0) {
-      return;
-    }
+    const errorList: string[] = [];
 
-    for (const formulaIdentifier of formulaIdentifiers) {
-      const monitorFormula = await this.monitorFormulaRepository.getOneFormulaIdsMonLocId(
-        {
-          formulaIdentifier: formulaIdentifier.identifier,
-          monitoringLocationId: formulaIdentifier.monitoringLocationId,
-        },
-      );
-
-      const errorList: string[] = [];
-      if (isUndefinedOrNull(monitorFormula)) {
-        const errorMessage = CheckCatalogService.formatResultMessage(
-          'IMPORT-28-A',
-          {
-            formulaID: formulaIdentifier,
-          },
-        );
-        errorList.push(errorMessage);
-        this.throwIfErrors(errorList);
+    for (const [key, value] of identifierMap) {
+      const monitorFormulas = await this.monitorFormulaRepository.find({
+        where: { monitoringLocationId: key },
+      });
+      const validFormulas = new Set(monitorFormulas.map(mf => mf.formulaId));
+      for (const formula of Array.from(value)) {
+        if (!validFormulas.has(formula)) {
+          const errorMessage = CheckCatalogService.formatResultMessage(
+            'IMPORT-28-A',
+            {
+              formulaID: formula,
+            },
+          );
+          errorList.push(errorMessage);
+          this.throwIfErrors(errorList);
+        }
       }
     }
   }
