@@ -39,7 +39,10 @@ export default registerAs('app', () => ({
     'Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)',
   ),
   env: getConfigValue('EASEY_EMISSIONS_API_ENV', 'local-dev'),
-  apiKey: getConfigValue('EASEY_EMISSIONS_API_KEY'),
+  apiKey: getConfigValue(
+    'EASEY_EMISSIONS_API_KEY',
+    'PXPWlQGB3wKXotkWN1PbSwbSoM7CoWW0ZMPWYtfc',
+  ),
   enableApiKey: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_API_KEY'),
   enableRoleGuard: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD',
@@ -71,12 +74,16 @@ export default registerAs('app', () => ({
   // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
   currentUser: getConfigValue('EASEY_EMISSIONS_API_CURRENT_USER'),
   enableRoleGuardCheckoutCheck: getConfigValueBoolean(
-    'EASEY_MONITOR_PLAN_API_ENABLE_ROLE_GUARD_CHECKOUT',
+    'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD_CHECKOUT',
     true,
   ),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   apiHost: apiHost,
   authApi: {
-    uri: getConfigValue('EASEY_AUTH_API', `https://${apiHost}/auth-mgmt`),
+    uri: getConfigValue(
+      'EASEY_AUTH_API',
+      //`https://${apiHost}/auth-mgmt`
+      'http://localhost:8000/auth-mgmt',
+    ),
   },
 }));
