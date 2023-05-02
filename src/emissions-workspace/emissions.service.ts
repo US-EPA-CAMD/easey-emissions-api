@@ -323,27 +323,6 @@ export class EmissionsWorkspaceService {
       identifiers,
     );
   }
-  // const dailyTestSummaryImports: Array<Promise<void>> = [];
-
-  // if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
-  //   for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-  //     const monitoringLocationId = await this.getMonitoringLocationId(
-  //       monitoringLocations,
-  //       dailyTestSummaryDatum,
-  //     );
-
-  //     dailyTestSummaryImports.push(
-  //       this.dailyTestSummaryService.import({
-  //         ...dailyTestSummaryDatum,
-  //         reportingPeriodId,
-  //         monitoringLocationId,
-  //         identifiers,
-  //       }),
-  //     );
-  //   }
-  //   return Promise.all(dailyTestSummaryImports);
-  // }
-  //}
 
   async importHourlyOperating(
     emissionsImport: EmissionsImportDTO,
@@ -351,7 +330,6 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
   ): Promise<void> {
-    console.log('Importing');
     await this.hourlyOperatingService.import(
       emissionsImport,
       monitoringLocations,

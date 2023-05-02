@@ -16,6 +16,7 @@ import { isUndefinedOrNull } from '../utils/utils';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -45,9 +46,7 @@ export class DailyTestSummaryWorkspaceService {
     return this.map.many(results);
   }
 
-  async delete(
-    criteria: FindConditions<DailyTestSummary>,
-  ): Promise<void> {
+  async delete(criteria: FindConditions<DailyTestSummary>): Promise<void> {
     await this.repository.delete(criteria);
   }
 
@@ -91,6 +90,22 @@ export class DailyTestSummaryWorkspaceService {
 
     const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
       'camdecmpswks.daily_test_summary',
+      [
+        'daily_test_sum_id',
+        'rpt_period_id',
+        'mon_loc_id',
+        'component_id',
+        'daily_test_date',
+        'daily_test_hour',
+        'daily_test_min',
+        'test_type_cd',
+        'test_result_cd',
+        'userid',
+        'add_date',
+        'update_date',
+        'span_scale_cd',
+        'mon_sys_id',
+      ],
     );
 
     for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
@@ -115,10 +130,9 @@ export class DailyTestSummaryWorkspaceService {
         dailyTestMin: dailyTestSummaryDatum.minute,
         testTypeCd: dailyTestSummaryDatum.testTypeCode,
         testResultCd: dailyTestSummaryDatum.testResultCode,
-        calcTestResultCd: null,
         userId: identifiers?.userId,
-        addDate: new Date().toISOString(),
-        updateDate: new Date().toISOString(),
+        addDate: currentDateTime().toISOString(),
+        updateDate: currentDateTime().toISOString(),
         spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
         monSysId:
           identifiers?.monitoringSystems?.[
@@ -131,29 +145,24 @@ export class DailyTestSummaryWorkspaceService {
     await bulkLoadStream.finished;
 
     if (bulkLoadStream.status === 'Complete') {
-      const promises = [];
+      const buildPromises = [];
+
+      const dailyCalibrationObjects = [];
 
       for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-        promises.push(
-          this.dailyCalibrationService.import(
+        buildPromises.push(
+          this.dailyCalibrationService.buildObjectList(
             dailyTestSummaryDatum.dailyCalibrationData,
             dailyTestSummaryDatum['id'],
             reportingPeriodId,
             identifiers,
+            dailyCalibrationObjects,
           ),
         );
       }
+      await Promise.all(buildPromises);
 
-      const settled = await Promise.allSettled(promises);
-
-      for (const settledElement of settled) {
-        if (settledElement.status === 'rejected') {
-          throw new LoggingException(
-            settledElement.reason.detail,
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
-      }
+      await this.dailyCalibrationService.import(dailyCalibrationObjects);
     }
   }
 }

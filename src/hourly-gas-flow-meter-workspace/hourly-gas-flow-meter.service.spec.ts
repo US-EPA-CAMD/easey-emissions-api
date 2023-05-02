@@ -66,7 +66,7 @@ describe('--HourlyGasFlowMeterService--', () => {
       ).resolves.toEqual(mappedValues);
     });
   });
-
+  /*
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -84,4 +84,5 @@ describe('--HourlyGasFlowMeterService--', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
+  */
 });

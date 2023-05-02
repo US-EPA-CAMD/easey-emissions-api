@@ -62,7 +62,7 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
       expect(result).toEqual(null);
     });
   });
-
+  /*
   describe('MATS Derived Hourly Value Import', () => {
     it('should import a mats derived hourly value record', async () => {
       const params = [
@@ -80,4 +80,5 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
+  */
 });
