@@ -92,7 +92,7 @@ describe('location checks service tests', () => {
         payload,
       );
 
-      expect(locations.length).toEqual(4);
+      expect(locations.length).toEqual(5);
       expect(locations.filter(e => e.unitId === 'u1').length).toEqual(1);
       expect(locations.filter(e => e.stackPipeId === 'sp1').length).toEqual(1);
 
