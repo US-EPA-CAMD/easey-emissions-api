@@ -81,6 +81,10 @@ import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multi
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -90,7 +94,7 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule],
+      imports: [LoggerModule, HttpModule, BulkLoadModule],
       controllers: [EmissionsWorkspaceController],
       providers: [
         DailyEmissionWorkspaceService,
@@ -177,6 +181,9 @@ describe('-- Emissions Controller --', () => {
         ReviewSubmitService,
         EmissionsReviewSubmitRepository,
         EmissionsReviewSubmitMap,
+        LongTermFuelFlowWorkspaceRepository,
+        LongTermFuelFlowWorkspaceService,
+        LongTermFuelFlowMap,
       ],
     }).compile();
 
@@ -207,8 +214,8 @@ describe('-- Emissions Controller --', () => {
         sessionId: 'string',
         expiration: 'string',
         clientIp: 'string',
-        isAdmin: true,
-        permissionSet: [],
+        facilities: [],
+        roles: [],
       };
 
       jest.spyOn(service, 'import').mockResolvedValue({ message: 'success' });

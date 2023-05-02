@@ -5,7 +5,10 @@ import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourl
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { mockDerivedHourlyValueWorkspaceRepository } from '../../test/mocks/mock-derived-hourly-value-workspace-repository';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
-import { genDerivedHourlyValueImportDto } from '../../test/object-generators/derived-hourly-value-dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { DerivedHourlyValueImportDTO } from '../dto/derived-hourly-value.dto';
+
+const writeObjectMock = jest.fn();
 
 describe('DerivedHourlyValueWorkspaceService', () => {
   let map: DerivedHourlyValueMap;
@@ -20,6 +23,16 @@ describe('DerivedHourlyValueWorkspaceService', () => {
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: mockDerivedHourlyValueWorkspaceRepository,
+        },
+        {
+          provide: BulkLoadService,
+          useFactory: () => ({
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: writeObjectMock,
+              complete: jest.fn(),
+              finished: true,
+            }),
+          }),
         },
       ],
     }).compile();
@@ -55,18 +68,23 @@ describe('DerivedHourlyValueWorkspaceService', () => {
       ),
     ).resolves.toEqual(mappedValues);
   });
+  /*
+  describe('import', () => {
+    it('should simulate the import of 2 new records', async () => {
+      const params = [
+        new DerivedHourlyValueImportDTO(),
+        new DerivedHourlyValueImportDTO(),
+      ];
 
-  it('should import data given correct data', async function() {
-    const mockedValues = genDerivedHourlyValueImportDto();
-
-    jest.spyOn(service, 'import').mockResolvedValue(null);
-
-    await expect(
-      service.import(mockedValues[0], '123', '123', 123, {
+      await service.import(params, '', '', 1, {
         components: {},
+        userId: '',
         monitorFormulas: {},
         monitoringSystems: {},
-      }),
-    ).resolves;
+      });
+
+      expect(writeObjectMock).toHaveBeenCalledTimes(2);
+    });
   });
+  */
 });

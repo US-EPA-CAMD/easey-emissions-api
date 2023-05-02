@@ -7,12 +7,15 @@ import {
 } from '../dto/hourly-param-fuel-flow.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class HourlyParameterFuelFlowWorkspaceService {
   constructor(
     private readonly map: HourlyParameterFuelFlowMap,
     private readonly repository: HourlyParameterFuelFlowWorkspaceRepository,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourlyFuelFlowId: string): Promise<HourlyParamFuelFlowDTO[]> {
@@ -21,33 +24,67 @@ export class HourlyParameterFuelFlowWorkspaceService {
     return this.map.many(hrlyParams);
   }
 
-  async import(
-    data: HourlyParamFuelFlowImportDTO,
-    hourlyFuelFlowId: string,
-    monitoringLocationId: string,
+  async buildObjectList(
+    data: HourlyParamFuelFlowImportDTO[],
+    parentId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    return this.repository.save(
-      this.repository.create({
+    objectList: Array<object>,
+    currentTime: string,
+  ): Promise<void> {
+    for (const dataChunk of data) {
+      objectList.push({
         id: randomUUID(),
-        hourlyFuelFlowId,
-        parameterCode: data.parameterCode,
-        parameterValueForFuel: data.parameterValueForFuel,
+        parentId: parentId,
+        parameterCode: dataChunk.parameterCode,
+        parameterValueForFuel: dataChunk.parameterValueForFuel,
         formulaIdentifier:
-          identifiers.monitorFormulas?.[data.formulaIdentifier],
-        sampleTypeCode: data.sampleTypeCode,
+          identifiers.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+        sampleTypeCode: dataChunk.sampleTypeCode,
         monitoringSystemId:
-          identifiers.monitoringSystems?.[data.monitoringSystemId],
-        operatingConditionCode: data.operatingConditionCode,
-        segmentNumber: data.segmentNumber,
-        parameterUomCode: data.parameterUomCode,
-        monitoringLocationId: monitoringLocationId,
+          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        operatingConditionCode: dataChunk.operatingConditionCode,
+        segmentNumber: dataChunk.segmentNumber,
+        parameterUomCode: dataChunk.parameterUomCode,
+        monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
-        addDate: new Date(),
-        updateDate: new Date(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
-      }),
-    );
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.hrly_param_fuel_flow',
+        [
+          'hrly_param_ff_id',
+          'hrly_fuel_flow_id',
+          'parameter_cd',
+          'param_val_fuel',
+          'mon_form_id',
+          'sample_type_cd',
+          'mon_sys_id',
+          'operating_condition_cd',
+          'segment_num',
+          'parameter_uom_cd',
+          'mon_loc_id',
+          'rpt_period_id',
+          'add_date',
+          'update_date',
+          'userid',
+        ],
+      );
+
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

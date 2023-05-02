@@ -55,8 +55,8 @@ export async function getSelectedView(
   const viewData = await (await mgr.query(`
     SELECT ${columnList.join(',')}
     FROM ${schema}.emission_view_${viewCode.toLowerCase()}
-    WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2);`,
-    [rptPeriod.map(i => i.id), monLocs.map(i => i.id)],
+    WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2) AND mon_plan_id = $3;`,
+    [rptPeriod.map(i => i.id), monLocs.map(i => i.id), monitorPlanId],
   )).map((item) => {
     const props = Object.entries(item).map(([key, val]) => {
       if (val !== null && val !== undefined) {

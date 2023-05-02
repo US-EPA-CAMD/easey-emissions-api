@@ -16,6 +16,7 @@ import { SorbentTrapService } from '../sorbent-trap/sorbent-trap.service';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 
 @Injectable()
 export class EmissionsService {
@@ -32,6 +33,7 @@ export class EmissionsService {
     private readonly sorbentTrapService: SorbentTrapService,
     private readonly summaryValueService: SummaryValueService,
     private readonly nsps4tSummaryService: Nsps4tSummaryService,
+    private readonly longTermFuelFlowService: LongTermFuelFlowService,
   ) {}
 
   async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
@@ -43,6 +45,7 @@ export class EmissionsService {
     const WEEKLY_TEST_SUMMARIES = 4;
     const SUMMARY_VALUES = 5;
     const NSPS4T_SUMMARY = 6;
+    const LONG_TERM_FUEL_FLOW = 7;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -59,8 +62,8 @@ export class EmissionsService {
       promises.push(this.sorbentTrapService.export(locationIds, params));
       promises.push(this.weeklyTestSummaryService.export(locationIds, params));
       promises.push(this.summaryValueService.export(locationIds, params));
-
       promises.push(this.nsps4tSummaryService.export(locationIds, params));
+      promises.push(this.longTermFuelFlowService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
@@ -71,6 +74,7 @@ export class EmissionsService {
       results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
+      results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
       return results;
     }

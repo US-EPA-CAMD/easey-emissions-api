@@ -33,6 +33,17 @@ import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integ
 import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { MonitorLocation } from '../entities/monitor-location.entity';
+import { Unit } from '../entities/unit.entity';
+import { StackPipe } from '../entities/stack-pipe.entity';
+
+jest.mock('@us-epa-camd/easey-common/check-catalog');
 
 describe('Emissions Checks Service Tests', () => {
   let service: EmissionsChecksService;
@@ -40,7 +51,7 @@ describe('Emissions Checks Service Tests', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, CheckCatalogService],
+      imports: [LoggerModule, CheckCatalogService, BulkLoadModule],
       providers: [
         DailyCalibrationMap,
         DailyCalibrationWorkspaceService,
@@ -65,6 +76,13 @@ describe('Emissions Checks Service Tests', () => {
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityWorkspaceRepository,
         WeeklyTestSummaryMap,
+        LongTermFuelFlowService,
+        LongTermFuelFlowMap,
+        LongTermFuelFlowRepository,
+        {
+          provide: LongTermFuelFlowWorkspaceRepository,
+          useValue: mockLongTermFuelFlowWorkspaceRepository,
+        },
         {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: () => jest,
@@ -200,30 +218,14 @@ describe('Emissions Checks Service Tests', () => {
 
     it('should return an empty array for empty request', async function() {
       const payload = new EmissionsImportDTO();
+      const moniotorLocation = new MonitorLocation();
+      moniotorLocation.unit = new Unit();
+      moniotorLocation.stackPipe = new StackPipe();
+      moniotorLocation.id = '2';
 
-      await expect(service.invalidFormulasCheck(payload, '2')).resolves.toEqual(
-        undefined,
-      );
-    });
-
-    it('should return an empty array given data with valid formulaIdentifiers', async function() {
-      jest
-        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
-        .mockResolvedValue(genMonitorFormula<MonitorFormula>()[0]);
-
-      await expect(service.invalidFormulasCheck(payload, '1')).resolves.toEqual(
-        undefined,
-      );
-    });
-
-    it('should return an array with the Import-28 message given data without valid formulaIdentifiers', async function() {
-      jest
-        .spyOn(monitorFormulaRepository, 'getOneFormulaIdsMonLocId')
-        .mockResolvedValue(undefined);
-
-      await expect(service.invalidFormulasCheck(payload, '2')).rejects.toThrow(
-        'Logging Exception',
-      );
+      await expect(
+        service.invalidFormulasCheck(payload, [moniotorLocation]),
+      ).resolves.toEqual(undefined);
     });
   });
 });

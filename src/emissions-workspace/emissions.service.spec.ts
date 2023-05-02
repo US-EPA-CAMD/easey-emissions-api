@@ -89,9 +89,20 @@ import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import * as typeorm_functions from 'typeorm/globals';
+import { EntityManager } from 'typeorm';
+import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
+  let longTermFuelFlowService: LongTermFuelFlowWorkspaceService;
   let emissionsRepository: EmissionsWorkspaceRepository;
   let emissionsService: EmissionsWorkspaceService;
   let emissionsMap: EmissionsMap;
@@ -99,6 +110,7 @@ describe('Emissions Workspace Service', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [BulkLoadModule],
       providers: [
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
@@ -166,6 +178,12 @@ describe('Emissions Workspace Service', () => {
         WeeklySystemIntegrityRepository,
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityMap,
+        LongTermFuelFlowMap,
+        LongTermFuelFlowWorkspaceService,
+        {
+          provide: LongTermFuelFlowWorkspaceRepository,
+          useValue: mockLongTermFuelFlowWorkspaceRepository,
+        },
         {
           provide: DerivedHourlyValueWorkspaceRepository,
           useValue: jest,
@@ -217,6 +235,7 @@ describe('Emissions Workspace Service', () => {
       ],
     }).compile();
 
+    longTermFuelFlowService = module.get(LongTermFuelFlowWorkspaceService);
     dailyTestsummaryService = module.get(DailyTestSummaryWorkspaceService);
     emissionsRepository = module.get(EmissionsWorkspaceRepository);
     emissionsService = module.get(EmissionsWorkspaceService);
@@ -247,22 +266,29 @@ describe('Emissions Workspace Service', () => {
     );
   });
 
-  it('should find one record from the repository', async function() {
-    await expect(emissionsService.findOne()).resolves.toEqual(undefined);
-  });
-
   it('should successfully import', async function() {
-    const emissionsDtoMock = genEmissionsImportDto();
+    jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
+    jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
+      findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
+      query: jest.fn(),
+    } as unknown) as EntityManager);
+
+    const emissionsDtoMock = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
-      monitorPlanAmount: 3,
+      monitorPlanAmount: 2,
       monitorPlanConfig: {
-        include: ['beginRptPeriod'],
+        include: ['beginRptPeriod', 'endRptPeriod'],
       },
     });
+
     plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
     plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
       emissionsDtoMock[0].quarter;
+    plantMock[0].monitorPlans[0].endRptPeriod = null;
+    plantMock[0].monitorPlans[0].locations = [new MonitorLocation()];
 
     jest
       .spyOn(plantRepository, 'getImportLocations')
@@ -284,21 +310,24 @@ describe('Emissions Workspace Service', () => {
 
     jest.spyOn(dailyTestsummaryService, 'import').mockReturnValue(undefined);
 
+    const monitoringLocation = new MonitorLocation();
     await expect(
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
+        [monitoringLocation],
         faker.datatype.number(),
-        faker.datatype.string(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        new Date().toISOString(),
       ),
     ).resolves.toBeUndefined();
 
     await expect(
       emissionsService.importDailyTestSummaries(
         dtoMockWithDailyTest[0],
+        [monitoringLocation],
         faker.datatype.number(),
-        faker.datatype.string(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        new Date().toISOString(),
       ),
     ).resolves;
   });

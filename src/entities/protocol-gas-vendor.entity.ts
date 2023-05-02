@@ -26,14 +26,12 @@ export class ProtocolGasVendor extends BaseEntity {
 
   @Column({
     name: 'add_date',
-    type: 'date',
     nullable: true,
   })
   addDate: Date;
 
   @Column({
     name: 'update_date',
-    type: 'date',
     nullable: true,
   })
   updateDate: Date;

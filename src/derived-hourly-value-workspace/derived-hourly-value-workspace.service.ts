@@ -4,12 +4,15 @@ import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { randomUUID } from 'crypto';
 import { DerivedHourlyValueImportDTO } from '../dto/derived-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class DerivedHourlyValueWorkspaceService {
   constructor(
     private readonly repository: DerivedHourlyValueWorkspaceRepository,
     private readonly map: DerivedHourlyValueMap,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourIds: string[]) {
@@ -22,33 +25,72 @@ export class DerivedHourlyValueWorkspaceService {
     return Promise.all(promises);
   }
 
-  async import(
-    data: DerivedHourlyValueImportDTO,
+  async buildObjectList(
+    data: DerivedHourlyValueImportDTO[],
     hourId: string,
-    monitoringLocationId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    buildObject: Array<object>,
+    currentTime: string,
   ) {
-    return this.repository.save(
-      this.repository.create({
-        parameterCode: data.parameterCode,
-        unadjustedHrlyValue: data.unadjustedHourlyValue,
-        adjustedHrlyValue: data.adjustedHourlyValue,
-        modcCode: data.modcCode,
-        monSysId: identifiers?.monitoringSystems?.[data.monitoringSystemId],
-        monFormId: identifiers?.monitorFormulas?.[data.formulaIdentifier],
-        pctAvailable: data.percentAvailable,
-        operatingConditionCode: data.operatingConditionCode,
-        segmentNum: data.segmentNumber,
-        fuelCode: data.fuelCode,
+    for (const dataChunk of data) {
+      buildObject.push({
         id: randomUUID(),
-        hourId,
-        rptPeriodId: reportingPeriodId,
-        monitorLocationId: monitoringLocationId,
-        addDate: new Date(),
-        updateDate: new Date(),
+        hourId: hourId,
+        monSysId:
+          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] ||
+          null,
+        monFormId:
+          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+        parameterCode: dataChunk.parameterCode,
+        unadjustedHrlyValue: dataChunk.unadjustedHourlyValue,
+        adjustedHourlyValue: dataChunk.adjustedHourlyValue,
+        modcCd: dataChunk.modcCode,
+        opConditionCode: dataChunk.operatingConditionCode,
+        pctAvailable: dataChunk.percentAvailable,
+        segmentNum: dataChunk.segmentNumber,
+        fuelCd: dataChunk.fuelCode,
         userId: identifiers?.userId,
-      }),
-    );
+        addDate: currentTime,
+        updateDate: currentTime,
+        rptPeriod: reportingPeriodId,
+        monLocId: monitorLocationId,
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.derived_hrly_value',
+        [
+          'derv_id',
+          'hour_id',
+          'mon_sys_id',
+          'mon_form_id',
+          'parameter_cd',
+          'unadjusted_hrly_value',
+          'adjusted_hrly_value',
+          'modc_cd',
+          'operating_condition_cd',
+          'pct_available',
+          'segment_num',
+          'fuel_cd',
+          'userid',
+          'add_date',
+          'update_date',
+          'rpt_period_id',
+          'mon_loc_id',
+        ],
+      );
+
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

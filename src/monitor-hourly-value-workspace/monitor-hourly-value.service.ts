@@ -8,12 +8,15 @@ import {
 } from '../dto/monitor-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MonitorHourlyValueWorkspaceService {
   constructor(
     private readonly map: MonitorHourlyValueMap,
     private readonly repository: MonitorHourlyValueWorkspaceRepository,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourIds: string[]): Promise<MonitorHourlyValueDTO[]> {
@@ -21,31 +24,64 @@ export class MonitorHourlyValueWorkspaceService {
     return this.map.many(results);
   }
 
-  async import(
-    data: MonitorHourlyValueImportDTO,
+  async buildObjectList(
+    data: MonitorHourlyValueImportDTO[],
     hourId: string,
-    monitoringLocationId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    return this.repository.save(
-      this.repository.create({
+    objectList: Array<object>,
+    currentTime: string,
+  ): Promise<void> {
+    for (const dataChunk of data) {
+      objectList.push({
         id: randomUUID(),
         monitoringSystemId:
-          identifiers.monitoringSystems?.[data.monitoringSystemId],
-        parameterCode: data.parameterCode,
-        unadjustedHourlyValue: data.unadjustedHourlyValue,
-        modcCode: data.modcCode,
-        componentId: identifiers.components?.[data.componentId],
-        percentAvailable: data.percentAvailable,
-        moistureBasis: data.moistureBasis,
-        monitoringLocationId: monitoringLocationId,
+          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        parameterCode: dataChunk.parameterCode,
+        unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+        modcCode: dataChunk.modcCode,
+        componentId: identifiers.components?.[dataChunk.componentId] || null,
+        percentAvailable: dataChunk.percentAvailable,
+        moistureBasis: dataChunk.moistureBasis,
+        monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
         hourId,
-        addDate: new Date(),
-        updateDate: new Date(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
-      }),
-    );
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.monitor_hrly_value',
+        [
+          'monitor_hrly_val_id',
+          'mon_sys_id',
+          'parameter_cd',
+          'unadjusted_hrly_value',
+          'modc_cd',
+          'component_id',
+          'pct_available',
+          'moisture_basis',
+          'mon_loc_id',
+          'rpt_period_id',
+          'hour_id',
+          'add_date',
+          'update_date',
+          'userid',
+        ],
+      );
+
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

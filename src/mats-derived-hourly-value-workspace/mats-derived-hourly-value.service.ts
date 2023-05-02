@@ -7,12 +7,15 @@ import {
 } from '../dto/mats-derived-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MatsDerivedHourlyValueWorkspaceService {
   constructor(
     private readonly map: MatsDerivedHourlyValueMap,
     private readonly repository: MatsDerivedHourlyValueWorkspaceRepository,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async export(hourIds: string[]): Promise<MatsDerivedHourlyValueDTO[]> {
@@ -20,26 +23,58 @@ export class MatsDerivedHourlyValueWorkspaceService {
     return this.map.many(matsDerivedHourlyValueData);
   }
 
-  async import(
-    data: MatsDerivedHourlyValueImportDTO,
-    identifiers: ImportIdentifiers,
+  async buildObjectList(
+    data: MatsDerivedHourlyValueImportDTO[],
     hourId: string,
-    monitoringLocationId: string,
+    monitorLocationId: string,
     reportingPeriodId: number,
-  ) {
-    const o = {
-      id: randomUUID(),
-      parameterCode: data.parameterCode,
-      unadjustedHourlyValue: data.unadjustedHourlyValue,
-      modcCode: data.modcCode,
-      monFormId: identifiers?.monitorFormulas?.[data.formulaIdentifier],
-      hourId,
-      monitoringLocationId,
-      reportingPeriodId,
-      addDate: new Date(),
-      updateDate: new Date(),
-      userId: identifiers?.userId,
-    };
-    return this.repository.save(this.repository.create(o));
+    identifiers: ImportIdentifiers,
+    objectList: Array<object>,
+    currentTime: string,
+  ): Promise<void> {
+    for (const dataChunk of data) {
+      objectList.push({
+        id: randomUUID(),
+        parameterCode: dataChunk.parameterCode,
+        unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+        modcCode: dataChunk.modcCode,
+        monFormId:
+          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+        hourId: hourId,
+        monLod: monitorLocationId,
+        rptPeriod: reportingPeriodId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        userId: identifiers?.userId,
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.mats_derived_hrly_value',
+        [
+          'mats_dhv_id',
+          'parameter_cd',
+          'unadjusted_hrly_value',
+          'modc_cd',
+          'mon_form_id',
+          'hour_id',
+          'mon_loc_id',
+          'rpt_period_id',
+          'add_date',
+          'update_date',
+          'userid',
+        ],
+      );
+
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

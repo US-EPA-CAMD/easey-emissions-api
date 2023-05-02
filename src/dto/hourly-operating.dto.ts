@@ -36,73 +36,71 @@ export class HourlyOperatingBaseDTO {
   @IsOptional()
   @IsString()
   stackPipeId?: string;
+
   @IsOptional()
   @IsString()
   unitId?: string;
+
   @IsDateString()
   date: Date;
+
   @IsNumber()
   hour: number;
+
   @IsOptional()
   @IsNumber()
   operatingTime?: number;
+
   @IsOptional()
   @IsNumber()
   hourLoad?: number;
+
   @IsOptional()
   @IsString()
   loadUnitsOfMeasureCode?: string;
+
   @IsOptional()
   @IsNumber()
   matsHourLoad?: number;
+
   @IsOptional()
   @IsNumber()
   loadRange?: number;
+
   @IsOptional()
   @IsNumber()
   commonStackLoadRange?: number;
+
   @IsOptional()
   @IsNumber()
   fcFactor?: number;
+
   @IsOptional()
   @IsNumber()
   fdFactor?: number;
+
   @IsOptional()
   @IsNumber()
   fwFactor?: number;
+
   @IsOptional()
   @IsString()
   fuelCode?: string;
+
   @IsOptional()
   @IsString()
   matsStartupShutdownFlag?: string;
 }
 export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   id: string;
-  @IsNumber()
   reportingPeriodId: number;
-  @IsString()
   monitoringLocationId: string;
-  @IsOptional()
-  @IsString()
   multiFuelFlg?: string;
-  @IsOptional()
-  @IsString()
   userId?: string;
-  @IsOptional()
-  @IsDateString()
   addDate?: Date;
-  @IsOptional()
-  @IsDateString()
   updateDate?: Date;
-  @IsOptional()
-  @IsString()
   operatingConditionCode?: string;
-  @IsOptional()
-  @IsString()
   fuelCdList?: string;
-  @IsOptional()
-  @IsNumber()
   mhhiIndicator?: number;
 }
 

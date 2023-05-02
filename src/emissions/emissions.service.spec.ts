@@ -76,6 +76,10 @@ import { SummaryValueRepository } from '../summary-value/summary-value.repositor
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import moment from 'moment';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
@@ -89,6 +93,7 @@ describe('Emissions Service', () => {
   let weeklyTestSummaryService: WeeklyTestSummaryService;
   let nsps4tSummaryService: Nsps4tSummaryService;
   let summaryValueService: SummaryValueService;
+  let longTermFuelFlowService: LongTermFuelFlowService;
   let configService: ConfigService;
 
   beforeAll(async () => {
@@ -146,6 +151,13 @@ describe('Emissions Service', () => {
         SummaryValueService,
         SummaryValueRepository,
         SummaryValueMap,
+        LongTermFuelFlowMap,
+        LongTermFuelFlowService,
+        {
+
+          provide: LongTermFuelFlowRepository,
+          useValue: mockLongTermFuelFlowRepository
+        },
         {
           provide: DerivedHourlyValueRepository,
           useValue: jest,
@@ -212,6 +224,7 @@ describe('Emissions Service', () => {
     nsps4tSummaryService = module.get(Nsps4tSummaryService);
     summaryValueService = module.get(SummaryValueService);
     emissionsSubmissionsProgressRepository = module.get(EmissionsSubmissionsProgressRepository);
+    longTermFuelFlowService = module.get(LongTermFuelFlowService)
     configService = module.get(ConfigService);
   });
 
@@ -244,6 +257,7 @@ describe('Emissions Service', () => {
       jest.spyOn(weeklyTestSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(summaryValueService, 'export').mockResolvedValue(null);
+      jest.spyOn(longTermFuelFlowService, 'export').mockResolvedValue(null);
       jest.spyOn(configService, 'get').mockReturnValue("test");
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(

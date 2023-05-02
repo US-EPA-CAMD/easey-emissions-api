@@ -45,6 +45,9 @@ import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-
 import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.module';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 
 @Module({
   imports: [
@@ -63,6 +66,7 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
       Nsps4tAnnualWorkspaceRepository,
       Nsps4tCompliancePeriodWorkspaceRepository,
       EmissionsReviewSubmitRepository,
+      LongTermFuelFlowWorkspaceRepository,
     ]),
     Logger,
     HttpModule,
@@ -74,6 +78,7 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
     WeeklyTestSummaryWorkspaceModule,
     HourlyFuelFlowWorkspaceModule,
     SummaryValueWorkspaceModule,
+    LongTermFuelFlowWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [
@@ -94,6 +99,7 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
     Nsps4tCompliancePeriodWorkspaceService,
     ReviewSubmitService,
     EmissionsReviewSubmitMap,
+    LongTermFuelFlowWorkspaceService,
   ],
 })
 export class EmissionsWorkspaceModule {}

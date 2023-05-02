@@ -67,6 +67,9 @@ import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { ReviewSubmitService } from '../emissions-workspace/ReviewSubmit.service';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -141,6 +144,9 @@ describe('-- Emissions Controller --', () => {
         SummaryValueMap,
         SummaryValueRepository,
         SummaryValueService,
+        LongTermFuelFlowService,
+        LongTermFuelFlowRepository,
+        LongTermFuelFlowMap,
       ],
     }).compile();
 

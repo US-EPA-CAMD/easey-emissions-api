@@ -3,6 +3,7 @@ applications:
     memory: ((memory))M
     disk_quota: ((disk))M
     instances: ((instances))
+    stack: cflinuxfs4
     buildpacks:
       - nodejs_buildpack
     env:
@@ -23,6 +24,8 @@ applications:
       EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD: true
       EASEY_API_GATEWAY_HOST: ((apiHost))
       EASEY_AUTH_API: https://((apiHost))/auth-mgmt
+      EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD_CHECKOUT: true
+      EASEY_EMISSIONS_API_BULK_LOAD_MAX_POOL_SIZE: 100
     routes:
       - route: ((host))/((path))
     services:

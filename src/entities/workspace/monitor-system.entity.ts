@@ -68,10 +68,10 @@ export class MonitorSystem extends BaseEntity {
   @Column({ type: 'varchar', nullable: true, length: 25, name: 'userid' })
   userId: string;
 
-  @Column({ type: 'date', nullable: true, name: 'add_date' })
+  @Column({ nullable: true, name: 'add_date' })
   addDate: Date;
 
-  @Column({ type: 'date', nullable: true, name: 'update_date' })
+  @Column({ nullable: true, name: 'update_date' })
   updateDate: Date;
 
   @OneToMany(
@@ -143,5 +143,4 @@ export class MonitorSystem extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorLocation: MonitorLocation;
-
 }
