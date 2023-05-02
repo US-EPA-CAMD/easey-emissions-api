@@ -80,6 +80,7 @@ export class DailyTestSummaryWorkspaceService {
     monitoringLocations,
     reportingPeriodId,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.dailyTestSummaryData) ||
@@ -131,8 +132,8 @@ export class DailyTestSummaryWorkspaceService {
         testTypeCd: dailyTestSummaryDatum.testTypeCode,
         testResultCd: dailyTestSummaryDatum.testResultCode,
         userId: identifiers?.userId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
         monSysId:
           identifiers?.monitoringSystems?.[
@@ -157,6 +158,7 @@ export class DailyTestSummaryWorkspaceService {
             reportingPeriodId,
             identifiers,
             dailyCalibrationObjects,
+            currentTime,
           ),
         );
       }

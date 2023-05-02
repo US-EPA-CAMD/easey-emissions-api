@@ -56,6 +56,7 @@ export class DailyCalibrationWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
     for (const dataChunk of data) {
       objectList.push({
@@ -78,8 +79,8 @@ export class DailyCalibrationWorkspaceService {
         zeroRefValue: dataChunk.zeroReferenceValue,
         upscaleRefValue: dataChunk.upscaleReferenceValue,
         userId: identifiers?.userId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         rptPeriodId: reportingPeriodId,
         upscaleGasTypeCd: dataChunk.upscaleGasTypeCode,
         vendorId: dataChunk.vendorIdentifier,

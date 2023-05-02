@@ -31,6 +31,7 @@ export class HourlyGasFlowMeterWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
     for (const dataChunk of data) {
       objectList.push({
@@ -44,8 +45,8 @@ export class HourlyGasFlowMeterWorkspaceService {
         avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
         samplingRateUom: dataChunk.samplingRateUom,
         hourlySfsrRatio: dataChunk.hourlySfsrRatio,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
       });
     }

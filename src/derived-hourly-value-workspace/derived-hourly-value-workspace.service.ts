@@ -32,6 +32,7 @@ export class DerivedHourlyValueWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     buildObject: Array<object>,
+    currentTime: string,
   ) {
     for (const dataChunk of data) {
       buildObject.push({
@@ -51,8 +52,8 @@ export class DerivedHourlyValueWorkspaceService {
         segmentNum: dataChunk.segmentNumber,
         fuelCd: dataChunk.fuelCode,
         userId: identifiers?.userId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         rptPeriod: reportingPeriodId,
         monLocId: monitorLocationId,
       });

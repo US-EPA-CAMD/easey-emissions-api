@@ -111,6 +111,7 @@ export class HourlyOperatingWorkspaceService {
     monitoringLocations,
     reportingPeriodId,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ): Promise<void> {
     console.log('Started', new Date());
 
@@ -152,8 +153,8 @@ export class HourlyOperatingWorkspaceService {
         fuelCd: hourlyOperatingDatum.fuelCode,
         multiFuelFlag: null,
         userId: identifiers?.userId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         loadUOM: hourlyOperatingDatum.loadUnitsOfMeasureCode,
         operatingConditionCd: null,
         fuelCdList: null,
@@ -196,6 +197,7 @@ export class HourlyOperatingWorkspaceService {
             reportingPeriodId,
             identifiers,
             derivedHourlyValueObjects,
+            currentTime,
           ),
         );
 
@@ -207,6 +209,7 @@ export class HourlyOperatingWorkspaceService {
             reportingPeriodId,
             identifiers,
             matsMonitorHourlyValueObjects,
+            currentTime,
           ),
         );
 
@@ -218,6 +221,7 @@ export class HourlyOperatingWorkspaceService {
             reportingPeriodId,
             identifiers,
             monitorHourlyValueObjects,
+            currentTime,
           ),
         );
 
@@ -229,6 +233,7 @@ export class HourlyOperatingWorkspaceService {
             reportingPeriodId,
             identifiers,
             matsDerivedHourlyValueObjects,
+            currentTime,
           ),
         );
 
@@ -241,6 +246,7 @@ export class HourlyOperatingWorkspaceService {
             identifiers,
             hourlyFuelFlowObjects,
             hourlyParameterFuelFlowObjects,
+            currentTime,
           ),
         );
 
@@ -252,6 +258,7 @@ export class HourlyOperatingWorkspaceService {
             reportingPeriodId,
             identifiers,
             hourlyGasFlowMeterObjects,
+            currentTime,
           ),
         );
       }

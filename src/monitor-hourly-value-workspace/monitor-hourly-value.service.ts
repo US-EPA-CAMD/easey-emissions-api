@@ -31,6 +31,7 @@ export class MonitorHourlyValueWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
     for (const dataChunk of data) {
       objectList.push({
@@ -46,8 +47,8 @@ export class MonitorHourlyValueWorkspaceService {
         monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
         hourId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
       });
     }

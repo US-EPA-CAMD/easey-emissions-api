@@ -31,6 +31,7 @@ export class MatsMonitorHourlyValueWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
     for (const dataChunk of data) {
       objectList.push({
@@ -45,8 +46,8 @@ export class MatsMonitorHourlyValueWorkspaceService {
         hourId,
         monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
       });
     }

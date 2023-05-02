@@ -57,6 +57,7 @@ export class HourlyFuelFlowWorkspaceService {
     identifiers: ImportIdentifiers,
     parentObjectList: Array<object>,
     childObjectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
     for (const dataChunk of data) {
       const uid = randomUUID();
@@ -76,8 +77,8 @@ export class HourlyFuelFlowWorkspaceService {
           identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
-        addDate: currentDateTime().toISOString(),
-        updateDate: currentDateTime().toISOString(),
+        addDate: currentTime,
+        updateDate: currentTime,
         userId: identifiers?.userId,
       });
     }
@@ -93,6 +94,7 @@ export class HourlyFuelFlowWorkspaceService {
           reportingPeriodId,
           identifiers,
           childObjectList,
+          currentTime,
         ),
       );
     }

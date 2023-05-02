@@ -267,7 +267,6 @@ describe('Emissions Workspace Service', () => {
   });
 
   it('should successfully import', async function() {
-
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
     jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
       findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
@@ -282,15 +281,14 @@ describe('Emissions Workspace Service', () => {
       monitorPlanAmount: 2,
       monitorPlanConfig: {
         include: ['beginRptPeriod', 'endRptPeriod'],
-
       },
     });
-    
+
     plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
     plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
       emissionsDtoMock[0].quarter;
     plantMock[0].monitorPlans[0].endRptPeriod = null;
-    plantMock[0].monitorPlans[0].locations = [new MonitorLocation]
+    plantMock[0].monitorPlans[0].locations = [new MonitorLocation()];
 
     jest
       .spyOn(plantRepository, 'getImportLocations')
@@ -319,6 +317,7 @@ describe('Emissions Workspace Service', () => {
         [monitoringLocation],
         faker.datatype.number(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        new Date().toISOString(),
       ),
     ).resolves.toBeUndefined();
 
@@ -328,6 +327,7 @@ describe('Emissions Workspace Service', () => {
         [monitoringLocation],
         faker.datatype.number(),
         { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        new Date().toISOString(),
       ),
     ).resolves;
   });
