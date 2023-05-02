@@ -575,7 +575,9 @@ export class EmissionsWorkspaceService {
         location.id,
         userId,
       );
-
+      Object.keys(partialIdentifiers.components).forEach(key => partialIdentifiers.components[key] === undefined && delete partialIdentifiers.components[key])      
+      Object.keys(partialIdentifiers.monitorFormulas).forEach(key => partialIdentifiers.monitorFormulas[key] === undefined && delete partialIdentifiers.monitorFormulas[key])      
+      Object.keys(partialIdentifiers.monitoringSystems).forEach(key => partialIdentifiers.monitoringSystems[key] === undefined && delete partialIdentifiers.monitoringSystems[key])      
       Object.assign(identifiers.components, partialIdentifiers.components);
       Object.assign(
         identifiers.monitorFormulas,
