@@ -32,6 +32,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -190,6 +191,8 @@ export class EmissionsWorkspaceService {
       );
     }
 
+    const currentTime = currentDateTime().toISOString();
+
     const importPromises = [
       this.importDailyEmissions(
         params,
@@ -203,6 +206,7 @@ export class EmissionsWorkspaceService {
         monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
 
       this.importHourlyOperating(
@@ -210,6 +214,7 @@ export class EmissionsWorkspaceService {
         monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
 
       this.importSummaryValue(
@@ -315,12 +320,14 @@ export class EmissionsWorkspaceService {
     monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ): Promise<void> {
     await this.dailyTestSummaryService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
+      currentTime,
     );
   }
 
@@ -329,13 +336,14 @@ export class EmissionsWorkspaceService {
     monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ): Promise<void> {
-    console.log('Importing');
     await this.hourlyOperatingService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
+      currentTime,
     );
   }
 

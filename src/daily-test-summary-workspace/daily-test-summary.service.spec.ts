@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
-import {
-  DailyTestSummaryWorkspaceService,
-} from './daily-test-summary.service';
+import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
@@ -119,12 +117,18 @@ describe('Daily Summary Workspace Service', () => {
       new DailyTestSummaryImportDTO(),
     ];
 
-    await dailyTestSummaryService.import(emissionsDto, [new MonitorLocation], 1, {
-      components: {},
-      monitorFormulas: {},
-      monitoringSystems: {},
-      userId: '',
-    });
+    await dailyTestSummaryService.import(
+      emissionsDto,
+      [new MonitorLocation()],
+      1,
+      {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+        userId: '',
+      },
+      new Date().toISOString(),
+    );
 
     expect(writeObjectMock).toHaveBeenCalledTimes(3);
   });

@@ -221,12 +221,18 @@ describe('HourlyOperatingWorskpaceService', () => {
         new HourlyOperatingImportDTO(),
       ];
 
-      await service.import(dto, [MonitorLocation], 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+      await service.import(
+        dto,
+        [MonitorLocation],
+        1,
+        {
+          components: {},
+          userId: '',
+          monitorFormulas: {},
+          monitoringSystems: {},
+        },
+        new Date().toISOString(),
+      );
 
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });

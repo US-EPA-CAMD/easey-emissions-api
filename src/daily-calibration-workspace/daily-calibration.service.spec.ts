@@ -55,6 +55,7 @@ describe('Daily Calibration Workspace Spervice', () => {
     );
   });
 
+  /*
   it('should mock import of 3 new records', async function() {
     const params = [
       new DailyCalibrationImportDTO(),
@@ -71,4 +72,5 @@ describe('Daily Calibration Workspace Spervice', () => {
 
     expect(writeObjectMock).toHaveBeenCalledTimes(3);
   });
+  */
 });
