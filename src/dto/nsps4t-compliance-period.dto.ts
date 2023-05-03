@@ -23,6 +23,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsString()
+  //add code
   co2EmissionRateUomCode?: string;
 
   @IsOptional()

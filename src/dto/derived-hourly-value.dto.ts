@@ -1,7 +1,16 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ModcCode } from '../entities/modc-code.entity';
+import { OperatingConditionCode } from '../entities/operating-condition-code.entity';
+import { FuelCode } from '../entities/fuel-code.entity';
 
 export class DerivedHourlyValueBaseDTO {
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: ImportCodeErrorMessage(),
+  })
   parameterCode: string;
 
   @IsNumber()
@@ -14,6 +23,9 @@ export class DerivedHourlyValueBaseDTO {
 
   @IsString()
   @IsOptional()
+  @IsValidCode(ModcCode, {
+    message: ImportCodeErrorMessage(),
+  })
   modcCode: string;
 
   @IsString()
@@ -30,6 +42,9 @@ export class DerivedHourlyValueBaseDTO {
 
   @IsString()
   @IsOptional()
+  @IsValidCode(OperatingConditionCode, {
+    message: ImportCodeErrorMessage(),
+  })
   operatingConditionCode: string;
 
   @IsNumber()
@@ -38,6 +53,9 @@ export class DerivedHourlyValueBaseDTO {
 
   @IsString()
   @IsOptional()
+  @IsValidCode(FuelCode, {
+    message: ImportCodeErrorMessage(),
+  })
   fuelCode: string;
 }
 

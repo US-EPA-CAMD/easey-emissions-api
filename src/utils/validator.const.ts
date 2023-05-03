@@ -109,3 +109,8 @@ export function OpYear() {
     IsNotEmptyString({ message: ErrorMessages.RequiredProperty() }),
   );
 }
+
+export function ImportCodeErrorMessage(){
+  return 'You reported an invalid $Property of $Value.'
+
+}

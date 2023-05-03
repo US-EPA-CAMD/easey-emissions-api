@@ -7,6 +7,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ParameterCode } from '../entities/parameter-code.entity';
 
 export class DailyEmissionBaseDTO {
   @IsOptional()
@@ -18,6 +21,9 @@ export class DailyEmissionBaseDTO {
   unitId?: string;
 
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: ImportCodeErrorMessage(),
+  })  
   parameterCode: string;
 
   @IsDateString()

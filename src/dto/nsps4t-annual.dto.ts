@@ -7,6 +7,7 @@ export class Nsps4tAnnualBaseDTO {
 
   @IsOptional()
   @IsString()
+  //need to add validation code
   annualEnergySoldTypeCode?: string;
 
   @IsOptional()

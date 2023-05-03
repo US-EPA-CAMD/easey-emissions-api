@@ -1,4 +1,8 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { FuelFlowPeriodCode } from '../entities/fuel-flow-period-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { UnitsOfMeasureCode } from 'src/entities/units-of-measure.entity';
 
 export class LongTermFuelFlowBaseDTO {
   @IsOptional()
@@ -14,12 +18,18 @@ export class LongTermFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(FuelFlowPeriodCode, {
+    message: ImportCodeErrorMessage(),
+  })
   fuelFlowPeriodCode?: string;
 
   @IsNumber()
   longTermFuelFlowValue: number;
 
   @IsString()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: ImportCodeErrorMessage(),
+  })
   longTermFuelFlowUomCode: string;
 
   @IsOptional()
@@ -28,6 +38,10 @@ export class LongTermFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  //need to double check code
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: ImportCodeErrorMessage(),
+  })
   gcvUnitsOfMeasureCode?: string;
 
   @IsOptional()

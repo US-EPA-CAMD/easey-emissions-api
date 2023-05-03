@@ -7,6 +7,10 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ModcCode } from '../entities/modc-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ApsCode } from '../entities/aps-code.entity';
 
 export class SorbentTrapBaseDTO {
   @IsOptional()
@@ -42,6 +46,9 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(ModcCode, {
+    message: ImportCodeErrorMessage(),
+  })
   modcCode?: string;
 
   @IsOptional()
@@ -50,6 +57,9 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(ApsCode, {
+    message: ImportCodeErrorMessage(),
+  })
   apsCode?: string;
 
   @IsOptional()

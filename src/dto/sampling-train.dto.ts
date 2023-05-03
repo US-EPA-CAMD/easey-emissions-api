@@ -1,3 +1,4 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class SamplingTrainBaseDTO {
@@ -45,14 +46,17 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsString()
+  //add code
   samplingRatioCheckResultCode?: string;
 
   @IsOptional()
   @IsString()
+  //add code
   postLeakCheckResultCode?: string;
 
   @IsOptional()
   @IsString()
+ // @IsValidCode('train-qa-status-codes')
   trainQaStatusCode?: string;
 
   @IsOptional()

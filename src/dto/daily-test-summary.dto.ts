@@ -10,6 +10,11 @@ import {
   DailyCalibrationDTO,
   DailyCalibrationImportDTO,
 } from './daily-calibration.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { TestTypeCode } from '../entities/test-type-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { TestResultCode } from '../entities/test-result-code.entity';
+import { SpanScaleCode } from '../entities/span-scale-code.entity';
 
 export class DailyTestSummaryBaseDTO {
   @IsOptional()
@@ -39,14 +44,22 @@ export class DailyTestSummaryBaseDTO {
   componentId?: string;
 
   @IsString()
+  @IsValidCode(TestTypeCode, {
+    message: ImportCodeErrorMessage(),
+  })
   testTypeCode: string;
 
   @IsString()
+  @IsValidCode(TestResultCode, {
+    message: ImportCodeErrorMessage(),
+  })
   testResultCode: string;
 
   @IsOptional()
   @IsString()
-  spanScaleCode?: string;
+  @IsValidCode(SpanScaleCode, {
+    message: ImportCodeErrorMessage(),
+  })  spanScaleCode?: string;
 }
 
 export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {

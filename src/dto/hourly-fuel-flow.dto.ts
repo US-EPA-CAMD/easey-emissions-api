@@ -9,9 +9,18 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { FuelCode } from '../entities/fuel-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { UnitsOfMeasureCode } from 'src/entities/units-of-measure.entity';
+import { SodVolumetricCode } from 'src/entities/sod-volumetri-code.entity';
+import { SodMassCode } from 'src/entities/sod-mass-code.entity';
 
 export class HourlyFuelFlowBaseDTO {
   @IsString()
+  @IsValidCode(FuelCode, {
+    message: ImportCodeErrorMessage(),
+  })
   fuelCode: string;
 
   @IsNumber()
@@ -24,10 +33,16 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsString()
   @IsOptional()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: ImportCodeErrorMessage(),
+  })
   volumetricUnitsOfMeasureCode?: string;
 
   @IsString()
   @IsOptional()
+  @IsValidCode(SodVolumetricCode, {
+    message: ImportCodeErrorMessage(),
+  })
   sourceOfDataVolumetricCode?: string;
 
   @IsNumber()
@@ -36,6 +51,9 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsString()
   @IsOptional()
+  @IsValidCode(SodMassCode, {
+    message: ImportCodeErrorMessage(),
+  })
   sourceOfDataMassCode?: string;
 
   @IsString()

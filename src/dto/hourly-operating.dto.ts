@@ -31,6 +31,10 @@ import {
   MatsDerivedHourlyValueDTO,
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { FuelCode } from '../entities/fuel-code.entity';
 
 export class HourlyOperatingBaseDTO {
   @IsOptional()
@@ -57,6 +61,9 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: ImportCodeErrorMessage(),
+  })
   loadUnitsOfMeasureCode?: string;
 
   @IsOptional()
@@ -85,6 +92,9 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(FuelCode, {
+    message: ImportCodeErrorMessage(),
+  })
   fuelCode?: string;
 
   @IsOptional()

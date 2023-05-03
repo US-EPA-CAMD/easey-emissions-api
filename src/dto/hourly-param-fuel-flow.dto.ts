@@ -1,7 +1,16 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { SampleTypeCode } from '../entities/sample-type-code.entity';
+import { OperatingConditionCode } from '../entities/operating-condition-code.entity';
+import { UnitsOfMeasureCode } from 'src/entities/units-of-measure.entity';
 
 export class HourlyParamFuelFlowBaseDTO {
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: ImportCodeErrorMessage(),
+  })
   parameterCode: string;
 
   @IsOptional()
@@ -14,6 +23,9 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(SampleTypeCode, {
+    message: ImportCodeErrorMessage(),
+  })
   sampleTypeCode?: string;
 
   @IsOptional()
@@ -22,6 +34,9 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(OperatingConditionCode, {
+    message: ImportCodeErrorMessage(),
+  })
   operatingConditionCode?: string;
 
   @IsOptional()
@@ -30,6 +45,9 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: ImportCodeErrorMessage(),
+  })
   parameterUomCode?: string;
 }
 

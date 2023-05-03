@@ -1,7 +1,14 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ModcCode } from '../entities/modc-code.entity';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class MatsMonitorHourlyValueBaseDTO {
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: ImportCodeErrorMessage(),
+  })
   parameterCode: string;
 
   @IsOptional()
@@ -10,6 +17,9 @@ export class MatsMonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(ModcCode, {
+    message: ImportCodeErrorMessage(),
+  })
   modcCode?: string;
 
   @IsOptional()

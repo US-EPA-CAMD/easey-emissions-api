@@ -1,7 +1,13 @@
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsNumber, IsString } from 'class-validator';
+import { GasLevelCode } from '../entities/gas-level-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class WeeklySystemIntegrityBaseDTO {
   @IsString()
+  @IsValidCode(GasLevelCode, {
+    message: ImportCodeErrorMessage(),
+  })
   gasLevelCode?: string;
 
   @IsNumber()

@@ -10,6 +10,7 @@ import {
   Nsps4tCompliancePeriodImportDTO,
 } from './nsps4t-compliance-period.dto';
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 
 export class Nsps4tSummaryBaseDTO {
   @IsOptional()
@@ -22,6 +23,7 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
+  //add code
   co2EmissionStandardCode?: string;
 
   @IsOptional()
@@ -30,10 +32,13 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
+    //add code
   modusUomCode?: string;
 
   @IsOptional()
   @IsString()
+  // nedd to add validation code
+  @IsValidCode('electrical-load-codes')
   electricalLoadCode?: string;
 
   @IsOptional()
