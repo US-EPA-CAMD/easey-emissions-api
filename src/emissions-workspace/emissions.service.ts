@@ -222,6 +222,7 @@ export class EmissionsWorkspaceService {
         monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
       this.importSorbentTrap(
         params,
@@ -352,28 +353,35 @@ export class EmissionsWorkspaceService {
     monitoringLocations: MonitorLocation[],
     reportingPeriodId,
     identifiers: ImportIdentifiers,
-  ) {
+    currentTime: string,
+  ): Promise<void> {
     const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
 
-    if (Array.isArray(emissionsImport.summaryValueData)) {
-      for (const summaryValueDatum of emissionsImport.summaryValueData) {
-        const monitoringLocationId = await this.getMonitoringLocationId(
-          monitoringLocations,
-          summaryValueDatum,
-        );
+    await this.summaryValueService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    )
+    // if (Array.isArray(emissionsImport.summaryValueData)) {
+    //   for (const summaryValueDatum of emissionsImport.summaryValueData) {
+    //     const monitoringLocationId = await this.getMonitoringLocationId(
+    //       monitoringLocations,
+    //       summaryValueDatum,
+    //     );
 
-        summaryValueImports.push(
-          this.summaryValueService.import({
-            ...summaryValueDatum,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-          }),
-        );
-      }
-    }
+    //     summaryValueImports.push(
+    //       this.summaryValueService.import({
+    //         ...summaryValueDatum,
+    //         monitoringLocationId,
+    //         reportingPeriodId,
+    //         identifiers,
+    //       }),
+    //     );
+    //   }
+    // }
 
-    return Promise.all(summaryValueImports);
   }
 
   async importSorbentTrap(
