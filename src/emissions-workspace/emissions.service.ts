@@ -21,12 +21,10 @@ import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
-import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
-import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
@@ -196,9 +194,10 @@ export class EmissionsWorkspaceService {
     const importPromises = [
       this.importDailyEmissions(
         params,
-        reportingPeriodId,
         monitoringLocations,
+        reportingPeriodId,
         identifiers,
+        currentTime,
       ),
 
       this.importDailyTestSummaries(
@@ -292,29 +291,19 @@ export class EmissionsWorkspaceService {
 
   async importDailyEmissions(
     emissionsImport: EmissionsImportDTO,
-    reportingPeriodId: number,
     monitoringLocations: MonitorLocation[],
+    reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ) {
-    if (hasArrayValues(emissionsImport.dailyEmissionData)) {
-      const promises = [];
-      for (const dailyEmission of emissionsImport.dailyEmissionData) {
-        const monitoringLocationId = await this.getMonitoringLocationId(
-          monitoringLocations,
-          dailyEmission,
-        );
 
-        promises.push(
-          this.dailyEmissionService.import({
-            ...dailyEmission,
-            identifiers,
-            monitoringLocationId,
-            reportingPeriodId,
-          }),
-        );
-      }
-      return Promise.all(promises);
-    }
+    await this.dailyEmissionService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async importDailyTestSummaries(
