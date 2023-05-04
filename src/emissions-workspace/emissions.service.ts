@@ -241,6 +241,7 @@ export class EmissionsWorkspaceService {
         monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
       this.importLongTermFuelFlow(
         params,
@@ -355,7 +356,6 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
-    const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
 
     await this.summaryValueService.import(
       emissionsImport,
@@ -364,24 +364,6 @@ export class EmissionsWorkspaceService {
       identifiers,
       currentTime,
     )
-    // if (Array.isArray(emissionsImport.summaryValueData)) {
-    //   for (const summaryValueDatum of emissionsImport.summaryValueData) {
-    //     const monitoringLocationId = await this.getMonitoringLocationId(
-    //       monitoringLocations,
-    //       summaryValueDatum,
-    //     );
-
-    //     summaryValueImports.push(
-    //       this.summaryValueService.import({
-    //         ...summaryValueDatum,
-    //         monitoringLocationId,
-    //         reportingPeriodId,
-    //         identifiers,
-    //       }),
-    //     );
-    //   }
-    // }
-
   }
 
   async importSorbentTrap(
@@ -445,27 +427,17 @@ export class EmissionsWorkspaceService {
     monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ) {
-    const weeklyTestSummaryImports: Array<Promise<WeeklyTestSummaryDTO>> = [];
 
-    if (Array.isArray(emissionsImport.weeklyTestSummaryData)) {
-      for (const weeklyTestSummary of emissionsImport.weeklyTestSummaryData) {
-        const monitoringLocationId = await this.getMonitoringLocationId(
-          monitoringLocations,
-          weeklyTestSummary,
-        );
 
-        weeklyTestSummaryImports.push(
-          this.weeklyTestSummaryService.import({
-            ...weeklyTestSummary,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-    }
-    return Promise.all(weeklyTestSummaryImports);
+    await this.weeklyTestSummaryService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    )
   }
 
   async importLongTermFuelFlow(
