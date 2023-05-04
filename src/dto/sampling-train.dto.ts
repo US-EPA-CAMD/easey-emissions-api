@@ -53,7 +53,7 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsString()
-  trainQaStatusCode?: string;
+  trainQAStatusCode?: string;
 
   @IsOptional()
   @IsString()

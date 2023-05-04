@@ -86,7 +86,7 @@ export class SamplingTrain extends BaseEntity {
   postLeakCheckResultCode: string;
 
   @Column({ name: 'train_qa_status_cd', nullable: true })
-  trainQaStatusCode: string;
+  trainQAStatusCode: string;
 
   @Column({ name: 'sample_damage_explanation', nullable: true })
   sampleDamageExplanation: string;
