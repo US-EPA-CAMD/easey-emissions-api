@@ -49,7 +49,7 @@ describe('SamplingTrainMap', () => {
         percentSpikeRecovery: mock.percentSpikeRecovery,
         samplingRatioCheckResultCode: mock.samplingRatioCheckResultCode,
         postLeakCheckResultCode: mock.postLeakCheckResultCode,
-        trainQaStatusCode: mock.trainQaStatusCode,
+        trainQAStatusCode: mock.trainQAStatusCode,
         sampleDamageExplanation: mock.sampleDamageExplanation,
         calcHgConcentration: mock.calcHgConcentration,
         calcPercentBreakthrough: mock.calcPercentBreakthrough,
