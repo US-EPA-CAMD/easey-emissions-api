@@ -38,7 +38,7 @@ export const importSamplingTrainData = async ({
       percentSpikeRecovery: data.percentSpikeRecovery,
       samplingRatioCheckResultCode: data.samplingRatioCheckResultCode,
       postLeakCheckResultCode: data.postLeakCheckResultCode,
-      trainQaStatusCode: data.trainQaStatusCode,
+      trainQAStatusCode: data.trainQAStatusCode,
       sampleDamageExplanation: data.sampleDamageExplanation,
       userId: data.identifiers?.userId,
       addDate: new Date(),

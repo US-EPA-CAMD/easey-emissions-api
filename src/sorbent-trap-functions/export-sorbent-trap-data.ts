@@ -22,6 +22,7 @@ export const exportSorbentTrapQuery = ({
     .innerJoinAndSelect('sorbentTrap.monitorLocation', 'monitorLocation')
     .leftJoinAndSelect('monitorLocation.unit', 'unit')
     .leftJoinAndSelect('monitorLocation.stackPipe', 'stack')
+    .leftJoinAndSelect('sorbentTrap.monitorSystem', 'monitorSystem')
     .innerJoin('sorbentTrap.reportingPeriod', 'reportingPeriod')
     .where('monitorLocation.mon_loc_id IN (:...monitoringLocationIds)', {
       monitoringLocationIds: monitoringLocationIds,
