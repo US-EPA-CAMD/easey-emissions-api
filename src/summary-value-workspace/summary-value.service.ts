@@ -108,40 +108,4 @@ export class SummaryValueWorkspaceService {
     bulkLoadStream.complete();
     await bulkLoadStream.finished;
   }
-//   async import(data: SummaryValueCreate): Promise<SummaryValueDTO> {
-//     await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
-//     const uniqueResults = await this.repository.find({
-//       where: {
-//         reportingPeriodId: data.reportingPeriodId,
-//         monitoringLocationId: data.monitoringLocationId,
-//         parameterCode: data.parameterCode,
-//       },
-//     });
-
-//     let entity;
-//     if (uniqueResults.length > 0) {
-//       data.reportingPeriodId = undefined;
-//       data.monitoringLocationId = undefined;
-//       data.parameterCode = undefined;
-
-//       entity = this.repository.create({
-//         ...data,
-//         id: uniqueResults[0].id,
-//         addDate: new Date(),
-//         updateDate: new Date(),
-//         userId: data.identifiers?.userId,
-//       });
-//     } else
-//       entity = this.repository.create({
-//         ...data,
-//         id: randomUUID(),
-//         addDate: new Date(),
-//         updateDate: new Date(),
-//         userId: data.identifiers?.userId,
-//       });
-
-//     const result = await this.repository.save(entity);
-
-//     return result;
-//   }
 }
