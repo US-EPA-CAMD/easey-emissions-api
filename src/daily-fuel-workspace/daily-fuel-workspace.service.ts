@@ -87,22 +87,4 @@ export class DailyFuelWorkspaceService {
       await bulkLoadStream.finished;
     }
   }
-
-  // async import(data: DailyFuelWorkspaceCreate) {
-  //   return this.repository.save(
-  //     this.repository.create({
-  //       id: randomUUID(),
-  //       dailyEmissionId: data.dailyEmissionId,
-  //       fuelCode: data.fuelCode,
-  //       dailyFuelFeed: data.dailyFuelFeed,
-  //       carbonContentUsed: data.carbonContentUsed,
-  //       fuelCarbonBurned: data.fuelCarbonBurned,
-  //       reportingPeriodId: data.reportingPeriodId,
-  //       monitoringLocationId: data.monitoringLocationId,
-  //       addDate: new Date(),
-  //       updateDate: new Date(),
-  //       userId: data.identifiers.userId,
-  //     }),
-  //   );
-  // }
 }
