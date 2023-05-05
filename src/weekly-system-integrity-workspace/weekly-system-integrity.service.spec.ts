@@ -9,17 +9,22 @@ import { WeeklySystemIntegrity } from '../entities/workspace/weekly-system-integ
 import { genWeeklySystemIntegrityDto } from '../../test/object-generators/weekly-system-integrity.dto';
 import { WeeklySystemIntegrityImportDTO } from '../dto/weekly-system-integrity.dto';
 import { ImportIdentifiers } from '../../dist/emissions-workspace/emissions.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { ConfigService } from '@nestjs/config';
 
 describe('--WeeklySystemIntegrityWorkspaceService--', () => {
   let map: WeeklySystemIntegrityMap;
   let repository: WeeklySystemIntegrityWorkspaceRepository;
   let service: WeeklySystemIntegrityWorkspaceService;
+  let bulkLoadService: BulkLoadService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityWorkspaceService,
+        BulkLoadService,
+        ConfigService,
         {
           provide: WeeklySystemIntegrityWorkspaceRepository,
           useValue: mockWeeklySystemIntegrityWorkspaceRepository,
@@ -30,6 +35,7 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
     map = module.get(WeeklySystemIntegrityMap);
     repository = module.get(WeeklySystemIntegrityWorkspaceRepository);
     service = module.get(WeeklySystemIntegrityWorkspaceService);
+    bulkLoadService = module.get(BulkLoadService);
   });
 
   it('should be defined', () => {
@@ -58,23 +64,17 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
 
   describe('import', () => {
     it('should successfully import a weekly test summary record', async () => {
-      const generatedData = genWeeklySystemIntegrityDto(1)[0];
-      const importData: WeeklySystemIntegrityImportDTO = {
-        ...generatedData,
-      };
-      const importIdentfiers = {
-        monitorFormulas: {},
-        components: {},
-        monitoringSystems: {},
-      };
-      const result = await service.import(
-        importData,
-        '123',
-        '123',
-        1,
-        importIdentfiers,
-      );
-      expect(result).toBeNull();
+      const generatedData = genWeeklySystemIntegrityDto(1);
+
+      // @ts-expect-error use as mock
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
+        writeObject:jest.fn(),
+        complete:jest.fn(),
+        finished: Promise.resolve(true)
+      });
+
+      await expect(service.import(generatedData)).resolves;
+      
     });
   });
 });

@@ -7,9 +7,10 @@ import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyEmissionImportDTO } from '../dto/daily-emission.dto';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { hasArrayValues } from '../utils/utils';
 import { DeleteResult, FindConditions } from 'typeorm';
 import { DailyEmission } from '../entities/workspace/daily-emission.entity';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 export type DailyEmissionWorkspaceCreate = DailyEmissionImportDTO & {
   reportingPeriodId: number;
@@ -23,6 +24,7 @@ export class DailyEmissionWorkspaceService {
     private readonly map: DailyEmissionMap,
     private readonly repository: DailyEmissionWorkspaceRepository,
     private readonly dailyFuelWorkspaceService: DailyFuelWorkspaceService,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async delete(criteria: FindConditions<DailyEmission>): Promise<DeleteResult> {
@@ -54,53 +56,98 @@ export class DailyEmissionWorkspaceService {
     return dailyEmissionData;
   }
 
-  async import(data: DailyEmissionWorkspaceCreate) {
-    await this.delete({
-      monitoringLocationId: data.monitoringLocationId,
-      reportingPeriodId: data.reportingPeriodId,
-    });
-    const dailyEmission = await this.repository.save(
-      this.repository.create({
-        id: randomUUID(),
-        reportingPeriodId: data.reportingPeriodId,
-        monitoringLocationId: data.monitoringLocationId,
-        parameterCode: data.parameterCode,
-        date: data.date,
-        totalDailyEmissions: data.totalDailyEmissions,
-        adjustedDailyEmissions: data.adjustedDailyEmissions,
-        sorbentRelatedMassEmissions: data.sorbentRelatedMassEmissions,
-        unadjustedDailyEmissions: data.unadjustedDailyEmissions,
-        totalCarbonBurned: data.totalCarbonBurned,
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: data.identifiers?.userId,
-      }),
-    );
+  async import(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations,
+    reportingPeriodId,
+    identifiers: ImportIdentifiers,
+    currentTime: string,
+  ): Promise<void>{
 
-    if (hasArrayValues(data.dailyFuelData)) {
-      const promises = [];
-      for (const dailyFuel of data.dailyFuelData) {
-        promises.push(
-          this.dailyFuelWorkspaceService
-            .import({
-              dailyEmissionId: dailyEmission.id,
-              monitoringLocationId: data.monitoringLocationId,
-              reportingPeriodId: data.reportingPeriodId,
-              identifiers: data.identifiers,
-              ...dailyFuel,
-            })
-            .then(data => {
-              if (!Array.isArray(dailyEmission.dailyFuelData)) {
-                dailyEmission.dailyFuelData = [];
-              }
-
-              dailyEmission.dailyFuelData.push(data);
-            }),
-        );
-      }
-      await Promise.all(promises);
+    if (
+      !Array.isArray(emissionsImport?.dailyEmissionData) ||
+      emissionsImport?.dailyEmissionData.length === 0
+    ) {
+      return;
     }
 
-    return dailyEmission;
+    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+      'camdecmpswks.daily_emission',
+      [
+        'daily_emission_id',
+        'rpt_period_id',
+        'mon_loc_id',
+        'parameter_cd',
+        'begin_date',
+        'total_daily_emission',
+        'adjusted_daily_emission',
+        'sorbent_mass_emission',
+        'userid',
+        'add_date',
+        'update_date',
+        'unadjusted_daily_emission',
+        'total_carbon_burned',
+      ],
+    );
+
+
+    for (const dailyEmissionDatum of emissionsImport.dailyEmissionData) {
+      const monitoringLocationId = monitoringLocations.filter(location => {
+        return (
+          location.unit?.name === dailyEmissionDatum.unitId ||
+          location.stackPipe?.name === dailyEmissionDatum.stackPipeId
+        );
+      })[0].id;
+
+      const uid = randomUUID();
+      dailyEmissionDatum['id'] = uid;
+      dailyEmissionDatum['locationId'] = monitoringLocationId;
+
+
+      const {parameterCode, date, totalDailyEmissions, adjustedDailyEmissions, 
+        sorbentRelatedMassEmissions, unadjustedDailyEmissions, totalCarbonBurned} = dailyEmissionDatum;
+
+      bulkLoadStream.writeObject({
+        id: uid,
+        reportingPeriodId,
+        monitoringLocationId,
+        parameterCode,
+        date,
+        totalDailyEmissions,
+        adjustedDailyEmissions,
+        sorbentRelatedMassEmissions,
+        userId: identifiers?.userId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        unadjustedDailyEmissions,
+        totalCarbonBurned,
+      });
+    }
+
+    bulkLoadStream.complete();
+    await bulkLoadStream.finished;
+
+    if (bulkLoadStream.status === 'Complete') {
+      const buildPromises = [];
+
+      const dailyFuelObjects = [];
+
+      for (const dailyEmissionDatum of emissionsImport.dailyEmissionData) {
+        buildPromises.push(
+          this.dailyFuelWorkspaceService.buildObjectList(
+            dailyEmissionDatum.dailyFuelData,
+            dailyEmissionDatum['id'],
+            dailyEmissionDatum['locationId'],
+            reportingPeriodId,
+            identifiers,
+            dailyFuelObjects,
+            currentTime,
+          ),
+        );
+      }
+      await Promise.all(buildPromises);
+
+      await this.dailyFuelWorkspaceService.import(dailyFuelObjects);
+    }
   }
 }
