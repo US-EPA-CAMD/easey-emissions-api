@@ -8,6 +8,7 @@ export class HourlyParameterFuelFlowWorkspaceRepository extends Repository<
   async export(hourlyFuelFlowId: string) {
     return this.createQueryBuilder('hrlyParam')
       .leftJoinAndSelect('hrlyParam.monitorFormula', 'monitorFormula')
+      .leftJoinAndSelect('hrlyParam.monitorSystem', 'ms')
       .where('hrlyParam.hrly_fuel_flow_id = :hourlyFuelFlowId', {
         hourlyFuelFlowId,
       })

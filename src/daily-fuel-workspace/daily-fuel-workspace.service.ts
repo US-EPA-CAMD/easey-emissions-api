@@ -5,6 +5,7 @@ import { DailyFuelWorkspaceRepository } from './daily-fuel-workspace.repository'
 import { randomUUID } from 'crypto';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 export type DailyFuelWorkspaceCreate = DailyFuelImportDTO & {
   dailyEmissionId: string;
@@ -15,10 +16,12 @@ export type DailyFuelWorkspaceCreate = DailyFuelImportDTO & {
 
 @Injectable()
 export class DailyFuelWorkspaceService {
+
   constructor(
     private readonly map: DailyFuelMap,
     private readonly repository: DailyFuelWorkspaceRepository,
-  ) {}
+    private readonly bulkLoadService: BulkLoadService,
+  ) { }
 
   async export(dailyEmissionIds: string[]): Promise<DailyFuelDTO[]> {
     return exportDailyFuelData({
@@ -27,21 +30,61 @@ export class DailyFuelWorkspaceService {
     });
   }
 
-  async import(data: DailyFuelWorkspaceCreate) {
-    return this.repository.save(
-      this.repository.create({
+  async buildObjectList(
+    data: DailyFuelImportDTO[],
+    dailyEmissionId: string,
+    monitoringLocationId: string,
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+    objectList: Array<object>,
+    currentTime: string,
+  ): Promise<void> {
+
+    for (const dataChunk of data) {
+      const {fuelCode, dailyFuelFeed, carbonContentUsed, fuelCarbonBurned} = dataChunk;
+      objectList.push({
         id: randomUUID(),
-        dailyEmissionId: data.dailyEmissionId,
-        fuelCode: data.fuelCode,
-        dailyFuelFeed: data.dailyFuelFeed,
-        carbonContentUsed: data.carbonContentUsed,
-        fuelCarbonBurned: data.fuelCarbonBurned,
-        reportingPeriodId: data.reportingPeriodId,
-        monitoringLocationId: data.monitoringLocationId,
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: data.identifiers.userId,
-      }),
-    );
+        dailyEmissionId,
+        fuelCode,
+        dailyFuelFeed,
+        carbonContentUsed,
+        fuelCarbonBurned,
+        userId: identifiers?.userId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        reportingPeriodId,
+        monitoringLocationId,
+      });
+
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
+      const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+        'camdecmpswks.daily_fuel',
+        [
+          'daily_fuel_id',
+          'daily_emission_id',
+          'fuel_cd',
+          'daily_fuel_feed',
+          'carbon_content_used',
+          'fuel_carbon_burned',
+          'userid',
+          'add_date',
+          'update_date',
+          'rpt_period_id',
+          'mon_loc_id',
+        ],
+        '|',
+      );
+
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
+      }
+
+      bulkLoadStream.complete();
+      await bulkLoadStream.finished;
+    }
   }
 }

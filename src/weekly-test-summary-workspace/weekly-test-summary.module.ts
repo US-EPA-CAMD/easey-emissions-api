@@ -6,11 +6,13 @@ import { WeeklySystemIntegrityWorkspaceModule } from '../weekly-system-integrity
 import { WeeklyTestSummaryCheckService } from './weekly-test-summary-check.service';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([WeeklyTestSummaryWorkspaceRepository]),
     WeeklySystemIntegrityWorkspaceModule,
+    BulkLoadService,
   ],
   controllers: [],
   providers: [
