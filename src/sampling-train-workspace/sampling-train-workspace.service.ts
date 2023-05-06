@@ -49,7 +49,7 @@ export class SamplingTrainWorkspaceService {
         percentSpikeRecovery: dataChunk.percentSpikeRecovery,
         samplingRatioTestResultCd: dataChunk.samplingRatioCheckResultCode,
         postLeakTestResultCd: dataChunk.postLeakCheckResultCode,
-        trainQAStatusCd: dataChunk.trainQaStatusCode,
+        trainQAStatusCd: dataChunk.trainQAStatusCode,
         sampleDamageExplanation: dataChunk.sampleDamageExplanation,
         userId: identifiers?.userId,
         addDate: currentTime,
