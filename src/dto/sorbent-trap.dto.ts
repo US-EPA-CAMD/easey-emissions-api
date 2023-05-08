@@ -4,6 +4,7 @@ import {
   ValidateNested,
   IsNumber,
   IsDateString,
+  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
@@ -47,7 +48,9 @@ export class SorbentTrapBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(ModcCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   modcCode?: string;
 
@@ -58,7 +61,9 @@ export class SorbentTrapBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(ApsCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   apsCode?: string;
 

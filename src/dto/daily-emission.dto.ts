@@ -4,6 +4,7 @@ import {
   ValidateNested,
   IsNumber,
   IsDateString,
+  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
@@ -22,8 +23,10 @@ export class DailyEmissionBaseDTO {
 
   @IsString()
   @IsValidCode(ParameterCode, {
-    message: ImportCodeErrorMessage(),
-  })  
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   parameterCode: string;
 
   @IsDateString()

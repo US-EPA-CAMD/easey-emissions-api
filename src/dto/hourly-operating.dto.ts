@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 
 import {
@@ -62,7 +63,9 @@ export class HourlyOperatingBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(UnitsOfMeasureCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   loadUnitsOfMeasureCode?: string;
 
@@ -93,7 +96,9 @@ export class HourlyOperatingBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(FuelCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   fuelCode?: string;
 

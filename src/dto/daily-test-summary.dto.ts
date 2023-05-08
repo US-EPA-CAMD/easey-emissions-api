@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 import {
   DailyCalibrationDTO,
@@ -45,21 +46,28 @@ export class DailyTestSummaryBaseDTO {
 
   @IsString()
   @IsValidCode(TestTypeCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   testTypeCode: string;
 
   @IsString()
   @IsValidCode(TestResultCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   testResultCode: string;
 
   @IsOptional()
   @IsString()
   @IsValidCode(SpanScaleCode, {
-    message: ImportCodeErrorMessage(),
-  })  spanScaleCode?: string;
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
+  spanScaleCode?: string;
 }
 
 export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {

@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -11,10 +12,10 @@ import {
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
 import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { TestTypeCode } from 'src/entities/test-type-code.entity';
-import { ImportCodeErrorMessage } from 'src/utils/validator.const';
-import { TestResultCode } from 'src/entities/test-result-code.entity';
-import { SpanScaleCode } from 'src/entities/span-scale-code.entity';
+import { TestTypeCode } from '../entities/test-type-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { TestResultCode } from '../entities/test-result-code.entity';
+import { SpanScaleCode } from '../entities/span-scale-code.entity';
 
 export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
@@ -39,20 +40,26 @@ export class WeeklyTestSummaryBaseDTO {
 
   @IsString()
   @IsValidCode(TestTypeCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   testTypeCode: string;
 
   @IsString()
   @IsValidCode(TestResultCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   testResultCode: string;
 
   @IsString()
   @IsOptional()
   @IsValidCode(SpanScaleCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   spanScaleCode: string;
 }

@@ -110,7 +110,7 @@ export function OpYear() {
   );
 }
 
-export function ImportCodeErrorMessage(){
-  return 'You reported an invalid $Property of $Value.'
+export function ImportCodeErrorMessage(property, value){
+  return `You reported an invalid ${property} of ${value}.`
 
 }

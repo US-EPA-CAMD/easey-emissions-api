@@ -7,8 +7,8 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { GasLevelCode } from '../entities/gas-level-code.entity';
-import { GasTypeCode } from '../entities/gas-type-code.entity';
 import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
@@ -18,7 +18,9 @@ export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(GasLevelCode, {
-    message: 'you provided an incorrect gas level code',
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   upscaleGasCode?: string;
 
@@ -80,11 +82,6 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(GasTypeCode, {
-    message: (args: ValidationArguments) => {
-      return `You reported an invalid gas level code of [${args.value}].`;
-    },
-  })
   upscaleGasTypeCode?: string;
 
   @IsOptional()
@@ -102,7 +99,9 @@ export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(InjectionProtocolCode, {
-    message: 'reported an invalid injection protocol code',
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   injectionProtocolCode?: string;
 }

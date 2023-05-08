@@ -1,15 +1,22 @@
 import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
 import { ParameterCode } from '../entities/parameter-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { SampleTypeCode } from '../entities/sample-type-code.entity';
 import { OperatingConditionCode } from '../entities/operating-condition-code.entity';
-import { UnitsOfMeasureCode } from 'src/entities/units-of-measure.entity';
+import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 
 export class HourlyParamFuelFlowBaseDTO {
   @IsString()
   @IsValidCode(ParameterCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   parameterCode: string;
 
@@ -24,7 +31,9 @@ export class HourlyParamFuelFlowBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(SampleTypeCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   sampleTypeCode?: string;
 
@@ -35,7 +44,9 @@ export class HourlyParamFuelFlowBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(OperatingConditionCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   operatingConditionCode?: string;
 
@@ -46,7 +57,9 @@ export class HourlyParamFuelFlowBaseDTO {
   @IsOptional()
   @IsString()
   @IsValidCode(UnitsOfMeasureCode, {
-    message: ImportCodeErrorMessage(),
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
   })
   parameterUomCode?: string;
 }
