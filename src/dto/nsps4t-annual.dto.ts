@@ -5,7 +5,7 @@ import {
   IsString,
   ValidationArguments,
 } from 'class-validator';
-import { Nsps4tElectricalLoadCode } from '../entities/nsps4t_electrical_load_code.entity';
+import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tAnnualBaseDTO {

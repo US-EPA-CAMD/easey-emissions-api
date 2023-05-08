@@ -12,7 +12,7 @@ import {
 } from './nsps4t-compliance-period.dto';
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
 import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { Nsps4tElectricalLoadCode } from '../entities/nsps4t_electrical_load_code.entity';
+import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { Nsps4tEmissionStandardCode } from '../entities/nsps4t-emission-standard-code.entity';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
