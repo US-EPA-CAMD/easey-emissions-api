@@ -20,7 +20,7 @@ export const genSamplingTrainImportDto = (amount = 1) => {
       percentSpikeRecovery: optionalValue(faker.datatype.number()),
       samplingRatioCheckResultCode: optionalValue(faker.datatype.string()),
       postLeakCheckResultCode: optionalValue(faker.datatype.string()),
-      trainQaStatusCode: optionalValue(faker.datatype.string()),
+      trainQAStatusCode: optionalValue(faker.datatype.string()),
       sampleDamageExplanation: optionalValue(faker.datatype.string()),
     });
   }

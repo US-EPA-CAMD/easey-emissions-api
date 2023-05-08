@@ -1,7 +1,7 @@
 import { BaseEntity, ViewColumn, ViewEntity } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
-@ViewEntity({ name: 'camdecmpswks.vw_em_review_and_submit' })
+@ViewEntity({ name: 'camdecmpswks.vw_em_eval_and_submit' })
 export class EmissionsReviewSubmit extends BaseEntity {
   @ViewColumn({
     name: 'oris_code',
@@ -21,8 +21,14 @@ export class EmissionsReviewSubmit extends BaseEntity {
   @ViewColumn({ name: 'eval_status_cd' })
   evalStatusCode: string;
 
+  @ViewColumn({ name: 'eval_status_cd_description' })
+  evalStatusCodeDescription: string;
+
   @ViewColumn({ name: 'submission_availability_cd' })
   submissionAvailabilityCode: string;
+
+  @ViewColumn({ name: 'submission_availability_cd_description' })
+  submissionAvailabilityCodeDescription: string;
 
   @ViewColumn({ name: 'userid' })
   userid: string;

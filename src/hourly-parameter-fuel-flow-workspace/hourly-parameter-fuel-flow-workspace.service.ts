@@ -8,6 +8,7 @@ import {
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class HourlyParameterFuelFlowWorkspaceService {
@@ -23,14 +24,40 @@ export class HourlyParameterFuelFlowWorkspaceService {
     return this.map.many(hrlyParams);
   }
 
-  async import(
+  async buildObjectList(
     data: HourlyParamFuelFlowImportDTO[],
     parentId: string,
     monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
-    if (data && data.length > 0) {
+    for (const dataChunk of data) {
+      objectList.push({
+        id: randomUUID(),
+        parentId: parentId,
+        parameterCode: dataChunk.parameterCode,
+        parameterValueForFuel: dataChunk.parameterValueForFuel,
+        formulaIdentifier:
+          identifiers.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+        sampleTypeCode: dataChunk.sampleTypeCode,
+        monitoringSystemId:
+          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        operatingConditionCode: dataChunk.operatingConditionCode,
+        segmentNumber: dataChunk.segmentNumber,
+        parameterUomCode: dataChunk.parameterUomCode,
+        monitoringLocationId: monitorLocationId,
+        reportingPeriodId: reportingPeriodId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        userId: identifiers?.userId,
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_param_fuel_flow',
         [
@@ -52,27 +79,8 @@ export class HourlyParameterFuelFlowWorkspaceService {
         ],
       );
 
-      for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
-          id: randomUUID(),
-          parentId: parentId,
-          parameterCode: dataChunk.parameterCode,
-          parameterValueForFuel: dataChunk.parameterValueForFuel,
-          formulaIdentifier:
-            identifiers.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
-          sampleTypeCode: dataChunk.sampleTypeCode,
-          monitoringSystemId:
-            identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] ||
-            null,
-          operatingConditionCode: dataChunk.operatingConditionCode,
-          segmentNumber: dataChunk.segmentNumber,
-          parameterUomCode: dataChunk.parameterUomCode,
-          monitoringLocationId: monitorLocationId,
-          reportingPeriodId: reportingPeriodId,
-          addDate: new Date().toISOString(),
-          updateDate: new Date().toISOString(),
-          userId: identifiers?.userId,
-        });
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
       }
 
       bulkLoadStream.complete();

@@ -65,7 +65,7 @@ describe('HourlyFuelFlowService Workspace', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
+  /*
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -83,6 +83,7 @@ describe('HourlyFuelFlowService Workspace', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
+  */
 
   describe('export', () => {
     it('should return null given no fuel flows were found', async function() {

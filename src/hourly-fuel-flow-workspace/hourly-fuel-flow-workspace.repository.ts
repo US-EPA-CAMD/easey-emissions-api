@@ -10,6 +10,7 @@ export class HourlyFuelFlowWorkspaceRepository extends Repository<
       .where('hourlyFuelFlow.hour_id IN (:...hourlyOperatingIds)', {
         hourlyOperatingIds,
       })
+      .leftJoinAndSelect('hourlyFuelFlow.monitorSystem', 'ms')
       .getMany();
   }
 }

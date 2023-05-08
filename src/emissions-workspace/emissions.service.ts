@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { DeleteResult, FindConditions, getManager } from 'typeorm';
 
 import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
@@ -21,16 +22,14 @@ import { ComponentRepository } from '../component/component.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
-import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
 import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
-import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
-import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -145,7 +144,7 @@ export class EmissionsWorkspaceService {
     }
 
     const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-      return isUndefinedOrNull(plan.endRptPeriod)
+      return isUndefinedOrNull(plan.endRptPeriod);
     });
 
     if (filteredMonitorPlans.length === 0) {
@@ -156,31 +155,31 @@ export class EmissionsWorkspaceService {
       throw new NotFoundException('Multiple active monitor plans found.');
     }
 
-
     const manager = getManager();
     const reportingPeriod = await manager.findOne(ReportingPeriod, {
-      where:{
+      where: {
         year: params.year,
         quarter: params.quarter,
-      }
-    })
+      },
+    });
 
-    if( !reportingPeriod ){
+    if (!reportingPeriod) {
       throw new NotFoundException('Reporting period not found.');
     }
 
     const monitorPlanId = filteredMonitorPlans[0].id;
-    const monitoringLocationId = filteredMonitorPlans[0].locations?.[0].id;
+    const monitoringLocations = filteredMonitorPlans[0].locations;
 
     const reportingPeriodId = reportingPeriod.id;
-    const identifiers = await this.getIdentifiers(
+
+    const identifiers = await this.getUnifiedIdentifiers(
       params,
-      monitoringLocationId,
+      monitoringLocations,
       userId,
     );
 
     // Import-28 Valid formulaIdentifiers for location
-    await this.checksService.invalidFormulasCheck(params, monitoringLocationId);
+    await this.checksService.invalidFormulasCheck(params, monitoringLocations);
 
     for (const monitorPlan of filteredMonitorPlans) {
       await manager.query(
@@ -189,57 +188,67 @@ export class EmissionsWorkspaceService {
       );
     }
 
+    const currentTime = currentDateTime().toISOString();
+
     const importPromises = [
       this.importDailyEmissions(
         params,
+        monitoringLocations,
         reportingPeriodId,
-        monitoringLocationId,
         identifiers,
+        currentTime,
       ),
 
       this.importDailyTestSummaries(
         params,
+        monitoringLocations,
         reportingPeriodId,
-        monitoringLocationId,
         identifiers,
+        currentTime,
       ),
 
       this.importHourlyOperating(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
 
       this.importSummaryValue(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
       this.importSorbentTrap(
         params,
         reportingPeriodId,
-        monitoringLocationId,
+        monitoringLocations,
         identifiers,
+        currentTime,
       ),
       this.importNsps4tSummaries(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
       this.importWeeklyTestSummary(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
       this.importLongTermFuelFlow(
         params,
-        monitoringLocationId,
+        monitoringLocations,
         reportingPeriodId,
         identifiers,
+        currentTime,
       ),
     ];
 
@@ -284,177 +293,134 @@ export class EmissionsWorkspaceService {
 
   async importDailyEmissions(
     emissionsImport: EmissionsImportDTO,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
-    monitoringLocationId: string,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ) {
-    if (hasArrayValues(emissionsImport.dailyEmissionData)) {
-      const promises = [];
-      for (const dailyEmission of emissionsImport.dailyEmissionData) {
-        promises.push(
-          this.dailyEmissionService.import({
-            ...dailyEmission,
-            identifiers,
-            monitoringLocationId,
-            reportingPeriodId,
-          }),
-        );
-      }
-      return Promise.all(promises);
-    }
+
+    await this.dailyEmissionService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async importDailyTestSummaries(
     emissionsImport: EmissionsImportDTO,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
-    monitoringLocationId: string,
     identifiers: ImportIdentifiers,
-  ) {
-    const dailyTestSummaryImports: Array<Promise<void>> = [];
-
-    if (Array.isArray(emissionsImport.dailyTestSummaryData)) {
-      for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-        dailyTestSummaryImports.push(
-          this.dailyTestSummaryService.import({
-            ...dailyTestSummaryDatum,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-      return Promise.all(dailyTestSummaryImports);
-    }
+    currentTime: string,
+  ): Promise<void> {
+    await this.dailyTestSummaryService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async importHourlyOperating(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ): Promise<void> {
     await this.hourlyOperatingService.import(
       emissionsImport,
-      monitoringLocationId,
+      monitoringLocations,
       reportingPeriodId,
       identifiers,
+      currentTime,
     );
   }
 
   async importSummaryValue(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId,
     identifiers: ImportIdentifiers,
-  ) {
-    const summaryValueImports: Array<Promise<SummaryValueDTO>> = [];
+    currentTime: string,
+  ): Promise<void> {
 
-    if (Array.isArray(emissionsImport.summaryValueData)) {
-      for (const summaryValueDatum of emissionsImport.summaryValueData) {
-        summaryValueImports.push(
-          this.summaryValueService.import({
-            ...summaryValueDatum,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-          }),
-        );
-      }
-    }
-
-    return Promise.all(summaryValueImports);
+    await this.summaryValueService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    )
   }
 
   async importSorbentTrap(
     emissionsImport: EmissionsImportDTO,
     reportingPeriodId: number,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     identifiers: ImportIdentifiers,
-  ) {
-    if (hasArrayValues(emissionsImport.sorbentTrapData)) {
-      const promises = [];
-      for (const sorbentTrap of emissionsImport.sorbentTrapData) {
-        promises.push(
-          this.sorbentTrapService.import({
-            ...sorbentTrap,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-          }),
-        );
-      }
-      return Promise.all(promises);
-    }
+    currentTime: string,
+  ): Promise<void> {
+    await this.sorbentTrapService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async importNsps4tSummaries(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    const nsps4tSummaryImports = [];
-
-    if (Array.isArray(emissionsImport.nsps4tSummaryData)) {
-      for (const nsps4tSummary of emissionsImport.nsps4tSummaryData) {
-        nsps4tSummaryImports.push(
-          this.nsps4tSummaryWorkspaceService.import({
-            ...nsps4tSummary,
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-          }),
-        );
-      }
-    }
-
-    return Promise.all(nsps4tSummaryImports);
+    currentTime: string,
+  ): Promise<void> {
+    await this.nsps4tSummaryWorkspaceService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async importWeeklyTestSummary(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    currentTime: string,
   ) {
-    const weeklyTestSummaryImports: Array<Promise<WeeklyTestSummaryDTO>> = [];
 
-    if (Array.isArray(emissionsImport.weeklyTestSummaryData)) {
-      for (const weeklyTestSummary of emissionsImport.weeklyTestSummaryData) {
-        weeklyTestSummaryImports.push(
-          this.weeklyTestSummaryService.import({
-            ...weeklyTestSummary,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-    }
-    return Promise.all(weeklyTestSummaryImports);
+
+    await this.weeklyTestSummaryService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    )
   }
 
   async importLongTermFuelFlow(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocationId: string,
+    monitoringLocations: MonitorLocation[],
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
-  ) {
-    const longTermFuelFlowImports: Array<Promise<LongTermFuelFlowDTO>> = [];
-
-    if (Array.isArray(emissionsImport.longTermFuelFlowData)) {
-      for (const longTermFuelFlow of emissionsImport.longTermFuelFlowData) {
-        longTermFuelFlowImports.push(
-          this.longTermFuelFlowWorkspaceService.import({
-            ...longTermFuelFlow,
-            reportingPeriodId,
-            monitoringLocationId,
-            identifiers,
-          }),
-        );
-      }
-    }
-    return Promise.all(longTermFuelFlowImports);
+    currentTime: string,
+  ): Promise<void> {
+    await this.longTermFuelFlowWorkspaceService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
   }
 
   async getIdentifiers(
@@ -533,5 +499,65 @@ export class EmissionsWorkspaceService {
     await Promise.all(promises);
 
     return identifiers;
+  }
+
+  async getUnifiedIdentifiers(
+    params: EmissionsImportDTO,
+    locations: MonitorLocation[],
+    userId: string,
+  ) {
+    const identifiers = {
+      components: {},
+      monitorFormulas: {},
+      monitoringSystems: {},
+      userId,
+    };
+
+    for (const location of locations) {
+      const partialIdentifiers = await this.getIdentifiers(
+        params,
+        location.id,
+        userId,
+      );
+      Object.keys(partialIdentifiers.components).forEach(
+        key =>
+          partialIdentifiers.components[key] === undefined &&
+          delete partialIdentifiers.components[key],
+      );
+      Object.keys(partialIdentifiers.monitorFormulas).forEach(
+        key =>
+          partialIdentifiers.monitorFormulas[key] === undefined &&
+          delete partialIdentifiers.monitorFormulas[key],
+      );
+      Object.keys(partialIdentifiers.monitoringSystems).forEach(
+        key =>
+          partialIdentifiers.monitoringSystems[key] === undefined &&
+          delete partialIdentifiers.monitoringSystems[key],
+      );
+      Object.assign(identifiers.components, partialIdentifiers.components);
+      Object.assign(
+        identifiers.monitorFormulas,
+        partialIdentifiers.monitorFormulas,
+      );
+      Object.assign(
+        identifiers.monitoringSystems,
+        partialIdentifiers.monitoringSystems,
+      );
+    }
+
+    return identifiers;
+  }
+
+  async getMonitoringLocationId(
+    monitoringLocations: MonitorLocation[],
+    dataType,
+  ) {
+    const filteredLocations = monitoringLocations.filter(location => {
+      return (
+        location.unit?.name === dataType.unitId ||
+        location.stackPipe?.name === dataType.stackPipeId
+      );
+    });
+    return filteredLocations[0].id;
   }
 }

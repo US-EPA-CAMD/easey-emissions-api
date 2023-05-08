@@ -36,11 +36,10 @@ import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.m
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
 import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
-import { genEmissionEvaluation } from '../../test/object-generators/emission-evaluation';
-import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
+import { MonitorLocation } from '../entities/monitor-location.entity';
 
 const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   include: [
@@ -222,12 +221,18 @@ describe('HourlyOperatingWorskpaceService', () => {
         new HourlyOperatingImportDTO(),
       ];
 
-      await service.import(dto, '', 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+      await service.import(
+        dto,
+        [MonitorLocation],
+        1,
+        {
+          components: {},
+          userId: '',
+          monitorFormulas: {},
+          monitoringSystems: {},
+        },
+        new Date().toISOString(),
+      );
 
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });

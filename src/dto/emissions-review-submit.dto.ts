@@ -9,7 +9,11 @@ export class EmissionsReviewSubmitDTO {
 
   evalStatusCode: string;
 
+  evalStatusCodeDescription: string;
+
   submissionAvailabilityCode: string;
+
+  submissionAvailabilityCodeDescription: string;
 
   userid: string;
 

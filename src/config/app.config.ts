@@ -69,7 +69,18 @@ export default registerAs('app', () => ({
   enableDebug: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_DEBUG'),
   // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
   // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
-  currentUser: getConfigValue('EASEY_EMISSIONS_API_CURRENT_USER'),
+  currentUser: getConfigValue(
+    'EASEY_EMISSIONS_API_CURRENT_USER',
+    '{"userId": ""}',
+  ),
+  enableRoleGuardCheckoutCheck: getConfigValueBoolean(
+    'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD_CHECKOUT',
+    true,
+  ),
+  bulkLoadMaxPoolSize: getConfigValueNumber(
+    'EASEY_EMISSIONS_API_BULK_LOAD_MAX_POOL_SIZE',
+    100,
+  ),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   apiHost: apiHost,
   authApi: {

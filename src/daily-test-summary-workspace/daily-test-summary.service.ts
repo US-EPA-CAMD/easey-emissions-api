@@ -3,17 +3,18 @@ import {
   DailyTestSummaryDTO,
   DailyTestSummaryImportDTO,
 } from '../dto/daily-test-summary.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { DeleteResult, FindConditions } from 'typeorm';
+import { FindConditions } from 'typeorm';
 import { randomUUID } from 'crypto';
-import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { isUndefinedOrNull } from '../utils/utils';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -27,6 +28,7 @@ export class DailyTestSummaryWorkspaceService {
     private readonly map: DailyTestSummaryMap,
     private readonly repository: DailyTestSummaryWorkspaceRepository,
     private readonly dailyCalibrationService: DailyCalibrationWorkspaceService,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
   async getDailyTestSummariesByLocationIds(
@@ -42,10 +44,8 @@ export class DailyTestSummaryWorkspaceService {
     return this.map.many(results);
   }
 
-  async delete(
-    criteria: FindConditions<DailyTestSummary>,
-  ): Promise<DeleteResult> {
-    return this.repository.delete(criteria);
+  async delete(criteria: FindConditions<DailyTestSummary>): Promise<void> {
+    await this.repository.delete(criteria);
   }
 
   async export(
@@ -73,53 +73,96 @@ export class DailyTestSummaryWorkspaceService {
     return summaries;
   }
 
-  async import(parameters: DailyTestSummaryCreate): Promise<void> {
-    await this.delete({
-      monitoringLocationId: parameters.monitoringLocationId,
-      reportingPeriodId: parameters.reportingPeriodId,
-    });
-    const result = await this.repository.save(
-      this.repository.create({
-        ...parameters,
-        id: randomUUID(),
-        monitoringSystemId:
-          parameters?.identifiers?.monitoringSystems?.[
-            parameters.monitoringSystemId
-          ],
-        componentId:
-          parameters?.identifiers?.components?.[parameters.componentId],
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: parameters.identifiers?.userId,
-      }),
-    );
-
-    if (Array.isArray(parameters.dailyCalibrationData)) {
-      await this.importDailyCalibrations(
-        parameters.dailyCalibrationData,
-        parameters.reportingPeriodId,
-        result.id,
-        parameters.identifiers,
-      );
-    }
-  }
-
-  async importDailyCalibrations(
-    dailyCalibrations: Array<DailyCalibrationImportDTO>,
-    reportingPeriodId: number,
-    dailyTestSummaryId: string,
+  async import(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations,
+    reportingPeriodId,
     identifiers: ImportIdentifiers,
-  ) {
-    const dailyCalibrationImports = dailyCalibrations?.map(
-      dailyCalibrationDatum => {
-        return this.dailyCalibrationService.import({
-          ...dailyCalibrationDatum,
-          dailyTestSummaryId,
-          reportingPeriodId,
-          identifiers: identifiers,
-        });
-      },
+    currentTime: string,
+  ): Promise<void> {
+    if (
+      !Array.isArray(emissionsImport?.dailyTestSummaryData) ||
+      emissionsImport?.dailyTestSummaryData.length === 0
+    ) {
+      return;
+    }
+
+    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+      'camdecmpswks.daily_test_summary',
+      [
+        'daily_test_sum_id',
+        'rpt_period_id',
+        'mon_loc_id',
+        'component_id',
+        'daily_test_date',
+        'daily_test_hour',
+        'daily_test_min',
+        'test_type_cd',
+        'test_result_cd',
+        'userid',
+        'add_date',
+        'update_date',
+        'span_scale_cd',
+        'mon_sys_id',
+      ],
     );
-    await Promise.all(dailyCalibrationImports);
+
+    for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
+      const monitoringLocationId = monitoringLocations.filter(location => {
+        return (
+          location.unit?.name === dailyTestSummaryDatum.unitId ||
+          location.stackPipe?.name === dailyTestSummaryDatum.stackPipeId
+        );
+      })[0].id;
+
+      const uid = randomUUID();
+      dailyTestSummaryDatum['id'] = uid;
+
+      bulkLoadStream.writeObject({
+        id: uid,
+        rptPeriodId: reportingPeriodId,
+        monLocId: monitoringLocationId,
+        componentId:
+          identifiers?.components?.[dailyTestSummaryDatum.componentId] || null,
+        dailyTestDate: dailyTestSummaryDatum.date,
+        dailyTestHour: dailyTestSummaryDatum.hour,
+        dailyTestMin: dailyTestSummaryDatum.minute,
+        testTypeCd: dailyTestSummaryDatum.testTypeCode,
+        testResultCd: dailyTestSummaryDatum.testResultCode,
+        userId: identifiers?.userId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
+        monSysId:
+          identifiers?.monitoringSystems?.[
+            dailyTestSummaryDatum.monitoringSystemId
+          ] || null,
+      });
+    }
+
+    bulkLoadStream.complete();
+    await bulkLoadStream.finished;
+
+    if (bulkLoadStream.status === 'Complete') {
+      const buildPromises = [];
+
+      const dailyCalibrationObjects = [];
+
+      for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
+        buildPromises.push(
+          this.dailyCalibrationService.buildObjectList(
+            dailyTestSummaryDatum.dailyCalibrationData,
+            dailyTestSummaryDatum['id'],
+            reportingPeriodId,
+            identifiers,
+            dailyCalibrationObjects,
+            currentTime,
+          ),
+        );
+      }
+      await Promise.all(buildPromises);
+
+      await this.dailyCalibrationService.import(dailyCalibrationObjects);
+    }
   }
 }

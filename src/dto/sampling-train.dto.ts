@@ -77,7 +77,7 @@ export class SamplingTrainBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  trainQaStatusCode?: string;
+  trainQAStatusCode?: string;
 
   @IsOptional()
   @IsString()

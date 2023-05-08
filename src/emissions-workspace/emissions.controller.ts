@@ -18,7 +18,6 @@ import {
 } from '@nestjs/swagger';
 
 import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
-import { AuthGuard } from '@us-epa-camd/easey-common/guards';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -46,19 +45,35 @@ export class EmissionsWorkspaceController {
       'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
   @UseInterceptors(ClassSerializerInterceptor)
-  @RoleGuard({ queryParam: 'monitorPlanId' }, LookupType.MonitorPlan)
+  @RoleGuard(
+    { enforceCheckout: false, queryParam: 'monitorPlanId' },
+    LookupType.MonitorPlan,
+  )
   export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
     return this.service.export(params);
   }
 
   @Post('import')
-  @UseGuards(AuthGuard)
   @ApiBearerAuth('Token')
   @ApiOkResponse({
     type: EmissionsDTO,
     description: 'Imports Emissions data from JSON file into the workspace',
   })
-  @RoleGuard({ bodyParam: 'orisCode' }, LookupType.Facility)
+  @RoleGuard(
+    {
+      importLocationSources: [
+        'dailyEmissionData',
+        'weeklyTestSummaryData',
+        'summaryValueData',
+        'dailyTestSummaryData',
+        'hourlyOperatingData',
+        'longTermFuelFlowData',
+        'sorbentTrapData',
+        'nsps4tSummaryData',
+      ],
+    },
+    LookupType.Location,
+  )
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
@@ -89,7 +104,7 @@ export class EmissionsWorkspaceController {
     explode: false,
   })
   @RoleGuard(
-    { queryParam: 'orisCodes', isPipeDelimitted: true },
+    { enforceCheckout: false, queryParam: 'orisCodes', isPipeDelimitted: true },
     LookupType.Facility,
   )
   async getEmissions(

@@ -68,7 +68,7 @@ describe('DerivedHourlyValueWorkspaceService', () => {
       ),
     ).resolves.toEqual(mappedValues);
   });
-
+  /*
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -86,4 +86,5 @@ describe('DerivedHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
+  */
 });

@@ -12,6 +12,8 @@ import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrit
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DeleteResult, FindConditions } from 'typeorm';
 import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 export type WeeklyTestSummaryCreate = WeeklyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -25,14 +27,15 @@ export class WeeklyTestSummaryWorkspaceService {
     private readonly map: WeeklyTestSummaryMap,
     private readonly repository: WeeklyTestSummaryWorkspaceRepository,
     private readonly weeklySystemIntegrityService: WeeklySystemIntegrityWorkspaceService,
-  ) {}
+    private readonly bulkLoadService: BulkLoadService,
+  ) { }
 
   async delete(
     criteria: FindConditions<WeeklyTestSummary>,
   ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
-  
+
   async getWeeklyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
@@ -69,35 +72,97 @@ export class WeeklyTestSummaryWorkspaceService {
     return weeklyTestSummaries;
   }
 
-  async import(data: WeeklyTestSummaryCreate): Promise<WeeklyTestSummaryDTO> {
-    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
-    const weeklyTestSummary = await this.repository.save(
-      this.repository.create({
-        ...data,
-        id: randomUUID(),
-        componentId: data.identifiers?.components?.[data.componentId],
-        addDate: new Date(),
-        updateDate: new Date(),
-        userId: data.identifiers?.userId,
-      }),
-    );
-
-    if (data?.weeklySystemIntegrityData) {
-      for (const weeklySystemIntegrity of data.weeklySystemIntegrityData) {
-        await this.weeklySystemIntegrityService
-          .import(
-            weeklySystemIntegrity,
-            weeklyTestSummary.id,
-            data.monitoringLocationId,
-            data.reportingPeriodId,
-            data.identifiers,
-          )
-          .then(data => {
-            weeklyTestSummary.weeklySystemIntegrity = data;
-          });
-      }
+  async import(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations,
+    reportingPeriodId,
+    identifiers: ImportIdentifiers,
+    currentTime: string,
+  ): Promise<void> {
+    if (
+      !Array.isArray(emissionsImport?.weeklyTestSummaryData) ||
+      emissionsImport?.weeklyTestSummaryData.length === 0
+    ) {
+      return;
     }
 
-    return this.map.one(weeklyTestSummary);
+    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+      'camdecmpswks.weekly_test_summary',
+      [
+        'weekly_test_sum_id',
+        'rpt_period_id',
+        'mon_loc_id',
+        'component_id',
+        'test_date',
+        'test_hour',
+        'test_min',
+        'test_type_cd',
+        'test_result_cd',
+        'span_scale_cd',
+        'userid',
+        'add_date',
+        'update_date',
+      ],
+    );
+
+    for (const weeklyTestSummaryDatum of emissionsImport.weeklyTestSummaryData) {
+      const monitoringLocationId = monitoringLocations.filter(location => {
+        return (
+          location.unit?.name === weeklyTestSummaryDatum.unitId ||
+          location.stackPipe?.name === weeklyTestSummaryDatum.stackPipeId
+        );
+      })[0].id;
+
+      const uid = randomUUID();
+      weeklyTestSummaryDatum['id'] = uid;
+      weeklyTestSummaryDatum['locationId'] = monitoringLocationId;
+
+      const { date, hour, minute, componentId,
+        testTypeCode, testResultCode, spanScaleCode } = weeklyTestSummaryDatum;
+
+      bulkLoadStream.writeObject({
+        uid,
+        reportingPeriodId,
+        monitoringLocationId,
+        componentId: identifiers?.components?.[componentId] || null,
+        date,
+        hour,
+        minute,
+        testTypeCode,
+        testResultCode,
+        spanScaleCode,
+        userId: identifiers?.userId,
+        addDate: currentTime,
+        updateDate: currentTime,
+      });
+    }
+    
+    bulkLoadStream.complete();
+    await bulkLoadStream.finished;
+
+    if (bulkLoadStream.status === 'Complete') {
+      const buildPromises = [];
+
+      const systemIntegrityObjects = [];
+
+      for (const weeklyTestSummaryDatum of emissionsImport.weeklyTestSummaryData) {
+        buildPromises.push(
+          this.weeklySystemIntegrityService.buildObjectList(
+            weeklyTestSummaryDatum.weeklySystemIntegrityData,
+            weeklyTestSummaryDatum['id'],
+            weeklyTestSummaryDatum['locationId'],
+            reportingPeriodId,
+            identifiers,
+            systemIntegrityObjects,
+            currentTime,
+          ),
+        );
+      }
+
+      await Promise.all(buildPromises);
+
+      await this.weeklySystemIntegrityService.import(systemIntegrityObjects);
+    }
+
   }
 }

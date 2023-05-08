@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { randomUUID } from 'crypto';
+
 import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { exportSorbentTrapData } from '../sorbent-trap-functions/export-sorbent-trap-data';
 import { hasArrayValues } from '../utils/utils';
-import {
-  importSorbentTrapData,
-  SorbentTrapWorkspaceCreate,
-} from '../sorbent-trap-functions/import-sorbent-trap-data';
 import { DeleteResult, FindConditions } from 'typeorm';
 import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 @Injectable()
 export class SorbentTrapWorkspaceService {
   constructor(
     private readonly repository: SorbentTrapWorkspaceRepository,
     private readonly samplingTrainService: SamplingTrainWorkspaceService,
+    private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: FindConditions<SorbentTrap>,
-  ): Promise<DeleteResult> {
+  async delete(criteria: FindConditions<SorbentTrap>): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 
@@ -47,36 +47,108 @@ export class SorbentTrapWorkspaceService {
     return sorbentTrapData;
   }
 
-  async import(data: SorbentTrapWorkspaceCreate) 
-  {
-    await this.delete({monitoringLocationId: data.monitoringLocationId, reportingPeriodId: data.reportingPeriodId})
-    const sorbentTrap = await importSorbentTrapData({
-      data,
-      repository: this.repository,
-    });
-
-    if (hasArrayValues(data.samplingTrainData)) {
-      const promises = [];
-      for (const samplingTrain of data.samplingTrainData) {
-        await this.samplingTrainService
-          .import({
-            ...samplingTrain,
-            sorbentTrapId: sorbentTrap.id,
-            monitoringLocationId: data.monitoringLocationId,
-            reportingPeriodId: data.reportingPeriodId,
-            identifiers: data.identifiers,
-          })
-          .then(data => {
-            if (!Array.isArray(sorbentTrap.samplingTrains)) {
-              sorbentTrap.samplingTrains = [];
-            }
-
-            sorbentTrap.samplingTrains.push(data);
-          });
-      }
-      await Promise.all(promises);
+  async import(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations,
+    reportingPeriodId,
+    identifiers: ImportIdentifiers,
+    currentTime: string,
+  ): Promise<void> {
+    if (
+      !Array.isArray(emissionsImport?.sorbentTrapData) ||
+      emissionsImport?.sorbentTrapData.length === 0
+    ) {
+      return;
     }
 
-    return sorbentTrap;
+    const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+      'camdecmpswks.sorbent_trap',
+      [
+        'trap_id',
+        'mon_loc_id',
+        'rpt_period_id',
+        'begin_date',
+        'begin_hour',
+        'end_date',
+        'end_hour',
+        'mon_sys_id',
+        'paired_trap_agreement',
+        'absolute_difference_ind',
+        'modc_cd',
+        'hg_concentration',
+        'userid',
+        'add_date',
+        'update_date',
+        'sorbent_trap_aps_cd',
+        'rata_ind',
+      ],
+    );
+
+    for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
+      const monitoringLocationId = monitoringLocations.filter(location => {
+        return (
+          location.unit?.name === sorbentTrapDatum.unitId ||
+          location.stackPipe?.name === sorbentTrapDatum.stackPipeId
+        );
+      })[0].id;
+
+      const uid = randomUUID();
+      sorbentTrapDatum['id'] = uid;
+
+      bulkLoadStream.writeObject({
+        id: uid,
+        monLocId: monitoringLocationId,
+        rptPeriodId: reportingPeriodId,
+        beginDate: sorbentTrapDatum.beginDate,
+        beginHour: sorbentTrapDatum.beginHour,
+        endDate: sorbentTrapDatum.endDate,
+        endHour: sorbentTrapDatum.endHour,
+        monSysId:
+          identifiers?.monitoringSystems?.[
+            sorbentTrapDatum.monitoringSystemId
+          ] || null,
+        pairedTrapAgreement: sorbentTrapDatum.pairedTrapAgreement,
+        absoluteDifferentInd: sorbentTrapDatum.absoluteDifferenceIndicator,
+        modcCd: sorbentTrapDatum.modcCode,
+        hgConcentration: sorbentTrapDatum.hgSystemConcentration,
+        userId: identifiers?.userId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        sorbentTrapsApsCd: sorbentTrapDatum.apsCode,
+        rataInd: sorbentTrapDatum.rataIndicator,
+      });
+    }
+
+    bulkLoadStream.complete();
+    await bulkLoadStream.finished;
+
+    if (bulkLoadStream.status === 'Complete') {
+      const buildPromises = [];
+
+      const samplingTrainObjects = [];
+
+      for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
+        const monitoringLocationId = monitoringLocations.filter(location => {
+          return (
+            location.unit?.name === sorbentTrapDatum.unitId ||
+            location.stackPipe?.name === sorbentTrapDatum.stackPipeId
+          );
+        })[0].id;
+        buildPromises.push(
+          this.samplingTrainService.buildObjectList(
+            sorbentTrapDatum.samplingTrainData,
+            sorbentTrapDatum['id'],
+            reportingPeriodId,
+            monitoringLocationId,
+            identifiers,
+            samplingTrainObjects,
+            currentTime,
+          ),
+        );
+      }
+      await Promise.all(buildPromises);
+
+      await this.samplingTrainService.import(samplingTrainObjects);
+    }
   }
 }

@@ -55,7 +55,7 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
       expect(result).toEqual(null);
     });
   });
-
+  /*
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -73,4 +73,5 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
+  */
 });

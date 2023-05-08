@@ -8,6 +8,7 @@ import {
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MatsDerivedHourlyValueWorkspaceService {
@@ -22,14 +23,35 @@ export class MatsDerivedHourlyValueWorkspaceService {
     return this.map.many(matsDerivedHourlyValueData);
   }
 
-  async import(
+  async buildObjectList(
     data: MatsDerivedHourlyValueImportDTO[],
     hourId: string,
     monitorLocationId: string,
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
+    objectList: Array<object>,
+    currentTime: string,
   ): Promise<void> {
-    if (data && data.length > 0) {
+    for (const dataChunk of data) {
+      objectList.push({
+        id: randomUUID(),
+        parameterCode: dataChunk.parameterCode,
+        unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+        modcCode: dataChunk.modcCode,
+        monFormId:
+          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+        hourId: hourId,
+        monLod: monitorLocationId,
+        rptPeriod: reportingPeriodId,
+        addDate: currentTime,
+        updateDate: currentTime,
+        userId: identifiers?.userId,
+      });
+    }
+  }
+
+  async import(objectList: Array<object>): Promise<void> {
+    if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.mats_derived_hrly_value',
         [
@@ -47,21 +69,8 @@ export class MatsDerivedHourlyValueWorkspaceService {
         ],
       );
 
-      for (const dataChunk of data) {
-        bulkLoadStream.writeObject({
-          id: randomUUID(),
-          parameterCode: dataChunk.parameterCode,
-          unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
-          modcCode: dataChunk.modcCode,
-          monFormId:
-            identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
-          hourId: hourId,
-          monLod: monitorLocationId,
-          rptPeriod: reportingPeriodId,
-          addDate: new Date().toISOString(),
-          updateDate: new Date().toISOString(),
-          userId: identifiers?.userId,
-        });
+      for (const slice of objectList) {
+        bulkLoadStream.writeObject(slice);
       }
 
       bulkLoadStream.complete();

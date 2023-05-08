@@ -17,7 +17,10 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       monPlanId: entity.monPlanId,
       configuration: entity.configuration,
       evalStatusCode: entity.evalStatusCode,
+      evalStatusCodeDescription: entity.evalStatusCodeDescription,
       submissionAvailabilityCode: entity.submissionAvailabilityCode,
+      submissionAvailabilityCodeDescription:
+        entity.submissionAvailabilityCodeDescription,
       userid: entity.userid,
       updateDate: entity.updateDate,
       windowStatus: entity.windowStatus,
