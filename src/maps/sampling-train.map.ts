@@ -34,7 +34,7 @@ export class SamplingTrainMap extends BaseMap<
       percentSpikeRecovery: entity.percentSpikeRecovery,
       samplingRatioCheckResultCode: entity.samplingRatioCheckResultCode,
       postLeakCheckResultCode: entity.postLeakCheckResultCode,
-      trainQaStatusCode: entity.trainQaStatusCode,
+      trainQAStatusCode: entity.trainQAStatusCode,
       sampleDamageExplanation: entity.sampleDamageExplanation,
       calcHgConcentration: entity.calcHgConcentration,
       calcPercentBreakthrough: entity.calcPercentBreakthrough,

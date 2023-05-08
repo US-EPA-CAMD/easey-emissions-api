@@ -10,8 +10,10 @@ import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
 import { Nsps4tSummaryMap } from '../maps/nsps4t-summary.map';
 import * as exportNsps4tSummaryData from '../nsps4t-summary-functions/export-nsps4t-summary-data';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import * as importNsps4tSummaryData from '../nsps4t-summary-functions/import-nsps4t-summary-data';
-import { Nsps4tSummaryDataCreate } from '../nsps4t-summary-functions/import-nsps4t-summary-data';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { ConfigService } from '@nestjs/config';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 describe('Nsps4tSummaryWorkspaceNewService', () => {
   let service: Nsps4tSummaryWorkspaceService;
@@ -19,6 +21,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
   let annualService: Nsps4tAnnualWorkspaceService;
   let compliancePeriodService: Nsps4tCompliancePeriodWorkspaceService;
   let map: Nsps4tSummaryMap;
+  let bulkLoadService: BulkLoadService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +33,8 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
         Nsps4tSummaryWorkspaceRepository,
         Nsps4tSummaryWorkspaceService,
         Nsps4tSummaryMap,
+        BulkLoadService,
+        ConfigService,
       ],
     }).compile();
 
@@ -38,9 +43,11 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     );
     repository = module.get(Nsps4tSummaryWorkspaceRepository);
     annualService = module.get(Nsps4tAnnualWorkspaceService);
-    compliancePeriodService = module.get(Nsps4tCompliancePeriodWorkspaceService);
+    compliancePeriodService = module.get(
+      Nsps4tCompliancePeriodWorkspaceService,
+    );
     map = module.get(Nsps4tSummaryMap);
-
+    bulkLoadService = module.get(BulkLoadService);
   });
 
   it('should be defined', () => {
@@ -55,38 +62,45 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
       .spyOn(exportNsps4tSummaryData, 'exportNsps4tSummaryData')
       .mockResolvedValue(mappedValues);
 
-    jest
-      .spyOn(annualService, 'export')
-      .mockResolvedValue([]);
+    jest.spyOn(annualService, 'export').mockResolvedValue([]);
 
-    jest
-      .spyOn(compliancePeriodService, 'export')
-      .mockResolvedValue([]);
+    jest.spyOn(compliancePeriodService, 'export').mockResolvedValue([]);
 
-    await expect(
-      service.export([], new EmissionsParamsDTO()),
-    ).resolves.toEqual(mappedValues);
+    await expect(service.export([], new EmissionsParamsDTO())).resolves.toEqual(
+      mappedValues,
+    );
   });
 
-  it('should successfully import', async function () {
-    const entityMocks = genNsps4tSummary<Nsps4tSummary>(1, { include: ["nsps4tAnnualData", "nsps4tCompliancePeriodData"], nsps4tCompliancePeriodDataAmount: 1, nsps4tAnnualDataAmount: 1 });
+  it('should successfully import', async function() {
+    const entityMocks = genNsps4tSummary<Nsps4tSummary>(1, {
+      include: ['nsps4tAnnualData', 'nsps4tCompliancePeriodData'],
+      nsps4tCompliancePeriodDataAmount: 1,
+      nsps4tAnnualDataAmount: 1,
+    });
+    const nsps4tSummaryData = await map.many(entityMocks);
 
-    // need to massage the data to make it look like import dto
-    const importMock = ({...entityMocks[0]}as unknown) as Nsps4tSummaryDataCreate;
-    delete importMock["nsps4tAnnualData"];
-    importMock.nsps4tFourthQuarterData = [{...entityMocks[0].nsps4tAnnualData[0]}]
+    //@ts-expect-error as mock
+    jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
+      writeObject: jest.fn(),
+      complete: jest.fn(),
+      finished: Promise.resolve(true),
+    });
 
-    jest.spyOn(importNsps4tSummaryData, 'importNsps4tSummaryData').mockResolvedValue(entityMocks[0]);
-    jest.spyOn(annualService, 'import').mockResolvedValue(entityMocks[0].nsps4tAnnualData[0]);
-    jest.spyOn(compliancePeriodService, 'import').mockResolvedValue(entityMocks[0].nsps4tCompliancePeriodData[0]);
-    jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
+    const emissionsDto = new EmissionsImportDTO();
+    emissionsDto.nsps4tSummaryData = nsps4tSummaryData;
+
+    const locations = [{ unit: { name: '1' }, id: 1 }];
+
+    nsps4tSummaryData[0].unitId = '1';
+    const identifiers = ({
+      components: [],
+      monitorFormulas: [],
+      monitoringSystems: [],
+      userId: '',
+    } as unknown) as ImportIdentifiers;
 
     await expect(
-      service.import(
-        importMock
-      ),
-    ).resolves.toEqual(entityMocks[0]);
+      service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),
+    ).resolves;
   });
-
-
 });

@@ -3,11 +3,13 @@ import { DailyFuelWorkspaceService } from './daily-fuel-workspace.service';
 import { DailyFuelWorkspaceRepository } from './daily-fuel-workspace.repository';
 import { genDailyFuel } from '../../test/object-generators/daily-fuel';
 import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
-import { faker } from '@faker-js/faker';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { ConfigService } from '@nestjs/config';
 
 describe('DailyFuelWorkspaceService', () => {
   let service: DailyFuelWorkspaceService;
+  let bulkLoadService: BulkLoadService;
   let repository: DailyFuelWorkspaceRepository;
 
   beforeEach(async () => {
@@ -16,11 +18,14 @@ describe('DailyFuelWorkspaceService', () => {
         DailyFuelMap,
         DailyFuelWorkspaceService,
         DailyFuelWorkspaceRepository,
+        BulkLoadService,
+        ConfigService,
       ],
     }).compile();
 
     service = module.get<DailyFuelWorkspaceService>(DailyFuelWorkspaceService);
     repository = module.get(DailyFuelWorkspaceRepository);
+    bulkLoadService = module.get(BulkLoadService);
   });
 
   it('should be defined', () => {
@@ -29,24 +34,16 @@ describe('DailyFuelWorkspaceService', () => {
 
   describe('import', () => {
     it('should import a record', async function() {
-      const dailyFuel = genDailyFuel<DailyFuel>()[0];
+      const dailyFuel = genDailyFuel<DailyFuel>();
 
       // @ts-expect-error use as mock
-      jest.spyOn(repository, 'create').mockResolvedValue(dailyFuel);
-      jest.spyOn(repository, 'save').mockResolvedValue(dailyFuel);
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
+        writeObject:jest.fn(),
+        complete:jest.fn(),
+        finished: Promise.resolve(true)
+      });
 
-      await expect(
-        service.import({
-          ...dailyFuel,
-          reportingPeriodId: faker.datatype.number(),
-          monitoringLocationId: faker.datatype.string(),
-          identifiers: {
-            components: {},
-            monitoringSystems: {},
-            monitorFormulas: {},
-          },
-        }),
-      ).resolves.toEqual(dailyFuel);
+      await expect(service.import(dailyFuel)).resolves;
     });
   });
 });

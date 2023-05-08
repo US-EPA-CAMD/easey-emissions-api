@@ -1,10 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   DailyTestSummaryDTO,
   DailyTestSummaryImportDTO,
 } from '../dto/daily-test-summary.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
@@ -16,7 +15,6 @@ import { isUndefinedOrNull } from '../utils/utils';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;

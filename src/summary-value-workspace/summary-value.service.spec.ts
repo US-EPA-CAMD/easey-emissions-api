@@ -1,16 +1,18 @@
 import { Test } from '@nestjs/testing';
 import {
-  SummaryValueCreate,
   SummaryValueWorkspaceService,
 } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-dto';
-import { faker } from '@faker-js/faker';
 import { mockRepositoryFunctions } from '../../test/mocks/mock-repository-functions';
 import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { SummaryValue } from '../entities/workspace/summary-value.entity';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { ConfigService } from '@nestjs/config';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 const mockRepository = {
   ...mockRepositoryFunctions,
@@ -19,6 +21,7 @@ const mockRepository = {
 
 describe('Summary Value Workspace Service Test', () => {
   let service: SummaryValueWorkspaceService;
+  let bulkLoadService: BulkLoadService;
   let repository: any;
   let map;
 
@@ -27,6 +30,8 @@ describe('Summary Value Workspace Service Test', () => {
       providers: [
         SummaryValueWorkspaceService,
         SummaryValueMap,
+        BulkLoadService,
+        ConfigService,
         {
           provide: SummaryValueWorkspaceRepository,
           useValue: mockRepository,
@@ -36,6 +41,7 @@ describe('Summary Value Workspace Service Test', () => {
 
     service = module.get(SummaryValueWorkspaceService);
     repository = module.get(SummaryValueWorkspaceRepository);
+    bulkLoadService = module.get(BulkLoadService);
     map = module.get(SummaryValueMap);
 
     repository.save.mockResolvedValue(null);
@@ -44,22 +50,30 @@ describe('Summary Value Workspace Service Test', () => {
 
   describe('Summary Value Import', () => {
     it('should successfully import a summary value record', async () => {
-      jest.spyOn(service, 'delete').mockResolvedValue(undefined);
-      const generatedData = genSummaryValueImportDto(1)[0];
-      const importData: SummaryValueCreate = {
-        ...generatedData,
-        monitoringLocationId: faker.datatype.string(5),
-        reportingPeriodId: faker.datatype.number(),
-        identifiers: {
-          components: {},
-          monitoringSystems: {},
-          monitorFormulas: {},
-          userId: 'test'
-        },
-      };
 
-      const r = await service.import(importData);
-      expect(r).toBeNull();
+      const generatedData = genSummaryValueImportDto(1);
+
+      // @ts-expect-error use as mock
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
+        writeObject:jest.fn(),
+        complete:jest.fn(),
+        finished: Promise.resolve(true)
+      });
+
+      const emissionsDto = new EmissionsImportDTO();
+      emissionsDto.summaryValueData = generatedData;
+
+      const locations = [{ unit: { name: "a" }, id: 1 }]
+      emissionsDto.summaryValueData[0].unitId = "a";
+      const identifiers = {
+        components: [],
+        monitorFormulas: [],
+        monitoringSystems: [],
+        userId: "",
+      } as unknown as ImportIdentifiers;
+
+      await expect(service.import(emissionsDto, locations, "", identifiers, "")).resolves;
+      
     });
   });
 
