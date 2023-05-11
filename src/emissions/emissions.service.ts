@@ -78,6 +78,7 @@ export class EmissionsService {
 
       return results;
     }
+
     return new EmissionsDTO();
   }
 

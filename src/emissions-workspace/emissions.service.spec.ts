@@ -278,7 +278,7 @@ describe('Emissions Workspace Service', () => {
     });
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
-      monitorPlanAmount: 2,
+      monitorPlanAmount: 1,
       monitorPlanConfig: {
         include: ['beginRptPeriod', 'endRptPeriod'],
       },
@@ -291,7 +291,7 @@ describe('Emissions Workspace Service', () => {
     plantMock[0].monitorPlans[0].locations = [new MonitorLocation()];
 
     jest
-      .spyOn(plantRepository, 'getImportLocations')
+      .spyOn(plantRepository, 'getImportPlant')
       .mockResolvedValue(plantMock[0]);
 
     await expect(emissionsService.import(emissionsDtoMock[0])).resolves.toEqual(
