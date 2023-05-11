@@ -34,7 +34,7 @@ describe('Monitor plan repository tests', () => {
 
   describe('Plant repository getImportLocations() test', () => {
     it('gets the expected result from getOne()', async () => {
-      const result = await repository.getImportLocations({
+      const result = await repository.getImportPlant({
         orisCode: 123,
         stackIds: ['1'],
         unitIds: ['2'],
