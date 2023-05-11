@@ -133,25 +133,30 @@ export class EmissionsWorkspaceService {
     const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
     const unitIds = objectValuesByKey<string>('unitId', params, true);
 
-    const plantLocation = await this.plantRepository.getImportLocations({
+    const plant = await this.plantRepository.getImportPlant({
       orisCode: params.orisCode,
       stackIds: stackPipeIds,
       unitIds: unitIds,
     });
 
-    if (isUndefinedOrNull(plantLocation)) {
+    console.log("plantLocation")
+    console.log(plant)
+    if (isUndefinedOrNull(plant)) {
       throw new NotFoundException('Plant not found.');
     }
 
-    const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-      return isUndefinedOrNull(plan.endRptPeriod);
-    });
+    console.log(plant.monitorPlans)
+    // const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
+    //   return isUndefinedOrNull(plan.endRptPeriod);
+    // });
 
-    if (filteredMonitorPlans.length === 0) {
+    const monitorPlans = plant.monitorPlans;
+
+    if (monitorPlans.length === 0) {
       throw new NotFoundException('Monitor plan not found.');
     }
 
-    if (filteredMonitorPlans.length > 1) {
+    if (monitorPlans.length > 1) {
       throw new NotFoundException('Multiple active monitor plans found.');
     }
 
@@ -167,8 +172,8 @@ export class EmissionsWorkspaceService {
       throw new NotFoundException('Reporting period not found.');
     }
 
-    const monitorPlanId = filteredMonitorPlans[0].id;
-    const monitoringLocations = filteredMonitorPlans[0].locations;
+    const monitorPlanId = monitorPlans[0].id;
+    const monitoringLocations = monitorPlans[0].locations;
 
     const reportingPeriodId = reportingPeriod.id;
 
@@ -181,7 +186,7 @@ export class EmissionsWorkspaceService {
     // Import-28 Valid formulaIdentifiers for location
     await this.checksService.invalidFormulasCheck(params, monitoringLocations);
 
-    for (const monitorPlan of filteredMonitorPlans) {
+    for (const monitorPlan of monitorPlans) {
       await manager.query(
         'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
         [monitorPlan.id, reportingPeriodId],
