@@ -78,7 +78,7 @@ export class EmissionsService {
 
       return results;
     }
-    console.log("returning new emissions dto")
+
     return new EmissionsDTO();
   }
 

@@ -9,7 +9,7 @@ export type GetImportLocationsProperties = {
 
 @EntityRepository(Plant)
 export class PlantRepository extends Repository<Plant> {
-  async getImportLocation({
+  async getImportPlant({
     orisCode,
     stackIds,
     unitIds,
@@ -35,10 +35,6 @@ export class PlantRepository extends Repository<Plant> {
       .where('plant.oris_code = :orisCode', { orisCode })
       .andWhere('monitorPlans.endRptPeriod is null')
       .andWhere(`(${unitsWhere}${stacksWhere})`, { unitIds, stackIds });
-
-    console.log(q.getSql())
-    console.log(stackIds)
-    console.log(unitIds)
 
     return q.getOne();
   }

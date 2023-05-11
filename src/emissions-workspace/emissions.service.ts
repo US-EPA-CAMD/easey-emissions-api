@@ -139,16 +139,9 @@ export class EmissionsWorkspaceService {
       unitIds: unitIds,
     });
 
-    console.log("plantLocation")
-    console.log(plant)
     if (isUndefinedOrNull(plant)) {
       throw new NotFoundException('Plant not found.');
     }
-
-    console.log(plant.monitorPlans)
-    // const filteredMonitorPlans = plantLocation.monitorPlans?.filter(plan => {
-    //   return isUndefinedOrNull(plan.endRptPeriod);
-    // });
 
     const monitorPlans = plant.monitorPlans;
 
