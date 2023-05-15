@@ -6,52 +6,52 @@ import { LocationIdentifiers } from '../interfaces/location-identifiers.interfac
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { genMonitorPlan } from '../../test/object-generators/monitor-plan';
 
+describe('MonitorPlanChecksService tests', () => {
+  let service: MonitorPlanChecksService;
+  let repository: any;
 
-describe('MonitorPlanChecksService tests', ()=>{
-    let service: MonitorPlanChecksService;
-    let repository: any;
+  const mockRepository = {
+    getMonitorPlansByLocationIds: jest.fn(),
+  };
 
-    const mockRepository = {
-        getMonitorPlansByLocationIds: jest.fn()
-    }
+  const unitStackLocations: LocationIdentifiers[] = [
+    {
+      unitId: '1',
+      locationId: '1',
+      stackPipeId: null,
+      componentIds: new Set(['1', '2']),
+      monitoringSystemIds: new Set(['3', '4']),
+      ltffMonitoringSystemIds: new Set(['5', '6']),
+    },
+  ];
 
-    const unitStackLocations: LocationIdentifiers[] = [
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      imports: [LoggerModule],
+      providers: [
+        MonitorPlanChecksService,
         {
-            unitId: '1',
-            locationId: '1',
-            stackPipeId: null,
-            componentIds: new Set(['1', '2']),
-            monitoringSystemIds: new Set(['3', '4']),
-            ltffMonitoringSystemIds: new Set(['5', '6'])
+          provide: MonitorPlanWorkspaceRepository,
+          useValue: mockRepository,
         },
-    ]
+      ],
+    }).compile();
 
-    beforeEach(async () => {
-        const module = await Test.createTestingModule({
-          imports: [LoggerModule],
-          providers: [
-            MonitorPlanChecksService,
-            {
-              provide: MonitorPlanWorkspaceRepository,
-              useValue: mockRepository,
-            },
-          ],
-        }).compile();
-    
-        service = module.get(MonitorPlanChecksService);
-        repository = module.get(MonitorPlanWorkspaceRepository);
-      });
-    
-    describe("runChecks() test", ()=>{
-        beforeAll(() => {
-            CheckCatalogService.formatResultMessage = () => "";
-        });
+    service = module.get(MonitorPlanChecksService);
+    repository = module.get(MonitorPlanWorkspaceRepository);
+  });
 
-        it('should return a non empty array', async()=>{
-            repository.getMonitorPlansByLocationIds.mockResolvedValue(genMonitorPlan(1, {include:["locations"], monitorLocationAmount: 1}))
-            const errorList = await service.runChecks(unitStackLocations)
-            expect(errorList.length).toBeGreaterThan(0);
-        })
-    })
-    
-})
+  describe('runChecks() test', () => {
+    beforeAll(() => {
+      CheckCatalogService.formatResultMessage = () => '';
+    });
+
+    it('should return a non empty array', async () => {
+      repository.getMonitorPlansByLocationIds.mockResolvedValue(
+        genMonitorPlan(1, { include: ['locations'], monitorLocationAmount: 1 }),
+      );
+      const errorList = await service.runChecks(unitStackLocations);
+      expect(errorList.length).toBeGreaterThan(0);
+    });
+  });
+});

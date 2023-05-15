@@ -2,9 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
-import {
-  WeeklyTestSummaryWorkspaceService,
-} from './weekly-test-summary.service';
+import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
@@ -83,30 +81,35 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
 
   describe('import', () => {
     it('should successfully import a weekly test summary record', async () => {
-      const generatedData = genWeeklyTestSumValues<WeeklyTestSummary>(1, { include: ["weeklySystemIntegrityData"] });
+      const generatedData = genWeeklyTestSumValues<WeeklyTestSummary>(1, {
+        include: ['weeklySystemIntegrityData'],
+      });
       const importData = await map.many(generatedData);
 
       // @ts-expect-error use as mock
       jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
         writeObject: jest.fn(),
         complete: jest.fn(),
-        finished: Promise.resolve(true)
+        finished: Promise.resolve(true),
       });
 
-      jest.spyOn(weeklySystemIntegrityService, 'import').mockResolvedValue(null);
+      jest
+        .spyOn(weeklySystemIntegrityService, 'import')
+        .mockResolvedValue(null);
       const emissionsDto = new EmissionsImportDTO();
       emissionsDto.weeklyTestSummaryData = importData;
 
-      const locations = [{ unit: { name: "a" }, id: 1 }]
-      importData[0].unitId = "a";
-      const identifiers = {
+      const locations = [{ unit: { name: 'a' }, id: 1 }];
+      importData[0].unitId = 'a';
+      const identifiers = ({
         components: [],
         monitorFormulas: [],
         monitoringSystems: [],
-        userId: "",
-      } as unknown as ImportIdentifiers;
+        userId: '',
+      } as unknown) as ImportIdentifiers;
 
-      await expect(service.import(emissionsDto, locations, "", identifiers, "")).resolves;
+      await expect(service.import(emissionsDto, locations, '', identifiers, ''))
+        .resolves;
     });
   });
 });

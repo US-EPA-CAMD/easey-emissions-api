@@ -24,8 +24,8 @@ export class WeeklySystemIntegrityMap extends BaseMap<
       calcSystemIntegrityError: entity.calcSystemIntegrityError,
       calcApsInd: entity.calcApsInd,
       userId: entity.userId,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate ? entity.addDate.toISOString() : null,
+      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
       reportingPeriodId: entity.reportingPeriodId,
       monitoringLocationId: entity.monitoringLocationId,
     };

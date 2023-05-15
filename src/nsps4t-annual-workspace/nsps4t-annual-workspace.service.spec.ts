@@ -19,7 +19,7 @@ describe('Nsps4tAnnualWorkspaceService', () => {
         Nsps4tAnnualWorkspaceRepository,
         Nsps4tAnnualMap,
         BulkLoadService,
-        ConfigService
+        ConfigService,
       ],
     }).compile();
 

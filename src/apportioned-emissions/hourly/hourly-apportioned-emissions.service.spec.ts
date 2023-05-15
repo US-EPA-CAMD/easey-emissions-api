@@ -60,7 +60,7 @@ describe('-- Hourly Apportioned Emissions Service --', () => {
   describe('getEmissions', () => {
     it('calls HourUnitDataRepository.getEmissions() and gets all emissions from the repository', async () => {
       const expected = genHourUnitData<HourUnitDataView>();
-      console.log(expected)
+      console.log(expected);
       repository.getEmissions.mockResolvedValue(expected);
       let filters = new PaginatedHourlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissions(req, filters);

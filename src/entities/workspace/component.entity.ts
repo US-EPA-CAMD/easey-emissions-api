@@ -159,5 +159,4 @@ export class Component extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorLocation: MonitorLocation;
-
 }

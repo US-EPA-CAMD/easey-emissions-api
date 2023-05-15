@@ -14,26 +14,26 @@ describe('Summary Value Map Test', () => {
   it('should map values correctly', async function() {
     const mocks = [
       genSummaryValue<SummaryValue>(1)[0],
-    //   genSummaryValue<SummaryValueWorkspace>(1)[0]
+      //   genSummaryValue<SummaryValueWorkspace>(1)[0]
     ];
 
     const expectOne = async (mock: SummaryValue | SummaryValueWorkspace) => {
       await expect(map.one(mock)).resolves.toEqual({
-      id: mock.id,
-      reportingPeriodId: mock.reportingPeriodId,
-      monitoringLocationId: mock.monitoringLocationId,
-      calcCurrentRptPeriodTotal: mock.calcCurrentRptPeriodTotal,
-      calcOsTotal: mock.calcOsTotal,
-      calcYearTotal: mock.calcYearTotal,
-      userId: mock.userId,
-      addDate: mock.addDate,
-      updateDate: mock.updateDate,
-      stackPipeId: mock.monitorLocation?.stackPipe?.name ?? null,
-      unitId: mock.monitorLocation?.unit?.name ?? null,
-      parameterCode: mock.parameterCode,
-      currentReportingPeriodTotal: mock.currentReportingPeriodTotal,
-      ozoneSeasonToDateTotal: mock.ozoneSeasonToDateTotal,
-      yearToDateTotal: mock.yearToDateTotal,
+        id: mock.id,
+        reportingPeriodId: mock.reportingPeriodId,
+        monitoringLocationId: mock.monitoringLocationId,
+        calcCurrentRptPeriodTotal: mock.calcCurrentRptPeriodTotal,
+        calcOsTotal: mock.calcOsTotal,
+        calcYearTotal: mock.calcYearTotal,
+        userId: mock.userId,
+        addDate: mock.addDate,
+        updateDate: mock.updateDate,
+        stackPipeId: mock.monitorLocation?.stackPipe?.name ?? null,
+        unitId: mock.monitorLocation?.unit?.name ?? null,
+        parameterCode: mock.parameterCode,
+        currentReportingPeriodTotal: mock.currentReportingPeriodTotal,
+        ozoneSeasonToDateTotal: mock.ozoneSeasonToDateTotal,
+        yearToDateTotal: mock.yearToDateTotal,
       });
     };
 

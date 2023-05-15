@@ -6,34 +6,35 @@ import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 
 @Injectable()
 export class LongTermFuelFlowMap extends BaseMap<
-    LongTermFuelFlow | LongTermFuelFlowWorkspace,
-    LongTermFuelFlowDTO
+  LongTermFuelFlow | LongTermFuelFlowWorkspace,
+  LongTermFuelFlowDTO
 > {
-    public async one(
-        entity: LongTermFuelFlow | LongTermFuelFlowWorkspace,
-    ): Promise<LongTermFuelFlowDTO> {
-        const unitId = entity?.monitorLocation?.unit?.name ?? null;
-        const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
-        const monitoringSystemId = entity?.monitorSystem?.monitoringSystemId ?? null;
+  public async one(
+    entity: LongTermFuelFlow | LongTermFuelFlowWorkspace,
+  ): Promise<LongTermFuelFlowDTO> {
+    const unitId = entity?.monitorLocation?.unit?.name ?? null;
+    const stackPipeId = entity?.monitorLocation?.stackPipe?.name ?? null;
+    const monitoringSystemId =
+      entity?.monitorSystem?.monitoringSystemId ?? null;
 
-        return {
-            stackPipeId,
-            unitId,
-            monitoringSystemId,
-            id: entity.id,
-            reportingPeriodId: entity.reportingPeriodId,
-            monitoringLocationId: entity.monitoringLocationId,
-            monitoringSystemRecordId: entity.monitoringSystemId,
-            calcTotalHeatInput: entity.calcTotalHeatInput,
-            fuelFlowPeriodCode: entity.fuelFlowPeriodCode,
-            longTermFuelFlowValue: entity.longTermFuelFlowValue,
-            longTermFuelFlowUomCode: entity.longTermFuelFlowUomCode,
-            grossCalorificValue: entity.grossCalorificValue,
-            gcvUnitsOfMeasureCode: entity.gcvUnitsOfMeasureCode,
-            totalHeatInput: entity.totalHeatInput,
-            userId: entity.userId,
-            addDate: entity.addDate,
-            updateDate: entity.updateDate,
-        };
-    }
+    return {
+      stackPipeId,
+      unitId,
+      monitoringSystemId,
+      id: entity.id,
+      reportingPeriodId: entity.reportingPeriodId,
+      monitoringLocationId: entity.monitoringLocationId,
+      monitoringSystemRecordId: entity.monitoringSystemId,
+      calcTotalHeatInput: entity.calcTotalHeatInput,
+      fuelFlowPeriodCode: entity.fuelFlowPeriodCode,
+      longTermFuelFlowValue: entity.longTermFuelFlowValue,
+      longTermFuelFlowUomCode: entity.longTermFuelFlowUomCode,
+      grossCalorificValue: entity.grossCalorificValue,
+      gcvUnitsOfMeasureCode: entity.gcvUnitsOfMeasureCode,
+      totalHeatInput: entity.totalHeatInput,
+      userId: entity.userId,
+      addDate: entity.addDate ? entity.addDate.toISOString() : null,
+      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+    };
+  }
 }

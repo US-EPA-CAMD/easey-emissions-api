@@ -13,8 +13,8 @@ export class Nsps4tAnnualMap extends BaseMap<
     return {
       id: entity.id,
       userId: entity.userId,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate ? entity.addDate.toISOString() : null,
+      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
       nsps4tSumId: entity.nsps4tSumId,
       monitoringLocationId: entity.monitoringLocationId,
       reportingPeriodId: entity.reportingPeriodId,

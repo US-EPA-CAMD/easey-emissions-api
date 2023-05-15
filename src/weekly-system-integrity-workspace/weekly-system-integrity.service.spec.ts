@@ -68,13 +68,12 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
 
       // @ts-expect-error use as mock
       jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject:jest.fn(),
-        complete:jest.fn(),
-        finished: Promise.resolve(true)
+        writeObject: jest.fn(),
+        complete: jest.fn(),
+        finished: Promise.resolve(true),
       });
 
       await expect(service.import(generatedData)).resolves;
-      
     });
   });
 });

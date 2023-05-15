@@ -123,7 +123,7 @@ describe('QuarterUnitDataRepository', () => {
       const result = await repository.getEmissions(
         req,
         fieldMappings.emissions.quarterly.data.aggregation.unit,
-        filters
+        filters,
       );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');
@@ -148,7 +148,7 @@ describe('QuarterUnitDataRepository', () => {
       expect(paginatedResult).toEqual('mockEmissions');
     });
   });
-  
+
   describe('getEmissionsFacilityAggregation', () => {
     it('calls createQueryBuilder and gets all QuarterUnitData aggregated by facility from the repository no filters', async () => {
       const result = await repository.getEmissionsFacilityAggregation(
@@ -202,7 +202,7 @@ describe('QuarterUnitDataRepository', () => {
     });
 
     it('does not run query to get count if initial query returns no result', async () => {
-      queryBuilder.getRawMany.mockReturnValue([])
+      queryBuilder.getRawMany.mockReturnValue([]);
       const result = await repository.getEmissionsStateAggregation(
         req,
         new PaginatedQuarterlyApportionedEmissionsParamsDTO(),

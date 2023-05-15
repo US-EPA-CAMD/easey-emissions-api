@@ -1,6 +1,13 @@
 import { FindOneOptions } from 'typeorm';
 import { Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+  ValidationArguments,
+} from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
@@ -52,7 +59,6 @@ export class EmissionsBaseDTO {
   constructor(values: Object = {}) {
     Object.assign(this, values);
   }
-
 }
 
 export class EmissionsRecordDTO extends EmissionsBaseDTO {
@@ -80,7 +86,7 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   submissionAvailabilityCd?: string;
 
   constructor(values: Object = {}) {
-    super(values)
+    super(values);
     Object.assign(this, values);
   }
 }
@@ -153,7 +159,7 @@ export class EmissionsDTO extends EmissionsRecordDTO {
   nsps4tSummaryData: Nsps4tSummaryDTO[];
 
   constructor(values: Object = {}) {
-    super(values)
+    super(values);
     Object.assign(this, values);
   }
 }

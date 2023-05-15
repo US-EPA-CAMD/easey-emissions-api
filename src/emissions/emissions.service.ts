@@ -71,7 +71,8 @@ export class EmissionsService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData =
+        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];

@@ -7,14 +7,9 @@ import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-em
 import { QuarterlyApportionedEmissionsController } from './quarterly-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([QuarterUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([QuarterUnitDataRepository])],
   controllers: [QuarterlyApportionedEmissionsController],
-  providers: [
-    ConfigService,
-    QuarterlyApportionedEmissionsService
-  ],
+  providers: [ConfigService, QuarterlyApportionedEmissionsService],
   exports: [TypeOrmModule],
 })
 export class QuarterlyApportionedEmissionsModule {}

@@ -49,8 +49,8 @@ export class HourlyFuelFlowRecordDTO extends HourlyFuelFlowBaseDTO {
   monitoringSystemRecordId?: string;
   calcMassFlowRate?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcVolumetricFlowRate?: number;
   calcAppdStatus?: string;
   reportingPeriodId: number;

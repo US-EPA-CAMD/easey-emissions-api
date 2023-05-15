@@ -10,7 +10,7 @@ import { UnitFactRepository } from '../unit-fact.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UnitFactRepository]),
-    HourlyMatsApportionedEmissionsModule
+    HourlyMatsApportionedEmissionsModule,
   ],
   controllers: [MatsApportionedEmissionsController],
   providers: [ConfigService, MatsApportionedEmissionsService],

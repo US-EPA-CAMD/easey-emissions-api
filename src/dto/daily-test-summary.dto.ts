@@ -57,8 +57,8 @@ export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
   componentRecordId?: string;
   calcTestResultCode: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class DailyTestSummaryImportDTO extends DailyTestSummaryBaseDTO {

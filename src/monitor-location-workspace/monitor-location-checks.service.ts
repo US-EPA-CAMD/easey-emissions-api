@@ -42,10 +42,8 @@ export class MonitorLocationChecksService {
       let location = locations.find(l => {
         const locationUnitId = l?.unitId;
         const locationStackPipeId = l?.stackPipeId;
-        if(unitId)
-          return locationUnitId === unitId;
-        if(stackPipeId)
-          return locationStackPipeId === stackPipeId;
+        if (unitId) return locationUnitId === unitId;
+        if (stackPipeId) return locationStackPipeId === stackPipeId;
       });
 
       if (!location) {

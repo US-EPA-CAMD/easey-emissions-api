@@ -1,12 +1,6 @@
 import { Request } from 'express';
 
-import {
-  Get,
-  Req,
-  Query,
-  Controller,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
 
 import {
   ApiTags,
@@ -42,10 +36,7 @@ import { DailyApportionedEmissionsNationalAggregationDTO } from '../../dto/daily
 @ApiExtraModels(DailyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(DailyApportionedEmissionsNationalAggregationDTO)
 export class DailyApportionedEmissionsController {
-  
-  constructor(
-    private readonly service: DailyApportionedEmissionsService
-  ) {}
+  constructor(private readonly service: DailyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
