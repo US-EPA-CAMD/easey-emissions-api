@@ -23,7 +23,7 @@ const commonSQL = (schema: string) => {
     JOIN camd.plant p USING(fac_id)
     WHERE end_rpt_period_id IS NULL
     ORDER BY oris_code, configuration, period_abbreviation`;
-}
+};
 
 @Injectable()
 export class WhatHasDataService {
@@ -37,7 +37,7 @@ export class WhatHasDataService {
     isWorkspace: boolean = false,
   ): Promise<any> {
     let sql = null;
-    const schema = isWorkspace ? "camdecmpswks" : "camdecmps";
+    const schema = isWorkspace ? 'camdecmpswks' : 'camdecmps';
 
     if (dataType === EmissionsDataTypes.DAILY_CAL) {
       sql = `

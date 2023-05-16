@@ -6,11 +6,7 @@ import { WhatHasDataController } from './what-has-data.controller';
 import { EmissionsRepository } from '../emissions/emissions.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      EmissionsRepository
-    ])
-  ],
+  imports: [TypeOrmModule.forFeature([EmissionsRepository])],
   controllers: [WhatHasDataController],
   providers: [WhatHasDataService],
 })

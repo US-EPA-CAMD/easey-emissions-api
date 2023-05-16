@@ -68,7 +68,7 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   reportingPeriodId: number;
   @IsOptional()
   @IsDateString()
-  lastUpdated?: Date;
+  lastUpdated?: string;
   @IsOptional()
   @IsString()
   updatedStatusFlg?: string;
