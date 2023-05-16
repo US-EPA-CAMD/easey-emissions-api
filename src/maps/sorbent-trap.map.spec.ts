@@ -57,8 +57,8 @@ describe('SorbentTrapMap', () => {
         calcModcCode: mock.calcModcCode,
         calcHgConcentration: mock.calcHgConcentration,
         userId: mock.userId,
-        addDate: mock.addDate,
-        updateDate: mock.updateDate,
+        addDate: mock.addDate?.toISOString() ?? null,
+        updateDate: mock.updateDate?.toISOString() ?? null,
         samplingTrainData: [],
       });
     };

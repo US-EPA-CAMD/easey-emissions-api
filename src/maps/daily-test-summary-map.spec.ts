@@ -47,8 +47,8 @@ describe('DailyTestSummaryMap', () => {
         calcTestResultCode: mock.calcTestResultCode,
         spanScaleCode: mock.spanScaleCode,
         userId: mock.userId,
-        addDate: mock.addDate,
-        updateDate: mock.updateDate,
+        addDate: mock.addDate?.toISOString() ?? null,
+        updateDate: mock.updateDate?.toISOString() ?? null,
         dailyCalibrationData: mock?.dailyCalibrations ?? [],
       });
     };

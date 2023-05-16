@@ -25,8 +25,8 @@ describe('DailFuelMap', () => {
         dailyEmissionId: mock.dailyEmissionId,
         calcFuelCarbonBurned: mock.calcFuelCarbonBurned,
         userId: mock.userId,
-        addDate: mock.addDate,
-        updateDate: mock.updateDate,
+        addDate: mock.addDate?.toISOString() ?? null,
+        updateDate: mock.updateDate?.toISOString() ?? null,
         reportingPeriodId: mock.reportingPeriodId,
         monitoringLocationId: mock.monitoringLocationId,
       });

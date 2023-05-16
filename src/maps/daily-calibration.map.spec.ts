@@ -44,8 +44,8 @@ describe('DailyCalibrationMap', () => {
         expirationDate: mock.expirationDate,
         injectionProtocolCode: mock.injectionProtocolCode,
         userId: mock.userId,
-        addDate: mock.addDate,
-        updateDate: mock.updateDate,
+        addDate: mock.addDate?.toISOString() ?? null,
+        updateDate: mock.updateDate?.toISOString() ?? null,
       });
     };
 

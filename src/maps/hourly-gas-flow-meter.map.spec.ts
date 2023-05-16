@@ -28,8 +28,8 @@ describe('HourlyGasFlowMap', () => {
         calcFlowToSamplingRatio: mock.calcFlowToSamplingRatio,
         calcFlowToSamplingMult: mock.calcFlowToSamplingMult,
         userId: mock.userId,
-        addDate: mock.addDate,
-        updateDate: mock.updateDate,
+        addDate: mock.addDate?.toISOString() ?? null,
+        updateDate: mock.updateDate?.toISOString() ?? null,
       });
     };
 
