@@ -12,7 +12,7 @@ import { mockWeeklyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-
 import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { ImportIdentifiers } from '../../dist/emissions-workspace/emissions.service';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { ConfigService } from '@nestjs/config';
 
 describe('--WeeklyTestSummaryWorkspaceService--', () => {
