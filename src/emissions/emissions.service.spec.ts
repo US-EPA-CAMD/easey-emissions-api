@@ -75,7 +75,6 @@ import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/ns
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
-import moment from 'moment';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
@@ -281,7 +280,7 @@ describe('Emissions Service', () => {
         .spyOn(emissionsSubmissionsProgressRepository, 'getSubmissionProgress')
         .mockResolvedValue(undefined);
       const result = await emissionsService.getSubmissionProgress(
-        moment('2022-10-10').toDate(),
+        new Date('2022-10-10'),
       );
       expect(result.year).toBe(2022);
       expect(result.quarterName).toBe('Third');

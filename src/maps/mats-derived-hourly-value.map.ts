@@ -28,8 +28,8 @@ export class MatsDerivedHourlyValueMap extends BaseMap<
       calcPctDiluent: entity.calcPctDiluent,
       calcPctMoisture: entity.calcPctMoisture,
       userId: entity.userId,
-      addDate: entity.addDate ? entity.addDate.toISOString() : null,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
     };
   }
 }

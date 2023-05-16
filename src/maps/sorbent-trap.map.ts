@@ -34,8 +34,8 @@ export class SorbentTrapMap extends BaseMap<
       calcModcCode: entity.calcModcCode,
       calcHgConcentration: entity.calcHgConcentration,
       userId: entity.userId,
-      addDate: entity.addDate ? entity.addDate.toISOString() : null,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       samplingTrainData: [],
     };
   }

@@ -34,8 +34,8 @@ export class WeeklyTestSummaryMap extends BaseMap<
       monitoringSystemRecordId: entity.monitoringSystemId,
       calcTestResultCode: entity.calcTestResultCode,
       userId: entity.userId,
-      addDate: entity.addDate ? entity.addDate.toISOString() : null,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       weeklySystemIntegrityData: [],
     };
   }

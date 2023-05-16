@@ -51,8 +51,8 @@ export class DailyTestSummaryMap extends BaseMap<
       calcTestResultCode: entity.calcTestResultCode,
       spanScaleCode: entity.spanScaleCode,
       userId: entity.userId,
-      addDate: entity.addDate ? entity.addDate.toISOString() : null,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       dailyCalibrationData,
     };
   }

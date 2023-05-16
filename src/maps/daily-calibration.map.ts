@@ -44,8 +44,8 @@ export class DailyCalibrationMap extends BaseMap<
       expirationDate: entity.expirationDate,
       injectionProtocolCode: entity.injectionProtocolCode,
       userId: entity.userId,
-      addDate: entity.addDate ? entity.addDate.toISOString() : null,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
     };
   }
 }

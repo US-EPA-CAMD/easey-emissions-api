@@ -22,7 +22,7 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       submissionAvailabilityCodeDescription:
         entity.submissionAvailabilityCodeDescription,
       userid: entity.userid,
-      updateDate: entity.updateDate ? entity.updateDate.toISOString() : null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       windowStatus: entity.windowStatus,
       periodAbbreviation: entity.periodAbbreviation,
     };
