@@ -62,8 +62,7 @@ export class DailyEmissionWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
-  ): Promise<void>{
-
+  ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.dailyEmissionData) ||
       emissionsImport?.dailyEmissionData.length === 0
@@ -90,7 +89,6 @@ export class DailyEmissionWorkspaceService {
       ],
     );
 
-
     for (const dailyEmissionDatum of emissionsImport.dailyEmissionData) {
       const monitoringLocationId = monitoringLocations.filter(location => {
         return (
@@ -103,9 +101,15 @@ export class DailyEmissionWorkspaceService {
       dailyEmissionDatum['id'] = uid;
       dailyEmissionDatum['locationId'] = monitoringLocationId;
 
-
-      const {parameterCode, date, totalDailyEmissions, adjustedDailyEmissions, 
-        sorbentRelatedMassEmissions, unadjustedDailyEmissions, totalCarbonBurned} = dailyEmissionDatum;
+      const {
+        parameterCode,
+        date,
+        totalDailyEmissions,
+        adjustedDailyEmissions,
+        sorbentRelatedMassEmissions,
+        unadjustedDailyEmissions,
+        totalCarbonBurned,
+      } = dailyEmissionDatum;
 
       bulkLoadStream.writeObject({
         id: uid,

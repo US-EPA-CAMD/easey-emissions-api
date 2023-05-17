@@ -28,7 +28,7 @@ export class WeeklyTestSummaryWorkspaceService {
     private readonly repository: WeeklyTestSummaryWorkspaceRepository,
     private readonly weeklySystemIntegrityService: WeeklySystemIntegrityWorkspaceService,
     private readonly bulkLoadService: BulkLoadService,
-  ) { }
+  ) {}
 
   async delete(
     criteria: FindConditions<WeeklyTestSummary>,
@@ -117,8 +117,15 @@ export class WeeklyTestSummaryWorkspaceService {
       weeklyTestSummaryDatum['id'] = uid;
       weeklyTestSummaryDatum['locationId'] = monitoringLocationId;
 
-      const { date, hour, minute, componentId,
-        testTypeCode, testResultCode, spanScaleCode } = weeklyTestSummaryDatum;
+      const {
+        date,
+        hour,
+        minute,
+        componentId,
+        testTypeCode,
+        testResultCode,
+        spanScaleCode,
+      } = weeklyTestSummaryDatum;
 
       bulkLoadStream.writeObject({
         uid,
@@ -136,7 +143,7 @@ export class WeeklyTestSummaryWorkspaceService {
         updateDate: currentTime,
       });
     }
-    
+
     bulkLoadStream.complete();
     await bulkLoadStream.finished;
 
@@ -163,6 +170,5 @@ export class WeeklyTestSummaryWorkspaceService {
 
       await this.weeklySystemIntegrityService.import(systemIntegrityObjects);
     }
-
   }
 }

@@ -18,10 +18,6 @@ import {
     LongTermFuelFlowMap,
     BulkLoadService,
   ],
-  exports: [
-    TypeOrmModule,
-    LongTermFuelFlowMap,
-    BulkLoadService,
-  ],
+  exports: [TypeOrmModule, LongTermFuelFlowMap, BulkLoadService],
 })
 export class LongTermFuelFlowWorkspaceModule {}

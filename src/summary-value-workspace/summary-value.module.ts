@@ -11,14 +11,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
     BulkLoadModule,
   ],
   controllers: [],
-  providers: [
-    SummaryValueWorkspaceService, 
-    SummaryValueMap
-  ],
-  exports: [
-    TypeOrmModule, 
-    SummaryValueWorkspaceService, 
-    SummaryValueMap
-  ],
+  providers: [SummaryValueWorkspaceService, SummaryValueMap],
+  exports: [TypeOrmModule, SummaryValueWorkspaceService, SummaryValueMap],
 })
 export class SummaryValueWorkspaceModule {}

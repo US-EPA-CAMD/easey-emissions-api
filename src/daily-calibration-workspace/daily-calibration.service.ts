@@ -10,7 +10,6 @@ import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceRepository } from './daily-calibration.repository';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 export type DailyCalibrationCreate = DailyCalibrationImportDTO & {
   dailyTestSummaryId: string;

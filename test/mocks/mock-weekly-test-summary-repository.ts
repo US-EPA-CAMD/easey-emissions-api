@@ -1,4 +1,3 @@
 export const mockWeeklyTestSummaryRepository = {
-    export: () => jest,
-  };
-  
+  export: () => jest,
+};

@@ -17,8 +17,8 @@ describe('NSPS4TAnnualMap', () => {
         return {
           id: param.id,
           userId: param.userId,
-          addDate: param.addDate,
-          updateDate: param.updateDate,
+          addDate: param.addDate?.toISOString() ?? null,
+          updateDate: param.updateDate?.toISOString() ?? null,
           nsps4tSumId: param.nsps4tSumId,
           monitoringLocationId: param.monitoringLocationId,
           reportingPeriodId: param.reportingPeriodId,

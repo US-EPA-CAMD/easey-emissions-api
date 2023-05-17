@@ -335,9 +335,7 @@ export const genQuarterUnitData = <RepoType>(amount = 1): RepoType[] => {
   return quarterUnitData;
 };
 
-export const genApplicableApportionedEmissionsAttributesDto = (
-  amount = 1,
-) => {
+export const genApplicableApportionedEmissionsAttributesDto = (amount = 1) => {
   const dtos: ApplicableApportionedEmissionsAttributesDTO[] = [];
 
   for (let dto = 0; dto < amount; dto++) {

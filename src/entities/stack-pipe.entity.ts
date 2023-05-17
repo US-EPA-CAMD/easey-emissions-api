@@ -53,5 +53,4 @@ export class StackPipe extends BaseEntity {
   )
   @JoinColumn({ name: 'fac_id' })
   plant: Plant;
-
 }

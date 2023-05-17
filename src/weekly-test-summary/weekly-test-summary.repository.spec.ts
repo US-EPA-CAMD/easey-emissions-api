@@ -11,7 +11,7 @@ let filters = new EmissionsParamsDTO();
 describe('-- WeeklyTestSummaryRepository --', () => {
   let repository;
   let queryBuilder;
-  
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [

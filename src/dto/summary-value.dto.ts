@@ -33,8 +33,8 @@ export class SummaryValueRecordDTO extends SummaryValueBaseDTO {
   calcOsTotal?: number;
   calcYearTotal?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class SummaryValueImportDTO extends SummaryValueBaseDTO {}

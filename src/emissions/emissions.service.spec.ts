@@ -75,7 +75,6 @@ import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/ns
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
-import moment from 'moment';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
@@ -84,7 +83,7 @@ import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
   let emissionsRepository: EmissionsRepository;
-  let emissionsSubmissionsProgressRepository: EmissionsSubmissionsProgressRepository
+  let emissionsSubmissionsProgressRepository: EmissionsSubmissionsProgressRepository;
   let emissionsService: EmissionsService;
   let dailyTestSummaryService: DailyTestSummaryService;
   let hourlyOperatingService: HourlyOperatingService;
@@ -154,9 +153,8 @@ describe('Emissions Service', () => {
         LongTermFuelFlowMap,
         LongTermFuelFlowService,
         {
-
           provide: LongTermFuelFlowRepository,
-          useValue: mockLongTermFuelFlowRepository
+          useValue: mockLongTermFuelFlowRepository,
         },
         {
           provide: DerivedHourlyValueRepository,
@@ -223,8 +221,10 @@ describe('Emissions Service', () => {
     weeklyTestSummaryService = module.get(WeeklyTestSummaryService);
     nsps4tSummaryService = module.get(Nsps4tSummaryService);
     summaryValueService = module.get(SummaryValueService);
-    emissionsSubmissionsProgressRepository = module.get(EmissionsSubmissionsProgressRepository);
-    longTermFuelFlowService = module.get(LongTermFuelFlowService)
+    emissionsSubmissionsProgressRepository = module.get(
+      EmissionsSubmissionsProgressRepository,
+    );
+    longTermFuelFlowService = module.get(LongTermFuelFlowService);
     configService = module.get(ConfigService);
   });
 
@@ -258,7 +258,7 @@ describe('Emissions Service', () => {
       jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(summaryValueService, 'export').mockResolvedValue(null);
       jest.spyOn(longTermFuelFlowService, 'export').mockResolvedValue(null);
-      jest.spyOn(configService, 'get').mockReturnValue("test");
+      jest.spyOn(configService, 'get').mockReturnValue('test');
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
         mappedEmissions,
@@ -274,15 +274,17 @@ describe('Emissions Service', () => {
     });
   });
 
-  describe('getSubmissionProgress', ()=>{
-
-    it('should run successfully', async()=>{
-
-      jest.spyOn(emissionsSubmissionsProgressRepository, 'getSubmissionProgress').mockResolvedValue(undefined);
-      const result = await emissionsService.getSubmissionProgress(moment("2022-10-10").toDate());
-      expect(result.year).toBe(2022)
-      expect(result.quarterName).toBe('Third')
-      expect(result.quarter).toBe(3)
-    })
-  })
+  describe('getSubmissionProgress', () => {
+    it('should run successfully', async () => {
+      jest
+        .spyOn(emissionsSubmissionsProgressRepository, 'getSubmissionProgress')
+        .mockResolvedValue(undefined);
+      const result = await emissionsService.getSubmissionProgress(
+        new Date('2022-10-10'),
+      );
+      expect(result.year).toBe(2022);
+      expect(result.quarterName).toBe('Third');
+      expect(result.quarter).toBe(3);
+    });
+  });
 });

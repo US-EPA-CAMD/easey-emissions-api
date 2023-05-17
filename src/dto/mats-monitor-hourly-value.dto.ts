@@ -38,8 +38,8 @@ export class MatsMonitorHourlyValueRecordDTO extends MatsMonitorHourlyValueBaseD
   calcHgi1Status?: string;
   calcRataStatus?: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class MatsMonitorHourlyValueImportDTO extends MatsMonitorHourlyValueBaseDTO {}

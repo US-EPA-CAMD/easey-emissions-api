@@ -26,7 +26,8 @@ export class EmissionsViewController {
   @Get()
   @ApiOkResponse({
     isArray: true,
-    description: 'Retrieves a list of official Emissions data views that are available',
+    description:
+      'Retrieves a list of official Emissions data views that are available',
   })
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();

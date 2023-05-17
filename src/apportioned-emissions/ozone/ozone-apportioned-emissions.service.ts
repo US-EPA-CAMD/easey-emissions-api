@@ -98,10 +98,7 @@ export class OzoneApportionedEmissionsService {
     let query;
 
     try {
-      query = await this.repository.getEmissionsStateAggregation(
-        req,
-        params,
-      );
+      query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
       throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -112,13 +109,9 @@ export class OzoneApportionedEmissionsService {
     );
 
     return query.map(item => {
-      return plainToClass(
-        OzoneApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return plainToClass(OzoneApportionedEmissionsStateAggregationDTO, item, {
+        enableImplicitConversion: true,
+      });
     });
   }
 

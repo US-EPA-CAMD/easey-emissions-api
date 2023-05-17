@@ -30,8 +30,8 @@ export class HourlyParameterFuelFlowMap extends BaseMap<
       parameterUomCode: entity.parameterUomCode,
       hourlyFuelFlowId: entity.hourlyFuelFlowId,
       calcParamValFuel: entity.calcParamValFuel,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       calcAppeStatus: entity.calcAppeStatus,
       reportingPeriodId: entity.reportingPeriodId,
     };

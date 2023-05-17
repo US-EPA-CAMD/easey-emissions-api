@@ -35,14 +35,21 @@ describe('SorbentTrapService', () => {
   });
 
   it('should export data', async () => {
-    const mockedValues = genSorbentTrap<SorbentTrap>(1, { include: ['samplingTrains'], samplingTrainAmount: 1 });
+    const mockedValues = genSorbentTrap<SorbentTrap>(1, {
+      include: ['samplingTrains'],
+      samplingTrainAmount: 1,
+    });
     const mappedValues = await map.many(mockedValues);
 
-    jest.spyOn(exportSorbentTrapData, 'exportSorbentTrapData').mockResolvedValue(mappedValues);
-    jest.spyOn(samplingTrainService, 'export').mockResolvedValue(mappedValues[0].samplingTrainData);
+    jest
+      .spyOn(exportSorbentTrapData, 'exportSorbentTrapData')
+      .mockResolvedValue(mappedValues);
+    jest
+      .spyOn(samplingTrainService, 'export')
+      .mockResolvedValue(mappedValues[0].samplingTrainData);
 
-    await expect(
-      service.export([], new EmissionsParamsDTO()),
-    ).resolves.toEqual(mappedValues);
-  })
+    await expect(service.export([], new EmissionsParamsDTO())).resolves.toEqual(
+      mappedValues,
+    );
+  });
 });

@@ -6,7 +6,6 @@ import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repositor
 import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
 
-
 let filters = new EmissionsParamsDTO();
 
 describe('-- HourlyOperatingWorkspaceRepository --', () => {

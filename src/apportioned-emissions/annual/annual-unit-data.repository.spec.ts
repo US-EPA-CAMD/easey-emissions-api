@@ -122,7 +122,7 @@ describe('AnnualUnitDataRepository', () => {
       const result = await repository.getEmissions(
         req,
         fieldMappings.emissions.annual.data.aggregation.unit,
-        filters
+        filters,
       );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

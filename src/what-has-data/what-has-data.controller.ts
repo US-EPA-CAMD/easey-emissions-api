@@ -10,9 +10,7 @@ export class WhatHasDataController {
   constructor(private service: WhatHasDataService) {}
 
   @Get()
-  whatHasData(
-    @Query() dto: WhatHasDataParamsDTO,
-  ): Promise<any> {
+  whatHasData(@Query() dto: WhatHasDataParamsDTO): Promise<any> {
     return this.service.whatHasData(dto.dataType, dto.workspace);
   }
 }
