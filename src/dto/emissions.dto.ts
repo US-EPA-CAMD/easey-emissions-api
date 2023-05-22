@@ -1,6 +1,6 @@
 import { FindOneOptions } from 'typeorm';
 import { Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
+import { IsDateString, IsNotEmptyObject, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
@@ -49,7 +49,7 @@ export class EmissionsBaseDTO {
   @IsString()
   submissionComment?: string;
 
-  constructor(values: Object = {}) {
+  constructor(values: Object) {
     Object.assign(this, values);
   }
 
