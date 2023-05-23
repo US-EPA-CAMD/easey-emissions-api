@@ -22,7 +22,7 @@ export class EmissionsChecksService {
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
-  ) {}
+  ) { }
   public throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
       throw new LoggingException(errorList, HttpStatus.BAD_REQUEST);
@@ -33,6 +33,18 @@ export class EmissionsChecksService {
     this.logger.info('Running Emissions Import Checks');
 
     const errorList: string[] = [];
+
+    const doesNotHaveData = (d) => isUndefinedOrNull(d) || d.length === 0;
+
+    if (doesNotHaveData(payload.dailyEmissionData)
+      && doesNotHaveData(payload.dailyTestSummaryData)
+      && doesNotHaveData(payload.hourlyOperatingData)
+      && doesNotHaveData(payload.longTermFuelFlowData)
+      && doesNotHaveData(payload.nsps4tSummaryData)
+    ) {
+
+      this.throwIfErrors(["No data found in payload"])
+    }
 
     // IMPORT-29: Inappropriate Children Records for Daily Test Summary
     const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(

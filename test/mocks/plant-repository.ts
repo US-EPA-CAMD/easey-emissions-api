@@ -1,3 +1,3 @@
 export const mockPlantRepository = {
-  getImportLocations: () => null,
+  getImportPlant: () => null,
 };

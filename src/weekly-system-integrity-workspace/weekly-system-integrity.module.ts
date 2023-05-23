@@ -23,4 +23,4 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
     BulkLoadService,
   ],
 })
-export class WeeklySystemIntegrityWorkspaceModule { }
+export class WeeklySystemIntegrityWorkspaceModule {}

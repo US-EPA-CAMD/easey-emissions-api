@@ -19,7 +19,9 @@ export function IsInValidReportingQuarter(
       validator: {
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
-          const relatedValue = (args.object as unknown as number)[relatedPropertyName];
+          const relatedValue = ((args.object as unknown) as number)[
+            relatedPropertyName
+          ];
           const curDate = new Date();
           const curYear = new Date().getFullYear();
           const yearIndicator =

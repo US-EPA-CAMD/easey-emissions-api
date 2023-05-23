@@ -34,8 +34,8 @@ export class DailyFuelRecordDTO extends DailyFuelBaseDTO {
   dailyEmissionId: string;
   calcFuelCarbonBurned?: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   reportingPeriodId: number;
   monitoringLocationId: string;
 }

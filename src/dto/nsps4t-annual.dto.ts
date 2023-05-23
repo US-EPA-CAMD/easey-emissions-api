@@ -33,8 +33,8 @@ export class Nsps4tAnnualRecordDTO extends Nsps4tAnnualBaseDTO {
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class Nsps4tAnnualImportDTO extends Nsps4tAnnualBaseDTO {}

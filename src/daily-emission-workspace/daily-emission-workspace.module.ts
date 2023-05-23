@@ -3,25 +3,24 @@ import { DailyEmissionWorkspaceService } from './daily-emission-workspace.servic
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { BulkLoadModule, BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import {
+  BulkLoadModule,
+  BulkLoadService,
+} from '@us-epa-camd/easey-common/bulk-load';
 import { DailyFuelWorkspaceModule } from '../daily-fuel-workspace/daily-fuel-workspace.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DailyEmissionWorkspaceRepository,]),
+    TypeOrmModule.forFeature([DailyEmissionWorkspaceRepository]),
     DailyFuelWorkspaceModule,
     BulkLoadModule,
   ],
-  providers: [
-    DailyEmissionMap,
-    DailyEmissionWorkspaceService,
-    BulkLoadService
-  ],
+  providers: [DailyEmissionMap, DailyEmissionWorkspaceService, BulkLoadService],
   exports: [
     TypeOrmModule,
     DailyEmissionMap,
     DailyEmissionWorkspaceService,
-    BulkLoadService
-  ]
+    BulkLoadService,
+  ],
 })
 export class DailyEmissionWorkspaceModule {}

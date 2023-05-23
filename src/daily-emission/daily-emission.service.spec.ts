@@ -15,7 +15,6 @@ describe('DailyEmissionDataService', () => {
     export: () => Promise.resolve([new DailyFuelDTO()]),
   };
 
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -25,15 +24,14 @@ describe('DailyEmissionDataService', () => {
         DailyFuelRepository,
         {
           provide: DailyFuelService,
-          useValue: mockDailyFuelService
-        }
+          useValue: mockDailyFuelService,
+        },
       ],
-    }).compile();  
+    }).compile();
     service = module.get<DailyEmissionService>(DailyEmissionService);
     exportModule = await import(
       '../daily-emission-functions/export-daily-emission-data'
     );
-
   });
 
   it('should be defined', () => {
@@ -41,12 +39,12 @@ describe('DailyEmissionDataService', () => {
   });
 
   it('should successfully export', async () => {
-
-    jest.spyOn(exportModule, 'exportDailyEmissionData').mockResolvedValue([new DailyEmissionDTO()]);
+    jest
+      .spyOn(exportModule, 'exportDailyEmissionData')
+      .mockResolvedValue([new DailyEmissionDTO()]);
     const result = await service.export([], new EmissionsParamsDTO());
 
-    expect(result.length).toEqual(1)
-    expect(result[0].dailyFuelData.length).toEqual(1)
-
-  })
+    expect(result.length).toEqual(1);
+    expect(result[0].dailyFuelData.length).toEqual(1);
+  });
 });

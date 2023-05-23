@@ -1,5 +1,5 @@
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
-import { Repository, EntityRepository, } from 'typeorm';
+import { Repository, EntityRepository } from 'typeorm';
 
 @EntityRepository(EmissionEvaluation)
 export class EmissionsWorkspaceRepository extends Repository<
@@ -21,9 +21,11 @@ export class EmissionsWorkspaceRepository extends Repository<
     return query.getOne();
   }
 
-  async updateAllViews(monitorPlanId: string, quarter: number, year: number){
-    await this.query("CALL camdecmpswks.refresh_emissions_views($1,$2,$3)", [monitorPlanId, year, quarter])
+  async updateAllViews(monitorPlanId: string, quarter: number, year: number) {
+    await this.query('CALL camdecmpswks.refresh_emissions_views($1,$2,$3)', [
+      monitorPlanId,
+      year,
+      quarter,
+    ]);
   }
-
-
 }

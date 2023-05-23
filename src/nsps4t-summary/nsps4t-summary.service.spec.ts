@@ -44,7 +44,7 @@ describe('Nsps4tSummaryService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should export mapped data', async function () {
+  it('should export mapped data', async function() {
     const nsps4tSummaryMock = genNsps4tSummary<Nsps4tSummary>();
     const mappedValues = await map.many(nsps4tSummaryMock);
 
@@ -52,17 +52,12 @@ describe('Nsps4tSummaryService', () => {
       .spyOn(exportNsps4tSummaryData, 'exportNsps4tSummaryData')
       .mockResolvedValue(mappedValues);
 
-    jest
-      .spyOn(annualService, 'export')
-      .mockResolvedValue([]);
+    jest.spyOn(annualService, 'export').mockResolvedValue([]);
 
-    jest
-      .spyOn(compliancePeriodService, 'export')
-      .mockResolvedValue([]);
+    jest.spyOn(compliancePeriodService, 'export').mockResolvedValue([]);
 
-    await expect(
-      service.export([], new EmissionsParamsDTO()),
-    ).resolves.toEqual(mappedValues);
+    await expect(service.export([], new EmissionsParamsDTO())).resolves.toEqual(
+      mappedValues,
+    );
   });
-
 });

@@ -18,10 +18,6 @@ import { Nsps4tCompliancePeriodMap } from '../maps/nsps4t-compliance-period.map'
     BulkLoadService,
     Nsps4tCompliancePeriodMap,
   ],
-  exports: [
-    TypeOrmModule,
-    Nsps4tCompliancePeriodMap,
-    BulkLoadService,
-  ],
+  exports: [TypeOrmModule, Nsps4tCompliancePeriodMap, BulkLoadService],
 })
 export class Nsps4tCompliancePeriodWorkspaceModule {}

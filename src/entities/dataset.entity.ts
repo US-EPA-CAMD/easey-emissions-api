@@ -19,7 +19,7 @@ export class DataSet extends BaseEntity {
   @Column({
     name: 'group_cd',
   })
-  groupCode: string;  
+  groupCode: string;
 
   @Column({
     name: 'display_name',

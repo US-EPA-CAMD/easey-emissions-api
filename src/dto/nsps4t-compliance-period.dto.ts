@@ -57,8 +57,8 @@ export class Nsps4tCompliancePeriodRecordDTO extends Nsps4tCompliancePeriodBaseD
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class Nsps4tCompliancePeriodImportDTO extends Nsps4tCompliancePeriodBaseDTO {}

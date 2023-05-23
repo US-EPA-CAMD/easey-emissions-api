@@ -60,8 +60,8 @@ export class MonitorHourlyValueRecordDTO extends MonitorHourlyValueBaseDTO {
   biasAdjustmentFactor?: number;
   calcAdjustedHrlyValue?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcLineStatus?: string;
   calcRataStatus?: string;
   calcDaycalStatus?: string;

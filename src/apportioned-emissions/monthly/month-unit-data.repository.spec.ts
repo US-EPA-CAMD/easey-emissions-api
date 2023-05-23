@@ -162,7 +162,7 @@ describe('MonthUnitDataRepository', () => {
     });
 
     it('does not run additional query to get count if initial query returns no result', async () => {
-      queryBuilder.getRawMany.mockReturnValue([])
+      queryBuilder.getRawMany.mockReturnValue([]);
       const result = await repository.getEmissionsFacilityAggregation(
         req,
         new PaginatedMonthlyApportionedEmissionsParamsDTO(),
@@ -216,7 +216,7 @@ describe('MonthUnitDataRepository', () => {
     });
 
     it('does not run query to get count if initial query returns no result', async () => {
-      queryBuilder.getRawMany.mockReturnValue([])
+      queryBuilder.getRawMany.mockReturnValue([]);
       const result = await repository.getEmissionsStateAggregation(
         req,
         new PaginatedMonthlyApportionedEmissionsParamsDTO(),
@@ -269,7 +269,7 @@ describe('MonthUnitDataRepository', () => {
     });
 
     it('does not run query to get count if initial query returns no result', async () => {
-      queryBuilder.getRawMany.mockReturnValue([])
+      queryBuilder.getRawMany.mockReturnValue([]);
       const result = await repository.getEmissionsNationalAggregation(
         req,
         new PaginatedMonthlyApportionedEmissionsParamsDTO(),

@@ -82,8 +82,8 @@ export class DerivedHourlyValueRecordDTO extends DerivedHourlyValueBaseDTO {
   calcAdjustedHrlyValue: number;
   diluentCapInd: number;
   userId: string;
-  addDate: Date;
-  updateDate: Date;
+  addDate?: string;
+  updateDate?: string;
   calcPctDiluent: string;
   calcPctMoisture: string;
   calcRataStatus: string;

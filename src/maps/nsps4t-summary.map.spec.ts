@@ -29,8 +29,8 @@ describe('NSPS4TSummaryMap', () => {
             param.noCompliancePeriodEndedIndicator,
           noCompliancePeriodEndedComment: param.noCompliancePeriodEndedComment,
           userId: param.userId,
-          addDate: param.addDate,
-          updateDate: param.updateDate,
+          addDate: param.addDate?.toISOString() ?? null,
+          updateDate: param.updateDate?.toISOString() ?? null,
           nsps4tCompliancePeriodData: hasArrayValues(
             param.nsps4tCompliancePeriodData,
           )

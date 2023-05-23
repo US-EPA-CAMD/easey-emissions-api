@@ -15,8 +15,6 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
-import { genMonitorFormula } from '../../test/object-generators/monitor-formula';
-import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
@@ -42,6 +40,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { Unit } from '../entities/unit.entity';
 import { StackPipe } from '../entities/stack-pipe.entity';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -117,11 +116,18 @@ describe('Emissions Checks Service Tests', () => {
   });
 
   describe('test runChecks()', () => {
-    it('should run successfully', async () => {
-      const emissionsPayload = genEmissionsImportDto();
-      const result = service.runChecks(emissionsPayload[0]);
 
-      await expect(result).resolves.toEqual([]);
+    it('should successfully import', async ()=>{
+      const emissionsPayload = genEmissionsImportDto(1, {include:['dailyEmissionData']});
+
+      const result = service.runChecks(emissionsPayload[0]);
+      await expect(result).resolves.toEqual([])
+    })
+
+    it('should throw errors for emissions payload without children data', async () => {
+      const emissionsPayload = genEmissionsImportDto();
+
+      await expect(service.runChecks(emissionsPayload[0])).rejects.toThrow(LoggingException);
     });
 
     it('should throw errors as array of strings', () => {

@@ -116,8 +116,8 @@ export class DailyCalibrationRecordDTO extends DailyCalibrationBaseDTO {
   calcZeroCalibrationError?: number;
   calcUpscaleCalibrationError?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   reportingPeriodId?: number;
 }
 

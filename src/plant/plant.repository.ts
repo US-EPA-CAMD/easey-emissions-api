@@ -9,7 +9,7 @@ export type GetImportLocationsProperties = {
 
 @EntityRepository(Plant)
 export class PlantRepository extends Repository<Plant> {
-  async getImportLocations({
+  async getImportPlant({
     orisCode,
     stackIds,
     unitIds,
@@ -30,12 +30,11 @@ export class PlantRepository extends Repository<Plant> {
     const q = this.createQueryBuilder('plant')
       .innerJoinAndSelect('plant.monitorPlans', 'monitorPlans')
       .innerJoinAndSelect('monitorPlans.locations', 'monitorLocation')
-      .innerJoinAndSelect('monitorPlans.beginRptPeriod', 'beginReportingPeriod')
-      .leftJoinAndSelect('monitorPlans.endRptPeriod', 'endReportingPeriod')
       .leftJoinAndSelect('monitorLocation.unit', 'locationUnit')
       .leftJoinAndSelect('monitorLocation.stackPipe', 'locationStack')
       .where('plant.oris_code = :orisCode', { orisCode })
-      .andWhere(`${unitsWhere}${stacksWhere}`, { unitIds, stackIds });
+      .andWhere('monitorPlans.endRptPeriod is null')
+      .andWhere(`(${unitsWhere}${stacksWhere})`, { unitIds, stackIds });
 
     return q.getOne();
   }

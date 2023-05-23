@@ -58,8 +58,8 @@ export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
   reportingPeriodId: number;
   monitoringLocationId: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcTotalDailyEmissions?: number;
   calcTotalOpTime?: number;
 }

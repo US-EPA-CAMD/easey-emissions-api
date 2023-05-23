@@ -7,8 +7,6 @@ import { WeeklySystemIntegrityWorkspaceService } from './weekly-system-integrity
 import { mockWeeklySystemIntegrityWorkspaceRepository } from '../../test/mocks/mock-weekly-system-integrity-workspace-repository';
 import { WeeklySystemIntegrity } from '../entities/workspace/weekly-system-integrity.entity';
 import { genWeeklySystemIntegrityDto } from '../../test/object-generators/weekly-system-integrity.dto';
-import { WeeklySystemIntegrityImportDTO } from '../dto/weekly-system-integrity.dto';
-import { ImportIdentifiers } from '../../dist/emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
 
@@ -68,13 +66,12 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
 
       // @ts-expect-error use as mock
       jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject:jest.fn(),
-        complete:jest.fn(),
-        finished: Promise.resolve(true)
+        writeObject: jest.fn(),
+        complete: jest.fn(),
+        finished: Promise.resolve(true),
       });
 
       await expect(service.import(generatedData)).resolves;
-      
     });
   });
 });

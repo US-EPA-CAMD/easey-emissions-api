@@ -1,0 +1,25 @@
+export enum EmissionsDataTypes {
+  DAILY_CAL = 'daily_calibration',
+  DAILY_TEST = 'daily_test_summary',
+  DAILY_FUEL = 'daily_fuel',
+  DAILY_EMISSIONS = 'daily_emission',
+  LONG_TERM_FUEL_FLOW = 'long_term_fuel_flow',
+  NSPS4T_SUM = 'nsps4t_summary',
+  NSPS4T_4TH_QTR = 'nsps4t_annual',
+  NSPS4T_COMPLIANCE = 'nsps4t_compliance_period',
+  SAMPLING_TRAIN = 'sampling_train',
+  SORBENT_TRAP = 'sorbent_trap',
+  SUMMARY_VALUE = 'summary_value',
+  WKLY_SYSTEM_INT = 'weekly_system_integrity',
+  WKLY_TEST_SUM = 'weekly_test_summary',
+  HRLY_OP_DATA = 'hrly_op_data',
+  HRLY_GFM = 'hrly_gas_flow_meter',
+  HRLY_FUEL_FLOW = 'hrly_fuel_flow',
+  DERIVED_HRLY_VALUE = 'derived_hrly_value',
+  MONITOR_HRLY_VALUE = 'monitor_hrly_value',
+  HRLY_PARAM_FUEL_FLOW = 'hrly_param_fuel_flow',
+  MATS_DERIVED_HRLY_VALUE = 'mats_derived_hrly_value',
+  MATS_MONITOR_HRLY_VALUE = 'mats_monitor_hrly_value',
+}
+
+export default EmissionsDataTypes;

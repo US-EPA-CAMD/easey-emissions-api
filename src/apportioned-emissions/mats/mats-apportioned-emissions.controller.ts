@@ -21,10 +21,7 @@ import {
 @ApiTags('Apportioned MATS Emissions')
 @ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)
 export class MatsApportionedEmissionsController {
-  
-  constructor(
-    private readonly service: MatsApportionedEmissionsService
-  ) {}
+  constructor(private readonly service: MatsApportionedEmissionsService) {}
 
   @Get('attributes/applicable')
   @ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)

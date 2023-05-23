@@ -31,8 +31,8 @@ export class WeeklySystemIntegrityRecordDTO extends WeeklySystemIntegrityBaseDTO
   calcSystemIntegrityError?: number;
   calcApsInd?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   reportingPeriodId: number;
   monitoringLocationId: string;
 }

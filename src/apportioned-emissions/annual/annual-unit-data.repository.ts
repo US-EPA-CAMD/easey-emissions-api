@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(AnnualUnitDataView)
 export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
-
   async getEmissions(
     req: Request,
     columns: any[],
@@ -36,12 +35,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
   private buildQuery(
     columns: any[],
     params: AnnualApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud').select(
       alias
         ? columns.map(col => `aud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `aud.${col.value}`)
+        : columns.map(col => `aud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

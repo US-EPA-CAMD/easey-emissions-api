@@ -19,7 +19,7 @@ export class SetEmissionViewHeaderInterceptor implements NestInterceptor {
     const fileName = await getFileName(req.params.viewCode, req.query);
     return next.handle().pipe(
       map(data => {
-        if (req.query.attachFile === "true") {
+        if (req.query.attachFile === 'true') {
           req.res.setHeader(
             'content-disposition',
             `attachment; filename="${fileName}"`,

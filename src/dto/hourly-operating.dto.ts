@@ -112,8 +112,8 @@ export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   monitoringLocationId: string;
   multiFuelFlg?: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   operatingConditionCode?: string;
   fuelCdList?: string;
   mhhiIndicator?: number;

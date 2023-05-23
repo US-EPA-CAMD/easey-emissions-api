@@ -30,7 +30,6 @@ import {
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
-
   async getEmissions(
     req: Request,
     params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
