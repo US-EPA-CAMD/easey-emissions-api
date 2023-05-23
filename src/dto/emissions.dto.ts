@@ -56,7 +56,7 @@ export class EmissionsBaseDTO {
   @IsString()
   submissionComment?: string;
 
-  constructor(values: Object = {}) {
+  constructor(values: Object={}) {
     Object.assign(this, values);
   }
 }
