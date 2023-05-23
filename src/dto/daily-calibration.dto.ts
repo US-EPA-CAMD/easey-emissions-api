@@ -82,6 +82,7 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  //add validation
   upscaleGasTypeCode?: string;
 
   @IsOptional()
