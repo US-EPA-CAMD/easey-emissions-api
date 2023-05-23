@@ -137,7 +137,7 @@ export const genEmissionsRecordDto = (
       ...genEmissionBaseDto()[0],
       monitorPlanId: faker.datatype.string(),
       reportingPeriodId: faker.datatype.number(),
-      lastUpdated: optionalValue(faker.datatype.datetime()),
+      lastUpdated: optionalValue(faker.date.soon().toISOString()),
       updatedStatusFlg: optionalValue(faker.datatype.string()),
       needsEvalFlag: optionalValue(faker.datatype.string()),
       chkSessionId: optionalValue(faker.datatype.string()),

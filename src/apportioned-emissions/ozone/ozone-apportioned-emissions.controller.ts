@@ -1,12 +1,6 @@
 import { Request } from 'express';
 
-import {
-  Get,
-  Req,
-  Query,
-  Controller,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
 
 import {
   ApiTags,
@@ -43,10 +37,7 @@ import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozo
 @ApiExtraModels(OzoneApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(OzoneApportionedEmissionsNationalAggregationDTO)
 export class OzoneApportionedEmissionsController {
-  
-  constructor(
-    private readonly service: OzoneApportionedEmissionsService
-  ) { }
+  constructor(private readonly service: OzoneApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -82,7 +73,8 @@ export class OzoneApportionedEmissionsController {
 
   @Get('by-facility')
   @ApiOkResponse({
-    description: 'Retrieves Ozone Apportioned Emissions per filter criteria aggregated by facility',
+    description:
+      'Retrieves Ozone Apportioned Emissions per filter criteria aggregated by facility',
     content: {
       'application/json': {
         schema: {
@@ -114,7 +106,8 @@ export class OzoneApportionedEmissionsController {
 
   @Get('by-state')
   @ApiOkResponse({
-    description: 'Retrieves Ozone Apportioned Emissions per filter criteria aggregated by state',
+    description:
+      'Retrieves Ozone Apportioned Emissions per filter criteria aggregated by state',
     content: {
       'application/json': {
         schema: {
@@ -146,7 +139,8 @@ export class OzoneApportionedEmissionsController {
 
   @Get('nationally')
   @ApiOkResponse({
-    description: 'Retrieves Ozone Apportioned Emissions per filter criteria aggregated nationally',
+    description:
+      'Retrieves Ozone Apportioned Emissions per filter criteria aggregated nationally',
     content: {
       'application/json': {
         schema: {

@@ -52,7 +52,7 @@ export class MonitorLocationWorkspaceRepository extends Repository<
         unitIds,
         stackPipeIds,
       });
-    
+
     return query.getMany();
   }
 }

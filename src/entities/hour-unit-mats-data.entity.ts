@@ -1,4 +1,10 @@
-import { Column, ViewEntity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  ViewEntity,
+  PrimaryColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { UnitFact } from './unit-fact.entity';
 

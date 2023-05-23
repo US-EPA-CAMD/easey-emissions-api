@@ -10,14 +10,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
     TypeOrmModule.forFeature([DailyFuelWorkspaceRepository]),
     BulkLoadModule,
   ],
-  providers: [
-    DailyFuelMap, 
-    DailyFuelWorkspaceService, 
-  ],
-  exports:[
-    TypeOrmModule,
-    DailyFuelMap, 
-    DailyFuelWorkspaceService,
-  ]
+  providers: [DailyFuelMap, DailyFuelWorkspaceService],
+  exports: [TypeOrmModule, DailyFuelMap, DailyFuelWorkspaceService],
 })
 export class DailyFuelWorkspaceModule {}

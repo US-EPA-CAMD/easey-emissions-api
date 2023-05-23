@@ -36,8 +36,8 @@ export class MatsMonitorHourlyValueMap extends BaseMap<
       calcHgi1Status: entity.calcHgi1Status,
       calcRataStatus: entity.calcRataStatus,
       userId: entity.userId,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
     };
   }
 }

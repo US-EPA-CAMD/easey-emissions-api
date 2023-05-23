@@ -5,7 +5,10 @@ import {
   genDerivedHrlyValues,
 } from '../../test/object-generators/derived-hourly-value';
 import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
-import { exportSupplementaryDerivedHourlyValues, exportSupplementaryDerivedHourlyValuesQuery } from './derived-hourly-value-export';
+import {
+  exportSupplementaryDerivedHourlyValues,
+  exportSupplementaryDerivedHourlyValuesQuery,
+} from './derived-hourly-value-export';
 import { Test } from '@nestjs/testing';
 import { SelectQueryBuilder } from 'typeorm';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
@@ -40,33 +43,35 @@ describe('DerivedHourlyValueExport', () => {
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
     queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.getMany.mockReturnValue([]);
-    
   });
 
-    it('should successfully create and run query for export', async ()=>{ 
-      const params = genDerivedHourlyValueParamsDto()[0];
-      params.orisCode = [1,2,3]
-      params.locationName = ["a", "b", "c"]
-      const result = await exportSupplementaryDerivedHourlyValuesQuery(params, repository);
-      expect(result.length).toBe(0)
-    })
+  it('should successfully create and run query for export', async () => {
+    const params = genDerivedHourlyValueParamsDto()[0];
+    params.orisCode = [1, 2, 3];
+    params.locationName = ['a', 'b', 'c'];
+    const result = await exportSupplementaryDerivedHourlyValuesQuery(
+      params,
+      repository,
+    );
+    expect(result.length).toBe(0);
+  });
 
-    it('should export derived hourly values given correct endpoint parameters', async function() {
-      const mockderivedHourlyValues = genDerivedHrlyValues<DerivedHrlyValue>();
-  
-      jest
-        .spyOn(
-          derivedHourlyExportModule,
-          'exportSupplementaryDerivedHourlyValuesQuery',
-        )
-        .mockResolvedValue(mockderivedHourlyValues);
-      const mappedValues = await map.many(mockderivedHourlyValues);
-  
-      await expect(
-        exportSupplementaryDerivedHourlyValues(
-          genDerivedHourlyValueParamsDto()[0],
-          repository,
-        ),
-      ).resolves.toEqual(mappedValues);
-    });  
+  it('should export derived hourly values given correct endpoint parameters', async function() {
+    const mockderivedHourlyValues = genDerivedHrlyValues<DerivedHrlyValue>();
+
+    jest
+      .spyOn(
+        derivedHourlyExportModule,
+        'exportSupplementaryDerivedHourlyValuesQuery',
+      )
+      .mockResolvedValue(mockderivedHourlyValues);
+    const mappedValues = await map.many(mockderivedHourlyValues);
+
+    await expect(
+      exportSupplementaryDerivedHourlyValues(
+        genDerivedHourlyValueParamsDto()[0],
+        repository,
+      ),
+    ).resolves.toEqual(mappedValues);
+  });
 });

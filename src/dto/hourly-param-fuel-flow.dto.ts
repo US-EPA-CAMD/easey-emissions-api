@@ -39,8 +39,8 @@ export class HourlyParamFuelFlowRecordDTO extends HourlyParamFuelFlowBaseDTO {
   monitoringFormulaRecordId?: string;
   calcParamValFuel?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcAppeStatus?: string;
   reportingPeriodId: number;
   monitoringLocationId: string;

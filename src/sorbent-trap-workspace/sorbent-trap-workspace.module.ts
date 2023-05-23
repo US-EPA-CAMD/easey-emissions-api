@@ -24,10 +24,6 @@ import { SorbentTrapMap } from 'src/maps/sorbent-trap.map';
     BulkLoadService,
     SorbentTrapMap,
   ],
-  exports: [
-    TypeOrmModule,
-    SorbentTrapMap,
-    BulkLoadService,
-  ],
+  exports: [TypeOrmModule, SorbentTrapMap, BulkLoadService],
 })
 export class SorbentTrapWorkspaceModule {}

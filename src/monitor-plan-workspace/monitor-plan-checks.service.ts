@@ -24,9 +24,7 @@ export class MonitorPlanChecksService {
     const errorList: string[] = [];
     const invalidUnitNamePrefixes = ['CS', 'MS', 'CP', 'MP'];
 
-    if( locations?.length === 0)
-      return errorList;
-
+    if (locations?.length === 0) return errorList;
 
     const invalidUnitIds = locations
       .filter(l => l?.unitId)
@@ -42,12 +40,10 @@ export class MonitorPlanChecksService {
     }
 
     const monitorLocationIds = locations
-    .filter(l => l?.locationId)
-    .map(l => l.locationId);
+      .filter(l => l?.locationId)
+      .map(l => l.locationId);
 
-
-    if( monitorLocationIds.length === 0)
-      return errorList;
+    if (monitorLocationIds.length === 0) return errorList;
 
     const dbMonitorPlans: MonitorPlan[] = await this.monitorPlanRepository.getMonitorPlansByLocationIds(
       monitorLocationIds,
@@ -56,17 +52,18 @@ export class MonitorPlanChecksService {
       .map(mp => mp.locations)
       .flat()
       .map(ml => ml.id);
-    
-    monLocIdsFromMonPlans = [...new Set(monLocIdsFromMonPlans)]
-    
+
+    monLocIdsFromMonPlans = [...new Set(monLocIdsFromMonPlans)];
+
     // Here, we are comparing the monitor location of the uploaded unit/stack ids and making sure there is
     // a monitor plan for the location.
-    const invalidUnitStackLocations = locations.map(l => {
-
-      // if the monitor location id from the unit/stack uploaded doesn't have a monitor plan for it, then return that unit/stack
-      if (!monLocIdsFromMonPlans.includes(l.locationId))
-        return l.unitId ? l.unitId : l.stackPipeId;
-    }).filter((i) => i !== undefined);
+    const invalidUnitStackLocations = locations
+      .map(l => {
+        // if the monitor location id from the unit/stack uploaded doesn't have a monitor plan for it, then return that unit/stack
+        if (!monLocIdsFromMonPlans.includes(l.locationId))
+          return l.unitId ? l.unitId : l.stackPipeId;
+      })
+      .filter(i => i !== undefined);
 
     if (invalidUnitStackLocations.length > 0) {
       errorList.push(
@@ -74,10 +71,8 @@ export class MonitorPlanChecksService {
           invalid: invalidUnitStackLocations,
         }),
       );
-    }     
+    }
 
     return errorList;
   }
-
-  
 }

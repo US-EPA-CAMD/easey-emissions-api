@@ -296,7 +296,6 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ) {
-
     await this.dailyEmissionService.import(
       emissionsImport,
       monitoringLocations,
@@ -345,14 +344,13 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
-
     await this.summaryValueService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
       currentTime,
-    )
+    );
   }
 
   async importSorbentTrap(
@@ -394,15 +392,13 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ) {
-
-
     await this.weeklyTestSummaryService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
       currentTime,
-    )
+    );
   }
 
   async importLongTermFuelFlow(

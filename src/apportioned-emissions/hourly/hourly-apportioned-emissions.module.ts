@@ -7,13 +7,9 @@ import { HourlyApportionedEmissionsService } from './hourly-apportioned-emission
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HourUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([HourUnitDataRepository])],
   controllers: [HourlyApportionedEmissionsController],
-  providers: [
-    ConfigService,
-    HourlyApportionedEmissionsService],
+  providers: [ConfigService, HourlyApportionedEmissionsService],
   exports: [TypeOrmModule],
 })
 export class HourlyApportionedEmissionsModule {}

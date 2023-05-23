@@ -16,12 +16,11 @@ export type DailyFuelWorkspaceCreate = DailyFuelImportDTO & {
 
 @Injectable()
 export class DailyFuelWorkspaceService {
-
   constructor(
     private readonly map: DailyFuelMap,
     private readonly repository: DailyFuelWorkspaceRepository,
     private readonly bulkLoadService: BulkLoadService,
-  ) { }
+  ) {}
 
   async export(dailyEmissionIds: string[]): Promise<DailyFuelDTO[]> {
     return exportDailyFuelData({
@@ -39,9 +38,13 @@ export class DailyFuelWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
-
     for (const dataChunk of data) {
-      const {fuelCode, dailyFuelFeed, carbonContentUsed, fuelCarbonBurned} = dataChunk;
+      const {
+        fuelCode,
+        dailyFuelFeed,
+        carbonContentUsed,
+        fuelCarbonBurned,
+      } = dataChunk;
       objectList.push({
         id: randomUUID(),
         dailyEmissionId,
@@ -55,7 +58,6 @@ export class DailyFuelWorkspaceService {
         reportingPeriodId,
         monitoringLocationId,
       });
-
     }
   }
 

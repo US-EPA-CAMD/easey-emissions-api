@@ -122,7 +122,7 @@ describe('OzoneUnitDataRepository', () => {
       const result = await repository.getEmissions(
         req,
         fieldMappings.emissions.ozone.data.aggregation.unit,
-        filters
+        filters,
       );
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockEmissions');

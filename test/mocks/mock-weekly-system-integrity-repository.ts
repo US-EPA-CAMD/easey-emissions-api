@@ -1,4 +1,3 @@
 export const mockWeeklySystemIntegrityRepository = {
-    find: () => jest,
-  };
-  
+  find: () => jest,
+};

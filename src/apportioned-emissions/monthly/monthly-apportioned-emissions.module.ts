@@ -7,14 +7,9 @@ import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissi
 import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([MonthUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([MonthUnitDataRepository])],
   controllers: [MonthlyApportionedEmissionsController],
-  providers: [
-    ConfigService,
-    MonthlyApportionedEmissionsService
-  ],
+  providers: [ConfigService, MonthlyApportionedEmissionsService],
   exports: [TypeOrmModule],
 })
 export class MonthlyApportionedEmissionsModule {}

@@ -12,7 +12,6 @@ import {
 
 @EntityRepository(QuarterUnitDataView)
 export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
-
   async getEmissions(
     req: Request,
     columns: any[],
@@ -36,12 +35,12 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
   private buildQuery(
     columns: any[],
     params: QuarterlyApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<QuarterUnitDataView> {
     let query = this.createQueryBuilder('qud').select(
       alias
         ? columns.map(col => `qud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `qud.${col.value}`)
+        : columns.map(col => `qud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -82,7 +81,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
       'qud.facilityName',
       'qud.facilityId',
       'qud.year',
-      'qud.quarter'
+      'qud.quarter',
     ];
     const orderByColumns = ['qud.facilityId', 'qud.year', 'qud.quarter'];
 

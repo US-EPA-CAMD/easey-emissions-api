@@ -6,9 +6,7 @@ import { IsInValidReportingQuarter } from '../pipes/is-in-valid-reporting-quarte
 describe('-- Apportioned Emissions Params DTO --', () => {
   describe('getHourlyEmissions with query parameters', () => {
     class MyClass {
-      constructor(
-        month: string,
-      ) {
+      constructor(month: string) {
         this.month = month;
       }
       @IsValidNumber(12)
@@ -17,20 +15,12 @@ describe('-- Apportioned Emissions Params DTO --', () => {
     }
 
     it('should pass all validation pipes', async () => {
-      const results = await validate(
-        new MyClass(
-          '3'
-        ),
-      );
+      const results = await validate(new MyClass('3'));
       expect(results.length).toBe(0);
     });
 
     it('should fail one of validation pipes (month)', async () => {
-      const results = await validate(
-        new MyClass(
-          'invalid'
-        ),
-      );
+      const results = await validate(new MyClass('invalid'));
       expect(results.length).toBe(1);
     });
   });

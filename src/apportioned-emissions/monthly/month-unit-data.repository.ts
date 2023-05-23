@@ -39,8 +39,8 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
   ): SelectQueryBuilder<MonthUnitDataView> {
     let query = this.createQueryBuilder('mud').select(
       alias
-        ? columns.map((col) => `mud.${col.value} AS "${col.value}"`)
-        : columns.map((col) => `mud.${col.value}`),
+        ? columns.map(col => `mud.${col.value} AS "${col.value}"`)
+        : columns.map(col => `mud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -180,7 +180,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       query = this.createQueryBuilder('mud').select('COUNT(*) OVER() as count');
     } else {
       query = this.createQueryBuilder('mud').select(
-        selectColumns.map((col) => {
+        selectColumns.map(col => {
           return `${col} AS "${col.split('.')[1]}"`;
         }),
       );
@@ -210,8 +210,8 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
       'mud',
     );
 
-    selectColumns.forEach((c) => query.addGroupBy(c));
-    orderByColumns.forEach((c) => query.addOrderBy(c));
+    selectColumns.forEach(c => query.addGroupBy(c));
+    orderByColumns.forEach(c => query.addOrderBy(c));
 
     return query;
   }

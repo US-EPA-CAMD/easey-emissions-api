@@ -27,8 +27,8 @@ export class MatsDerivedHourlyValueRecordDTO extends MatsDerivedHourlyValueBaseD
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class MatsDerivedHourlyValueImportDTO extends MatsDerivedHourlyValueBaseDTO {}

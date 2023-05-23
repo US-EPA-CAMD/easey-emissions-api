@@ -65,5 +65,4 @@ export class Unit extends BaseEntity {
   )
   @JoinColumn({ name: 'fac_id' })
   plant: Plant;
-
 }

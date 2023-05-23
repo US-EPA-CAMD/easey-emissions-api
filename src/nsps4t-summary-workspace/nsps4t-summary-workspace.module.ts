@@ -28,10 +28,6 @@ import { Nsps4tSummaryMap } from 'src/maps/nsps4t-summary.map';
     BulkLoadService,
     Nsps4tSummaryMap,
   ],
-  exports: [
-    TypeOrmModule,
-    Nsps4tSummaryMap,
-    BulkLoadService,
-  ],
+  exports: [TypeOrmModule, Nsps4tSummaryMap, BulkLoadService],
 })
 export class Nsps4tSummaryWorkspaceModule {}

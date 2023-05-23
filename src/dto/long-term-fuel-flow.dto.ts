@@ -42,8 +42,8 @@ export class LongTermFuelFlowRecordDTO extends LongTermFuelFlowBaseDTO {
   monitoringSystemRecordId?: string;
   calcTotalHeatInput?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class LongTermFuelFlowImportDTO extends LongTermFuelFlowBaseDTO {}

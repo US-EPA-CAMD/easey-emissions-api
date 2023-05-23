@@ -14,10 +14,6 @@ import { Nsps4tAnnualMap } from '../maps/nsps4t-annual.map';
     BulkLoadModule,
   ],
   providers: [Nsps4tAnnualWorkspaceService, BulkLoadService, Nsps4tAnnualMap],
-  exports: [
-    TypeOrmModule,
-    Nsps4tAnnualMap,
-    BulkLoadService,
-  ],
+  exports: [TypeOrmModule, Nsps4tAnnualMap, BulkLoadService],
 })
 export class Nsps4tAnnualWorkspaceModule {}

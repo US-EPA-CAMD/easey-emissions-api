@@ -50,8 +50,8 @@ export class Nsps4tSummaryRecordDTO extends Nsps4tSummaryBaseDTO {
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class Nsps4tSummaryImportDTO extends Nsps4tSummaryBaseDTO {

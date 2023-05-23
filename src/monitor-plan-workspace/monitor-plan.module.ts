@@ -7,10 +7,7 @@ import { MonitorPlanWorkspaceRepository } from './monitor-plan-repository';
 @Module({
   imports: [TypeOrmModule.forFeature([MonitorPlanWorkspaceRepository])],
   controllers: [],
-  providers: [ MonitorPlanChecksService],
-  exports: [
-    TypeOrmModule,
-    MonitorPlanChecksService,
-  ],
+  providers: [MonitorPlanChecksService],
+  exports: [TypeOrmModule, MonitorPlanChecksService],
 })
 export class MonitorPlanWorkspaceModule {}

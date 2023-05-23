@@ -1,5 +1,8 @@
 import { genSummaryValue } from '../../test/object-generators/summary-value';
-import { exportSupplementarySummaryValues, exportSupplementarySummaryValuesQuery } from './summary-value-export';
+import {
+  exportSupplementarySummaryValues,
+  exportSupplementarySummaryValuesQuery,
+} from './summary-value-export';
 import { SummaryValueRepository } from '../summary-value/summary-value.repository';
 import { SummaryValue } from '../entities/summary-value.entity';
 import { SummaryValueMap } from '../maps/summary-value.map';
@@ -24,29 +27,31 @@ describe('SummaryValueExport', () => {
     }).compile();
 
     repository = module.get(SummaryValueRepository);
-    queryBuilder = module.get<SelectQueryBuilder<SummaryValue>>(SelectQueryBuilder);
+    queryBuilder = module.get<SelectQueryBuilder<SummaryValue>>(
+      SelectQueryBuilder,
+    );
     map = new SummaryValueMap();
     summaryValueExportModule = await import('./summary-value-export');
-
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-  })
-
+  });
 
   it('should run the queries in exportSupplementarySummaryValuesQuery successfully', async () => {
     repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
     queryBuilder.innerJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.innerJoin.mockReturnValue(queryBuilder);
-    queryBuilder.getMany.mockResolvedValue([])
+    queryBuilder.getMany.mockResolvedValue([]);
 
-    const result = await exportSupplementarySummaryValuesQuery(genSummaryValueParamsDtos()[0], repository);
-    expect(result).toEqual([])
-  })
+    const result = await exportSupplementarySummaryValuesQuery(
+      genSummaryValueParamsDtos()[0],
+      repository,
+    );
+    expect(result).toEqual([]);
+  });
 
-
-  it('should export mapped summary value data given the correct endpoint parameters', async function () {
+  it('should export mapped summary value data given the correct endpoint parameters', async function() {
     const mockSummaryValues = [genSummaryValue<SummaryValue>()[0]];
     jest
       .spyOn(summaryValueExportModule, 'exportSupplementarySummaryValuesQuery')
