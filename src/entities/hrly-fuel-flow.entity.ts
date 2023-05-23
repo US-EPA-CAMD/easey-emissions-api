@@ -82,7 +82,11 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({ name: 'calc_appd_status', nullable: true })
   calcAppdStatus: string;
 
-  @Column({ name: 'rpt_period_id', nullable: false })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+    nullable: false,
+  })
   reportingPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })

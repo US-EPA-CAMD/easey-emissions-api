@@ -21,7 +21,11 @@ export class SorbentTrap extends BaseEntity {
   @Column({ nullable: false, name: 'mon_loc_id' })
   monitoringLocationId: string;
 
-  @Column({ nullable: false, name: 'rpt_period_id' })
+  @Column({
+    nullable: false,
+    transformer: new NumericColumnTransformer(),
+    name: 'rpt_period_id',
+  })
   reportingPeriodId: number;
 
   @Column({ type: 'date', nullable: false, name: 'begin_date' })
@@ -92,7 +96,11 @@ export class SorbentTrap extends BaseEntity {
   @Column({ name: 'sorbent_trap_aps_cd', nullable: true })
   apsCode: string;
 
-  @Column({ name: 'rata_ind', nullable: true })
+  @Column({
+    name: 'rata_ind',
+    transformer: new NumericColumnTransformer(),
+    nullable: true,
+  })
   rataIndicator: number;
 
   @ManyToOne(
