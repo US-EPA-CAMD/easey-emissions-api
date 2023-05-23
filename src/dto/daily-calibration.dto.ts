@@ -1,4 +1,14 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { GasLevelCode } from '../entities/gas-level-code.entity';
+import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
@@ -7,6 +17,11 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(GasLevelCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   upscaleGasCode?: string;
 
   @IsOptional()
@@ -67,6 +82,7 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  //add validation
   upscaleGasTypeCode?: string;
 
   @IsOptional()
@@ -83,6 +99,11 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(InjectionProtocolCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   injectionProtocolCode?: string;
 }
 

@@ -1,4 +1,13 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { TestResultCode } from '../entities/test-result-code.entity';
+import { TrainQaStatusCode } from '../entities/train-qa-status-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class SamplingTrainBaseDTO {
   @IsString()
@@ -45,14 +54,29 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(TestResultCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   samplingRatioCheckResultCode?: string;
 
   @IsOptional()
   @IsString()
+  @IsValidCode(TestResultCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   postLeakCheckResultCode?: string;
 
   @IsOptional()
   @IsString()
+  @IsValidCode(TrainQaStatusCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   trainQAStatusCode?: string;
 
   @IsOptional()
