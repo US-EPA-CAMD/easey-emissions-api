@@ -43,7 +43,7 @@ export default registerAs('app', () => ({
   enableApiKey: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_API_KEY'),
   enableRoleGuard: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_ROLE_GUARD',
-    false,
+    true,
   ),
   secretToken: getConfigValue('EASEY_EMISSIONS_API_SECRET_TOKEN'),
   enableSecretToken: getConfigValueBoolean(
@@ -52,7 +52,7 @@ export default registerAs('app', () => ({
   enableCors: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_CORS', true),
   enableAuthToken: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN',
-    false,
+    true,
   ),
   enableGlobalValidationPipes: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_GLOBAL_VALIDATION_PIPE',
