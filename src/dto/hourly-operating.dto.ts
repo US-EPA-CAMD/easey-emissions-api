@@ -142,7 +142,7 @@ export class HourlyOperatingImportDTO extends HourlyOperatingBaseDTO {
 
   @ValidateNested({ each: true })
   @Type(() => HourlyGasFlowMeterImportDTO)
-  hourlyGFMData: HourlyGasFlowMeterImportDTO[];
+  hourlyGfmData: HourlyGasFlowMeterImportDTO[];
 }
 
 export class HourlyOperatingDTO extends HourlyOperatingRecordDTO {
