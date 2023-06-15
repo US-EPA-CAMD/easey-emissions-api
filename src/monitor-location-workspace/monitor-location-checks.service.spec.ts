@@ -36,7 +36,7 @@ describe('location checks service tests', () => {
   payload.hourlyOperatingData[0].matsMonitorHourlyValueData = [
     { parameterCode: 'a', componentId: '3' },
   ];
-  payload.hourlyOperatingData[0].hourlyGFMData = [{ componentId: '4' }];
+  payload.hourlyOperatingData[0].hourlyGfmData = [{ componentId: '4' }];
   const genDerivedHourlyValueDtoData = genDerivedHourlyValueImportDto();
   genDerivedHourlyValueDtoData[0].monitoringSystemId = '4';
   payload.hourlyOperatingData[0].derivedHourlyValueData = genDerivedHourlyValueDtoData;

@@ -81,7 +81,7 @@ export const genHourlyOperatingImportDto = (
             config?.hourlyFuelFlowConfig,
           )
         : undefined,
-      hourlyGFMData: config?.include?.includes('hourlyGFMData')
+      hourlyGfmData: config?.include?.includes('hourlyGFMData')
         ? [new HourlyGasFlowMeterImportDTO()]
         : undefined,
     });
