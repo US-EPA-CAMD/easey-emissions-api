@@ -116,25 +116,28 @@ describe('Emissions Checks Service Tests', () => {
   });
 
   describe('test runChecks()', () => {
-
-    it('should successfully import', async ()=>{
-      const emissionsPayload = genEmissionsImportDto(1, {include:['dailyEmissionData']});
+    it('should successfully import', async () => {
+      const emissionsPayload = genEmissionsImportDto(1, {
+        include: ['dailyEmissionData'],
+      });
 
       const result = service.runChecks(emissionsPayload[0]);
-      await expect(result).resolves.toEqual([])
-    })
+      await expect(result).resolves.toEqual([]);
+    });
 
     it('should throw errors for emissions payload without children data', async () => {
       const emissionsPayload = genEmissionsImportDto();
 
-      await expect(service.runChecks(emissionsPayload[0])).rejects.toThrow(LoggingException);
+      await expect(service.runChecks(emissionsPayload[0])).rejects.toThrow(
+        LoggingException,
+      );
     });
 
     it('should throw errors as array of strings', () => {
       try {
         service.throwIfErrors(['test']);
       } catch (error) {
-        expect(error?.response?.message).toStrictEqual(['test']);
+        expect(error?.response?.message).toStrictEqual('test');
       }
     });
   });

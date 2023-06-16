@@ -255,7 +255,7 @@ export class EmissionsWorkspaceService {
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
         throw new LoggingException(
-          importResult.reason.detail,
+          importResult.reason.toString(),
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -283,7 +283,7 @@ export class EmissionsWorkspaceService {
     console.log(
       `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
     );
-    
+
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
     };
