@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { DeleteResult, FindConditions, getManager } from 'typeorm';
 
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -30,6 +29,7 @@ import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.en
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -254,8 +254,8 @@ export class EmissionsWorkspaceService {
 
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
-        throw new LoggingException(
-          importResult.reason.toString(),
+        throw new EaseyException(
+          new Error(importResult.reason.toString()),
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -277,12 +277,8 @@ export class EmissionsWorkspaceService {
         params.year,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    console.log(
-      `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
-    );
 
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
