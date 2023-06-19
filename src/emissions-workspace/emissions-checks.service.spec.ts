@@ -40,7 +40,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { Unit } from '../entities/unit.entity';
 import { StackPipe } from '../entities/stack-pipe.entity';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -129,7 +129,7 @@ describe('Emissions Checks Service Tests', () => {
       const emissionsPayload = genEmissionsImportDto();
 
       await expect(service.runChecks(emissionsPayload[0])).rejects.toThrow(
-        LoggingException,
+        EaseyException,
       );
     });
 

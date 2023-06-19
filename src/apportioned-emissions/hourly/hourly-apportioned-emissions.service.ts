@@ -22,7 +22,7 @@ import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-a
 import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
 import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
 import { HourlyApportionedEmissionsNationalAggregationDTO } from '../../dto/hourly-apportioned-emissions-national-aggregation.dto';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 @Injectable()
 export class HourlyApportionedEmissionsService {
@@ -45,7 +45,7 @@ export class HourlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -72,7 +72,7 @@ export class HourlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -103,7 +103,7 @@ export class HourlyApportionedEmissionsService {
     try {
       query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -137,7 +137,7 @@ export class HourlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(

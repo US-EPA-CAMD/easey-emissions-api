@@ -4,7 +4,7 @@ import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { In } from 'typeorm';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 @Injectable()
 export class ReviewSubmitService {
@@ -40,7 +40,7 @@ export class ReviewSubmitService {
         }),
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

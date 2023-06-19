@@ -7,10 +7,12 @@ import { TestTypeCodes } from '../enums/test-type-code.enum';
 
 @Injectable()
 export class WeeklyTestSummaryCheckService {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: Logger) {
+    this.logger.setContext('WeeklyTestSummaryCheckService');
+  }
 
   runChecks(payload: EmissionsImportDTO): string[] {
-    this.logger.info('Running Weekly Test Summary Checks');
+    this.logger.log('Running Weekly Test Summary Checks');
 
     const errorList: string[] = [];
 
@@ -21,7 +23,7 @@ export class WeeklyTestSummaryCheckService {
       errorList.push(error);
     });
 
-    this.logger.info('Completed Weekly Test Summary Checks');
+    this.logger.log('Completed Weekly Test Summary Checks');
 
     return errorList.filter(e => e !== null);
   }
