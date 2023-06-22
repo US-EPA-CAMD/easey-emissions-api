@@ -249,7 +249,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.hourlyGasFlowMeterService.buildObjectList(
-            hourlyOperatingDatum.hourlyGfmData,
+            hourlyOperatingDatum.hourlyGFMData,
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
