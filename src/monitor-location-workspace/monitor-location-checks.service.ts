@@ -73,8 +73,8 @@ export class MonitorLocationChecksService {
             location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
-      if ('hourlyGfmData' in i)
-        i.hourlyGfmData.forEach(d => {
+      if ('hourlyGFMData' in i)
+        i.hourlyGFMData.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
         });
 
