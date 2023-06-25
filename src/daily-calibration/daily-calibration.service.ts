@@ -7,6 +7,7 @@ import { DailyCalibrationDTO } from '../dto/daily-calibration.dto';
 
 @Injectable()
 export class DailyCalibrationService {
+
   constructor(
     private readonly map: DailyCalibrationMap,
     private readonly repository: DailyCalibrationRepository,
@@ -28,5 +29,21 @@ export class DailyCalibrationService {
 
   async export(dailyTestSummaryIds: string[]): Promise<DailyCalibrationDTO[]> {
     return this.dailyCalibrationByTestSumId(dailyTestSummaryIds);
+  }
+
+  async removeNonReportedValues(dailyCalibrationData: DailyCalibrationDTO[]) {
+    dailyCalibrationData.forEach(dto => {
+      delete dto.id;
+      delete dto.dailyTestSumId;
+      delete dto.reportingPeriodId;
+      delete dto.calcOnlineOfflineIndicator;
+      delete dto.calcZeroApsIndicator;
+      delete dto.calcUpscaleApsIndicator;
+      delete dto.calcZeroCalibrationError;
+      delete dto.calcUpscaleCalibrationError;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

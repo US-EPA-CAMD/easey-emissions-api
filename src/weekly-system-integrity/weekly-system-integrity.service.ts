@@ -7,6 +7,7 @@ import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 
 @Injectable()
 export class WeeklySystemIntegrityService {
+
   constructor(
     private readonly map: WeeklySystemIntegrityMap,
     private readonly repository: WeeklySystemIntegrityRepository,
@@ -23,5 +24,18 @@ export class WeeklySystemIntegrityService {
       return null;
     }
     return this.map.many(results);
+  }
+
+  async removeNonReportedValues(weeklySystemIntegrityData: WeeklySystemIntegrityDTO[]) {
+    weeklySystemIntegrityData.forEach(dto => {
+      delete dto.id;
+      delete dto.weeklyTestSumId;
+      delete dto.reportingPeriodId;
+      delete dto.calcSystemIntegrityError;
+      delete dto.calcApsInd;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

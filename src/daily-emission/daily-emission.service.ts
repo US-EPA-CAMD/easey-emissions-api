@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
+
+import { DailyEmissionDTO } from 'src/dto/daily-emission.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyEmissionRepository } from './daily-emission.repository';
 import { exportDailyEmissionData } from '../daily-emission-functions/export-daily-emission-data';
-import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 
 @Injectable()
 export class DailyEmissionService {
+
   constructor(
     private readonly repository: DailyEmissionRepository,
     private readonly dailyFuelService: DailyFuelService,
@@ -32,5 +35,22 @@ export class DailyEmissionService {
     }
 
     return dailyEmissionData;
+  }
+
+  async removeNonReportedValues(dailyEmissionData: DailyEmissionDTO[]) {
+    const promises = [];
+    dailyEmissionData.forEach(dto => {
+      promises.push(this.dailyFuelService.removeNonReportedValues(dto.dailyFuelData));
+      delete dto.id;
+      delete dto.monitoringLocationId;
+      delete dto.reportingPeriodId;
+      delete dto.calcTotalDailyEmissions;
+      delete dto.calcTotalOpTime;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    });
+
+    await Promise.all(promises);
   }
 }

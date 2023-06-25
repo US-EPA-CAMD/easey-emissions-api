@@ -8,6 +8,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 @Injectable()
 export class DailyTestSummaryService {
+
   constructor(
     private readonly map: DailyTestSummaryMap,
     private readonly repository: DailyTestSummaryRepository,
@@ -48,5 +49,23 @@ export class DailyTestSummaryService {
     }
 
     return summaries;
+  }
+
+  async removeNonReportedValues(dailyTestSummaryData: DailyTestSummaryDTO[]) {
+    const promises = [];
+    dailyTestSummaryData.forEach(dto => {
+      promises.push(this.dailyCalibrationService.removeNonReportedValues(dto.dailyCalibrationData));
+      delete dto.id;
+      delete dto.monitoringLocationId;
+      delete dto.reportingPeriodId;
+      delete dto.monitoringSystemRecordId;
+      delete dto.componentRecordId;
+      delete dto.calcTestResultCode;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    });
+
+    await Promise.all(promises);
   }
 }

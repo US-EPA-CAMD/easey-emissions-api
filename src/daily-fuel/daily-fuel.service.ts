@@ -5,6 +5,7 @@ import { exportDailyFuelData } from '../daily-fuel-functions/export-daily-fuel-d
 
 @Injectable()
 export class DailyFuelService {
+
   constructor(private readonly repository: DailyFuelRepository) {}
 
   async export(dailyEmissionIds: string[]): Promise<DailyFuelDTO[]> {
@@ -12,5 +13,17 @@ export class DailyFuelService {
       dailyEmissionIds,
       repository: this.repository,
     });
+  }
+
+  async removeNonReportedValues(dailyFuelData: DailyFuelDTO[]) {
+    dailyFuelData.forEach(dto => {
+      delete dto.id;
+      delete dto.dailyEmissionId;
+      delete dto.reportingPeriodId;
+      delete dto.calcFuelCarbonBurned;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

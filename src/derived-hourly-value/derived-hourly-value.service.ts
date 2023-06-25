@@ -7,6 +7,7 @@ import { exportSupplementaryDerivedHourlyValues } from '../derived-hourly-value-
 
 @Injectable()
 export class DerivedHourlyValueService {
+
   constructor(
     private readonly repository: DerivedHourlyValueRepository,
     private readonly map: DerivedHourlyValueMap,
@@ -26,5 +27,29 @@ export class DerivedHourlyValueService {
     params: DerivedHourlyValueParamsDto,
   ): Promise<DerivedHourlyValueDTO[]> {
     return exportSupplementaryDerivedHourlyValues(params, this.repository);
+  }
+
+  async removeNonReportedValues(derivedHourlyValueData: DerivedHourlyValueDTO[]) {
+    derivedHourlyValueData.forEach(dto => {
+      delete dto.id;
+      delete dto.hourId;
+      delete dto.reportingPeriodId;
+      delete dto.monitoringLocationId;
+      delete dto.monitoringSystemRecordId;
+      delete dto.monitoringFormulaRecordId;
+      delete dto.biasAdjustmentFactor;
+      delete dto.calcAdjustedHrlyValue;
+      delete dto.diluentCapInd;
+      delete dto.calcPctDiluent;
+      delete dto.calcPctMoisture;
+      delete dto.calcAppeStatus;
+      delete dto.calcFuelFlowTotal;
+      delete dto.calcHourMeasureCode;
+      delete dto.calcUnadjustedHrlyValue;
+      delete dto.calcRataStatus;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

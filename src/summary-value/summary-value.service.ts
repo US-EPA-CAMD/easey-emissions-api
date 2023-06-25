@@ -16,6 +16,7 @@ export type SummaryValueCreate = SummaryValueImportDTO & {
 
 @Injectable()
 export class SummaryValueService {
+
   constructor(
     private readonly map: SummaryValueMap,
     private readonly repository: SummaryValueRepository,
@@ -43,5 +44,19 @@ export class SummaryValueService {
       },
       this.repository,
     );
+  }
+
+  async removeNonReportedValues(summaryValueData: SummaryValueDTO[]) {
+    summaryValueData.forEach(dto => {
+      delete dto.id;
+      delete dto.monitoringLocationId;
+      delete dto.reportingPeriodId;
+      delete dto.calcCurrentRptPeriodTotal;
+      delete dto.calcOsTotal;
+      delete dto.calcYearTotal;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

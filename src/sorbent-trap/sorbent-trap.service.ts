@@ -4,9 +4,11 @@ import { exportSorbentTrapData } from '../sorbent-trap-functions/export-sorbent-
 import { SorbentTrapRepository } from './sorbent-trap.repository';
 import { hasArrayValues } from '../utils/utils';
 import { SamplingTrainService } from '../sampling-train/sampling-train.service';
+import { SorbentTrapDTO } from 'src/dto/sorbent-trap.dto';
 
 @Injectable()
 export class SorbentTrapService {
+
   constructor(
     private readonly repository: SorbentTrapRepository,
     private readonly samplingTrainService: SamplingTrainService,
@@ -33,5 +35,24 @@ export class SorbentTrapService {
     }
 
     return sorbentTrapData;
+  }
+
+  async removeNonReportedValues(sorbentTrapData: SorbentTrapDTO[]) {
+    const promises = [];
+    sorbentTrapData.forEach(dto => {
+      promises.push(this.samplingTrainService.removeNonReportedValues(dto.samplingTrainData));
+      delete dto.id;
+      delete dto.monitoringLocationId;
+      delete dto.reportingPeriodId;
+      delete dto.monitoringSystemRecordId;
+      delete dto.calcPairedTrapAgreement;
+      delete dto.calcModcCode;
+      delete dto.calcHgConcentration;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    });
+
+    await Promise.all(promises);
   }
 }

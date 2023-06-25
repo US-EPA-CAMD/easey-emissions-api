@@ -5,6 +5,7 @@ import { exportNps4tCompliancePeriodData } from '../nsps4t-compliance-period-fun
 
 @Injectable()
 export class Nsps4tCompliancePeriodService {
+
   constructor(private readonly repository: Nsps4tCompliancePeriodRepository) {}
 
   async export(
@@ -14,5 +15,17 @@ export class Nsps4tCompliancePeriodService {
       nsps4tSummaryIds,
       repository: this.repository,
     });
+  }
+
+  async removeNonReportedValues(nsps4tCompliancePeriodData: Nsps4tCompliancePeriodDTO[]) {
+    nsps4tCompliancePeriodData.forEach(dto => {
+      delete dto.id;
+      delete dto.nsps4tSumId;
+      delete dto.reportingPeriodId;
+      delete dto.monitoringLocationId;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    })
   }
 }

@@ -7,7 +7,7 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
-import { EmissionsDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
@@ -38,7 +38,10 @@ export class EmissionsService {
     private readonly longTermFuelFlowService: LongTermFuelFlowService,
   ) {}
 
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  async export(
+    params: EmissionsParamsDTO,
+    rptValuesOnly: boolean = false,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
@@ -73,16 +76,42 @@ export class EmissionsService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData =
-        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
+      if (rptValuesOnly) {
+        await this.removeNonReportedValues(results);
+      }
+
       return results;
     }
 
-    return new EmissionsDTO();
+    return null;
+  }
+
+  async removeNonReportedValues(dto: EmissionsDTO) {
+    const promises = [];
+    promises.push(this.dailyTestSummaryService.removeNonReportedValues(dto.dailyTestSummaryData));
+    promises.push(this.hourlyOperatingService.removeNonReportedValues(dto.hourlyOperatingData));
+    promises.push(this.dailyEmissionService.removeNonReportedValues(dto.dailyEmissionData));
+    promises.push(this.sorbentTrapService.removeNonReportedValues(dto.sorbentTrapData));
+    promises.push(this.weeklyTestSummaryService.removeNonReportedValues(dto.weeklyTestSummaryData));
+    promises.push(this.summaryValueService.removeNonReportedValues(dto.summaryValueData));
+    promises.push(this.nsps4tSummaryService.removeNonReportedValues(dto.nsps4tSummaryData));
+    promises.push(this.longTermFuelFlowService.removeNonReportedValues(dto.longTermFuelFlowData));
+
+    delete dto.monitorPlanId;
+    delete dto.reportingPeriodId;
+    delete dto.lastUpdated;
+    delete dto.updatedStatusFlg;
+    delete dto.needsEvalFlag;
+    delete dto.chkSessionId;
+    delete dto.submissionId;
+    delete dto.submissionAvailabilityCd;
+
+    await Promise.all(promises);
   }
 
   async getSubmissionProgress(

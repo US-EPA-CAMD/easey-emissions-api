@@ -70,7 +70,7 @@ export class EmissionsController {
     description: 'Successfull export of all data including database primary keys, calculated values, & audit properties',
   })
   @UseInterceptors(ClassSerializerInterceptor)
-  exportAllValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  exportAllValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
     return this.service.export(params);
   }
 
@@ -83,8 +83,8 @@ export class EmissionsController {
     description: 'Successfull export of reported values only matching import schema',
   })
   @UseInterceptors(ClassSerializerInterceptor)
-  exportReportValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsImportDTO> {
-    return this.service.export(params);
+  exportReportValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
+    return this.service.export(params, true);
   }
 
   @Get('submission-progress')

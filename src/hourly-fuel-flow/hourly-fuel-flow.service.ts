@@ -6,10 +6,11 @@ import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/ho
 
 @Injectable()
 export class HourlyFuelFlowService {
+
   constructor(
     private readonly repository: HourlyFuelFlowRepository,
     private readonly map: HourlyFuelFlowMap,
-    private readonly hourlyParameterFuelFlow: HourlyParameterFuelFlowService,
+    private readonly hourlyParameterFuelFlowService: HourlyParameterFuelFlowService,
   ) {}
 
   async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
@@ -28,7 +29,7 @@ export class HourlyFuelFlowService {
     const promises = [];
     for (const fuelFlow of mapped) {
       promises.push(
-        this.hourlyParameterFuelFlow.export(fuelFlow.id).then(data => {
+        this.hourlyParameterFuelFlowService.export(fuelFlow.id).then(data => {
           if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
             fuelFlow.hourlyParameterFuelFlowData = [];
           }
@@ -40,5 +41,25 @@ export class HourlyFuelFlowService {
     await Promise.all(promises);
 
     return mapped;
+  }
+
+  async removeNonReportedValues(hourlyFuelFlowData: HourlyFuelFlowDTO[]) {
+    const promises = [];
+    hourlyFuelFlowData.forEach(dto => {
+      promises.push(this.hourlyParameterFuelFlowService.removeNonReportedValues(dto.hourlyParameterFuelFlowData));
+      delete dto.id;
+      delete dto.hourId;
+      delete dto.monitoringLocationId;
+      delete dto.reportingPeriodId;
+      delete dto.monitoringSystemRecordId;
+      delete dto.calcMassFlowRate;
+      delete dto.calcVolumetricFlowRate;
+      delete dto.calcAppdStatus;
+      delete dto.userId;
+      delete dto.addDate;
+      delete dto.updateDate;
+    });
+
+    await Promise.all(promises);
   }
 }
