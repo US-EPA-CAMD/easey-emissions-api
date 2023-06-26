@@ -14,16 +14,4 @@ export class Nsps4tAnnualService {
       repository: this.repository,
     });
   }
-
-  async removeNonReportedValues(nsps4tFourthQuarterData: Nsps4tAnnualDTO[]) {
-    nsps4tFourthQuarterData.forEach(dto => {
-      delete dto.id;
-      delete dto.nsps4tSumId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringLocationId;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

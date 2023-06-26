@@ -49,22 +49,4 @@ export class WeeklyTestSummaryService {
     }
     return weeklyTestSummaries;
   }
-
-  async removeNonReportedValues(weeklyTestSummaryData: WeeklyTestSummaryDTO[]) {
-    const promises = [];
-    weeklyTestSummaryData.forEach(dto => {
-      promises.push(this.weeklySystemIntegrityService.removeNonReportedValues(dto.weeklySystemIntegrityData));
-      delete dto.id;
-      delete dto.monitoringLocationId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringSystemRecordId;
-      delete dto.componentRecordId;
-      delete dto.calcTestResultCode;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    });
-
-    await Promise.all(promises);
-  }
 }

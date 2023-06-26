@@ -23,17 +23,4 @@ export class LongTermFuelFlowService {
     );
     return this.map.many(result);
   }
-
-  async removeNonReportedValues(longTermFuelFlowData: LongTermFuelFlowDTO[]) {
-    longTermFuelFlowData.forEach(dto => {
-      delete dto.id;
-      delete dto.monitoringLocationId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringSystemRecordId;
-      delete dto.calcTotalHeatInput;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

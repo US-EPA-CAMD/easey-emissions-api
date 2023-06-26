@@ -88,28 +88,4 @@ export class HourlyOperatingService {
   ): Promise<HourlyOperatingDTO[]> {
     return exportSupplementaryHourlyOperatingData(params, this.repository);
   }
-
-  async removeNonReportedValues(hourlyOperatingData: HourlyOperatingDTO[]) {
-    const promises = [];
-    hourlyOperatingData.forEach(dto => {
-      promises.push(this.monitorHourlyValueService.removeNonReportedValues(dto.monitorHourlyValueData));
-      promises.push(this.matsMonitorHourlyValueService.removeNonReportedValues(dto.matsMonitorHourlyValueData));
-      promises.push(this.derivedHourlyValueService.removeNonReportedValues(dto.derivedHourlyValueData));
-      promises.push(this.matsDerivedHourlyValueService.removeNonReportedValues(dto.matsDerivedHourlyValueData));
-      promises.push(this.hourlyFuelFlowService.removeNonReportedValues(dto.hourlyFuelFlowData));
-      promises.push(this.hourlyGasFlowMeterService.removeNonReportedValues(dto.hourlyGFMData));
-      delete dto.id;
-      delete dto.monitoringLocationId;
-      delete dto.reportingPeriodId;
-      delete dto.multiFuelFlg;
-      delete dto.fuelCdList;
-      delete dto.mhhiIndicator;
-      delete dto.operatingConditionCode;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    });
-
-    await Promise.all(promises);
-  }
 }

@@ -1,3 +1,5 @@
+import { IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
@@ -34,4 +36,9 @@ export class EmissionsParamsDTO {
   })
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
   quarter: number;
+
+  @IsOptional()
+  @ApiProperty()
+  @Transform(({ value }) => value === "true")
+  reportedValuesOnly?: boolean;
 }

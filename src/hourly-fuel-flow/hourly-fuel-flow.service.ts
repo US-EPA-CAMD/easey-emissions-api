@@ -42,24 +42,4 @@ export class HourlyFuelFlowService {
 
     return mapped;
   }
-
-  async removeNonReportedValues(hourlyFuelFlowData: HourlyFuelFlowDTO[]) {
-    const promises = [];
-    hourlyFuelFlowData.forEach(dto => {
-      promises.push(this.hourlyParameterFuelFlowService.removeNonReportedValues(dto.hourlyParameterFuelFlowData));
-      delete dto.id;
-      delete dto.hourId;
-      delete dto.monitoringLocationId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringSystemRecordId;
-      delete dto.calcMassFlowRate;
-      delete dto.calcVolumetricFlowRate;
-      delete dto.calcAppdStatus;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    });
-
-    await Promise.all(promises);
-  }
 }

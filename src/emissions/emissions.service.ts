@@ -17,6 +17,7 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 
 const moment = require('moment');
 
@@ -82,36 +83,13 @@ export class EmissionsService {
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
       if (rptValuesOnly) {
-        await this.removeNonReportedValues(results);
+        await removeNonReportedValues(results);
       }
 
       return results;
     }
 
     return null;
-  }
-
-  async removeNonReportedValues(dto: EmissionsDTO) {
-    const promises = [];
-    promises.push(this.dailyTestSummaryService.removeNonReportedValues(dto.dailyTestSummaryData));
-    promises.push(this.hourlyOperatingService.removeNonReportedValues(dto.hourlyOperatingData));
-    promises.push(this.dailyEmissionService.removeNonReportedValues(dto.dailyEmissionData));
-    promises.push(this.sorbentTrapService.removeNonReportedValues(dto.sorbentTrapData));
-    promises.push(this.weeklyTestSummaryService.removeNonReportedValues(dto.weeklyTestSummaryData));
-    promises.push(this.summaryValueService.removeNonReportedValues(dto.summaryValueData));
-    promises.push(this.nsps4tSummaryService.removeNonReportedValues(dto.nsps4tSummaryData));
-    promises.push(this.longTermFuelFlowService.removeNonReportedValues(dto.longTermFuelFlowData));
-
-    delete dto.monitorPlanId;
-    delete dto.reportingPeriodId;
-    delete dto.lastUpdated;
-    delete dto.updatedStatusFlg;
-    delete dto.needsEvalFlag;
-    delete dto.chkSessionId;
-    delete dto.submissionId;
-    delete dto.submissionAvailabilityCd;
-
-    await Promise.all(promises);
   }
 
   async getSubmissionProgress(

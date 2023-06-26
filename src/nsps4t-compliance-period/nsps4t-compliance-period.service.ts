@@ -16,16 +16,4 @@ export class Nsps4tCompliancePeriodService {
       repository: this.repository,
     });
   }
-
-  async removeNonReportedValues(nsps4tCompliancePeriodData: Nsps4tCompliancePeriodDTO[]) {
-    nsps4tCompliancePeriodData.forEach(dto => {
-      delete dto.id;
-      delete dto.nsps4tSumId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringLocationId;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

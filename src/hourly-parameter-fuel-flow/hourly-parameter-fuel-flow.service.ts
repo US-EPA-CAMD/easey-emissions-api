@@ -16,19 +16,4 @@ export class HourlyParameterFuelFlowService {
 
     return this.map.many(hrlyParams);
   }
-
-  async removeNonReportedValues(hourlyParameterFuelFlowData: HourlyParamFuelFlowDTO[]) {
-    hourlyParameterFuelFlowData.forEach(dto => {
-      delete dto.id;
-      delete dto.hourlyFuelFlowId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringLocationId;
-      delete dto.monitoringFormulaRecordId;
-      delete dto.calcParamValFuel;
-      delete dto.calcAppeStatus;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

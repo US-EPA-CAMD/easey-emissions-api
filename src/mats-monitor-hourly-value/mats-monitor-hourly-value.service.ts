@@ -16,23 +16,4 @@ export class MatsMonitorHourlyValueService {
     const results = await this.repository.export(hourIds);
     return this.map.many(results);
   }
-
-  async removeNonReportedValues(matsMonitorHourlyValueData: MatsMonitorHourlyValueDTO[]) {
-    matsMonitorHourlyValueData.forEach(dto => {
-      delete dto.id;
-      delete dto.hourId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringLocationId;
-      delete dto.monitoringSystemRecordId;
-      delete dto.componentRecordId;
-      delete dto.calcUnadjustedHrlyValue;
-      delete dto.calcDailyCalStatus;
-      delete dto.calcHgLineStatus;
-      delete dto.calcHgi1Status;
-      delete dto.calcRataStatus;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

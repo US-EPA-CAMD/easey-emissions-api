@@ -1,4 +1,3 @@
-import { Nsps4tCompliancePeriod } from './../entities/nsps4t-compliance-period.entity';
 import { Injectable } from '@nestjs/common';
 import { Nsps4tSummaryRepository } from './nsps4t-summary.repository';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -6,7 +5,6 @@ import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps
 import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
 import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
 import { arrayPushCreate, hasArrayValues } from '../utils/utils';
-import { Nsps4tSummaryDTO } from 'src/dto/nsps4t-summary.dto';
 
 @Injectable()
 export class Nsps4tSummaryService {
@@ -50,20 +48,5 @@ export class Nsps4tSummaryService {
 
     return nsps4tSummaryData;
   }
-
-  async removeNonReportedValues(nsps4tSummaryData: Nsps4tSummaryDTO[]) {
-    const promises = [];
-    nsps4tSummaryData.forEach(dto => {
-      promises.push(this.nsps4tAnnualService.removeNonReportedValues(dto.nsps4tFourthQuarterData));
-      promises.push(this.nsps4tCompliancePeriodService.removeNonReportedValues(dto.nsps4tCompliancePeriodData));
-      delete dto.id;
-      delete dto.monitoringLocationId;
-      delete dto.reportingPeriodId;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    });
-
-    await Promise.all(promises);
-  }
 }
+

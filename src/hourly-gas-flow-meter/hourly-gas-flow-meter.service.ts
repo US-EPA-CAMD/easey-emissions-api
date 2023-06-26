@@ -16,19 +16,4 @@ export class HourlyGasFlowMeterService {
     const results = await this.repository.export(hourIds);
     return this.map.many(results);
   }
-
-  async removeNonReportedValues(hourlyGFMData: HourlyGasFlowMeterDTO[]) {
-    hourlyGFMData.forEach(dto => {
-      delete dto.id;
-      delete dto.hourId;
-      delete dto.reportingPeriodId;
-      delete dto.monitoringLocationId;
-      delete dto.componentRecordId;
-      delete dto.calcFlowToSamplingRatio;
-      delete dto.calcFlowToSamplingMult;
-      delete dto.userId;
-      delete dto.addDate;
-      delete dto.updateDate;
-    })
-  }
 }

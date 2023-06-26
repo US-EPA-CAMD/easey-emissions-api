@@ -45,12 +45,12 @@ export class EmissionsController {
           fullExport: {
             summary: 'Full Export',
             description: 'Full export of all data including database primary keys, calculated values, & audit properties',
-            value: "Reference EmissionsDTO",
+            value: "Reference EmissionsDTO schema for definition",
           },
           reportedValuesExport: {
             summary: 'Reported Values Export',
             description: 'Export of reported values only matching import schema',
-            value: "Reference EmissionsImportDTO",
+            value: "Reference EmissionsImportDTO schema for definition",
           }
         }
       }
@@ -58,33 +58,7 @@ export class EmissionsController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return this.service.export(params);
-  }
-
-  @Get('export/all-values')
-  @ApiOperation({
-    summary: 'Exports emissions data for the specified Monitor Plan & Reporting Period'
-  })
-  @ApiOkResponse({
-    type: EmissionsDTO,
-    description: 'Successfull export of all data including database primary keys, calculated values, & audit properties',
-  })
-  @UseInterceptors(ClassSerializerInterceptor)
-  exportAllValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return this.service.export(params);
-  }
-
-  @Get('export/reported-values')
-  @ApiOperation({
-    summary: 'Exports emissions data for the specified Monitor Plan & Reporting Period'
-  })
-  @ApiOkResponse({
-    type: EmissionsImportDTO,
-    description: 'Successfull export of reported values only matching import schema',
-  })
-  @UseInterceptors(ClassSerializerInterceptor)
-  exportReportValues(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return this.service.export(params, true);
+    return this.service.export(params, params.reportedValuesOnly);
   }
 
   @Get('submission-progress')
