@@ -6,6 +6,7 @@ import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 
 @Injectable()
 export class MonitorHourlyValueService {
+
   constructor(
     private readonly map: MonitorHourlyValueMap,
     private readonly repository: MonitorHourlyValueRepository,

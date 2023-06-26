@@ -3,7 +3,6 @@ import {
   Body,
   Post,
   Query,
-  UseGuards,
   Controller,
   UseInterceptors,
   ClassSerializerInterceptor,
@@ -15,6 +14,8 @@ import {
   ApiBearerAuth,
   ApiSecurity,
   ApiQuery,
+  ApiOperation,
+  refs,
 } from '@nestjs/swagger';
 
 import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -40,17 +41,43 @@ export class EmissionsWorkspaceController {
   ) {}
 
   @Get('export')
-  @ApiOkResponse({
-    description:
-      'Exports emissions data for the specified Monitor Plan & Reporting Period',
+  @ApiOperation({
+    summary: 'Exports emissions data for the specified Monitor Plan & Reporting Period'
   })
-  @UseInterceptors(ClassSerializerInterceptor)
-  @RoleGuard(
-    { enforceCheckout: false, queryParam: 'monitorPlanId' },
+  @ApiOkResponse({
+    description: 'Successfull export of emissions data',
+    content: {
+      'application/json': {
+        schema: {
+          oneOf: refs(
+            EmissionsDTO,
+            EmissionsImportDTO,
+          )
+        },
+        examples: {
+          fullExport: {
+            summary: 'Full Export',
+            description: 'Full export of all data including database primary keys, calculated values, & audit properties',
+            value: "Reference EmissionsDTO schema for definition",
+          },
+          reportedValuesExport: {
+            summary: 'Reported Values Export',
+            description: 'Export of reported values only matching import schema',
+            value: "Reference EmissionsImportDTO schema for definition",
+          }
+        }
+      }
+    }
+  })
+  @RoleGuard({
+      enforceCheckout: false,
+      queryParam: 'monitorPlanId'
+    },
     LookupType.MonitorPlan,
   )
-  export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO> {
-    return this.service.export(params);
+  @UseInterceptors(ClassSerializerInterceptor)
+  export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
+    return this.service.export(params, params.reportedValuesOnly);
   }
 
   @Post('import')

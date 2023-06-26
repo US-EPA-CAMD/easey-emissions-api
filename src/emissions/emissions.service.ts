@@ -7,7 +7,7 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
-import { EmissionsDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
@@ -17,6 +17,7 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 
 const moment = require('moment');
 
@@ -38,7 +39,10 @@ export class EmissionsService {
     private readonly longTermFuelFlowService: LongTermFuelFlowService,
   ) {}
 
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  async export(
+    params: EmissionsParamsDTO,
+    rptValuesOnly: boolean = false,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
@@ -73,11 +77,14 @@ export class EmissionsService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData =
-        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
+
+      if (rptValuesOnly) {
+        await removeNonReportedValues(results);
+      }
 
       return results;
     }

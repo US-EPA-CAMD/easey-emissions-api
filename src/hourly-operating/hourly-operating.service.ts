@@ -15,6 +15,7 @@ import { exportSupplementaryHourlyOperatingData } from '../hourly-operating-func
 
 @Injectable()
 export class HourlyOperatingService {
+
   constructor(
     private readonly map: HourlyOperatingMap,
     private readonly repository: HourlyOperatingRepository,
