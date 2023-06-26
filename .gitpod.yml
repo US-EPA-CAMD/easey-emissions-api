@@ -1,0 +1,56 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: install-cf-cli
+    init: echo 'installing cf cli'
+    command: |
+      curl -A "" -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github&version=v6" | tar -zx
+      sudo mv cf /usr/local/bin
+      sudo curl -o /usr/share/bash-completion/completions/cf https://raw.githubusercontent.com/cloudfoundry/cli-ci/master/ci/installers/completion/cf
+      cf version
+      gp sync-done install-cf-cli
+
+  - name: cf-login
+    init: echo 'cf login'
+    command: |
+      cf api https://api.fr.cloud.gov
+      cf auth
+      cf target -o epa-easey -s dev
+      gp sync-done cf-login
+
+  - name: open-ssh-tunnel
+    init: echo 'opening ssh tunnel'
+    command: |
+      gp sync-await cf-login
+      cf ssh ssh-tunnel -L 15210:cg-aws-broker-prodrd97maecoyqs19l.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com:5432
+      gp sync-done open-ssh-tunnel
+
+  - name: nestjs-app-run
+    init: |
+      yarn
+      echo 'Starting Application'
+    command: |
+      gp ports await 15210
+      gp sync-await open-ssh-tunnel
+      yarn start:dev
+
+  - name: open-swagger-ui
+    init: echo 'Launching Swagger UI'
+    command: |
+      gp ports await 8040
+      gp preview --external $(gp url 8040)/swagger
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
+    - mblode.pretty-formatter
+    - mtxr.sqltools
+    - mtxr.sqltools-driver-pg
+    - pivotal.vscode-boot-dev-pack
+
+ports:
+  - name: Emissions API
+    port: 8040
+    onOpen: notify
+  
