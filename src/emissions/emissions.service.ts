@@ -89,7 +89,7 @@ export class EmissionsService {
       return results;
     }
 
-    return null;
+    return new EmissionsDTO();
   }
 
   async getSubmissionProgress(

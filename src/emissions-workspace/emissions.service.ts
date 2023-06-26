@@ -131,7 +131,7 @@ export class EmissionsWorkspaceService {
       return results;
     }
 
-    return null;
+    return new EmissionsDTO();
   }
 
   async import(
