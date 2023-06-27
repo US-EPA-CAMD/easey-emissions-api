@@ -14,6 +14,7 @@ import { Plant } from './plant.entity';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @Entity({ name: 'camdecmps.monitor_plan' })
 export class MonitorPlan extends BaseEntity {
@@ -23,7 +24,11 @@ export class MonitorPlan extends BaseEntity {
   })
   id: string;
 
-  @Column({ name: 'fac_id', type: 'numeric' })
+  @Column({
+    name: 'fac_id',
+    transformer: new NumericColumnTransformer(),
+    type: 'numeric',
+  })
   facilityId: number;
 
   @JoinColumn({ name: 'begin_rpt_period_id' })

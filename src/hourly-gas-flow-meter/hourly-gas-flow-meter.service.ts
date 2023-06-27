@@ -6,6 +6,7 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 
 @Injectable()
 export class HourlyGasFlowMeterService {
+
   constructor(
     private readonly map: HourlyGasFlowMeterMap,
     private readonly repository: HourlyGasFlowMeterRepository,

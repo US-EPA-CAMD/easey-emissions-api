@@ -1,6 +1,11 @@
 import { Test } from '@nestjs/testing';
 import * as typeorm_functions from 'typeorm/globals';
-import { Repository, SelectQueryBuilder, getManager, EntityManager } from 'typeorm';
+import {
+  Repository,
+  SelectQueryBuilder,
+  getManager,
+  EntityManager,
+} from 'typeorm';
 
 import {
   State,
@@ -61,7 +66,7 @@ jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue(({
 } as unknown) as Repository<unknown>);
 
 jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
-  query: jest.fn().mockResolvedValue([])
+  query: jest.fn().mockResolvedValue([]),
 } as unknown) as EntityManager);
 
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
@@ -152,13 +157,21 @@ describe('HourUnitMatsDataRepository', () => {
     });
   });
 
-  describe('getApplicableEmissions', ()=>{
-    it('runs successfully and returns a mocked value of []', async ()=>{
-      let result = await repository.getApplicableEmissions(new ApplicableMatsApportionedEmissionsAttributesParamsDTO(), true, true);
-      expect(result).toEqual([])
+  describe('getApplicableEmissions', () => {
+    it('runs successfully and returns a mocked value of []', async () => {
+      let result = await repository.getApplicableEmissions(
+        new ApplicableMatsApportionedEmissionsAttributesParamsDTO(),
+        true,
+        true,
+      );
+      expect(result).toEqual([]);
 
-      result = await repository.getApplicableEmissions(new ApplicableMatsApportionedEmissionsAttributesParamsDTO(), true, false);
-      expect(result).toEqual([])
-    })
-  })
+      result = await repository.getApplicableEmissions(
+        new ApplicableMatsApportionedEmissionsAttributesParamsDTO(),
+        true,
+        false,
+      );
+      expect(result).toEqual([]);
+    });
+  });
 });

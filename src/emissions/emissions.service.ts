@@ -7,7 +7,7 @@ import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-p
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsMap } from '../maps/emissions.map';
-import { EmissionsDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { DailyTestSummaryService } from '../daily-test-summary/daily-test-summary.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { HourlyOperatingService } from '../hourly-operating/hourly-operating.service';
@@ -17,6 +17,9 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
+
+const moment = require('moment');
 
 @Injectable()
 export class EmissionsService {
@@ -36,7 +39,10 @@ export class EmissionsService {
     private readonly longTermFuelFlowService: LongTermFuelFlowService,
   ) {}
 
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  async export(
+    params: EmissionsParamsDTO,
+    rptValuesOnly: boolean = false,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
@@ -76,6 +82,10 @@ export class EmissionsService {
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
+      if (rptValuesOnly) {
+        await removeNonReportedValues(results);
+      }
+
       return results;
     }
 
@@ -90,8 +100,8 @@ export class EmissionsService {
       this.configService.get<number>('app.submissionDays'),
     );
 
-    const date = new Date(periodDate);
-    const month = date.getUTCMonth() + 1;
+    const date = moment(periodDate);
+    const month = date.get('month') + 1;
 
     if (queryResult === undefined) {
       if (
@@ -99,11 +109,11 @@ export class EmissionsService {
           this.configService.get<string>('app.env'),
         ) &&
         ([1, 4, 7, 10].includes(month) ||
-          ([2, 5, 8, 11].includes(month) && date.getUTCDate() <= 7))
+          ([2, 5, 8, 11].includes(month) && date.get('date') <= 7))
       ) {
         queryResult = new EmissionsSubmissionsProgress();
 
-        let year = date.getUTCFullYear();
+        let year = date.get('year');
         if (month >= 1 && month <= 3) {
           queryResult.quarter = 4;
           year--;
@@ -120,7 +130,6 @@ export class EmissionsService {
         return undefined;
       }
     }
-
     return this.submissionProgressMap.one(queryResult);
   }
 }

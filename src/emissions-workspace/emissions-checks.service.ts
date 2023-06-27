@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -12,6 +11,7 @@ import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.rep
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import moment from 'moment';
 import { MonitorLocation } from '../entities/monitor-location.entity';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -22,17 +22,34 @@ export class EmissionsChecksService {
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
-  ) {}
+  ) {
+    this.logger.setContext('EmissionsChecksService');
+  }
   public throwIfErrors(errorList: string[]) {
     if (errorList.length > 0) {
-      throw new LoggingException(errorList, HttpStatus.BAD_REQUEST);
+      throw new EaseyException(
+        new Error(errorList.toString()),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
-    this.logger.info('Running Emissions Import Checks');
+    this.logger.log('Running Emissions Import Checks');
 
     const errorList: string[] = [];
+
+    const doesNotHaveData = d => isUndefinedOrNull(d) || d.length === 0;
+
+    if (
+      doesNotHaveData(payload.dailyEmissionData) &&
+      doesNotHaveData(payload.dailyTestSummaryData) &&
+      doesNotHaveData(payload.hourlyOperatingData) &&
+      doesNotHaveData(payload.longTermFuelFlowData) &&
+      doesNotHaveData(payload.nsps4tSummaryData)
+    ) {
+      this.throwIfErrors(['No data found in payload']);
+    }
 
     // IMPORT-29: Inappropriate Children Records for Daily Test Summary
     const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(
@@ -66,7 +83,7 @@ export class EmissionsChecksService {
     );
 
     this.throwIfErrors(errorList);
-    this.logger.info('Completed Emissions Import Checks');
+    this.logger.log('Completed Emissions Import Checks');
 
     return errorList;
   }

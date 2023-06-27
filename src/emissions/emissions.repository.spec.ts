@@ -6,37 +6,37 @@ import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { EmissionsRepository } from './emissions.repository';
 
 describe('Emisions Repository Test', () => {
-    let repository;
-    let queryBuilder;
+  let repository;
+  let queryBuilder;
 
-    let mockedResult = new EmissionEvaluation();
-    
-    beforeEach(async () => {
-        const module = await Test.createTestingModule({
-            providers: [
-                EmissionsRepository,
-                { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
-            ],
-        }).compile();
+  let mockedResult = new EmissionEvaluation();
 
-        repository = module.get(EmissionsRepository);
-        queryBuilder = module.get<SelectQueryBuilder<EmissionEvaluation>>(
-            SelectQueryBuilder,
-        );
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        EmissionsRepository,
+        { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
+      ],
+    }).compile();
 
-        repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
+    repository = module.get(EmissionsRepository);
+    queryBuilder = module.get<SelectQueryBuilder<EmissionEvaluation>>(
+      SelectQueryBuilder,
+    );
 
-        queryBuilder.innerJoinAndSelect.mockReturnValue(queryBuilder);
-        queryBuilder.where.mockReturnValue(queryBuilder);
-        queryBuilder.andWhere.mockReturnValue(queryBuilder);
-        queryBuilder.getOne.mockResolvedValue(mockedResult);
+    repository.createQueryBuilder = jest.fn().mockReturnValue(queryBuilder);
+
+    queryBuilder.innerJoinAndSelect.mockReturnValue(queryBuilder);
+    queryBuilder.where.mockReturnValue(queryBuilder);
+    queryBuilder.andWhere.mockReturnValue(queryBuilder);
+    queryBuilder.getOne.mockResolvedValue(mockedResult);
+  });
+
+  describe('export', () => {
+    it('successfully exports emission evaluation data', async () => {
+      let result = await repository.export('', 1, 1);
+      expect(queryBuilder.getOne).toHaveBeenCalled();
+      expect(result).toEqual(mockedResult);
     });
-
-    describe('export', () => {
-        it('successfully exports emission evaluation data', async () => {
-            let result = await repository.export("", 1, 1,);
-            expect(queryBuilder.getOne).toHaveBeenCalled();
-            expect(result).toEqual(mockedResult);
-        });
-    });
+  });
 });

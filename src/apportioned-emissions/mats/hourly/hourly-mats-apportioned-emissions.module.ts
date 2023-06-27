@@ -7,9 +7,7 @@ import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned
 import { HourlyMatsApportionedEmissionsController } from './hourly-mats-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HourUnitMatsDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([HourUnitMatsDataRepository])],
   controllers: [HourlyMatsApportionedEmissionsController],
   providers: [ConfigService, HourlyMatsApportionedEmissionsService],
   exports: [TypeOrmModule],

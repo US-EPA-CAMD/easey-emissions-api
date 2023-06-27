@@ -1,4 +1,12 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class SummaryValueBaseDTO {
   @IsOptional()
@@ -10,6 +18,11 @@ export class SummaryValueBaseDTO {
   unitId?: string;
 
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   parameterCode: string;
 
   @IsOptional()
@@ -33,8 +46,8 @@ export class SummaryValueRecordDTO extends SummaryValueBaseDTO {
   calcOsTotal?: number;
   calcYearTotal?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class SummaryValueImportDTO extends SummaryValueBaseDTO {}

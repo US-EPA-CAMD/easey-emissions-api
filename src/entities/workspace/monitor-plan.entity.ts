@@ -9,6 +9,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
+import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 import { MonitorLocation } from './monitor-location.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
@@ -23,7 +24,11 @@ export class MonitorPlan extends BaseEntity {
   })
   id: string;
 
-  @Column({ name: 'fac_id', type: 'numeric' })
+  @Column({
+    name: 'fac_id',
+    transformer: new NumericColumnTransformer(),
+    type: 'numeric',
+  })
   facilityId: number;
 
   @JoinColumn({ name: 'begin_rpt_period_id' })

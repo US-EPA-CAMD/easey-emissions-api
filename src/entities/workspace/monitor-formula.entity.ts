@@ -78,7 +78,7 @@ export class MonitorFormula extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   monitorLocation: MonitorLocation;
-  
+
   @OneToMany(
     () => DerivedHrlyValue,
     c => c.monitorFormula,

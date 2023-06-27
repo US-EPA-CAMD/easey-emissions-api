@@ -1,4 +1,12 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
@@ -7,6 +15,11 @@ export class Nsps4tAnnualBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(Nsps4tElectricalLoadCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   annualEnergySoldTypeCode?: string;
 
   @IsOptional()
@@ -20,8 +33,8 @@ export class Nsps4tAnnualRecordDTO extends Nsps4tAnnualBaseDTO {
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class Nsps4tAnnualImportDTO extends Nsps4tAnnualBaseDTO {}

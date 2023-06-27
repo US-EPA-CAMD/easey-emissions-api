@@ -4,6 +4,7 @@ import { MatsDerivedHourlyValueRepository } from './mats-derived-hourly-value.re
 
 @Injectable()
 export class MatsDerivedHourlyValueService {
+
   constructor(
     private readonly map: MatsDerivedHourlyValueMap,
     private readonly repository: MatsDerivedHourlyValueRepository,

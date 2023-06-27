@@ -7,10 +7,12 @@ import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 @Injectable()
 export class DailyTestSummaryCheckService {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: Logger) {
+    this.logger.setContext('DailyTestSummaryCheckService');
+  }
 
   runChecks(payload: EmissionsImportDTO): string[] {
-    this.logger.info('Running Daily Test Summary Checks');
+    this.logger.log('Running Daily Test Summary Checks');
 
     const errorList: string[] = [];
 
@@ -21,7 +23,7 @@ export class DailyTestSummaryCheckService {
       errorList.push(error);
     });
 
-    this.logger.info('Completed Daily Test Summary Checks');
+    this.logger.log('Completed Daily Test Summary Checks');
 
     return errorList.filter(e => e !== null);
   }

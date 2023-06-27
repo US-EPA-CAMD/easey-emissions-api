@@ -32,7 +32,7 @@ export class WeeklySystemIntegrityWorkspaceService {
     return this.map.many(results);
   }
 
-  async buildObjectList(    
+  async buildObjectList(
     data: WeeklySystemIntegrityImportDTO[],
     weekyTestSumId: string,
     monitoringLocationId: string,
@@ -40,10 +40,15 @@ export class WeeklySystemIntegrityWorkspaceService {
     identifiers: ImportIdentifiers,
     objectList: Array<object>,
     currentTime: string,
-  ): Promise<void>{
+  ): Promise<void> {
     for (const dataChunk of data) {
-
-      const {gasLevelCode, referenceValue, measuredValue, apsIndicator, systemIntegrityError,} = dataChunk;
+      const {
+        gasLevelCode,
+        referenceValue,
+        measuredValue,
+        apsIndicator,
+        systemIntegrityError,
+      } = dataChunk;
       objectList.push({
         id: randomUUID(),
         weekyTestSumId,
@@ -59,8 +64,7 @@ export class WeeklySystemIntegrityWorkspaceService {
         monitoringLocationId,
       });
     }
-
-  } 
+  }
 
   async import(objectList: Array<object>): Promise<void> {
     if (objectList && objectList.length > 0) {

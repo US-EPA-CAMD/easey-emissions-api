@@ -15,8 +15,13 @@ import { MatsApportionedEmissionsModule } from './apportioned-emissions/mats/mat
 import { HourlyMatsApportionedEmissionsModule } from './apportioned-emissions/mats/hourly/hourly-mats-apportioned-emissions.module';
 import { EmissionsViewWorkspaceModule } from './emissions-view-workspace/emissions-view.module';
 import { EmissionsViewModule } from './emission-view/emissions-view.module';
+import { WhatHasDataModule } from './what-has-data/what-has-data.module';
 
 const routes: Routes = [
+  {
+    path: '/what-has-data',
+    module: WhatHasDataModule,
+  },
   {
     path: '/emissions',
     module: EmissionsModule,

@@ -4,9 +4,13 @@ import {
   ValidateNested,
   IsNumber,
   IsDateString,
+  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ParameterCode } from '../entities/parameter-code.entity';
 
 export class DailyEmissionBaseDTO {
   @IsOptional()
@@ -18,6 +22,11 @@ export class DailyEmissionBaseDTO {
   unitId?: string;
 
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   parameterCode: string;
 
   @IsDateString()
@@ -49,8 +58,8 @@ export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
   reportingPeriodId: number;
   monitoringLocationId: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcTotalDailyEmissions?: number;
   calcTotalOpTime?: number;
 }

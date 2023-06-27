@@ -4,8 +4,8 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
-  ManyToOne,  
-  PrimaryGeneratedColumn
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { DataSet } from './dataset.entity';

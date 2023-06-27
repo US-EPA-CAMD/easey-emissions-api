@@ -1,7 +1,21 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ModcCode } from '../entities/modc-code.entity';
 
 export class MonitorHourlyValueBaseDTO {
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   parameterCode: string;
 
   @IsOptional()
@@ -14,6 +28,11 @@ export class MonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(ModcCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   modcCode?: string;
 
   @IsOptional()
@@ -41,8 +60,8 @@ export class MonitorHourlyValueRecordDTO extends MonitorHourlyValueBaseDTO {
   biasAdjustmentFactor?: number;
   calcAdjustedHrlyValue?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   calcLineStatus?: string;
   calcRataStatus?: string;
   calcDaycalStatus?: string;

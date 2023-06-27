@@ -9,7 +9,7 @@ import {
   IsYearFormat,
   IsNotEmptyString,
   IsInRange,
-  Min
+  Min,
 } from '@us-epa-camd/easey-common/pipes';
 import { PAGINATION_MAX_PER_PAGE } from '../config/app.config';
 
@@ -108,4 +108,9 @@ export function OpYear() {
     }),
     IsNotEmptyString({ message: ErrorMessages.RequiredProperty() }),
   );
+}
+
+export function ImportCodeErrorMessage(property, value){
+  return `You reported an invalid ${property} of ${value}.`
+
 }

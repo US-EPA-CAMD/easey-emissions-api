@@ -1,12 +1,6 @@
 import { Request } from 'express';
 
-import {
-  Get,
-  Req,
-  Query,
-  Controller,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
 
 import {
   ApiTags,
@@ -35,7 +29,6 @@ import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.e
 @ApiTags('Apportioned Hourly MATS Emissions')
 @ApiExtraModels(HourlyMatsApportionedEmissionsDTO)
 export class HourlyMatsApportionedEmissionsController {
-  
   constructor(
     private readonly service: HourlyMatsApportionedEmissionsService,
   ) {}

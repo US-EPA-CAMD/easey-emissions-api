@@ -1,7 +1,21 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidationArguments,
+} from 'class-validator';
+import { ModcCode } from '../entities/modc-code.entity';
+import { ParameterCode } from '../entities/parameter-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class MatsMonitorHourlyValueBaseDTO {
   @IsString()
+  @IsValidCode(ParameterCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   parameterCode: string;
 
   @IsOptional()
@@ -10,6 +24,11 @@ export class MatsMonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(ModcCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   modcCode?: string;
 
   @IsOptional()
@@ -38,8 +57,8 @@ export class MatsMonitorHourlyValueRecordDTO extends MatsMonitorHourlyValueBaseD
   calcHgi1Status?: string;
   calcRataStatus?: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class MatsMonitorHourlyValueImportDTO extends MatsMonitorHourlyValueBaseDTO {}

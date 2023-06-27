@@ -5,6 +5,7 @@ import { Nsps4tAnnualDTO } from '../dto/nsps4t-annual.dto';
 
 @Injectable()
 export class Nsps4tAnnualService {
+
   constructor(private readonly repository: Nsps4tAnnualRepository) {}
 
   async export(nsps4tSummaryIds: string[]): Promise<Nsps4tAnnualDTO[]> {

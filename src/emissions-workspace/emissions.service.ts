@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { DeleteResult, FindConditions, getManager } from 'typeorm';
 
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -30,6 +29,8 @@ import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.en
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -72,7 +73,10 @@ export class EmissionsWorkspaceService {
     return this.repository.delete(criteria);
   }
 
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  async export(
+    params: EmissionsParamsDTO,
+    rptValuesOnly: boolean = false,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
@@ -115,14 +119,18 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData =
-        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
+      if (rptValuesOnly) {
+        await removeNonReportedValues(results);
+      }
+
       return results;
     }
+
     return new EmissionsDTO();
   }
 
@@ -254,8 +262,8 @@ export class EmissionsWorkspaceService {
 
     for (const importResult of importResults) {
       if (importResult.status === 'rejected') {
-        throw new LoggingException(
-          importResult.reason.detail,
+        throw new EaseyException(
+          new Error(importResult.reason.toString()),
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -277,12 +285,8 @@ export class EmissionsWorkspaceService {
         params.year,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    console.log(
-      `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
-    );
 
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
@@ -296,7 +300,6 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ) {
-
     await this.dailyEmissionService.import(
       emissionsImport,
       monitoringLocations,
@@ -345,14 +348,13 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
-
     await this.summaryValueService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
       currentTime,
-    )
+    );
   }
 
   async importSorbentTrap(
@@ -394,15 +396,13 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ) {
-
-
     await this.weeklyTestSummaryService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,
       identifiers,
       currentTime,
-    )
+    );
   }
 
   async importLongTermFuelFlow(

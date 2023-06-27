@@ -7,14 +7,9 @@ import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.
 import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([DayUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([DayUnitDataRepository])],
   controllers: [DailyApportionedEmissionsController],
-  providers: [
-    ConfigService,
-    DailyApportionedEmissionsService
-  ],
+  providers: [ConfigService, DailyApportionedEmissionsService],
   exports: [TypeOrmModule],
 })
 export class DailyApportionedEmissionsModule {}

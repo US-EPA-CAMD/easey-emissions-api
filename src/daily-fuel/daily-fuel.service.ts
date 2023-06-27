@@ -5,6 +5,7 @@ import { exportDailyFuelData } from '../daily-fuel-functions/export-daily-fuel-d
 
 @Injectable()
 export class DailyFuelService {
+
   constructor(private readonly repository: DailyFuelRepository) {}
 
   async export(dailyEmissionIds: string[]): Promise<DailyFuelDTO[]> {

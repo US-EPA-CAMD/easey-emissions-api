@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 
 import {
@@ -31,6 +32,10 @@ import {
   MatsDerivedHourlyValueDTO,
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { FuelCode } from '../entities/fuel-code.entity';
 
 export class HourlyOperatingBaseDTO {
   @IsOptional()
@@ -57,6 +62,11 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   loadUnitsOfMeasureCode?: string;
 
   @IsOptional()
@@ -85,6 +95,11 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(FuelCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   fuelCode?: string;
 
   @IsOptional()
@@ -97,8 +112,8 @@ export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
   monitoringLocationId: string;
   multiFuelFlg?: string;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
   operatingConditionCode?: string;
   fuelCdList?: string;
   mhhiIndicator?: number;

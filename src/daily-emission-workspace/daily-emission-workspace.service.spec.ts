@@ -25,7 +25,7 @@ describe('DailyEmissionWorkspaceService', () => {
 
   const mockDailyFuelWorkspaceService = {
     export: () => Promise.resolve([new DailyFuelDTO()]),
-    import: () => Promise.resolve([new DailyFuel()])
+    import: () => Promise.resolve([new DailyFuel()]),
   };
 
   beforeEach(async () => {
@@ -41,7 +41,7 @@ describe('DailyEmissionWorkspaceService', () => {
         {
           provide: DailyFuelWorkspaceService,
           useValue: mockDailyFuelWorkspaceService,
-        }
+        },
       ],
     }).compile();
 
@@ -63,52 +63,57 @@ describe('DailyEmissionWorkspaceService', () => {
 
   describe('import', () => {
     it('should import a record', async function() {
-      const dailyEmission = genDailyEmission<DailyEmission>(1, {include:['dailyFuelData']});
+      const dailyEmission = genDailyEmission<DailyEmission>(1, {
+        include: ['dailyFuelData'],
+      });
       const importData = await map.many(dailyEmission);
 
       // @ts-expect-error use as mock
       jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
         writeObject: jest.fn(),
         complete: jest.fn(),
-        finished: Promise.resolve(true)
+        finished: Promise.resolve(true),
       });
 
       const emissionsDto = new EmissionsImportDTO();
       emissionsDto.dailyEmissionData = importData;
 
-      const locations = [{ unit: { name: "a" }, id: 1 }]
-      importData[0].unitId = "a";
-      const identifiers = {
+      const locations = [{ unit: { name: 'a' }, id: 1 }];
+      importData[0].unitId = 'a';
+      const identifiers = ({
         components: [],
         monitorFormulas: [],
         monitoringSystems: [],
-        userId: "",
-      } as unknown as ImportIdentifiers;
+        userId: '',
+      } as unknown) as ImportIdentifiers;
 
-      await expect(service.import(emissionsDto, locations, "", identifiers, "")).resolves;
+      await expect(service.import(emissionsDto, locations, '', identifiers, ''))
+        .resolves;
 
-    //   await expect(
-    //     service.import({
-    //       ...dailyEmission,
-    //       reportingPeriodId: faker.datatype.number(),
-    //       monitoringLocationId: faker.datatype.string(),
-    //       identifiers: {
-    //         components: {},
-    //         monitorFormulas: {},
-    //         monitoringSystems: {},
-    //       },
-    //     }),
-    //   ).resolves.toEqual(dailyEmission);
+      //   await expect(
+      //     service.import({
+      //       ...dailyEmission,
+      //       reportingPeriodId: faker.datatype.number(),
+      //       monitoringLocationId: faker.datatype.string(),
+      //       identifiers: {
+      //         components: {},
+      //         monitorFormulas: {},
+      //         monitoringSystems: {},
+      //       },
+      //     }),
+      //   ).resolves.toEqual(dailyEmission);
     });
   });
 
-  describe('export', ()=>{
-    it( 'should successfully export', async ()=>{
-      jest.spyOn(exportModule, 'exportDailyEmissionData').mockResolvedValue([new DailyEmissionDTO()]);
+  describe('export', () => {
+    it('should successfully export', async () => {
+      jest
+        .spyOn(exportModule, 'exportDailyEmissionData')
+        .mockResolvedValue([new DailyEmissionDTO()]);
       const result = await service.export([], new EmissionsParamsDTO());
-  
-      expect(result.length).toEqual(1)
-      expect(result[0].dailyFuelData.length).toEqual(1)
-    })
-  })
+
+      expect(result.length).toEqual(1);
+      expect(result[0].dailyFuelData.length).toEqual(1);
+    });
+  });
 });

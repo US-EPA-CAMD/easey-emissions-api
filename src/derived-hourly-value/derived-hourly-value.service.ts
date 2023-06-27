@@ -7,6 +7,7 @@ import { exportSupplementaryDerivedHourlyValues } from '../derived-hourly-value-
 
 @Injectable()
 export class DerivedHourlyValueService {
+
   constructor(
     private readonly repository: DerivedHourlyValueRepository,
     private readonly map: DerivedHourlyValueMap,

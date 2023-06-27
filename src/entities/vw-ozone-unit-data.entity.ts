@@ -2,7 +2,7 @@ import { Column, ViewEntity } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
 @ViewEntity({
-  name: 'camddmw.vw_ozone_unit_data'
+  name: 'camddmw.vw_ozone_unit_data',
 })
 export class OzoneUnitDataView {
   @Column({ name: 'state' })
