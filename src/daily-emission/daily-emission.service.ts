@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
+
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyEmissionRepository } from './daily-emission.repository';
 import { exportDailyEmissionData } from '../daily-emission-functions/export-daily-emission-data';
-import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 
 @Injectable()
 export class DailyEmissionService {
+
   constructor(
     private readonly repository: DailyEmissionRepository,
     private readonly dailyFuelService: DailyFuelService,

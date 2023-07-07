@@ -8,6 +8,7 @@ import { arrayPushCreate, hasArrayValues } from '../utils/utils';
 
 @Injectable()
 export class Nsps4tSummaryService {
+
   constructor(
     private readonly repository: Nsps4tSummaryRepository,
     private readonly nsps4tAnnualService: Nsps4tAnnualService,
@@ -48,3 +49,4 @@ export class Nsps4tSummaryService {
     return nsps4tSummaryData;
   }
 }
+
