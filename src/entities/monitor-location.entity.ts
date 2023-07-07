@@ -119,7 +119,7 @@ export class MonitorLocation extends BaseEntity {
   summaryValues: SummaryValue[];
 
   @OneToMany(
-    () => SummaryValue,
+    () => DerivedHrlyValue,
     c => c.monitorLocation,
   )
   @JoinColumn({ name: 'mon_loc_id' })
