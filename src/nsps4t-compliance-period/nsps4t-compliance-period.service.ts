@@ -5,6 +5,7 @@ import { exportNps4tCompliancePeriodData } from '../nsps4t-compliance-period-fun
 
 @Injectable()
 export class Nsps4tCompliancePeriodService {
+
   constructor(private readonly repository: Nsps4tCompliancePeriodRepository) {}
 
   async export(

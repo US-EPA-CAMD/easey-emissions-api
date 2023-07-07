@@ -4,6 +4,7 @@ import { exportSamplingTrainData } from '../sampling-train-functions/export-samp
 
 @Injectable()
 export class SamplingTrainService {
+
   constructor(private readonly repository: SamplingTrainRepository) {}
 
   async export(sorbentTrapId: string) {

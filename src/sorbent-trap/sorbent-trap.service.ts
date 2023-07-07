@@ -7,6 +7,7 @@ import { SamplingTrainService } from '../sampling-train/sampling-train.service';
 
 @Injectable()
 export class SorbentTrapService {
+
   constructor(
     private readonly repository: SorbentTrapRepository,
     private readonly samplingTrainService: SamplingTrainService,

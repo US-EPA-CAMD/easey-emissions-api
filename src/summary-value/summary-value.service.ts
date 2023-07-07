@@ -16,6 +16,7 @@ export type SummaryValueCreate = SummaryValueImportDTO & {
 
 @Injectable()
 export class SummaryValueService {
+
   constructor(
     private readonly map: SummaryValueMap,
     private readonly repository: SummaryValueRepository,

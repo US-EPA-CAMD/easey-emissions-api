@@ -30,6 +30,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -72,7 +73,10 @@ export class EmissionsWorkspaceService {
     return this.repository.delete(criteria);
   }
 
-  async export(params: EmissionsParamsDTO): Promise<EmissionsDTO> {
+  async export(
+    params: EmissionsParamsDTO,
+    rptValuesOnly: boolean = false,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const promises = [];
     const DAILY_TEST_SUMMARIES = 0;
     const HOURLY_OPERATING = 1;
@@ -115,14 +119,18 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData =
-        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
 
+      if (rptValuesOnly) {
+        await removeNonReportedValues(results);
+      }
+
       return results;
     }
+
     return new EmissionsDTO();
   }
 
