@@ -23,7 +23,9 @@ export const exportSupplementaryDerivedHourlyValuesQuery = async (
     );
 
   if (hasArrayValues(params.orisCode)) {
-    const plantConditions = `plant.orisCode IN (${params.orisCode.join(', ')})`;
+    const plantConditions = `plant.orisCode IN (${params.orisCode.join(
+      ', ',
+    )}) AND plant.orisCode NOTNULL`;
 
     query = query
       .innerJoin('monitorLocation.monitorPlans', 'monitorPlans')
