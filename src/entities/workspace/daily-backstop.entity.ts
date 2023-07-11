@@ -85,13 +85,13 @@ export class DailyBackstop extends BaseEntity {
 
     @Column({
         name: 'userid',
-        nullable: true,
+        nullable: false,
     })
     userId: string;
 
     @Column({
         name: 'add_date',
-        nullable: true,
+        nullable: false,
     })
     addDate: Date;
 

@@ -1,0 +1,37 @@
+import { Injectable } from '@nestjs/common';
+import { BaseMap } from '@us-epa-camd/easey-common/maps';
+import { SummaryValue } from '../entities/summary-value.entity';
+import { SummaryValue as SummaryValueWorkspace } from '../entities/workspace/summary-value.entity';
+import { SummaryValueDTO } from '../dto/summary-value.dto';
+import { DailyBackstop } from '../entities/daily-backstop.entity';
+import { DailyBackstop as DailyBackstopWorkspace } from '../entities/workspace/daily-backstop.entity';
+import { DailyBackstopDTO } from '../dto/daily-backstop.dto';
+
+
+@Injectable()
+export class DailyBackstopMap extends BaseMap<
+    DailyBackstop | DailyBackstopWorkspace,
+    DailyBackstopDTO
+> {
+    public async one(
+        entity: DailyBackstop | DailyBackstopWorkspace,
+    ): Promise<DailyBackstopDTO> {
+        const unitId = entity?.monitorLocation?.unit?.name ?? null;
+
+        return {
+            id: entity.id,
+            unitId,
+            monitoringLocationId: entity.monitoringLocationId,
+            userId: entity.userId,
+            addDate: entity.addDate?.toISOString() ?? null,
+            updateDate: entity.updateDate?.toISOString() ?? null,
+            reportingPeriodId: entity.reportingPeriodId,
+            date: entity.date,
+            dailyNOxEmissions: entity.dailyNoxEmissions,
+            dailyHeatInput: entity.dailyHeatInput,
+            dailyAverageNOxRate: entity.dailyAverageNoxRate,
+            dailyNOxExceedence: entity.dailyNoxEmissions,
+            cumulativeOSNOxExceedence: entity.cumulativeOsNoxExceedence,
+        };
+    }
+}
