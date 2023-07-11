@@ -29,6 +29,7 @@ import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { Component } from './component.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 import { DerivedHrlyValue } from './derived-hrly-value.entity';
+import { DailyBackstop } from './daily-backstop.entity';
 
 @Entity({ name: 'camdecmps.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -208,4 +209,12 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
+
+  @OneToMany(
+    () => DailyBackstop,
+    o => o.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  dailyBackstops: DailyBackstop[];
+
 }
