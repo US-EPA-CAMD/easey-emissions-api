@@ -1,9 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ImportIdentifiers } from "../emissions-workspace/emissions.service";
-// import { DailyBackstopMap } from "../maps/daily-backstop.map";
 import { BulkLoadService } from "@us-epa-camd/easey-common/bulk-load";
 import { EmissionsImportDTO } from "../dto/emissions.dto";
-import { randomUUID } from 'crypto';
 
 export type DailyBackstopCreate = & {
     reportingPeriodId: number;
@@ -15,7 +13,6 @@ export type DailyBackstopCreate = & {
 export class DailyBackstopWorkspaceService {
 
     constructor(
-        // private readonly map: DailyBackstopMap,
         private readonly bulkLoadService: BulkLoadService,    
     ){}
 

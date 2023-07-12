@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { DailyBackstopMap } from '../maps/daily-backstop.map';
 import { DailyBackstopWorkspaceService } from './daily-backstop.service';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
