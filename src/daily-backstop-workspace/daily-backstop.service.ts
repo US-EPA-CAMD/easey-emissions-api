@@ -36,7 +36,6 @@ export class DailyBackstopWorkspaceService {
         const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
           'camdecmpswks.daily_backstop',
           [
-            'unit_id',
             'op_date',
             'daily_noxm',
             'daily_hit',
@@ -57,7 +56,6 @@ export class DailyBackstopWorkspaceService {
           )[0].id;
         
           const {
-            unitId,
             date,
             dailyNOxEmissions,
             dailyHeatInput,
@@ -67,7 +65,6 @@ export class DailyBackstopWorkspaceService {
           } = dailyBackstopDatum;
     
           bulkLoadStream.writeObject({
-            unitId,
             date,
             dailyNOxEmissions,
             dailyHeatInput,
