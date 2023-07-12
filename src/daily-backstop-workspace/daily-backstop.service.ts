@@ -1,5 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ImportIdentifiers } from "../emissions-workspace/emissions.service";
+// import { DailyBackstopMap } from "../maps/daily-backstop.map";
+import { BulkLoadService } from "@us-epa-camd/easey-common/bulk-load";
+import { EmissionsImportDTO } from "../dto/emissions.dto";
+import { randomUUID } from 'crypto';
 
 export type DailyBackstopCreate = & {
     reportingPeriodId: number;
@@ -8,5 +12,77 @@ export type DailyBackstopCreate = & {
 };
 
 @Injectable()
-export class SummaryValueWorkspaceService {
+export class DailyBackstopWorkspaceService {
+
+    constructor(
+        // private readonly map: DailyBackstopMap,
+        private readonly bulkLoadService: BulkLoadService,    
+    ){}
+
+    async import(
+        emissionsImport: EmissionsImportDTO,
+        monitoringLocations,
+        reportingPeriodId,
+        identifiers: ImportIdentifiers,
+        currentTime: string,
+      ): Promise<void> {
+        if (
+          !Array.isArray(emissionsImport?.dailyBackstopData) ||
+          emissionsImport?.dailyBackstopData.length === 0
+        ) {
+          return;
+        }
+    
+        const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
+          'camdecmpswks.daily_backstop',
+          [
+            'unit_id',
+            'op_date',
+            'daily_noxm',
+            'daily_hit',
+            'daily_avg_noxr',
+            'daily_noxm_exceed',
+            'cumulative_os_noxm_exceed',
+            'mon_loc_id',
+            'rpt_period_id',
+            'userid',
+            'add_date',
+            'update_date',
+          ],
+        );
+    
+        for (const dailyBackstopDatum of emissionsImport.dailyBackstopData) {
+          const monitoringLocationId = monitoringLocations.filter(location => 
+              location.unit?.name === dailyBackstopDatum.unitId 
+          )[0].id;
+        
+          const {
+            unitId,
+            date,
+            dailyNOxEmissions,
+            dailyHeatInput,
+            dailyAverageNOxRate,
+            dailyNOxExceedence,
+            cumulativeOSNOxExceedence,
+          } = dailyBackstopDatum;
+    
+          bulkLoadStream.writeObject({
+            unitId,
+            date,
+            dailyNOxEmissions,
+            dailyHeatInput,
+            dailyAverageNOxRate,
+            dailyNOxExceedence,
+            cumulativeOSNOxExceedence,
+            monitoringLocationId,
+            reportingPeriodId,
+            userId: identifiers?.userId,
+            addDate: currentTime,
+            updateDate: currentTime,
+          });
+        }
+    
+        bulkLoadStream.complete();
+        await bulkLoadStream.finished;
+      }
 }

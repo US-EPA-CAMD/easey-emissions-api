@@ -31,6 +31,7 @@ import {
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+import { DailyBackstopDTO } from './daily-backstop.dto';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -123,6 +124,10 @@ export class EmissionsImportDTO extends EmissionsBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tSummaryImportDTO)
   nsps4tSummaryData: Nsps4tSummaryImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => DailyBackstopDTO)
+  dailyBackstopData: DailyBackstopDTO[];
 }
 
 export class EmissionsDTO extends EmissionsRecordDTO {
@@ -157,6 +162,10 @@ export class EmissionsDTO extends EmissionsRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tSummaryDTO)
   nsps4tSummaryData: Nsps4tSummaryDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => DailyBackstopDTO)
+  dailyBackstopData: DailyBackstopDTO[];
 
   constructor(values: Object = {}) {
     super(values);

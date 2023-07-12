@@ -46,7 +46,8 @@ export class EmissionsChecksService {
       doesNotHaveData(payload.dailyTestSummaryData) &&
       doesNotHaveData(payload.hourlyOperatingData) &&
       doesNotHaveData(payload.longTermFuelFlowData) &&
-      doesNotHaveData(payload.nsps4tSummaryData)
+      doesNotHaveData(payload.nsps4tSummaryData) &&
+      doesNotHaveData(payload.dailyBackstopData)
     ) {
       this.throwIfErrors(['No data found in payload']);
     }

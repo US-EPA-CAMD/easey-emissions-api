@@ -31,6 +31,7 @@ import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
+import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -65,7 +66,8 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-  ) {}
+    private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService
+  ) { }
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -256,6 +258,14 @@ export class EmissionsWorkspaceService {
         identifiers,
         currentTime,
       ),
+      this.importDailyBackstop(
+        params,
+        monitoringLocations,
+        reportingPeriodId,
+        identifiers,
+        currentTime,
+      ),
+
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -413,6 +423,22 @@ export class EmissionsWorkspaceService {
     currentTime: string,
   ): Promise<void> {
     await this.longTermFuelFlowWorkspaceService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
+  }
+
+  async importDailyBackstop(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations: MonitorLocation[],
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+    currentTime: string,
+  ): Promise<void> {
+    await this.dailyBackstopWorkspaceService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,

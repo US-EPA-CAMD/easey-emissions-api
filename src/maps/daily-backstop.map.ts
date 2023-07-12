@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-import { SummaryValue } from '../entities/summary-value.entity';
-import { SummaryValue as SummaryValueWorkspace } from '../entities/workspace/summary-value.entity';
-import { SummaryValueDTO } from '../dto/summary-value.dto';
 import { DailyBackstop } from '../entities/daily-backstop.entity';
 import { DailyBackstop as DailyBackstopWorkspace } from '../entities/workspace/daily-backstop.entity';
 import { DailyBackstopDTO } from '../dto/daily-backstop.dto';
