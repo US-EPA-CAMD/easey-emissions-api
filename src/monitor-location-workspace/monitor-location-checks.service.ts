@@ -15,7 +15,7 @@ import { MonitorLocationWorkspaceRepository } from './monitor-location.repositor
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { isUndefinedOrNull } from '../utils/utils';
 import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
-import { DailyBackstopDTO } from '../dto/daily-backstop.dto';
+import { DailyBackstopImportDTO } from '../dto/daily-backstop.dto';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -26,7 +26,7 @@ type ForLocationType =
   | LongTermFuelFlowImportDTO
   | SummaryValueImportDTO
   | Nsps4tSummaryImportDTO
-  | DailyBackstopDTO;
+  | DailyBackstopImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -128,7 +128,6 @@ export class MonitorLocationChecksService {
     payload?.dailyEmissionData?.forEach(i => addLocation(i));
     payload?.nsps4tSummaryData?.forEach(i => addLocation(i));
     payload?.dailyBackstopData?.forEach(i => addLocation(i));
-
 
     return locations;
   }

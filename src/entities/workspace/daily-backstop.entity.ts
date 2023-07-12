@@ -10,7 +10,7 @@ import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 
-@Entity({ name: 'camdecmps.daily_backstop' })
+@Entity({ name: 'camdecmpswks.daily_backstop' })
 export class DailyBackstop extends BaseEntity {
     @PrimaryColumn({
         name: 'daily_backstop_id',
