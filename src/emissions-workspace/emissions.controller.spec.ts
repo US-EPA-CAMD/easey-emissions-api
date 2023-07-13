@@ -85,6 +85,7 @@ import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-work
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -94,7 +95,7 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule, BulkLoadModule],
+      imports: [LoggerModule, HttpModule, BulkLoadModule, DailyBackstopWorkspaceModule],
       controllers: [EmissionsWorkspaceController],
       providers: [
         DailyEmissionWorkspaceService,

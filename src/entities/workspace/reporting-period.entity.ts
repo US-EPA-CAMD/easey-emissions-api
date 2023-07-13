@@ -23,6 +23,7 @@ import { SorbentTrap } from './sorbent-trap.entity';
 import { WeeklyTestSummary } from './weekly-test-summary.entity';
 import { SamplingTrain } from './sampling-train.entity';
 import { EmissionEvaluation } from './emission-evaluation.entity';
+import { DailyBackstop } from './daily-backstop.entity';
 
 @Entity({ name: 'camdecmpsmd.reporting_period' })
 export class ReportingPeriod extends BaseEntity {
@@ -183,4 +184,12 @@ export class ReportingPeriod extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   emissionEvaluations: EmissionEvaluation[];
+
+  @OneToMany(
+    () => DailyBackstop,
+    o => o.reportingPeriod,
+  )
+  @JoinColumn({ name: 'rpt_period_id' })
+  dailyBackstops: DailyBackstop[];
+
 }

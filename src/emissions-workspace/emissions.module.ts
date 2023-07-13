@@ -48,6 +48,7 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
 import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.module';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
     HourlyFuelFlowWorkspaceModule,
     SummaryValueWorkspaceModule,
     LongTermFuelFlowWorkspaceModule,
+    DailyBackstopWorkspaceModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

@@ -100,6 +100,7 @@ import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { ConfigService } from '@nestjs/config';
+import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -111,7 +112,7 @@ describe('Emissions Workspace Service', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [BulkLoadModule],
+      imports: [BulkLoadModule, DailyBackstopWorkspaceModule],
       providers: [
         ConfigService,
         DerivedHourlyValueMap,

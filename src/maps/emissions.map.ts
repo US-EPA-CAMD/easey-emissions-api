@@ -34,6 +34,7 @@ export class EmissionsMap extends BaseMap<
       longTermFuelFlowData: [],
       sorbentTrapData: [],
       nsps4tSummaryData: [],
+      dailyBackstopData: [],
     };
   }
 }
