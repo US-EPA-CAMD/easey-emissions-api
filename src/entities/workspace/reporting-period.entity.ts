@@ -186,7 +186,7 @@ export class ReportingPeriod extends BaseEntity {
   emissionEvaluations: EmissionEvaluation[];
 
   @OneToMany(
-    () => EmissionEvaluation,
+    () => DailyBackstop,
     o => o.reportingPeriod,
   )
   @JoinColumn({ name: 'rpt_period_id' })
