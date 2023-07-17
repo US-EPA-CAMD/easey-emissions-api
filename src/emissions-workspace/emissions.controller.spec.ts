@@ -86,6 +86,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
+import {DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -95,7 +96,7 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule, BulkLoadModule, DailyBackstopWorkspaceModule],
+      imports: [LoggerModule, HttpModule, BulkLoadModule, ],
       controllers: [EmissionsWorkspaceController],
       providers: [
         DailyEmissionWorkspaceService,
@@ -185,6 +186,10 @@ describe('-- Emissions Controller --', () => {
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
+        {
+          provide: DailyBackstopWorkspaceService,
+          useValue: jest.mock('../daily-backstop-workspace/daily-backstop.service')
+        },
       ],
     }).compile();
 

@@ -5,24 +5,58 @@ import { ConfigService } from '@nestjs/config';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { genDailyBackstopImportDto } from '../../test/object-generators/daily-backstop-dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-
+import {DailyBackstopMap} from "../maps/daily-backstop.map";
+import {DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
+import {DailyBackstop} from "../entities/workspace/daily-backstop.entity";
+import {EmissionsParamsDTO} from "../dto/emissions.params.dto";
 
 describe('Daily Backstop Workspace Service Test', () => {
     let service: DailyBackstopWorkspaceService;
+    let repo: DailyBackstopWorkspaceRepository;
+    let map: DailyBackstopMap;
     let bulkLoadService: BulkLoadService;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             providers: [
                 DailyBackstopWorkspaceService,
+                DailyBackstopWorkspaceRepository,
+                DailyBackstopMap,
                 BulkLoadService,
                 ConfigService,
             ],
         }).compile();
 
         service = module.get(DailyBackstopWorkspaceService);
+        repo = module.get(DailyBackstopWorkspaceRepository);
+        map = module.get(DailyBackstopMap);
         bulkLoadService = module.get(BulkLoadService);
     });
+
+    describe('Test Daily Backstop Export', () => {
+        it('Should successfully export a Daily Backstop record', async () => {
+
+            const mockQueryBuilder: any = {
+                innerJoinAndSelect: () => mockQueryBuilder,
+                leftJoinAndSelect: () => mockQueryBuilder,
+                innerJoin: () => mockQueryBuilder,
+                where: () => mockQueryBuilder,
+                andWhere: () => mockQueryBuilder,
+                getMany: jest.fn().mockResolvedValue([
+                    new DailyBackstop(), new DailyBackstop()
+                ])
+            };
+
+            const mockRepo = jest.spyOn(repo, 'createQueryBuilder')
+                .mockImplementation(() => mockQueryBuilder);
+
+            const results = await service.export(['testSumId1', 'testSumId2'],
+                new EmissionsParamsDTO());
+
+            expect(mockRepo).toHaveBeenCalledTimes(1);
+            expect(results.length).toBe(2);
+        })
+    })
 
     describe('Daily Backstop Import', () => {
         it('should successfully import a daily record', async () => {
