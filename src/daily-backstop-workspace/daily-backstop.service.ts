@@ -3,6 +3,10 @@ import { ImportIdentifiers } from "../emissions-workspace/emissions.service";
 import { BulkLoadService } from "@us-epa-camd/easey-common/bulk-load";
 import { EmissionsImportDTO } from "../dto/emissions.dto";
 import { MonitorLocation } from "../entities/workspace/monitor-location.entity";
+import { DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
+import { DailyBackstopMap} from "../maps/daily-backstop.map";
+import {DailyBackstopDTO} from "../dto/daily-backstop.dto";
+import {EmissionsParamsDTO} from "../dto/emissions.params.dto";
 
 export type DailyBackstopCreate = & {
     reportingPeriodId: number;
@@ -14,7 +18,9 @@ export type DailyBackstopCreate = & {
 export class DailyBackstopWorkspaceService {
 
     constructor(
-        private readonly bulkLoadService: BulkLoadService,    
+        private readonly bulkLoadService: BulkLoadService,
+        private readonly repository: DailyBackstopWorkspaceRepository,
+        private readonly map: DailyBackstopMap,
     ){}
 
     async import(
@@ -82,4 +88,25 @@ export class DailyBackstopWorkspaceService {
         bulkLoadStream.complete();
         await bulkLoadStream.finished;
       }
+
+    async export(monitoringLocationIds: string[], params: EmissionsParamsDTO): Promise<DailyBackstopDTO[]> {
+        const results = await this.repository
+            .createQueryBuilder('backstop')
+            .innerJoinAndSelect('backstop.monitorLocation', 'monitorLocation')
+            .leftJoinAndSelect('monitorLocation.unit', 'unit')
+            .leftJoinAndSelect('monitorLocation.stackPipe', 'stack')
+            .innerJoin('backstop.reportingPeriod', 'reportingPeriod')
+            .where('monitorLocation.mon_loc_id IN (:...monitoringLocationIds)', {
+                monitoringLocationIds: monitoringLocationIds,
+            })
+            .andWhere('reportingPeriod.year = :year', { year: params.year })
+            .andWhere('reportingPeriod.quarter = :quarter', { quarter: params.quarter })
+            .getMany();
+
+        if (!results) {
+            return null;
+        }
+
+        return this.map.many(results);
+    }
 }

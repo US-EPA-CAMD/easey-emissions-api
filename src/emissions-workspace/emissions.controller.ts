@@ -76,8 +76,8 @@ export class EmissionsWorkspaceController {
     LookupType.MonitorPlan,
   )
   @UseInterceptors(ClassSerializerInterceptor)
-  export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return this.service.export(params, params.reportedValuesOnly);
+  async export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
+    return await this.service.export(params, params.reportedValuesOnly);
   }
 
   @Post('import')

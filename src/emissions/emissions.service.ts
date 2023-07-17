@@ -18,6 +18,7 @@ import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
+import {DailyBackstopService} from "../daily-backstop/daily-backstop.service";
 
 const moment = require('moment');
 
@@ -37,6 +38,7 @@ export class EmissionsService {
     private readonly summaryValueService: SummaryValueService,
     private readonly nsps4tSummaryService: Nsps4tSummaryService,
     private readonly longTermFuelFlowService: LongTermFuelFlowService,
+    private readonly dailyBackstopService: DailyBackstopService,
   ) {}
 
   async export(
@@ -52,6 +54,7 @@ export class EmissionsService {
     const SUMMARY_VALUES = 5;
     const NSPS4T_SUMMARY = 6;
     const LONG_TERM_FUEL_FLOW = 7;
+    const DAILY_BACKSTOP = 8;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -70,6 +73,7 @@ export class EmissionsService {
       promises.push(this.summaryValueService.export(locationIds, params));
       promises.push(this.nsps4tSummaryService.export(locationIds, params));
       promises.push(this.longTermFuelFlowService.export(locationIds, params));
+      promises.push(this.dailyBackstopService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const results = await this.map.one(emissions);
@@ -81,6 +85,7 @@ export class EmissionsService {
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
+      results.dailyBackstopData = promiseResult[DAILY_BACKSTOP] ?? [];
 
       if (rptValuesOnly) {
         await removeNonReportedValues(results);
