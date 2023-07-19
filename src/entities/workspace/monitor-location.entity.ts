@@ -30,6 +30,7 @@ import { Component } from './component.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { HrlyParamFuelFlow } from './hrly-param-fuel-flow.entity';
 import { MonitorFormula } from './monitor-formula.entity';
+import { DailyBackstop } from './daily-backstop.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_location' })
 export class MonitorLocation extends BaseEntity {
@@ -216,4 +217,11 @@ export class MonitorLocation extends BaseEntity {
   )
   @JoinColumn({ name: 'mon_loc_id' })
   hrlyParamFuelFlows: HrlyParamFuelFlow[];
+
+  @OneToMany(
+    () => DailyBackstop,
+    o => o.monitorLocation,
+  )
+  @JoinColumn({ name: 'mon_loc_id' })
+  dailyBackstops: DailyBackstop[];
 }
