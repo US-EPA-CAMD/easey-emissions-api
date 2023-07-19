@@ -27,10 +27,12 @@ import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-worksp
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
+
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -65,7 +67,8 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-  ) {}
+    private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService
+  ) { }
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -86,6 +89,7 @@ export class EmissionsWorkspaceService {
     const SUMMARY_VALUES = 5;
     const NSPS4T_SUMMARY = 6;
     const LONG_TERM_FUEL_FLOW = 7;
+    const DAILY_BACKSTOP = 8;
 
     const emissions = await this.repository.export(
       params.monitorPlanId,
@@ -110,6 +114,7 @@ export class EmissionsWorkspaceService {
       promises.push(
         this.longTermFuelFlowWorkspaceService.export(locationIds, params),
       );
+      promises.push(this.dailyBackstopWorkspaceService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -123,6 +128,7 @@ export class EmissionsWorkspaceService {
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
+      results.dailyBackstopData = promiseResult[DAILY_BACKSTOP] ?? [];
 
       if (rptValuesOnly) {
         await removeNonReportedValues(results);
@@ -256,6 +262,14 @@ export class EmissionsWorkspaceService {
         identifiers,
         currentTime,
       ),
+      this.importDailyBackstop(
+        params,
+        monitoringLocations,
+        reportingPeriodId,
+        identifiers,
+        currentTime,
+      ),
+
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -413,6 +427,22 @@ export class EmissionsWorkspaceService {
     currentTime: string,
   ): Promise<void> {
     await this.longTermFuelFlowWorkspaceService.import(
+      emissionsImport,
+      monitoringLocations,
+      reportingPeriodId,
+      identifiers,
+      currentTime,
+    );
+  }
+
+  async importDailyBackstop(
+    emissionsImport: EmissionsImportDTO,
+    monitoringLocations: MonitorLocation[],
+    reportingPeriodId: number,
+    identifiers: ImportIdentifiers,
+    currentTime: string,
+  ): Promise<void> {
+    await this.dailyBackstopWorkspaceService.import(
       emissionsImport,
       monitoringLocations,
       reportingPeriodId,

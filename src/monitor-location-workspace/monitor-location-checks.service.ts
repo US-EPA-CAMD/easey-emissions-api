@@ -15,6 +15,7 @@ import { MonitorLocationWorkspaceRepository } from './monitor-location.repositor
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { isUndefinedOrNull } from '../utils/utils';
 import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
+import { DailyBackstopImportDTO } from '../dto/daily-backstop.dto';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -24,7 +25,8 @@ type ForLocationType =
   | SorbentTrapImportDTO
   | LongTermFuelFlowImportDTO
   | SummaryValueImportDTO
-  | Nsps4tSummaryImportDTO;
+  | Nsps4tSummaryImportDTO
+  | DailyBackstopImportDTO;
 
 @Injectable()
 export class MonitorLocationChecksService {
@@ -37,11 +39,11 @@ export class MonitorLocationChecksService {
     const locations: LocationIdentifiers[] = [];
 
     const addLocation = (i: ForLocationType) => {
-      const unitId = i?.unitId;
-      const stackPipeId = i?.stackPipeId;
+      const unitId = i["unitId"];
+      const stackPipeId = i["stackPipeId"];
       let location = locations.find(l => {
-        const locationUnitId = l?.unitId;
-        const locationStackPipeId = l?.stackPipeId;
+        const locationUnitId = l["unitId"];
+        const locationStackPipeId = l["stackPipeId"];
         if (unitId) return locationUnitId === unitId;
         if (stackPipeId) return locationStackPipeId === stackPipeId;
       });
@@ -50,7 +52,7 @@ export class MonitorLocationChecksService {
         location = {
           unitId: i.unitId,
           locationId: null,
-          stackPipeId: i.stackPipeId,
+          stackPipeId: i["stackPipeId"],
           componentIds: new Set<string>(),
           monitoringSystemIds: new Set<string>(),
           ltffMonitoringSystemIds: new Set<string>(),
@@ -125,6 +127,7 @@ export class MonitorLocationChecksService {
     payload?.summaryValueData?.forEach(i => addLocation(i));
     payload?.dailyEmissionData?.forEach(i => addLocation(i));
     payload?.nsps4tSummaryData?.forEach(i => addLocation(i));
+    payload?.dailyBackstopData?.forEach(i => addLocation(i));
 
     return locations;
   }

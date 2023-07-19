@@ -79,6 +79,9 @@ import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fue
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import {DailyBackstopService} from "../daily-backstop/daily-backstop.service";
+import {DailyBackstopRepository} from "../daily-backstop/daily-backstop.repository";
+import {DailyBackstopMap} from "../maps/daily-backstop.map";
 
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
@@ -94,6 +97,7 @@ describe('Emissions Service', () => {
   let summaryValueService: SummaryValueService;
   let longTermFuelFlowService: LongTermFuelFlowService;
   let configService: ConfigService;
+  let dailyBackstopService: DailyBackstopService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -152,6 +156,8 @@ describe('Emissions Service', () => {
         SummaryValueMap,
         LongTermFuelFlowMap,
         LongTermFuelFlowService,
+        DailyBackstopService,
+        DailyBackstopMap,
         {
           provide: LongTermFuelFlowRepository,
           useValue: mockLongTermFuelFlowRepository,
@@ -208,6 +214,10 @@ describe('Emissions Service', () => {
           provide: EmissionsSubmissionsProgressRepository,
           useValue: mockEmissionsSubmissionsProgressRepository,
         },
+        {
+          provide: DailyBackstopRepository,
+          useValue: jest.mock('../daily-backstop/daily-backstop.repository'),
+        }
       ],
     }).compile();
 
@@ -226,6 +236,7 @@ describe('Emissions Service', () => {
     );
     longTermFuelFlowService = module.get(LongTermFuelFlowService);
     configService = module.get(ConfigService);
+    dailyBackstopService = module.get(DailyBackstopService);
   });
 
   it('should have a emissions service', function() {
@@ -246,6 +257,7 @@ describe('Emissions Service', () => {
       const mappedEmissions = await emissionsMap.one(emissionsMocks[0]);
       mappedEmissions.dailyTestSummaryData = [];
       mappedEmissions.hourlyOperatingData = [];
+      mappedEmissions.dailyBackstopData = [];
 
       jest
         .spyOn(emissionsRepository, 'export')
@@ -258,6 +270,7 @@ describe('Emissions Service', () => {
       jest.spyOn(nsps4tSummaryService, 'export').mockResolvedValue(null);
       jest.spyOn(summaryValueService, 'export').mockResolvedValue(null);
       jest.spyOn(longTermFuelFlowService, 'export').mockResolvedValue(null);
+      jest.spyOn(dailyBackstopService, 'export').mockResolvedValue(null);
       jest.spyOn(configService, 'get').mockReturnValue('test');
 
       await expect(emissionsService.export(dtoMocks[0])).resolves.toEqual(
