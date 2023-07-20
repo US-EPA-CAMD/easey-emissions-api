@@ -3,6 +3,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -10,6 +11,11 @@ import {
   Nsps4tCompliancePeriodImportDTO,
 } from './nsps4t-compliance-period.dto';
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
+import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
+import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { Nsps4tEmissionStandardCode } from '../entities/nsps4t-emission-standard-code.entity';
+import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 
 export class Nsps4tSummaryBaseDTO {
   @IsOptional()
@@ -22,6 +28,11 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(Nsps4tEmissionStandardCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   co2EmissionStandardCode?: string;
 
   @IsOptional()
@@ -30,10 +41,20 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsValidCode(UnitsOfMeasureCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   modusUomCode?: string;
 
   @IsOptional()
   @IsString()
+  @IsValidCode(Nsps4tElectricalLoadCode, {
+    message: (args: ValidationArguments) => {
+      return ImportCodeErrorMessage(args.property, args.value);
+    },
+  })
   electricalLoadCode?: string;
 
   @IsOptional()
@@ -50,8 +71,8 @@ export class Nsps4tSummaryRecordDTO extends Nsps4tSummaryBaseDTO {
   monitoringLocationId: string;
   reportingPeriodId: number;
   userId: string;
-  addDate: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class Nsps4tSummaryImportDTO extends Nsps4tSummaryBaseDTO {

@@ -8,6 +8,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 
 @Injectable()
 export class DailyTestSummaryService {
+
   constructor(
     private readonly map: DailyTestSummaryMap,
     private readonly repository: DailyTestSummaryRepository,

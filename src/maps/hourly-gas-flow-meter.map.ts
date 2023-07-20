@@ -29,8 +29,8 @@ export class HourlyGasFlowMeterMap extends BaseMap<
       calcFlowToSamplingRatio: entity.calcFlowToSamplingRatio,
       calcFlowToSamplingMult: entity.calcFlowToSamplingMult,
       userId: entity.userId,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
     };
   }
 }

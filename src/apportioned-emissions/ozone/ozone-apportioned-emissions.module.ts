@@ -7,14 +7,9 @@ import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.
 import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([OzoneUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([OzoneUnitDataRepository])],
   controllers: [OzoneApportionedEmissionsController],
-  providers: [
-    ConfigService,
-    OzoneApportionedEmissionsService
-  ],
+  providers: [ConfigService, OzoneApportionedEmissionsService],
   exports: [TypeOrmModule],
 })
 export class OzoneApportionedEmissionsModule {}

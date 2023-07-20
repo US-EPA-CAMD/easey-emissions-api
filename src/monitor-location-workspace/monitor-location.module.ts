@@ -7,10 +7,7 @@ import { MonitorLocationChecksService } from './monitor-location-checks.service'
 @Module({
   imports: [TypeOrmModule.forFeature([MonitorLocationWorkspaceRepository])],
   controllers: [],
-  providers: [ MonitorLocationChecksService],
-  exports: [
-    TypeOrmModule,
-    MonitorLocationChecksService,
-  ],
+  providers: [MonitorLocationChecksService],
+  exports: [TypeOrmModule, MonitorLocationChecksService],
 })
 export class MonitorLocationWorkspaceModule {}

@@ -18,7 +18,7 @@ import {
 import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 @Injectable()
 export class HourlyMatsApportionedEmissionsService {
@@ -37,7 +37,7 @@ export class HourlyMatsApportionedEmissionsService {
     try {
       entities = await this.repository.getEmissions(req, params);
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(

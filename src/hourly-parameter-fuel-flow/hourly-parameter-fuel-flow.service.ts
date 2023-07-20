@@ -5,6 +5,7 @@ import { HourlyParamFuelFlowDTO } from '../dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
 export class HourlyParameterFuelFlowService {
+
   constructor(
     private readonly map: HourlyParameterFuelFlowMap,
     private readonly repository: HourlyParameterFuelFlowRepository,

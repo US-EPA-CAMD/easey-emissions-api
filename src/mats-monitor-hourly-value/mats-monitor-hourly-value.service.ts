@@ -6,6 +6,7 @@ import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map
 
 @Injectable()
 export class MatsMonitorHourlyValueService {
+
   constructor(
     private readonly map: MatsMonitorHourlyValueMap,
     private readonly repository: MatsMonitorHourlyValueRepository,

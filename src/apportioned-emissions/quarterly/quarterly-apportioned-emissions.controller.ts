@@ -1,12 +1,6 @@
 import { Request } from 'express';
 
-import {
-  Get,
-  Req,
-  Query,
-  Controller,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
 
 import {
   ApiTags,
@@ -43,10 +37,7 @@ import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto
 @ApiExtraModels(QuarterlyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsNationalAggregationDTO)
 export class QuarterlyApportionedEmissionsController {
-
-  constructor(
-    private readonly service: QuarterlyApportionedEmissionsService
-  ) { }
+  constructor(private readonly service: QuarterlyApportionedEmissionsService) {}
 
   @Get()
   @ApiOkResponse({
@@ -88,7 +79,9 @@ export class QuarterlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(QuarterlyApportionedEmissionsFacilityAggregationDTO),
+          $ref: getSchemaPath(
+            QuarterlyApportionedEmissionsFacilityAggregationDTO,
+          ),
         },
       },
       'text/csv': {
@@ -153,7 +146,9 @@ export class QuarterlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(QuarterlyApportionedEmissionsNationalAggregationDTO),
+          $ref: getSchemaPath(
+            QuarterlyApportionedEmissionsNationalAggregationDTO,
+          ),
         },
       },
       'text/csv': {

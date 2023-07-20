@@ -37,6 +37,7 @@ import {
   HourlyOperatingImportDtoConfig,
 } from './hourly-operating-dto';
 import { genHourlyOpValues } from './hourly-op-data-values';
+import { DailyBackstopDTO, DailyBackstopImportDTO } from '../../src/dto/daily-backstop.dto';
 
 type GenEmissionsDtoConfig = {
   include?: Array<
@@ -48,6 +49,7 @@ type GenEmissionsDtoConfig = {
     | 'longTermFuelFlowData'
     | 'sorbentTrapData'
     | 'nsps4tSummaryData'
+    | 'dailyBackstopData'
   >;
   dailyTestSummaryAmount?: number;
   hourlyOperatingAmount?: number;
@@ -107,9 +109,9 @@ export const genEmissionsImportDto = (
         : undefined,
       hourlyOperatingData: config?.include?.includes('hourlyOperatingData')
         ? genHourlyOperatingImportDto(
-            config?.hourlyOperatingAmount,
-            config?.hourlyOperatingImportConfig,
-          )
+          config?.hourlyOperatingAmount,
+          config?.hourlyOperatingImportConfig,
+        )
         : undefined,
       longTermFuelFlowData: config?.include?.includes('longTermFuelFlowData')
         ? [new LongTermFuelFlowImportDTO()]
@@ -120,6 +122,9 @@ export const genEmissionsImportDto = (
       nsps4tSummaryData: config?.include?.includes('nsps4tSummaryData')
         ? [new Nsps4tSummaryImportDTO()]
         : undefined,
+      dailyBackstopData: config?.include?.includes('dailyBackstopData')
+        ? [new DailyBackstopImportDTO()]
+        : undefined
     });
   }
 
@@ -137,7 +142,7 @@ export const genEmissionsRecordDto = (
       ...genEmissionBaseDto()[0],
       monitorPlanId: faker.datatype.string(),
       reportingPeriodId: faker.datatype.number(),
-      lastUpdated: optionalValue(faker.datatype.datetime()),
+      lastUpdated: optionalValue(faker.date.soon().toISOString()),
       updatedStatusFlg: optionalValue(faker.datatype.string()),
       needsEvalFlag: optionalValue(faker.datatype.string()),
       chkSessionId: optionalValue(faker.datatype.string()),
@@ -166,6 +171,9 @@ export const genEmissionsRecordDto = (
         : undefined,
       nsps4tSummaryData: config?.include?.includes('nsps4tSummaryData')
         ? [new Nsps4tSummaryDTO()]
+        : undefined,
+      dailyBackstopData: config?.include?.includes('dailyBackstopData')
+        ? [new DailyBackstopDTO()]
         : undefined,
     });
   }

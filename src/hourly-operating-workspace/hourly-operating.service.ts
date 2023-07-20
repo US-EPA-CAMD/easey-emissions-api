@@ -20,8 +20,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
   reportingPeriodId: number;
@@ -113,8 +112,6 @@ export class HourlyOperatingWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
-    console.log('Started', new Date());
-
     if (
       !Array.isArray(emissionsImport?.hourlyOperatingData) ||
       emissionsImport?.hourlyOperatingData.length === 0
@@ -297,13 +294,12 @@ export class HourlyOperatingWorkspaceService {
 
       for (const settledElement of settled) {
         if (settledElement.status === 'rejected') {
-          throw new LoggingException(
-            settledElement.reason.detail,
+          throw new EaseyException(
+            new Error(settledElement.reason),
             HttpStatus.INTERNAL_SERVER_ERROR,
           );
         }
       }
     }
-    console.log('Finished', new Date());
   }
 }

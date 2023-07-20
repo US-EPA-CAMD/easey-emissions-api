@@ -99,10 +99,16 @@ import { EntityManager } from 'typeorm';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorLocation } from '../entities/monitor-location.entity';
+import { ConfigService } from '@nestjs/config';
+import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
+import {DailyBackstopWorkspaceRepository} from "../daily-backstop-workspace/daily-backstop.repository";
+import {DailyBackstopMap} from "../maps/daily-backstop.map";
+import {DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
   let longTermFuelFlowService: LongTermFuelFlowWorkspaceService;
+  let dailyBackstopService: DailyBackstopWorkspaceService;
   let emissionsRepository: EmissionsWorkspaceRepository;
   let emissionsService: EmissionsWorkspaceService;
   let emissionsMap: EmissionsMap;
@@ -110,8 +116,9 @@ describe('Emissions Workspace Service', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [BulkLoadModule],
+      imports: [BulkLoadModule,],
       providers: [
+        ConfigService,
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
         EmissionsWorkspaceService,
@@ -180,6 +187,8 @@ describe('Emissions Workspace Service', () => {
         WeeklySystemIntegrityMap,
         LongTermFuelFlowMap,
         LongTermFuelFlowWorkspaceService,
+        DailyBackstopWorkspaceService,
+        DailyBackstopMap,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository,
@@ -232,11 +241,18 @@ describe('Emissions Workspace Service', () => {
           provide: HourlyGasFlowMeterWorkspaceRepository,
           useValue: mockHourlyGasFlowMeterWorkspaceRepository,
         },
+        {
+          provide: DailyBackstopWorkspaceRepository,
+          useValue: jest.mock(
+              '../daily-backstop-workspace/daily-backstop.repository',
+          ),
+        },
       ],
     }).compile();
 
     longTermFuelFlowService = module.get(LongTermFuelFlowWorkspaceService);
     dailyTestsummaryService = module.get(DailyTestSummaryWorkspaceService);
+    dailyBackstopService = module.get(DailyBackstopWorkspaceService);
     emissionsRepository = module.get(EmissionsWorkspaceRepository);
     emissionsService = module.get(EmissionsWorkspaceService);
     emissionsMap = module.get(EmissionsMap);

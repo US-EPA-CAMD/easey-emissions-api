@@ -65,8 +65,8 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
             parameterUomCode: param.parameterUomCode,
             hourlyFuelFlowId: param.hourlyFuelFlowId,
             calcParamValFuel: param.calcParamValFuel,
-            addDate: param.addDate,
-            updateDate: param.updateDate,
+            addDate: param.addDate?.toISOString() ?? null,
+            updateDate: param.updateDate?.toISOString() ?? null,
             calcAppeStatus: param.calcAppeStatus,
             reportingPeriodId: param.reportingPeriodId,
           };

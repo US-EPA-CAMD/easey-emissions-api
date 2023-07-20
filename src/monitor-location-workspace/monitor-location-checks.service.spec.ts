@@ -100,7 +100,7 @@ describe('location checks service tests', () => {
       const u1ComponentIdList = Array.from(
         locations.find(e => e.unitId === 'u1').componentIds,
       );
-      
+
       expect(u1ComponentIdList.sort()).toEqual(['5']);
 
       const sp1ComponentIdList = Array.from(

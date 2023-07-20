@@ -1,7 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { arrayPushCreate, hasArrayValues } from '../utils/utils';
 import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -12,6 +11,7 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
 import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 
 @Injectable()
 export class Nsps4tSummaryWorkspaceService {
@@ -174,13 +174,12 @@ export class Nsps4tSummaryWorkspaceService {
 
       for (const settledElement of settled) {
         if (settledElement.status === 'rejected') {
-          throw new LoggingException(
-            settledElement.reason.detail,
+          throw new EaseyException(
+            new Error(settledElement.reason),
             HttpStatus.INTERNAL_SERVER_ERROR,
           );
         }
       }
     }
-    console.log('FInished', new Date());
   }
 }

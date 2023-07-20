@@ -116,7 +116,11 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({ name: 'calc_appe_status', nullable: true })
   calcAppeStatus: string;
 
-  @Column({ name: 'rpt_period_id', nullable: false })
+  @Column({
+    name: 'rpt_period_id',
+    transformer: new NumericColumnTransformer(),
+    nullable: false,
+  })
   rptPeriodId: number;
 
   @Column({ name: 'mon_loc_id', nullable: false })

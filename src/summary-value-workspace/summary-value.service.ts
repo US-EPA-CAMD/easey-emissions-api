@@ -16,7 +16,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 export type SummaryValueCreate = SummaryValueImportDTO & {
   reportingPeriodId: number;
   monitoringLocationId: string;
-  identifiers: ImportIdentifiers
+  identifiers: ImportIdentifiers;
 };
 
 @Injectable()
@@ -25,12 +25,9 @@ export class SummaryValueWorkspaceService {
     private readonly map: SummaryValueMap,
     private readonly repository: SummaryValueWorkspaceRepository,
     private readonly bulkLoadService: BulkLoadService,
-
   ) {}
 
-  async delete(
-    criteria: FindConditions<SummaryValue>,
-  ): Promise<DeleteResult> {
+  async delete(criteria: FindConditions<SummaryValue>): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 
@@ -53,7 +50,7 @@ export class SummaryValueWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
-  ): Promise<void>{
+  ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.summaryValueData) ||
       emissionsImport?.summaryValueData.length === 0
@@ -76,7 +73,7 @@ export class SummaryValueWorkspaceService {
         'update_date',
       ],
     );
-    
+
     for (const summaryValueDatum of emissionsImport.summaryValueData) {
       const monitoringLocationId = monitoringLocations.filter(location => {
         return (
@@ -88,8 +85,12 @@ export class SummaryValueWorkspaceService {
       const uid = randomUUID();
       summaryValueDatum['id'] = uid;
 
-      const {parameterCode, currentReportingPeriodTotal, 
-            ozoneSeasonToDateTotal, yearToDateTotal} = summaryValueDatum;
+      const {
+        parameterCode,
+        currentReportingPeriodTotal,
+        ozoneSeasonToDateTotal,
+        yearToDateTotal,
+      } = summaryValueDatum;
 
       bulkLoadStream.writeObject({
         uid,
@@ -97,7 +98,7 @@ export class SummaryValueWorkspaceService {
         monitoringLocationId,
         parameterCode,
         currentReportingPeriodTotal,
-        ozoneSeasonToDateTotal, 
+        ozoneSeasonToDateTotal,
         yearToDateTotal,
         userId: identifiers?.userId,
         addDate: currentTime,

@@ -1,7 +1,5 @@
 import { Test } from '@nestjs/testing';
-import {
-  SummaryValueWorkspaceService,
-} from './summary-value.service';
+import { SummaryValueWorkspaceService } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-dto';
@@ -50,30 +48,29 @@ describe('Summary Value Workspace Service Test', () => {
 
   describe('Summary Value Import', () => {
     it('should successfully import a summary value record', async () => {
-
       const generatedData = genSummaryValueImportDto(1);
 
       // @ts-expect-error use as mock
       jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject:jest.fn(),
-        complete:jest.fn(),
-        finished: Promise.resolve(true)
+        writeObject: jest.fn(),
+        complete: jest.fn(),
+        finished: Promise.resolve(true),
       });
 
       const emissionsDto = new EmissionsImportDTO();
       emissionsDto.summaryValueData = generatedData;
 
-      const locations = [{ unit: { name: "a" }, id: 1 }]
-      emissionsDto.summaryValueData[0].unitId = "a";
-      const identifiers = {
+      const locations = [{ unit: { name: 'a' }, id: 1 }];
+      emissionsDto.summaryValueData[0].unitId = 'a';
+      const identifiers = ({
         components: [],
         monitorFormulas: [],
         monitoringSystems: [],
-        userId: "",
-      } as unknown as ImportIdentifiers;
+        userId: '',
+      } as unknown) as ImportIdentifiers;
 
-      await expect(service.import(emissionsDto, locations, "", identifiers, "")).resolves;
-      
+      await expect(service.import(emissionsDto, locations, '', identifiers, ''))
+        .resolves;
     });
   });
 

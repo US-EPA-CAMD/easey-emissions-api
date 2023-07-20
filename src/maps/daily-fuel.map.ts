@@ -21,8 +21,8 @@ export class DailyFuelMap extends BaseMap<
       dailyEmissionId: entity.dailyEmissionId,
       calcFuelCarbonBurned: entity.calcFuelCarbonBurned,
       userId: entity.userId,
-      addDate: entity.addDate,
-      updateDate: entity.updateDate,
+      addDate: entity.addDate?.toISOString() ?? null,
+      updateDate: entity.updateDate?.toISOString() ?? null,
       reportingPeriodId: entity.reportingPeriodId,
       monitoringLocationId: entity.monitoringLocationId,
     };

@@ -7,6 +7,7 @@ import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 
 @Injectable()
 export class WeeklySystemIntegrityService {
+
   constructor(
     private readonly map: WeeklySystemIntegrityMap,
     private readonly repository: WeeklySystemIntegrityRepository,

@@ -13,14 +13,7 @@ import { DailyTestSummaryRepository } from './daily-test-summary.repository';
     DailyCalibrationModule,
   ],
   controllers: [],
-  providers: [
-    DailyTestSummaryMap,
-    DailyTestSummaryService,
-  ],
-  exports: [
-    TypeOrmModule,
-    DailyTestSummaryMap,
-    DailyTestSummaryService,
-  ],
+  providers: [DailyTestSummaryMap, DailyTestSummaryService],
+  exports: [TypeOrmModule, DailyTestSummaryMap, DailyTestSummaryService],
 })
 export class DailyTestSummaryModule {}

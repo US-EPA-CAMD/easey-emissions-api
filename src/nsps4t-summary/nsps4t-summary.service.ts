@@ -8,6 +8,7 @@ import { arrayPushCreate, hasArrayValues } from '../utils/utils';
 
 @Injectable()
 export class Nsps4tSummaryService {
+
   constructor(
     private readonly repository: Nsps4tSummaryRepository,
     private readonly nsps4tAnnualService: Nsps4tAnnualService,
@@ -27,18 +28,18 @@ export class Nsps4tSummaryService {
       for (const nsps4tSummary of nsps4tSummaryData) {
         promises.push(
           this.nsps4tAnnualService.export([nsps4tSummary.id]).then(data => {
-            nsps4tSummary.nsps4tFourthQuarterData = arrayPushCreate(
-              nsps4tSummary.nsps4tFourthQuarterData,
-              data,
-            ) ?? [];
+            nsps4tSummary.nsps4tFourthQuarterData =
+              arrayPushCreate(nsps4tSummary.nsps4tFourthQuarterData, data) ??
+              [];
           }),
           this.nsps4tCompliancePeriodService
             .export([nsps4tSummary.id])
             .then(data => {
-              nsps4tSummary.nsps4tCompliancePeriodData = arrayPushCreate(
-                nsps4tSummary.nsps4tCompliancePeriodData,
-                data,
-              ) ?? [];
+              nsps4tSummary.nsps4tCompliancePeriodData =
+                arrayPushCreate(
+                  nsps4tSummary.nsps4tCompliancePeriodData,
+                  data,
+                ) ?? [];
             }),
         );
       }
@@ -48,3 +49,4 @@ export class Nsps4tSummaryService {
     return nsps4tSummaryData;
   }
 }
+

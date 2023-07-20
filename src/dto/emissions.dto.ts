@@ -1,6 +1,13 @@
 import { FindOneOptions } from 'typeorm';
 import { Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested, ValidationArguments } from 'class-validator';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+  ValidationArguments,
+} from 'class-validator';
 import { Plant } from '../entities/plant.entity';
 import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
@@ -24,6 +31,7 @@ import {
   WeeklyTestSummaryImportDTO,
 } from './weekly-test-summary.dto';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+import { DailyBackstopDTO, DailyBackstopImportDTO } from './daily-backstop.dto';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -49,10 +57,9 @@ export class EmissionsBaseDTO {
   @IsString()
   submissionComment?: string;
 
-  constructor(values: Object = {}) {
+  constructor(values: Object={}) {
     Object.assign(this, values);
   }
-
 }
 
 export class EmissionsRecordDTO extends EmissionsBaseDTO {
@@ -62,7 +69,7 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   reportingPeriodId: number;
   @IsOptional()
   @IsDateString()
-  lastUpdated?: Date;
+  lastUpdated?: string;
   @IsOptional()
   @IsString()
   updatedStatusFlg?: string;
@@ -80,7 +87,7 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   submissionAvailabilityCd?: string;
 
   constructor(values: Object = {}) {
-    super(values)
+    super(values);
     Object.assign(this, values);
   }
 }
@@ -117,6 +124,10 @@ export class EmissionsImportDTO extends EmissionsBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tSummaryImportDTO)
   nsps4tSummaryData: Nsps4tSummaryImportDTO[];
+
+  @ValidateNested({ each: true })
+  @Type(() => DailyBackstopDTO)
+  dailyBackstopData: DailyBackstopImportDTO[];
 }
 
 export class EmissionsDTO extends EmissionsRecordDTO {
@@ -152,8 +163,12 @@ export class EmissionsDTO extends EmissionsRecordDTO {
   @Type(() => Nsps4tSummaryDTO)
   nsps4tSummaryData: Nsps4tSummaryDTO[];
 
+  @ValidateNested({ each: true })
+  @Type(() => DailyBackstopDTO)
+  dailyBackstopData: DailyBackstopDTO[];
+
   constructor(values: Object = {}) {
-    super(values)
+    super(values);
     Object.assign(this, values);
   }
 }

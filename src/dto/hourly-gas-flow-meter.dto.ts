@@ -34,8 +34,8 @@ export class HourlyGasFlowMeterRecordDTO extends HourlyGasFlowMeterBaseDTO {
   calcFlowToSamplingRatio?: number;
   calcFlowToSamplingMult?: number;
   userId?: string;
-  addDate?: Date;
-  updateDate?: Date;
+  addDate?: string;
+  updateDate?: string;
 }
 
 export class HourlyGasFlowMeterImportDTO extends HourlyGasFlowMeterBaseDTO {}
