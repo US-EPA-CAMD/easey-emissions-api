@@ -31,7 +31,7 @@ export class EmissionsSubmissionsProgressMap extends BaseMap<
       year: entity.calendarYear,
       quarterName: quarterN,
       quarter: entity.quarter,
-      percentage: entity.submittedPercentage,
+      percentage: entity.submittedPercentage,//
     };
   }
 }
