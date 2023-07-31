@@ -12,6 +12,6 @@ export class DailyFuelService {
     return exportDailyFuelData({
       dailyEmissionIds,
       repository: this.repository,
-    });
+    });//
   }
 }
