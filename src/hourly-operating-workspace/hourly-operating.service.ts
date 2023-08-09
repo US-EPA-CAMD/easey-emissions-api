@@ -186,78 +186,90 @@ export class HourlyOperatingWorkspaceService {
         })[0].id;
 
         //Load children records in a bulk fashion as well
-        buildPromises.push(
-          this.derivedHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.derivedHourlyValueData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            derivedHourlyValueObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.derivedHourlyValueData) {
+          buildPromises.push(
+            this.derivedHourlyValueService.buildObjectList(
+              hourlyOperatingDatum.derivedHourlyValueData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              derivedHourlyValueObjects,
+              currentTime,
+            ),
+          );
+        }
 
-        buildPromises.push(
-          this.matsMonitorHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.matsMonitorHourlyValueData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            matsMonitorHourlyValueObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.matsMonitorHourlyValueData) {
+          buildPromises.push(
+            this.matsMonitorHourlyValueService.buildObjectList(
+              hourlyOperatingDatum.matsMonitorHourlyValueData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              matsMonitorHourlyValueObjects,
+              currentTime,
+            ),
+          );
+        }
 
-        buildPromises.push(
-          this.monitorHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.monitorHourlyValueData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            monitorHourlyValueObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.monitorHourlyValueData) {
+          buildPromises.push(
+            this.monitorHourlyValueService.buildObjectList(
+              hourlyOperatingDatum.monitorHourlyValueData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              monitorHourlyValueObjects,
+              currentTime,
+            ),
+          );
+        }
 
-        buildPromises.push(
-          this.matsDerivedHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.matsDerivedHourlyValueData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            matsDerivedHourlyValueObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.matsDerivedHourlyValueData) {
+          buildPromises.push(
+            this.matsDerivedHourlyValueService.buildObjectList(
+              hourlyOperatingDatum.matsDerivedHourlyValueData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              matsDerivedHourlyValueObjects,
+              currentTime,
+            ),
+          );
+        }
 
-        buildPromises.push(
-          this.hourlyFuelFlowService.buildObjectList(
-            hourlyOperatingDatum.hourlyFuelFlowData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            hourlyFuelFlowObjects,
-            hourlyParameterFuelFlowObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.hourlyFuelFlowData) {
+          buildPromises.push(
+            this.hourlyFuelFlowService.buildObjectList(
+              hourlyOperatingDatum.hourlyFuelFlowData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              hourlyFuelFlowObjects,
+              hourlyParameterFuelFlowObjects,
+              currentTime,
+            ),
+          );
+        }
 
-        buildPromises.push(
-          this.hourlyGasFlowMeterService.buildObjectList(
-            hourlyOperatingDatum.hourlyGFMData,
-            hourlyOperatingDatum['id'],
-            monitoringLocationId,
-            reportingPeriodId,
-            identifiers,
-            hourlyGasFlowMeterObjects,
-            currentTime,
-          ),
-        );
+        if (hourlyOperatingDatum.hourlyGFMData) {
+          buildPromises.push(
+            this.hourlyGasFlowMeterService.buildObjectList(
+              hourlyOperatingDatum.hourlyGFMData,
+              hourlyOperatingDatum['id'],
+              monitoringLocationId,
+              reportingPeriodId,
+              identifiers,
+              hourlyGasFlowMeterObjects,
+              currentTime,
+            ),
+          );
+        }
       }
 
       await Promise.all(buildPromises);
