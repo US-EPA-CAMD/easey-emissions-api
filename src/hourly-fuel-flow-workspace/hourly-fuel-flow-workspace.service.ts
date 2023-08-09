@@ -59,6 +59,9 @@ export class HourlyFuelFlowWorkspaceService {
     childObjectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       const uid = randomUUID();
       dataChunk['id'] = uid;

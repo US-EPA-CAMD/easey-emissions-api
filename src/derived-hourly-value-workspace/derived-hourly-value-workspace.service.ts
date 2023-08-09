@@ -35,6 +35,9 @@ export class DerivedHourlyValueWorkspaceService {
     currentTime: string,
   ) {
     for (const dataChunk of data) {
+      if (!data) {
+        return;
+      }
       buildObject.push({
         id: randomUUID(),
         hourId: hourId,

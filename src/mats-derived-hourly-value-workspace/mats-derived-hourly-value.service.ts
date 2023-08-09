@@ -32,6 +32,9 @@ export class MatsDerivedHourlyValueWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
