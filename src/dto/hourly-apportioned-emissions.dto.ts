@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { propertyMetadata } from '@us-epa-camd/easey-common/constants';
 
 import { ApportionedEmissionsDTO } from './apportioned-emissions.dto';
+import { IsNumber } from 'class-validator';
 
 export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
   constructor() {
@@ -70,4 +71,12 @@ export class HourlyApportionedEmissionsDTO extends ApportionedEmissionsDTO {
     name: propertyMetadata.opTime.fieldLabels.value,
   })
   opTime?: number;
+
+  @ApiProperty({
+    description: propertyMetadata.unit_id.description,
+    example: propertyMetadata.unit_id.example,
+    name: propertyMetadata.unit_id.fieldLabels.value,
+  })
+  @IsNumber()
+  unit_id: number
 }
