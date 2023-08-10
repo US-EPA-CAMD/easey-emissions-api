@@ -234,6 +234,23 @@ export class QueryBuilderHelper {
     return query;
   }
 
+  public static whereLocationName(
+    query: any,
+    locations: string[],
+    alias: string,
+  ) {
+    if (locations) {
+      query.andWhere(
+        `( ${alias}.associatedStacks IN (${locations
+          .map(l => `'${l}'`)
+          .join(',')}) OR ${alias}.unitId IN (${locations
+          .map(l => `'${l}'`)
+          .join(',')}))`,
+      );
+    }
+    return query;
+  }
+
   public static createEmissionsQuery(
     query: any,
     dto: any,
@@ -262,6 +279,8 @@ export class QueryBuilderHelper {
       params,
       alias,
     );
+
+    query = this.whereLocationName(query, dto.locationName, alias);
 
     if (dto.page && dto.perPage) {
       query = query.skip((dto.page - 1) * dto.perPage).take(dto.perPage);
