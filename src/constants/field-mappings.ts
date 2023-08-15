@@ -128,6 +128,7 @@ const ozoneAggregationData = [
 
 hourly.push(
   ...commonCharacteristics,
+  {...propertyMetadata.unit_id.fieldLabels},
   { ...propertyMetadata.associatedStacks.fieldLabels },
   ...hourlyCharacteristics,
   { ...propertyMetadata.grossLoadHourly.fieldLabels },
@@ -207,6 +208,7 @@ monthlyNationalAggregation.push(...monthlyAggregationData);
 
 quarterly.push(
   ...commonCharacteristics,
+  {...propertyMetadata.unit_id.fieldLabels},
   { ...propertyMetadata.associatedStacks.fieldLabels },
   { ...propertyMetadata.year.fieldLabels },
   { ...propertyMetadata.quarter.fieldLabels },
@@ -229,6 +231,7 @@ quarterlyNationalAggregation.push(...quarterlyAggregationData);
 
 annual.push(
   ...commonCharacteristics,
+  {...propertyMetadata.unit_id.fieldLabels},
   { ...propertyMetadata.associatedStacks.fieldLabels },
   { ...propertyMetadata.year.fieldLabels },
   ...commonEmissions,
