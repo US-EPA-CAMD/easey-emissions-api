@@ -31,6 +31,15 @@ export class HourlyApportionedEmissionsParamsDTO extends ApportionedEmissionsPar
   })
   @IsOptional()
   operatingHoursOnly?: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value) {
+      return value.split('|').map((item: string) => item.trim());
+    }
+  })
+  locationName?: string[];
 }
 
 export class PaginatedHourlyApportionedEmissionsParamsDTO extends HourlyApportionedEmissionsParamsDTO {

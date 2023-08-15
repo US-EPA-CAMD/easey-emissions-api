@@ -117,3 +117,14 @@ export function ExcludeQuery() {
     }),
   );
 }
+
+export function ApiLocationNameQuery() {
+  return applyDecorators(
+    ApiQuery({
+      style: 'pipeDelimited',
+      name: 'locationName',
+      required: false,
+      explode: false,
+    }),
+  );
+}
