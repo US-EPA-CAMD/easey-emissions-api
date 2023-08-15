@@ -34,10 +34,10 @@ export class DerivedHourlyValueWorkspaceService {
     buildObject: Array<object>,
     currentTime: string,
   ) {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
-      if (!data) {
-        return;
-      }
       buildObject.push({
         id: randomUUID(),
         hourId: hourId,
