@@ -17,6 +17,9 @@ export class HourUnitDataView {
   })
   facilityId: number;
 
+  @Column({ name: 'unit_id' })
+  unit_id: string;
+
   @Column({ name: 'unitid' })
   unitId: string;
 

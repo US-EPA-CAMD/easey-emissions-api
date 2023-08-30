@@ -15,6 +15,7 @@ import {
   NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
+  ApiLocationNameQuery,
 } from '../../utils/swagger-decorator.const';
 
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
@@ -61,6 +62,7 @@ export class HourlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
   async getEmissions(
     @Req() req: Request,
@@ -93,6 +95,7 @@ export class HourlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissionsFacilityAggregation(
     @Req() req: Request,
@@ -125,6 +128,7 @@ export class HourlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissionsStateAggregation(
     @Req() req: Request,
@@ -157,6 +161,7 @@ export class HourlyApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
+  @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
   getEmissionsNationalAggregation(
     @Req() req: Request,

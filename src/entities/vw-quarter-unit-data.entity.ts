@@ -17,6 +17,9 @@ export class QuarterUnitDataView {
   })
   facilityId: number;
 
+  @Column({ name: 'unit_id' })
+  unit_id: string;
+
   @Column({ name: 'unitid' })
   unitId: string;
 
