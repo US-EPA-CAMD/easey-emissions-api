@@ -26,20 +26,31 @@ export class HourlyFuelFlowService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    const promises = [];
-    for (const fuelFlow of mapped) {
-      promises.push(
-        this.hourlyParameterFuelFlowService.export(fuelFlow.id).then(data => {
-          if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
-            fuelFlow.hourlyParameterFuelFlowData = [];
-          }
+    const mappedIds = mapped.map(el => el.id);
 
-          fuelFlow.hourlyParameterFuelFlowData.push(...data);
-        }),
-      );
-    }
-    await Promise.all(promises);
+    const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
+      mappedIds,
+    );
+
+    this.organizeData(mapped, hourlyParamFuelFlowData);
 
     return mapped;
+  }
+
+  private organizeData(parentArray, childArray) {
+    const parentMap = new Map();
+
+    parentArray.forEach(parentObj => {
+      parentMap.set(parentObj.id, parentObj);
+      parentObj.hourlyParameterFuelFlowData = [];
+    });
+
+    childArray.forEach(childObj => {
+      const parentId = childObj.hourlyFuelFlowId;
+      if (parentMap.has(parentId)) {
+        const parentObj = parentMap.get(parentId);
+        parentObj.hourlyParameterFuelFlowData.push(childObj);
+      }
+    });
   }
 }
