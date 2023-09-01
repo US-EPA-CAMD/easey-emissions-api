@@ -11,8 +11,8 @@ export class HourlyParameterFuelFlowService {
     private readonly repository: HourlyParameterFuelFlowRepository,
   ) {}
 
-  async export(hourlyFuelFlowId: string[]): Promise<HourlyParamFuelFlowDTO[]> {
-    const hrlyParams = await this.repository.export(hourlyFuelFlowId);
+  async export(hourlyFuelFlowIds: string[]): Promise<HourlyParamFuelFlowDTO[]> {
+    const hrlyParams = await this.repository.export(hourlyFuelFlowIds);
 
     return this.map.many(hrlyParams);
   }

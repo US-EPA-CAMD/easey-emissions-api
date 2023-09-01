@@ -28,7 +28,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
 
       jest.spyOn(repository, 'export').mockResolvedValue(hourlyParams);
 
-      await expect(service.export('123')).resolves.toEqual(
+      await expect(service.export(['123'])).resolves.toEqual(
         hourlyParams.map(param => {
           return {
             id: param.id,

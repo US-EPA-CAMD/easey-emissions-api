@@ -3,6 +3,7 @@ import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
 import { HourlyFuelFlowDTO } from '../dto/hourly-fuel-flow.dto';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
 export class HourlyFuelFlowService {
@@ -37,7 +38,7 @@ export class HourlyFuelFlowService {
     return mapped;
   }
 
-  private organizeData(parentArray, childArray) {
+  private organizeData(parentArray: HourlyFuelFlowDTO[], childArray: HourlyParamFuelFlowDTO[]) {
     const parentMap = new Map();
 
     parentArray.forEach(parentObj => {
