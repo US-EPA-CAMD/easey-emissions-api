@@ -9,7 +9,7 @@ export class HourlyParameterFuelFlowWorkspaceRepository extends Repository<
     return this.createQueryBuilder('hrlyParam')
       .leftJoinAndSelect('hrlyParam.monitorFormula', 'monitorFormula')
       .leftJoinAndSelect('hrlyParam.monitorSystem', 'ms')
-      .where('hrlyParam.hrly_fuel_flow_id IN (:...hourlyFuelFlowId)', {
+      .where('hrlyParam.hrly_fuel_flow_id IN (:...hourlyFuelFlowIds)', {
         hourlyFuelFlowIds,
       })
       .getMany();
