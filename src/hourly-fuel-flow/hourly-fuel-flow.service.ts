@@ -3,6 +3,7 @@ import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
 import { HourlyFuelFlowDTO } from '../dto/hourly-fuel-flow.dto';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
 export class HourlyFuelFlowService {
@@ -26,20 +27,31 @@ export class HourlyFuelFlowService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    const promises = [];
-    for (const fuelFlow of mapped) {
-      promises.push(
-        this.hourlyParameterFuelFlowService.export(fuelFlow.id).then(data => {
-          if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
-            fuelFlow.hourlyParameterFuelFlowData = [];
-          }
+    const mappedIds = mapped.map(el => el.id);
 
-          fuelFlow.hourlyParameterFuelFlowData.push(...data);
-        }),
-      );
-    }
-    await Promise.all(promises);
+    const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
+      mappedIds,
+    );
+
+    this.organizeData(mapped, hourlyParamFuelFlowData);
 
     return mapped;
+  }
+
+  private organizeData(parentArray: HourlyFuelFlowDTO[], childArray: HourlyParamFuelFlowDTO[]) {
+    const parentMap = new Map();
+
+    parentArray.forEach(parentObj => {
+      parentMap.set(parentObj.id, parentObj);
+      parentObj.hourlyParameterFuelFlowData = [];
+    });
+
+    childArray.forEach(childObj => {
+      const parentId = childObj.hourlyFuelFlowId;
+      if (parentMap.has(parentId)) {
+        const parentObj = parentMap.get(parentId);
+        parentObj.hourlyParameterFuelFlowData.push(childObj);
+      }
+    });
   }
 }
