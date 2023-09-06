@@ -17,7 +17,7 @@ describe('DailyCalibrationMap', () => {
         id: mock.id,
         dailyTestSumId: mock.dailyTestSummaryId,
         reportingPeriodId: mock.reportingPeriodId,
-        onLineOffLineIndicator: mock.onLineOffLineIndicator,
+        onlineOfflineIndicator: mock.onLineOffLineIndicator,
         calcOnlineOfflineIndicator: mock.calcOnlineOfflineIndicator,
         upscaleGasCode: mock.upscaleGasCode,
         zeroInjectionDate: mock.zeroInjectionDate,
