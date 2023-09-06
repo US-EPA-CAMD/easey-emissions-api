@@ -10,7 +10,7 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  hourlyGfmReading?: number;
+  hourlyGFMReading?: number;
 
   @IsOptional()
   @IsNumber()
