@@ -22,7 +22,7 @@ export class SamplingTrainMap extends BaseMap<
       userId: entity.userId,
       addDate: entity.addDate?.toISOString() ?? null,
       updateDate: entity.updateDate?.toISOString() ?? null,
-      sorbentTrapSn: entity.sorbentTrapSn,
+      sorbentTrapSN: entity.sorbentTrapSn,
       mainTrapHg: entity.mainTrapHg,
       btTrapHg: entity.btTrapHg,
       spikeTrapHg: entity.spikeTrapHg,

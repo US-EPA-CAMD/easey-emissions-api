@@ -37,7 +37,7 @@ describe('SamplingTrainMap', () => {
         userId: mock.userId,
         addDate: mock.addDate?.toISOString() ?? null,
         updateDate: mock.updateDate?.toISOString() ?? null,
-        sorbentTrapSn: mock.sorbentTrapSn,
+        sorbentTrapSN: mock.sorbentTrapSn,
         mainTrapHg: mock.mainTrapHg,
         btTrapHg: mock.btTrapHg,
         spikeTrapHg: mock.spikeTrapHg,

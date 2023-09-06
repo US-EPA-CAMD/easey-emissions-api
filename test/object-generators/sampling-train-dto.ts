@@ -8,7 +8,7 @@ export const genSamplingTrainImportDto = (amount = 1) => {
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
       componentId: faker.datatype.string(),
-      sorbentTrapSn: faker.datatype.string(),
+      sorbentTrapSN: faker.datatype.string(),
       mainTrapHg: optionalValue(faker.datatype.string()),
       btTrapHg: optionalValue(faker.datatype.string()),
       spikeTrapHg: optionalValue(faker.datatype.string()),

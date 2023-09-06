@@ -14,7 +14,7 @@ export class SamplingTrainBaseDTO {
   componentId: string;
 
   @IsString()
-  sorbentTrapSn: string;
+  sorbentTrapSN: string;
 
   @IsOptional()
   @IsString()
