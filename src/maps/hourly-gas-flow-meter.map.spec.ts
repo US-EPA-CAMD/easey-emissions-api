@@ -23,7 +23,7 @@ describe('HourlyGasFlowMap', () => {
         beginEndHourFlag: mock.beginEndHourFlag,
         hourlyGFMReading: mock.hourlyGfmReading,
         averageHourlySamplingRate: mock.avgHourlySamplingRate,
-        samplingRateUom: mock.samplingRateUom,
+        samplingRateUnitsOfMeasureCode: mock.samplingRateUom,
         hourlySfsrRatio: mock.hourlySfsrRatio,
         calcFlowToSamplingRatio: mock.calcFlowToSamplingRatio,
         calcFlowToSamplingMult: mock.calcFlowToSamplingMult,

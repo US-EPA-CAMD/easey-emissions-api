@@ -18,7 +18,7 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsString()
-  samplingRateUom?: string;
+  samplingRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsNumber()
