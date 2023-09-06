@@ -14,7 +14,7 @@ export const genSamplingTrainImportDto = (amount = 1) => {
       spikeTrapHg: optionalValue(faker.datatype.string()),
       spikeReferenceValue: optionalValue(faker.datatype.string()),
       totalSampleVolumeDSCM: optionalValue(faker.datatype.number()),
-      referenceSfsrRatio: optionalValue(faker.datatype.number()),
+      referenceSFSRRatio: optionalValue(faker.datatype.number()),
       hgConcentration: optionalValue(faker.datatype.string()),
       percentBreakthrough: optionalValue(faker.datatype.number()),
       percentSpikeRecovery: optionalValue(faker.datatype.number()),

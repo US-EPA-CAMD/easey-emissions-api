@@ -28,7 +28,7 @@ export class SamplingTrainMap extends BaseMap<
       spikeTrapHg: entity.spikeTrapHg,
       spikeReferenceValue: entity.spikeReferenceValue,
       totalSampleVolumeDSCM: entity.totalSampleVolumeDscm,
-      referenceSfsrRatio: entity.referenceSfsrRatio,
+      referenceSFSRRatio: entity.referenceSfsrRatio,
       hgConcentration: entity.hgConcentration,
       percentBreakthrough: entity.percentBreakthrough,
       percentSpikeRecovery: entity.percentSpikeRecovery,

@@ -38,7 +38,7 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  referenceSfsrRatio?: number;
+  referenceSFSRRatio?: number;
 
   @IsOptional()
   @IsString()
