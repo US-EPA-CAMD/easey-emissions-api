@@ -108,12 +108,12 @@ export class EmissionsChecksService {
       }
 
       hourlyOp?.derivedHourlyValueData?.forEach(derived => {
-        if (!isUndefinedOrNull(derived.formulaIdentifier)) {
+        if (!isUndefinedOrNull(derived.formulaId)) {
           identifierMap.set(
             monitoringLocationId,
             identifierMap
               .get(monitoringLocationId)
-              .add(derived.formulaIdentifier),
+              .add(derived.formulaId),
           );
         }
       });
