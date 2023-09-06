@@ -27,7 +27,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  averageCo2EmissionRate?: number;
+  averageCO2EmissionRate?: number;
 
   @IsOptional()
   @IsString()

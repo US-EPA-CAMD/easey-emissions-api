@@ -28,7 +28,7 @@ export const importNsps4tCompliancePeriodData = async ({
       beginMonth: data.beginMonth,
       endYear: data.endYear,
       endMonth: data.endMonth,
-      averageCo2EmissionRate: data.averageCo2EmissionRate,
+      averageCo2EmissionRate: data.averageCO2EmissionRate,
       co2EmissionRateUomCode: data.co2EmissionRateUomCode,
       percentValidOpHours: data.percentValidOpHours,
       violationOfCo2StandardIndicator: data.violationOfCo2StandardIndicator,
