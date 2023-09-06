@@ -7,7 +7,6 @@ import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
 export class HourlyFuelFlowService {
-
   constructor(
     private readonly repository: HourlyFuelFlowRepository,
     private readonly map: HourlyFuelFlowMap,
@@ -21,7 +20,7 @@ export class HourlyFuelFlowService {
 
     const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
 
-    if (!Array.isArray(hourlyFuelFlow)) {
+    if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
     }
 
@@ -29,16 +28,21 @@ export class HourlyFuelFlowService {
 
     const mappedIds = mapped.map(el => el.id);
 
-    const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
-      mappedIds,
-    );
+    if (mappedIds.length > 0) {
+      const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
+        mappedIds,
+      );
 
-    this.organizeData(mapped, hourlyParamFuelFlowData);
+      this.organizeData(mapped, hourlyParamFuelFlowData);
+    }
 
     return mapped;
   }
 
-  private organizeData(parentArray: HourlyFuelFlowDTO[], childArray: HourlyParamFuelFlowDTO[]) {
+  private organizeData(
+    parentArray: HourlyFuelFlowDTO[],
+    childArray: HourlyParamFuelFlowDTO[],
+  ) {
     const parentMap = new Map();
 
     parentArray.forEach(parentObj => {
