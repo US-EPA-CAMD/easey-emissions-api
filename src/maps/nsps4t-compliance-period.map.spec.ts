@@ -26,7 +26,7 @@ describe('NSPS4TCompliancePeriodMap', () => {
           beginMonth: param.beginMonth,
           endYear: param.endYear,
           endMonth: param.endMonth,
-          averageCo2EmissionRate: param.averageCo2EmissionRate,
+          averageCO2EmissionRate: param.averageCo2EmissionRate,
           co2EmissionRateUomCode: param.co2EmissionRateUomCode,
           percentValidOpHours: param.percentValidOpHours,
           violationOfCo2StandardIndicator:
