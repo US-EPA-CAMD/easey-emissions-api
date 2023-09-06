@@ -41,7 +41,7 @@ export class HourlyFuelFlowWorkspaceService {
         mappedIds,
       );
 
-      this.organizeData(mapped, hourlyParamFuelFlowData);
+      this.organizeData(mapped, hourlyParamFuelFlowData); 
     }
     return mapped;
   }
