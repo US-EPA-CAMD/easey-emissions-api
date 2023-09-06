@@ -43,7 +43,7 @@ export class Nsps4tCompliancePeriodWorkspaceService {
         endYear: dataChunk.endYear,
         endMonth: dataChunk.endMonth,
         avgCo2EmissionRate: dataChunk.averageCO2EmissionRate,
-        co2EmissionRateUomCd: dataChunk.co2EmissionRateUomCode,
+        co2EmissionRateUomCd: dataChunk.co2EmissionRateUnitsOfMeasureCode,
         pctValidOpHours: dataChunk.percentValidOpHours,
         co2ViolationInd: dataChunk.violationOfCo2StandardIndicator,
         co2ViolationComment: dataChunk.violationOfCo2StandardComment,

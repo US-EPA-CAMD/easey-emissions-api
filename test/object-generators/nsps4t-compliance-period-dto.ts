@@ -14,7 +14,7 @@ export const genNsps4tCompliancePeriodImportDTO = (
       endYear: optionalValue(faker.datatype.number()),
       endMonth: optionalValue(faker.datatype.number()),
       averageCO2EmissionRate: optionalValue(faker.datatype.number()),
-      co2EmissionRateUomCode: optionalValue(faker.datatype.string()),
+      co2EmissionRateUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
       percentValidOpHours: optionalValue(faker.datatype.number()),
       violationOfCo2StandardIndicator: optionalValue(faker.datatype.number()),
       violationOfCo2StandardComment: optionalValue(faker.datatype.string()),

@@ -36,7 +36,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  co2EmissionRateUomCode?: string;
+  co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsNumber()
