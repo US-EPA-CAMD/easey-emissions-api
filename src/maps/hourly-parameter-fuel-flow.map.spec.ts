@@ -26,7 +26,7 @@ describe('HourlyParameterFuelFlowMap', () => {
           monitoringSystemId: param.monitorSystem?.monitoringSystemId ?? null,
           operatingConditionCode: param.operatingConditionCode,
           segmentNumber: param.segmentNumber,
-          parameterUomCode: param.parameterUomCode,
+          parameterUnitsOfMeasureCode: param.parameterUomCode,
           hourlyFuelFlowId: param.hourlyFuelFlowId,
           calcParamValFuel: param.calcParamValFuel,
           addDate: param.addDate?.toISOString() ?? null,

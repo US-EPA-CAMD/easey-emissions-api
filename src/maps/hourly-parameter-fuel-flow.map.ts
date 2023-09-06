@@ -27,7 +27,7 @@ export class HourlyParameterFuelFlowMap extends BaseMap<
       monitoringSystemId,
       operatingConditionCode: entity.operatingConditionCode,
       segmentNumber: entity.segmentNumber,
-      parameterUomCode: entity.parameterUomCode,
+      parameterUnitsOfMeasureCode: entity.parameterUomCode,
       hourlyFuelFlowId: entity.hourlyFuelFlowId,
       calcParamValFuel: entity.calcParamValFuel,
       addDate: entity.addDate?.toISOString() ?? null,

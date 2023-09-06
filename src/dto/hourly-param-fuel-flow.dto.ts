@@ -61,7 +61,7 @@ export class HourlyParamFuelFlowBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  parameterUomCode?: string;
+  parameterUnitsOfMeasureCode?: string;
 }
 
 export class HourlyParamFuelFlowRecordDTO extends HourlyParamFuelFlowBaseDTO {

@@ -14,7 +14,7 @@ export const genHourlyParamFuelFlowImportDto = (amount = 1) => {
       monitoringSystemId: optionalValue(faker.datatype.string()),
       operatingConditionCode: optionalValue(faker.datatype.string()),
       segmentNumber: optionalValue(faker.datatype.number()),
-      parameterUomCode: optionalValue(faker.datatype.string()),
+      parameterUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
     });
   }
 
