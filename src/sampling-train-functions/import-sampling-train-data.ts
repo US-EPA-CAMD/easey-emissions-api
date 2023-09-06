@@ -31,7 +31,7 @@ export const importSamplingTrainData = async ({
       btTrapHg: data.btTrapHg,
       spikeTrapHg: data.spikeTrapHg,
       spikeReferenceValue: data.spikeReferenceValue,
-      totalSampleVolumeDscm: data.totalSampleVolumeDscm,
+      totalSampleVolumeDscm: data.totalSampleVolumeDSCM,
       referenceSfsrRatio: data.referenceSfsrRatio,
       hgConcentration: data.hgConcentration,
       percentBreakthrough: data.percentBreakthrough,

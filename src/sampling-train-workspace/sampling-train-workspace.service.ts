@@ -42,7 +42,7 @@ export class SamplingTrainWorkspaceService {
         breakthroughTrapHg: dataChunk.btTrapHg,
         spikeTrapHg: dataChunk.spikeTrapHg,
         spikeRefValue: dataChunk.spikeReferenceValue,
-        totalSampleValue: dataChunk.totalSampleVolumeDscm,
+        totalSampleValue: dataChunk.totalSampleVolumeDSCM,
         refFlowToSamplingRatio: dataChunk.referenceSfsrRatio,
         hgConcentration: dataChunk.hgConcentration,
         percentBreakthrough: dataChunk.percentBreakthrough,

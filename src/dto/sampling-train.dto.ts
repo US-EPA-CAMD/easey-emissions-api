@@ -34,7 +34,7 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  totalSampleVolumeDscm?: number;
+  totalSampleVolumeDSCM?: number;
 
   @IsOptional()
   @IsNumber()

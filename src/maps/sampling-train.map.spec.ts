@@ -42,7 +42,7 @@ describe('SamplingTrainMap', () => {
         btTrapHg: mock.btTrapHg,
         spikeTrapHg: mock.spikeTrapHg,
         spikeReferenceValue: mock.spikeReferenceValue,
-        totalSampleVolumeDscm: mock.totalSampleVolumeDscm,
+        totalSampleVolumeDSCM: mock.totalSampleVolumeDscm,
         referenceSfsrRatio: mock.referenceSfsrRatio,
         hgConcentration: mock.hgConcentration,
         percentBreakthrough: mock.percentBreakthrough,
