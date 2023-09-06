@@ -45,7 +45,7 @@ export class HourlyGasFlowMeterWorkspaceService {
         reportingPeriodId,
         beginEndHourFlag: dataChunk.beginEndHourFlag,
         hourlyGfmReading: dataChunk.hourlyGFMReading,
-        avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
+        avgHourlySamplingRate: dataChunk.averageHourlySamplingRate,
         samplingRateUom: dataChunk.samplingRateUom,
         hourlySfsrRatio: dataChunk.hourlySfsrRatio,
         addDate: currentTime,

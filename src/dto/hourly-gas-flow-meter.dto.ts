@@ -14,7 +14,7 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  avgHourlySamplingRate?: number;
+  averageHourlySamplingRate?: number;
 
   @IsOptional()
   @IsString()

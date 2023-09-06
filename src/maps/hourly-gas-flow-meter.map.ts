@@ -23,7 +23,7 @@ export class HourlyGasFlowMeterMap extends BaseMap<
       reportingPeriodId: entity.reportingPeriodId,
       beginEndHourFlag: entity.beginEndHourFlag,
       hourlyGFMReading: entity.hourlyGfmReading,
-      avgHourlySamplingRate: entity.avgHourlySamplingRate,
+      averageHourlySamplingRate: entity.avgHourlySamplingRate,
       samplingRateUom: entity.samplingRateUom,
       hourlySfsrRatio: entity.hourlySfsrRatio,
       calcFlowToSamplingRatio: entity.calcFlowToSamplingRatio,
