@@ -44,7 +44,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  violationOfCo2StandardIndicator?: number;
+  violationOfCO2StandardIndicator?: number;
 
   @IsOptional()
   @IsString()

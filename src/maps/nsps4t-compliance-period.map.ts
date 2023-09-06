@@ -25,7 +25,7 @@ export class Nsps4tCompliancePeriodMap extends BaseMap<
       averageCO2EmissionRate: entity.averageCo2EmissionRate,
       co2EmissionRateUnitsOfMeasureCode: entity.co2EmissionRateUomCode,
       percentValidOpHours: entity.percentValidOpHours,
-      violationOfCo2StandardIndicator: entity.violationOfCo2StandardIndicator,
+      violationOfCO2StandardIndicator: entity.violationOfCo2StandardIndicator,
       violationOfCo2StandardComment: entity.violationOfCo2StandardComment,
     };
   }
