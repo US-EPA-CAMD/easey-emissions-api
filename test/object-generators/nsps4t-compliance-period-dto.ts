@@ -17,7 +17,7 @@ export const genNsps4tCompliancePeriodImportDTO = (
       co2EmissionRateUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
       percentValidOpHours: optionalValue(faker.datatype.number()),
       violationOfCO2StandardIndicator: optionalValue(faker.datatype.number()),
-      violationOfCo2StandardComment: optionalValue(faker.datatype.string()),
+      violationOfCO2StandardComment: optionalValue(faker.datatype.string()),
     });
   }
 

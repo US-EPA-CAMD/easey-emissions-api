@@ -48,7 +48,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsString()
-  violationOfCo2StandardComment?: string;
+  violationOfCO2StandardComment?: string;
 }
 
 export class Nsps4tCompliancePeriodRecordDTO extends Nsps4tCompliancePeriodBaseDTO {

@@ -31,7 +31,7 @@ describe('NSPS4TCompliancePeriodMap', () => {
           percentValidOpHours: param.percentValidOpHours,
           violationOfCO2StandardIndicator:
             param.violationOfCo2StandardIndicator,
-          violationOfCo2StandardComment: param.violationOfCo2StandardComment,
+          violationOfCO2StandardComment: param.violationOfCo2StandardComment,
         };
       }),
     );
