@@ -18,7 +18,7 @@ export const genMatsDerivedHourlyValueImportDto = (amount = 1) => {
       modcCode: optionalValue(
         faker.datatype.number({ min: 10, max: 46 }).toString(),
       ),
-      formulaIdentifier: optionalValue(faker.datatype.string()),
+      formulaId: optionalValue(faker.datatype.string()),
     });
   }
 

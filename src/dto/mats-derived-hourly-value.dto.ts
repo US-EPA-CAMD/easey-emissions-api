@@ -28,7 +28,7 @@ export class MatsDerivedHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
-  formulaIdentifier?: string;
+  formulaId?: string;
 }
 
 export class MatsDerivedHourlyValueRecordDTO extends MatsDerivedHourlyValueBaseDTO {
