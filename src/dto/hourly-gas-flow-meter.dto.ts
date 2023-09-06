@@ -22,7 +22,7 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  hourlySfsrRatio?: number;
+  hourlySFSRRatio?: number;
 }
 
 export class HourlyGasFlowMeterRecordDTO extends HourlyGasFlowMeterBaseDTO {
