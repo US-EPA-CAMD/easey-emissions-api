@@ -26,7 +26,7 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
-  formulaIdentifier?: string;
+  formulaId?: string;
 
   @IsOptional()
   @IsString()

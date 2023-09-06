@@ -21,7 +21,7 @@ export class HourlyParameterFuelFlowMap extends BaseMap<
       monitoringLocationId: entity.monitoringLocationId,
       parameterCode: entity.parameterCode,
       parameterValueForFuel: entity.parameterValueForFuel,
-      formulaIdentifier,
+      formulaId: formulaIdentifier,
       monitoringFormulaRecordId: entity.formulaIdentifier,
       sampleTypeCode: entity.sampleTypeCode,
       monitoringSystemId,

@@ -20,7 +20,7 @@ describe('HourlyParameterFuelFlowMap', () => {
           monitoringLocationId: param.monitoringLocationId,
           parameterCode: param.parameterCode,
           parameterValueForFuel: param.parameterValueForFuel,
-          formulaIdentifier: param.monitorFormula?.formulaId ?? null,
+          formulaId: param.monitorFormula?.formulaId ?? null,
           monitoringFormulaRecordId: param.formulaIdentifier,
           sampleTypeCode: param.sampleTypeCode,
           monitoringSystemId: param.monitorSystem?.monitoringSystemId ?? null,

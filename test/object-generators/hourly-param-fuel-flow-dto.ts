@@ -9,7 +9,7 @@ export const genHourlyParamFuelFlowImportDto = (amount = 1) => {
     dtos.push({
       parameterCode: faker.datatype.string(),
       parameterValueForFuel: optionalValue(faker.datatype.number()),
-      formulaIdentifier: optionalValue(faker.datatype.string()),
+      formulaId: optionalValue(faker.datatype.string()),
       sampleTypeCode: optionalValue(faker.datatype.string()),
       monitoringSystemId: optionalValue(faker.datatype.string()),
       operatingConditionCode: optionalValue(faker.datatype.string()),

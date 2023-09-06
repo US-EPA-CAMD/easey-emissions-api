@@ -131,12 +131,12 @@ export class EmissionsChecksService {
 
       hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
         fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
-          if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
+          if (!isUndefinedOrNull(paramFuelFlow.formulaId)) {
             identifierMap.set(
               monitoringLocationId,
               identifierMap
                 .get(monitoringLocationId)
-                .add(paramFuelFlow.formulaIdentifier),
+                .add(paramFuelFlow.formulaId),
             );
           }
         });
