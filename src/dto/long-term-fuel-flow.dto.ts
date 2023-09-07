@@ -39,7 +39,7 @@ export class LongTermFuelFlowBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  longTermFuelFlowUomCode: string;
+  longTermFuelFlowUnitsOfMeasureCode: string;
 
   @IsOptional()
   @IsNumber()

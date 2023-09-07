@@ -27,7 +27,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  averageCo2EmissionRate?: number;
+  averageCO2EmissionRate?: number;
 
   @IsOptional()
   @IsString()
@@ -36,7 +36,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  co2EmissionRateUomCode?: string;
+  co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsNumber()
@@ -44,11 +44,11 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  violationOfCo2StandardIndicator?: number;
+  violationOfCO2StandardIndicator?: number;
 
   @IsOptional()
   @IsString()
-  violationOfCo2StandardComment?: string;
+  violationOfCO2StandardComment?: string;
 }
 
 export class Nsps4tCompliancePeriodRecordDTO extends Nsps4tCompliancePeriodBaseDTO {

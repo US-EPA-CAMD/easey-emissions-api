@@ -10,19 +10,19 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  hourlyGfmReading?: number;
+  hourlyGFMReading?: number;
 
   @IsOptional()
   @IsNumber()
-  avgHourlySamplingRate?: number;
+  averageHourlySamplingRate?: number;
 
   @IsOptional()
   @IsString()
-  samplingRateUom?: string;
+  samplingRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsNumber()
-  hourlySfsrRatio?: number;
+  hourlySFSRRatio?: number;
 }
 
 export class HourlyGasFlowMeterRecordDTO extends HourlyGasFlowMeterBaseDTO {

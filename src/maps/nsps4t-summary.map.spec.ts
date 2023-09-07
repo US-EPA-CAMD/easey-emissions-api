@@ -23,7 +23,7 @@ describe('NSPS4TSummaryMap', () => {
           unitId: param.monitorLocation?.unit?.name ?? null,
           co2EmissionStandardCode: param.co2EmissionStandardCode,
           modusValue: param.modusValue,
-          modusUomCode: param.modusUomCode,
+          modusUnitsOfMeasureCode: param.modusUomCode,
           electricalLoadCode: param.electricalLoadCode,
           noCompliancePeriodEndedIndicator:
             param.noCompliancePeriodEndedIndicator,

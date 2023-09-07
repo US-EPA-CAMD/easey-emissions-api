@@ -14,7 +14,7 @@ export class SamplingTrainBaseDTO {
   componentId: string;
 
   @IsString()
-  sorbentTrapSn: string;
+  sorbentTrapSN: string;
 
   @IsOptional()
   @IsString()
@@ -34,11 +34,11 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  totalSampleVolumeDscm?: number;
+  totalSampleVolumeDSCM?: number;
 
   @IsOptional()
   @IsNumber()
-  referenceSfsrRatio?: number;
+  referenceSFSRRatio?: number;
 
   @IsOptional()
   @IsString()

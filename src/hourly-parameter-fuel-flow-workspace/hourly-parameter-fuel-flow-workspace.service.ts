@@ -40,13 +40,13 @@ export class HourlyParameterFuelFlowWorkspaceService {
         parameterCode: dataChunk.parameterCode,
         parameterValueForFuel: dataChunk.parameterValueForFuel,
         formulaIdentifier:
-          identifiers.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+          identifiers.monitorFormulas?.[dataChunk.formulaId] || null,
         sampleTypeCode: dataChunk.sampleTypeCode,
         monitoringSystemId:
           identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         operatingConditionCode: dataChunk.operatingConditionCode,
         segmentNumber: dataChunk.segmentNumber,
-        parameterUomCode: dataChunk.parameterUomCode,
+        parameterUomCode: dataChunk.parameterUnitsOfMeasureCode,
         monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
         addDate: currentTime,

@@ -43,7 +43,7 @@ export class DerivedHourlyValueBaseDTO {
 
   @IsString()
   @IsOptional()
-  formulaIdentifier: string;
+  formulaId: string;
 
   @IsNumber()
   @IsOptional()

@@ -46,7 +46,7 @@ export class Nsps4tSummaryBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  modusUomCode?: string;
+  modusUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsString()
