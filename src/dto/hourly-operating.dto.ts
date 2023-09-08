@@ -9,7 +9,6 @@ import {
   Max,
   Min,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 
 import {
@@ -36,10 +35,6 @@ import {
   MatsDerivedHourlyValueDTO,
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { FuelCode } from '../entities/fuel-code.entity';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class HourlyOperatingBaseDTO {
@@ -75,11 +70,11 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   loadUnitsOfMeasureCode?: string;
 
   @IsOptional()
@@ -120,11 +115,11 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(FuelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(FuelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   fuelCode?: string;
 
   @IsOptional()

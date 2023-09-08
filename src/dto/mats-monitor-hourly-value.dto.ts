@@ -1,4 +1,3 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
@@ -6,20 +5,16 @@ import {
   Matches,
   Max,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { ModcCode } from '../entities/modc-code.entity';
-import { ParameterCode } from '../entities/parameter-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
 
 export class MatsMonitorHourlyValueBaseDTO {
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
   @IsOptional()
@@ -29,11 +24,11 @@ export class MatsMonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(ModcCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ModcCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   modcCode?: string;
 
   @IsOptional()

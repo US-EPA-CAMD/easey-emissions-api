@@ -1,17 +1,13 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { IsOptional, IsString, Matches, ValidationArguments } from 'class-validator';
-import { ParameterCode } from '../entities/parameter-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ModcCode } from '../entities/modc-code.entity';
 import { FORMULA_ID_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
 
 export class MatsDerivedHourlyValueBaseDTO {
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
   @IsOptional()
@@ -21,11 +17,11 @@ export class MatsDerivedHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(ModcCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ModcCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   modcCode?: string;
 
   @IsOptional()

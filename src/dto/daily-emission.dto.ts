@@ -4,16 +4,12 @@ import {
   ValidateNested,
   IsNumber,
   IsDateString,
-  ValidationArguments,
   Matches,
   Min,
   Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ParameterCode } from '../entities/parameter-code.entity';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class DailyEmissionBaseDTO {
@@ -28,11 +24,11 @@ export class DailyEmissionBaseDTO {
   unitId?: string;
 
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
   @IsDateString()

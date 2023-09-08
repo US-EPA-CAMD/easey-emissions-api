@@ -1,4 +1,3 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsIn,
   IsNumber,
@@ -7,10 +6,7 @@ import {
   Max,
   MaxLength,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tCompliancePeriodBaseDTO {
   @IsOptional()
@@ -45,11 +41,11 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()

@@ -1,4 +1,3 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
@@ -6,11 +5,7 @@ import {
   Matches,
   Max,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { FuelFlowPeriodCode } from '../entities/fuel-flow-period-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class LongTermFuelFlowBaseDTO {
@@ -30,11 +25,11 @@ export class LongTermFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(FuelFlowPeriodCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(FuelFlowPeriodCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   fuelFlowPeriodCode?: string;
 
   @IsNumber()
@@ -43,11 +38,11 @@ export class LongTermFuelFlowBaseDTO {
   longTermFuelFlowValue: number;
 
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   longTermFuelFlowUnitsOfMeasureCode: string;
 
   @IsOptional()
@@ -58,11 +53,11 @@ export class LongTermFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   gcvUnitsOfMeasureCode?: string;
 
   @IsOptional()

@@ -1,4 +1,3 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsDateString,
   IsIn,
@@ -8,14 +7,7 @@ import {
   Max,
   MaxLength,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { GasLevelCode } from '../entities/gas-level-code.entity';
-import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ProtocolGasVendor } from '../entities/protocol-gas-vendor.entity';
-import { FindOneOptions } from 'typeorm';
-import { DbLookup } from '../pipes/db-lookup.pipe';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
@@ -25,11 +17,11 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(GasLevelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(GasLevelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   upscaleGasCode?: string;
 
   @IsOptional()
@@ -122,17 +114,17 @@ export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsString()
   @MaxLength(8)
-  @DbLookup(
-    ProtocolGasVendor,
-    (args: ValidationArguments): FindOneOptions<ProtocolGasVendor> => {
-      return { where: { id: args.value } };
-    },
-    {
-      message: (args: ValidationArguments) => {
-        return `${args.property} has an invalid value of ${args.value}`;
-      },
-    },
-  )
+  // @DbLookup(
+  //   ProtocolGasVendor,
+  //   (args: ValidationArguments): FindOneOptions<ProtocolGasVendor> => {
+  //     return { where: { id: args.value } };
+  //   },
+  //   {
+  //     message: (args: ValidationArguments) => {
+  //       return `${args.property} has an invalid value of ${args.value}`;
+  //     },
+  //   },
+  // )
   vendorIdentifier?: string;
 
   @IsOptional()
@@ -141,11 +133,11 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(InjectionProtocolCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(InjectionProtocolCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   injectionProtocolCode?: string;
 }
 

@@ -1,22 +1,18 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
   Max,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { FuelCode } from '../entities/fuel-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyFuelBaseDTO {
   @IsString()
-  @IsValidCode(FuelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(FuelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   fuelCode: string;
 
   @IsOptional()

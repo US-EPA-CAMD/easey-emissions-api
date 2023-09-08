@@ -1,4 +1,3 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
@@ -6,10 +5,7 @@ import {
   Matches,
   Max,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { ParameterCode } from '../entities/parameter-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class SummaryValueBaseDTO {
@@ -24,11 +20,11 @@ export class SummaryValueBaseDTO {
   unitId?: string;
 
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
   @IsOptional()

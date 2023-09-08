@@ -4,7 +4,6 @@ import {
   ValidateNested,
   IsNumber,
   IsDateString,
-  ValidationArguments,
   Matches,
   Min,
   Max,
@@ -14,10 +13,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { ModcCode } from '../entities/modc-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ApsCode } from '../entities/aps-code.entity';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class SorbentTrapBaseDTO {
@@ -64,11 +59,11 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(ModcCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ModcCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   modcCode?: string;
 
   @IsOptional()
@@ -78,11 +73,11 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(ApsCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ApsCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   apsCode?: string;
 
   @IsOptional()

@@ -1,13 +1,9 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
   Min,
-  ValidationArguments,
 } from 'class-validator';
-import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
@@ -17,11 +13,11 @@ export class Nsps4tAnnualBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(Nsps4tElectricalLoadCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(Nsps4tElectricalLoadCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   annualEnergySoldTypeCode?: string;
 
   @IsOptional()

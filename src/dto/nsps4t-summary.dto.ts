@@ -10,7 +10,6 @@ import {
   MaxLength,
   Min,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -18,11 +17,6 @@ import {
   Nsps4tCompliancePeriodImportDTO,
 } from './nsps4t-compliance-period.dto';
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { Nsps4tEmissionStandardCode } from '../entities/nsps4t-emission-standard-code.entity';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class Nsps4tSummaryBaseDTO {
@@ -38,11 +32,11 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(Nsps4tEmissionStandardCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(Nsps4tEmissionStandardCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   co2EmissionStandardCode?: string;
 
   @IsOptional()
@@ -53,20 +47,20 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   modusUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(Nsps4tElectricalLoadCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(Nsps4tElectricalLoadCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   electricalLoadCode?: string;
 
   @IsOptional()
