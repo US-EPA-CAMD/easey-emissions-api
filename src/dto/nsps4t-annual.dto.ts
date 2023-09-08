@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
@@ -11,6 +12,7 @@ import { ImportCodeErrorMessage } from '../utils/validator.const';
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
   @IsNumber()
+  @Min(0)
   annualEnergySold?: number;
 
   @IsOptional()
@@ -24,6 +26,7 @@ export class Nsps4tAnnualBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   annualPotentialElectricOutput?: number;
 }
 

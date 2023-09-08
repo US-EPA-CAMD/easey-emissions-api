@@ -106,7 +106,7 @@ export class Nsps4tSummaryWorkspaceService {
         id: uid,
         emissionStandardCd: nsps4tSummaryDatum.co2EmissionStandardCode,
         modusValue: nsps4tSummaryDatum.modusValue,
-        modusUomCd: nsps4tSummaryDatum.modusUomCode,
+        modusUomCd: nsps4tSummaryDatum.modusUnitsOfMeasureCode,
         electricalLoadCd: nsps4tSummaryDatum.electricalLoadCode,
         noPeriodEndedInd: nsps4tSummaryDatum.noCompliancePeriodEndedIndicator,
         noPeriodEndedComment: nsps4tSummaryDatum.noCompliancePeriodEndedComment,

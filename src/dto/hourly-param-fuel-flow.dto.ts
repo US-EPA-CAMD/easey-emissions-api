@@ -3,6 +3,9 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { ParameterCode } from '../entities/parameter-code.entity';
@@ -10,6 +13,7 @@ import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { SampleTypeCode } from '../entities/sample-type-code.entity';
 import { OperatingConditionCode } from '../entities/operating-condition-code.entity';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, FORMULA_ID_REGEX } from '../constants/regex-list';
 
 export class HourlyParamFuelFlowBaseDTO {
   @IsString()
@@ -22,11 +26,14 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(99999999.99999)
   parameterValueForFuel?: number;
 
   @IsOptional()
   @IsString()
-  formulaIdentifier?: string;
+  @Matches(FORMULA_ID_REGEX)
+  formulaId?: string;
 
   @IsOptional()
   @IsString()
@@ -39,6 +46,7 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId?: string;
 
   @IsOptional()
@@ -61,7 +69,7 @@ export class HourlyParamFuelFlowBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  parameterUomCode?: string;
+  parameterUnitsOfMeasureCode?: string;
 }
 
 export class HourlyParamFuelFlowRecordDTO extends HourlyParamFuelFlowBaseDTO {

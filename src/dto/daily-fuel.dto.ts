@@ -3,6 +3,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { FuelCode } from '../entities/fuel-code.entity';
@@ -19,13 +21,19 @@ export class DailyFuelBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999999999.9)
   dailyFuelFeed?: number;
 
   @IsNumber()
+  @Min(0)
+  @Max(99999.9)
   carbonContentUsed: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999999999.9)
   fuelCarbonBurned?: number;
 }
 

@@ -1,9 +1,13 @@
 import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  MaxLength,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { GasLevelCode } from '../entities/gas-level-code.entity';
@@ -13,7 +17,8 @@ import { ImportCodeErrorMessage } from '../utils/validator.const';
 export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsNumber()
-  onLineOffLineIndicator?: number;
+  @IsIn([0, 1])
+  onlineOfflineIndicator?: number;
 
   @IsOptional()
   @IsString()
@@ -30,10 +35,14 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(23)
   zeroInjectionHour?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(59)
   zeroInjectionMinute?: number;
 
   @IsOptional()
@@ -42,22 +51,31 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(23)
   upscaleInjectionHour?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(59)
   upscaleInjectionMinute?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   zeroMeasuredValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   upscaleMeasuredValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
@@ -66,18 +84,26 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999.99)
   zeroCalibrationError?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999.99)
   upscaleCalibrationError?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   zeroReferenceValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   upscaleReferenceValue?: number;
 
   @IsOptional()
@@ -87,10 +113,12 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  @MaxLength(25)
   cylinderIdentifier?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(8)
   vendorIdentifier?: string;
 
   @IsOptional()

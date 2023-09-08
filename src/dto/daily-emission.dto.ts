@@ -5,20 +5,26 @@ import {
   IsNumber,
   IsDateString,
   ValidationArguments,
+  Matches,
+  Min,
+  Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { ParameterCode } from '../entities/parameter-code.entity';
+import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class DailyEmissionBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsString()
@@ -34,22 +40,32 @@ export class DailyEmissionBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   totalDailyEmissions?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   adjustedDailyEmissions?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   sorbentRelatedMassEmissions?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   unadjustedDailyEmissions?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999999999.9)
   totalCarbonBurned?: number;
 }
 

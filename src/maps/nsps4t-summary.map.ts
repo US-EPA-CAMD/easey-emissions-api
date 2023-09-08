@@ -21,7 +21,7 @@ export class Nsps4tSummaryMap extends BaseMap<
       unitId,
       co2EmissionStandardCode: entity.co2EmissionStandardCode,
       modusValue: entity.modusValue,
-      modusUomCode: entity.modusUomCode,
+      modusUnitsOfMeasureCode: entity.modusUomCode,
       electricalLoadCode: entity.electricalLoadCode,
       noCompliancePeriodEndedIndicator: entity.noCompliancePeriodEndedIndicator,
       noCompliancePeriodEndedComment: entity.noCompliancePeriodEndedComment,

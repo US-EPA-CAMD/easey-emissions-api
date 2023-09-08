@@ -6,6 +6,9 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
@@ -16,6 +19,7 @@ import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 import { SodVolumetricCode } from '../entities/sod-volumetri-code.entity';
 import { SodMassCode } from '../entities/sod-mass-code.entity';
+import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
 
 export class HourlyFuelFlowBaseDTO {
   @IsString()
@@ -28,10 +32,14 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber()
   @IsOptional()
+  @Min(0)
+  @Max(9.99)
   fuelUsageTime?: number;
 
   @IsNumber()
   @IsOptional()
+  @Min(0)
+  @Max(9999999999.9)
   volumetricFlowRate?: number;
 
   @IsString()
@@ -54,6 +62,8 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber()
   @IsOptional()
+  @Min(0)
+  @Max(9999999999.9)
   massFlowRate?: number;
 
   @IsString()
@@ -67,6 +77,7 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsString()
   @IsOptional()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId?: string;
 }
 

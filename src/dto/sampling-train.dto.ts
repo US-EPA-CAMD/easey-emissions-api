@@ -3,53 +3,75 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
   ValidationArguments,
 } from 'class-validator';
 import { TestResultCode } from '../entities/test-result-code.entity';
 import { TrainQaStatusCode } from '../entities/train-qa-status-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
 
 export class SamplingTrainBaseDTO {
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   componentId: string;
 
   @IsString()
-  sorbentTrapSn: string;
+  @MinLength(1)
+  @MaxLength(20)
+  sorbentTrapSN: string;
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   mainTrapHg?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   btTrapHg?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   spikeTrapHg?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   spikeReferenceValue?: string;
 
   @IsOptional()
   @IsNumber()
-  totalSampleVolumeDscm?: number;
+  @Min(0)
+  @Max(9999999999.9999)
+  totalSampleVolumeDSCM?: number;
 
   @IsOptional()
   @IsNumber()
-  referenceSfsrRatio?: number;
+  @Min(0)
+  @Max(999.9)
+  referenceSFSRRatio?: number;
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   hgConcentration?: string;
 
   @IsOptional()
   @IsNumber()
+  @Min(-10000)
+  @Max(10000)
   percentBreakthrough?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999.9)
   percentSpikeRecovery?: number;
 
   @IsOptional()
@@ -81,6 +103,8 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsString()
+  @MinLength(0)
+  @MaxLength(1000)
   sampleDamageExplanation?: string;
 }
 

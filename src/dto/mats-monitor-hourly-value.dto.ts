@@ -3,11 +3,15 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { ModcCode } from '../entities/modc-code.entity';
 import { ParameterCode } from '../entities/parameter-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
 
 export class MatsMonitorHourlyValueBaseDTO {
   @IsString()
@@ -20,6 +24,7 @@ export class MatsMonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   unadjustedHourlyValue?: string;
 
   @IsOptional()
@@ -33,14 +38,18 @@ export class MatsMonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   componentId?: string;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999.9)
   percentAvailable?: number;
 }
 

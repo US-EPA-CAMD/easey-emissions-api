@@ -1,7 +1,14 @@
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
@@ -16,14 +23,17 @@ import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-cod
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { Nsps4tEmissionStandardCode } from '../entities/nsps4t-emission-standard-code.entity';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class Nsps4tSummaryBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsOptional()
@@ -37,6 +47,8 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(99999)
   modusValue?: number;
 
   @IsOptional()
@@ -46,7 +58,7 @@ export class Nsps4tSummaryBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  modusUomCode?: string;
+  modusUnitsOfMeasureCode?: string;
 
   @IsOptional()
   @IsString()
@@ -59,10 +71,12 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   noCompliancePeriodEndedIndicator?: number;
 
   @IsOptional()
   @IsString()
+  @MaxLength(3500)
   noCompliancePeriodEndedComment?: string;
 }
 
@@ -78,19 +92,27 @@ export class Nsps4tSummaryRecordDTO extends Nsps4tSummaryBaseDTO {
 export class Nsps4tSummaryImportDTO extends Nsps4tSummaryBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tCompliancePeriodImportDTO)
+  @ArrayMinSize(0)
+  @ArrayMaxSize(3)
   nsps4tCompliancePeriodData: Nsps4tCompliancePeriodImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => Nsps4tAnnualImportDTO)
+  @ArrayMinSize(0)
+  @ArrayMaxSize(1)
   nsps4tFourthQuarterData: Nsps4tAnnualImportDTO[];
 }
 
 export class Nsps4tSummaryDTO extends Nsps4tSummaryRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => Nsps4tCompliancePeriodDTO)
+  @ArrayMinSize(0)
+  @ArrayMaxSize(3)
   nsps4tCompliancePeriodData: Nsps4tCompliancePeriodDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => Nsps4tAnnualDTO)
+  @ArrayMinSize(0)
+  @ArrayMaxSize(1)
   nsps4tFourthQuarterData: Nsps4tAnnualDTO[];
 }

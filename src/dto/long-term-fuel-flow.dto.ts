@@ -3,22 +3,29 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 import { FuelFlowPeriodCode } from '../entities/fuel-flow-period-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class LongTermFuelFlowBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId: string;
 
   @IsOptional()
@@ -31,6 +38,8 @@ export class LongTermFuelFlowBaseDTO {
   fuelFlowPeriodCode?: string;
 
   @IsNumber()
+  @Min(0)
+  @Max(9999999999)
   longTermFuelFlowValue: number;
 
   @IsString()
@@ -39,10 +48,12 @@ export class LongTermFuelFlowBaseDTO {
       return ImportCodeErrorMessage(args.property, args.value);
     },
   })
-  longTermFuelFlowUomCode: string;
+  longTermFuelFlowUnitsOfMeasureCode: string;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   grossCalorificValue?: number;
 
   @IsOptional()
@@ -56,6 +67,8 @@ export class LongTermFuelFlowBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999999.9)
   totalHeatInput?: number;
 }
 

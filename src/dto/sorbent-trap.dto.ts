@@ -5,6 +5,12 @@ import {
   IsNumber,
   IsDateString,
   ValidationArguments,
+  Matches,
+  Min,
+  Max,
+  IsIn,
+  ArrayMinSize,
+  ArrayMaxSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
@@ -12,37 +18,48 @@ import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { ModcCode } from '../entities/modc-code.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { ApsCode } from '../entities/aps-code.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class SorbentTrapBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsDateString()
   beginDate: Date;
 
   @IsNumber()
+  @Min(0)
+  @Max(23)
   beginHour: number;
 
   @IsDateString()
   endDate: Date;
 
   @IsNumber()
+  @Min(0)
+  @Max(23)
   endHour: number;
 
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId: string;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999.9)
   pairedTrapAgreement?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   absoluteDifferenceIndicator?: number;
 
   @IsOptional()
@@ -56,6 +73,7 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsString()
+  @Matches(SCIENTIFIC_NOTATION_REGEX)
   hgSystemConcentration?: string;
 
   @IsOptional()
@@ -69,6 +87,7 @@ export class SorbentTrapBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   rataIndicator?: number;
 }
 
@@ -88,11 +107,15 @@ export class SorbentTrapRecordDTO extends SorbentTrapBaseDTO {
 export class SorbentTrapImportDTO extends SorbentTrapBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => SamplingTrainImportDTO)
+  @ArrayMinSize(2)
+  @ArrayMaxSize(2)
   samplingTrainData: SamplingTrainImportDTO[];
 }
 
 export class SorbentTrapDTO extends SorbentTrapRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => SamplingTrainDTO)
+  @ArrayMinSize(2)
+  @ArrayMaxSize(2)
   samplingTrainData: SamplingTrainDTO[];
 }

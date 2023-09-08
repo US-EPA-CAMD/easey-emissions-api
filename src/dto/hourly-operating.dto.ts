@@ -1,9 +1,13 @@
 import { Type } from 'class-transformer';
 import {
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
@@ -36,28 +40,37 @@ import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
 import { FuelCode } from '../entities/fuel-code.entity';
+import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class HourlyOperatingBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsDateString()
   date: Date;
 
   @IsNumber()
+  @Min(0)
+  @Max(23)
   hour: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9.99)
   operatingTime?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999)
   hourLoad?: number;
 
   @IsOptional()
@@ -71,26 +84,38 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(999999)
   matsHourLoad?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(20)
   loadRange?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(1)
+  @Max(20)
   commonStackLoadRange?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999.9)
   fcFactor?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999.9)  
   fdFactor?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999999.9)
   fwFactor?: number;
 
   @IsOptional()
@@ -104,6 +129,7 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsString()
+  @IsIn(['U', 'D'])
   matsStartupShutdownFlag?: string;
 }
 export class HourlyOperatingRecordDTO extends HourlyOperatingBaseDTO {
