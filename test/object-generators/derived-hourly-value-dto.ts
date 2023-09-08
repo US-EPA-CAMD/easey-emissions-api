@@ -11,7 +11,7 @@ export const genDerivedHourlyValueImportDto = (amount = 1) => {
       adjustedHourlyValue: faker.datatype.number(),
       modcCode: faker.datatype.string(),
       monitoringSystemId: faker.datatype.string(),
-      formulaIdentifier: faker.datatype.string(),
+      formulaId: faker.datatype.string(),
       percentAvailable: faker.datatype.number(),
       operatingConditionCode: faker.datatype.string(),
       segmentNumber: faker.datatype.number(),

@@ -51,7 +51,7 @@ describe('location checks service tests', () => {
   payload.sorbentTrapData = [new SorbentTrapImportDTO()];
   payload.sorbentTrapData[0].unitId = 'u2';
   payload.sorbentTrapData[0].samplingTrainData = [
-    { componentId: '4', sorbentTrapSn: '123' },
+    { componentId: '4', sorbentTrapSN: '123' },
   ];
 
   payload.dailyTestSummaryData = [new DailyTestSummaryImportDTO()];

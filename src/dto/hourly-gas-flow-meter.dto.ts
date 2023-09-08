@@ -1,5 +1,8 @@
-import { IsNumber, IsOptional, IsString, Matches, Max, Min } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Matches, Max, Min, ValidationArguments } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
+import { DbLookup } from '../pipes/db-lookup.pipe';
+import { BeginEndHourFlag } from '../entities/begin-end-hour-flag.entity';
+import { FindOneOptions } from 'typeorm';
 
 export class HourlyGasFlowMeterBaseDTO {
   @IsString()
@@ -8,6 +11,17 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsString()
+  @DbLookup(
+    BeginEndHourFlag,
+    (args: ValidationArguments): FindOneOptions<BeginEndHourFlag> => {
+      return { where: { id: args.value } };
+    },
+    {
+      message: (args: ValidationArguments) => {
+        return `${args.property} has an invalid value of ${args.value}`;
+      },
+    },
+  )
   beginEndHourFlag?: string;
 
   @IsOptional()

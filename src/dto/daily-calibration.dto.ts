@@ -13,6 +13,9 @@ import {
 import { GasLevelCode } from '../entities/gas-level-code.entity';
 import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
 import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ProtocolGasVendor } from '../entities/protocol-gas-vendor.entity';
+import { FindOneOptions } from 'typeorm';
+import { DbLookup } from '../pipes/db-lookup.pipe';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
@@ -119,6 +122,17 @@ export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsString()
   @MaxLength(8)
+  @DbLookup(
+    ProtocolGasVendor,
+    (args: ValidationArguments): FindOneOptions<ProtocolGasVendor> => {
+      return { where: { id: args.value } };
+    },
+    {
+      message: (args: ValidationArguments) => {
+        return `${args.property} has an invalid value of ${args.value}`;
+      },
+    },
+  )
   vendorIdentifier?: string;
 
   @IsOptional()
