@@ -15,7 +15,7 @@ export const genDailyCalibration = <RepoType>(
     calibrations.push(({
       id: faker.datatype.string(),
       dailyTestSummaryId: faker.datatype.string(45),
-      onLineOfflineIndicator: faker.datatype.string(45),
+      onlineOfflineIndicator: faker.datatype.string(45),
       calcOnlineOfflineIndicator: optionalValue(faker.datatype.float()),
       upscaleGasCode: optionalValue(faker.datatype.string(7)),
       zeroInjectionDate: optionalValue(faker.datatype.datetime()),

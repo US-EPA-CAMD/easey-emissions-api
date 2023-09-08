@@ -28,7 +28,7 @@ export class HourlyFuelFlowWorkspaceService {
 
     const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
 
-    if (!Array.isArray(hourlyFuelFlow)) {
+    if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
     }
 
@@ -36,15 +36,20 @@ export class HourlyFuelFlowWorkspaceService {
 
     const mappedIds = mapped.map(el => el.id);
 
-    const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlow.export(
-      mappedIds,
-    );
+    if (mappedIds.length > 0) {
+      const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlow.export(
+        mappedIds,
+      );
 
-    this.organizeData(mapped, hourlyParamFuelFlowData);
+      this.organizeData(mapped, hourlyParamFuelFlowData); 
+    }
     return mapped;
   }
 
-  private organizeData(parentArray: HourlyFuelFlowDTO[], childArray: HourlyParamFuelFlowDTO[]) {
+  private organizeData(
+    parentArray: HourlyFuelFlowDTO[],
+    childArray: HourlyParamFuelFlowDTO[],
+  ) {
     const parentMap = new Map();
 
     parentArray.forEach(parentObj => {
