@@ -10,6 +10,7 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
+import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
 export class HourlyFuelFlowWorkspaceService {
@@ -27,26 +28,42 @@ export class HourlyFuelFlowWorkspaceService {
 
     const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
 
-    if (!Array.isArray(hourlyFuelFlow)) {
+    if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
     }
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    const promises = [];
-    for (const fuelFlow of mapped) {
-      promises.push(
-        this.hourlyParameterFuelFlow.export(fuelFlow.id).then(data => {
-          if (!Array.isArray(fuelFlow.hourlyParameterFuelFlowData)) {
-            fuelFlow.hourlyParameterFuelFlowData = [];
-          }
-          fuelFlow.hourlyParameterFuelFlowData.push(...data);
-        }),
-      );
-    }
+    const mappedIds = mapped.map(el => el.id);
 
-    await Promise.all(promises);
+    if (mappedIds.length > 0) {
+      const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlow.export(
+        mappedIds,
+      );
+
+      this.organizeData(mapped, hourlyParamFuelFlowData); 
+    }
     return mapped;
+  }
+
+  private organizeData(
+    parentArray: HourlyFuelFlowDTO[],
+    childArray: HourlyParamFuelFlowDTO[],
+  ) {
+    const parentMap = new Map();
+
+    parentArray.forEach(parentObj => {
+      parentMap.set(parentObj.id, parentObj);
+      parentObj.hourlyParameterFuelFlowData = [];
+    });
+
+    childArray.forEach(childObj => {
+      const parentId = childObj.hourlyFuelFlowId;
+      if (parentMap.has(parentId)) {
+        const parentObj = parentMap.get(parentId);
+        parentObj.hourlyParameterFuelFlowData.push(childObj);
+      }
+    });
   }
 
   async buildObjectList(

@@ -28,7 +28,7 @@ export class LongTermFuelFlowMap extends BaseMap<
       calcTotalHeatInput: entity.calcTotalHeatInput,
       fuelFlowPeriodCode: entity.fuelFlowPeriodCode,
       longTermFuelFlowValue: entity.longTermFuelFlowValue,
-      longTermFuelFlowUomCode: entity.longTermFuelFlowUomCode,
+      longTermFuelFlowUnitsOfMeasureCode: entity.longTermFuelFlowUomCode,
       grossCalorificValue: entity.grossCalorificValue,
       gcvUnitsOfMeasureCode: entity.gcvUnitsOfMeasureCode,
       totalHeatInput: entity.totalHeatInput,

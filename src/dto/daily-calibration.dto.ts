@@ -13,7 +13,7 @@ import { ImportCodeErrorMessage } from '../utils/validator.const';
 export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsNumber()
-  onLineOffLineIndicator?: number;
+  onlineOfflineIndicator?: number;
 
   @IsOptional()
   @IsString()

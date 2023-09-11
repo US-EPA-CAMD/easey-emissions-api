@@ -45,7 +45,7 @@ export class DerivedHourlyValueWorkspaceService {
           identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] ||
           null,
         monFormId:
-          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+          identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
         parameterCode: dataChunk.parameterCode,
         unadjustedHrlyValue: dataChunk.unadjustedHourlyValue,
         adjustedHourlyValue: dataChunk.adjustedHourlyValue,

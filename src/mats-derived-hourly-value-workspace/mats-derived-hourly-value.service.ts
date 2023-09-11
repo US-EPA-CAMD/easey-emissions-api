@@ -42,7 +42,7 @@ export class MatsDerivedHourlyValueWorkspaceService {
         unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
         modcCode: dataChunk.modcCode,
         monFormId:
-          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+          identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
         hourId: hourId,
         monLod: monitorLocationId,
         rptPeriod: reportingPeriodId,
