@@ -29,8 +29,7 @@ describe('NSPS4TCompliancePeriodMap', () => {
           averageCO2EmissionRate: param.averageCo2EmissionRate,
           co2EmissionRateUnitsOfMeasureCode: param.co2EmissionRateUomCode,
           percentValidOpHours: param.percentValidOpHours,
-          violationOfCO2StandardIndicator:
-            param.violationOfCo2StandardIndicator,
+          violationOfCO2StandardIndicator: param.violationOfCo2StandardIndicator,
           violationOfCO2StandardComment: param.violationOfCo2StandardComment,
         };
       }),

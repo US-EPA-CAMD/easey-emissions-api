@@ -1,66 +1,58 @@
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsDateString,
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   WeeklySystemIntegrityDTO,
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { TestTypeCode } from '../entities/test-type-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { TestResultCode } from '../entities/test-result-code.entity';
-import { SpanScaleCode } from '../entities/span-scale-code.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsDateString()
   date: Date;
 
   @IsNumber()
+  @Min(0)
+  @Max(23)
   hour: number;
 
   @IsNumber()
+  @Min(0)
+  @Max(59)
   minute?: number;
 
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   componentId?: string;
 
   @IsString()
-  @IsValidCode(TestTypeCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
   testTypeCode: string;
 
   @IsString()
-  @IsValidCode(TestResultCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
   testResultCode: string;
 
   @IsString()
   @IsOptional()
-  @IsValidCode(SpanScaleCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
   spanScaleCode: string;
 }
 
@@ -79,11 +71,15 @@ export class WeeklyTestSummaryRecordDTO extends WeeklyTestSummaryBaseDTO {
 export class WeeklyTestSummaryImportDTO extends WeeklyTestSummaryBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => WeeklySystemIntegrityImportDTO)
+  @ArrayMaxSize(1)
+  @ArrayMinSize(1)
   weeklySystemIntegrityData: WeeklySystemIntegrityImportDTO[];
 }
 
 export class WeeklyTestSummaryDTO extends WeeklyTestSummaryRecordDTO {
   @ValidateNested({ each: true })
   @Type(() => WeeklySystemIntegrityDTO)
+  @ArrayMaxSize(1)
+  @ArrayMinSize(1)
   weeklySystemIntegrityData: WeeklySystemIntegrityDTO[];
 }

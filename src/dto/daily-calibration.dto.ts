@@ -1,27 +1,27 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
+  Max,
+  MaxLength,
+  Min,
 } from 'class-validator';
-import { GasLevelCode } from '../entities/gas-level-code.entity';
-import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   onlineOfflineIndicator?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(GasLevelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(GasLevelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   upscaleGasCode?: string;
 
   @IsOptional()
@@ -30,10 +30,14 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(23)
   zeroInjectionHour?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(59)
   zeroInjectionMinute?: number;
 
   @IsOptional()
@@ -42,42 +46,60 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(23)
   upscaleInjectionHour?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(59)
   upscaleInjectionMinute?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   zeroMeasuredValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   upscaleMeasuredValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   upscaleAPSIndicator?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999.99)
   zeroCalibrationError?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(9999.99)
   upscaleCalibrationError?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   zeroReferenceValue?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10000000000)
   upscaleReferenceValue?: number;
 
   @IsOptional()
@@ -87,10 +109,23 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  @MaxLength(25)
   cylinderIdentifier?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(8)
+  // @DbLookup(
+  //   ProtocolGasVendor,
+  //   (args: ValidationArguments): FindOneOptions<ProtocolGasVendor> => {
+  //     return { where: { id: args.value } };
+  //   },
+  //   {
+  //     message: (args: ValidationArguments) => {
+  //       return `${args.property} has an invalid value of ${args.value}`;
+  //     },
+  //   },
+  // )
   vendorIdentifier?: string;
 
   @IsOptional()
@@ -99,11 +134,11 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
-  @IsValidCode(InjectionProtocolCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(InjectionProtocolCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   injectionProtocolCode?: string;
 }
 
