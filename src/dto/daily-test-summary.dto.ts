@@ -4,69 +4,75 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  Min,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 import {
   DailyCalibrationDTO,
   DailyCalibrationImportDTO,
 } from './daily-calibration.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { TestTypeCode } from '../entities/test-type-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { TestResultCode } from '../entities/test-result-code.entity';
-import { SpanScaleCode } from '../entities/span-scale-code.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
 
 export class DailyTestSummaryBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsDateString()
   date: Date;
 
   @IsNumber()
+  @Min(0)
+  @Max(23)
   hour: number;
 
   @IsNumber()
   @IsOptional()
+  @Min(0)
+  @Max(59)
   minute: number;
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   componentId?: string;
 
   @IsString()
-  @IsValidCode(TestTypeCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(TestTypeCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   testTypeCode: string;
 
   @IsString()
-  @IsValidCode(TestResultCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(TestResultCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   testResultCode: string;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(SpanScaleCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(SpanScaleCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   spanScaleCode?: string;
 }
 
