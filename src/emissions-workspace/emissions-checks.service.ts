@@ -43,6 +43,8 @@ export class EmissionsChecksService {
 
     if (
       doesNotHaveData(payload.dailyEmissionData) &&
+      doesNotHaveData(payload.weeklyTestSummaryData) &&
+      doesNotHaveData(payload.summaryValueData) &&
       doesNotHaveData(payload.dailyTestSummaryData) &&
       doesNotHaveData(payload.hourlyOperatingData) &&
       doesNotHaveData(payload.longTermFuelFlowData) &&

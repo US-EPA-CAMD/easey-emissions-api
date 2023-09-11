@@ -5,6 +5,9 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  MaxLength,
+  Min,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
@@ -50,11 +53,16 @@ export class EmissionsBaseDTO {
   @IsNumber()
   orisCode: number;
   @IsNumber()
+  @Min(2000)
+  @Max(2099)
   year: number;
   @IsNumber()
+  @Min(1)
+  @Max(4)
   quarter: number;
   @IsOptional()
   @IsString()
+  @MaxLength(3500)
   submissionComment?: string;
 
   constructor(values: Object={}) {
