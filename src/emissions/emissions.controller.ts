@@ -2,6 +2,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  NotFoundException,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -57,8 +58,12 @@ export class EmissionsController {
     }
   })
   @UseInterceptors(ClassSerializerInterceptor)
-  export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return this.service.export(params, params.reportedValuesOnly);
+  async export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
+    const data = await this.service.export(params, params.reportedValuesOnly);
+    if(Object.keys(data).length === 0){
+      throw new NotFoundException("Export unsuccessful there is no data for this reporting period");
+    }
+    return data;
   }
 
   @Get('submission-progress')
