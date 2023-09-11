@@ -6,7 +6,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { FORMULA_ID_REGEX } from '../constants/regex-list';
+import { COMPONENT_MONITOR_SYS_REGEX, FORMULA_ID_REGEX } from '../constants/regex-list';
 
 export class DerivedHourlyValueBaseDTO {
   @IsString()
@@ -40,6 +40,7 @@ export class DerivedHourlyValueBaseDTO {
 
   @IsString()
   @IsOptional()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId: string;
 
   @IsString()

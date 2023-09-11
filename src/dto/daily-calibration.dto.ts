@@ -75,6 +75,7 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
+  @IsIn([0, 1])
   upscaleAPSIndicator?: number;
 
   @IsOptional()
