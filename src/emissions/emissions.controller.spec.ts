@@ -71,6 +71,7 @@ import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-f
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import {DailyBackstopService} from "../daily-backstop/daily-backstop.service";
+import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -166,9 +167,10 @@ describe('-- Emissions Controller --', () => {
   describe('* export', () => {
     it('should export a record', async () => {
       const params = new EmissionsParamsDTO();
-      const expectedResult = new EmissionsDTO();
-      jest.spyOn(service, 'export').mockResolvedValue(expectedResult);
-      expect(await controller.export(params)).toBe(expectedResult);
+      const mockedValues = genEmissionsRecordDto(1);
+      console.log(mockedValues[0]);
+      jest.spyOn(service, 'export').mockResolvedValue(mockedValues[0]);
+      expect(await controller.export(params)).toBe(mockedValues[0]);
     });
   });
 });
