@@ -289,6 +289,8 @@ export class EmissionsWorkspaceService {
           monitorPlanId,
           reportingPeriodId,
           evalStatusCd: 'EVAL',
+          needsEvalFlag: 'Y',
+          updatedStatusFlg: 'Y',
           lastUpdated: new Date(),
         }),
       );
