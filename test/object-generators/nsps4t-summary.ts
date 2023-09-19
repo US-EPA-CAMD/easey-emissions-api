@@ -27,7 +27,7 @@ export const genNsps4tSummary = <RepoType>(
       id: faker.datatype.string(),
       co2EmissionStandardCode: optionalValue(faker.datatype.string()),
       modusValue: optionalValue(faker.datatype.number()),
-      modusUomCode: optionalValue(faker.datatype.string()),
+      modusUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
       electricalLoadCode: optionalValue(faker.datatype.string()),
       noCompliancePeriodEndedIndicator: optionalValue(faker.datatype.number()),
       noCompliancePeriodEndedComment: faker.datatype.string(),

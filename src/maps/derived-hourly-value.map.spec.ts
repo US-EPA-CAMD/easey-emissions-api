@@ -26,7 +26,7 @@ describe('DerivedHourlyValueMap', () => {
         unadjustedHourlyValue: derivedHourlyValue.unadjustedHrlyValue,
         adjustedHourlyValue: derivedHourlyValue.adjustedHrlyValue,
         modcCode: derivedHourlyValue.modcCode,
-        formulaIdentifier:
+        formulaId:
           derivedHourlyValue?.monitorFormula?.formulaId ?? null,
         monitoringFormulaRecordId: derivedHourlyValue.monFormId,
         percentAvailable: derivedHourlyValue.pctAvailable,

@@ -43,6 +43,8 @@ export class EmissionsChecksService {
 
     if (
       doesNotHaveData(payload.dailyEmissionData) &&
+      doesNotHaveData(payload.weeklyTestSummaryData) &&
+      doesNotHaveData(payload.summaryValueData) &&
       doesNotHaveData(payload.dailyTestSummaryData) &&
       doesNotHaveData(payload.hourlyOperatingData) &&
       doesNotHaveData(payload.longTermFuelFlowData) &&
@@ -108,35 +110,35 @@ export class EmissionsChecksService {
       }
 
       hourlyOp?.derivedHourlyValueData?.forEach(derived => {
-        if (!isUndefinedOrNull(derived.formulaIdentifier)) {
+        if (!isUndefinedOrNull(derived.formulaId)) {
           identifierMap.set(
             monitoringLocationId,
             identifierMap
               .get(monitoringLocationId)
-              .add(derived.formulaIdentifier),
+              .add(derived.formulaId),
           );
         }
       });
 
       hourlyOp?.matsDerivedHourlyValueData?.forEach(matsDerived => {
-        if (!isUndefinedOrNull(matsDerived.formulaIdentifier)) {
+        if (!isUndefinedOrNull(matsDerived.formulaId)) {
           identifierMap.set(
             monitoringLocationId,
             identifierMap
               .get(monitoringLocationId)
-              .add(matsDerived.formulaIdentifier),
+              .add(matsDerived.formulaId),
           );
         }
       });
 
       hourlyOp?.hourlyFuelFlowData?.forEach(fuelFlow => {
         fuelFlow?.hourlyParameterFuelFlowData?.forEach(paramFuelFlow => {
-          if (!isUndefinedOrNull(paramFuelFlow.formulaIdentifier)) {
+          if (!isUndefinedOrNull(paramFuelFlow.formulaId)) {
             identifierMap.set(
               monitoringLocationId,
               identifierMap
                 .get(monitoringLocationId)
-                .add(paramFuelFlow.formulaIdentifier),
+                .add(paramFuelFlow.formulaId),
             );
           }
         });

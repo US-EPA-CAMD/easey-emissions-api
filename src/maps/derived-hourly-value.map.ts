@@ -25,7 +25,7 @@ export class DerivedHourlyValueMap extends BaseMap<
       unadjustedHourlyValue: entity.unadjustedHrlyValue,
       adjustedHourlyValue: entity.adjustedHrlyValue,
       modcCode: entity.modcCode,
-      formulaIdentifier: formulaIdentifier,
+      formulaId: formulaIdentifier,
       monitoringFormulaRecordId: entity.monFormId,
       percentAvailable: entity.pctAvailable,
       operatingConditionCode: entity.operatingConditionCode,

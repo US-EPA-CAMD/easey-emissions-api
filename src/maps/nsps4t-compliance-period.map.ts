@@ -22,11 +22,11 @@ export class Nsps4tCompliancePeriodMap extends BaseMap<
       beginMonth: entity.beginMonth,
       endYear: entity.endYear,
       endMonth: entity.endMonth,
-      averageCo2EmissionRate: entity.averageCo2EmissionRate,
-      co2EmissionRateUomCode: entity.co2EmissionRateUomCode,
+      averageCO2EmissionRate: entity.averageCo2EmissionRate,
+      co2EmissionRateUnitsOfMeasureCode: entity.co2EmissionRateUomCode,
       percentValidOpHours: entity.percentValidOpHours,
-      violationOfCo2StandardIndicator: entity.violationOfCo2StandardIndicator,
-      violationOfCo2StandardComment: entity.violationOfCo2StandardComment,
+      violationOfCO2StandardIndicator: entity.violationOfCo2StandardIndicator,
+      violationOfCO2StandardComment: entity.violationOfCo2StandardComment,
     };
   }
 }

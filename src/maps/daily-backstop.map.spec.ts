@@ -26,7 +26,7 @@ describe('Daily Backstop Map Test', () => {
         dailyNOxEmissions: mock.dailyNoxEmissions,
         dailyHeatInput: mock.dailyHeatInput,
         dailyAverageNOxRate: mock.dailyAverageNoxRate,
-        dailyNOxExceedence: mock.dailyNoxEmissions,
+        dailyNOxExceedence: mock.dailyNoxExceedence,
         cumulativeOSNOxExceedence: mock.cumulativeOsNoxExceedence,
   });
     };
