@@ -49,6 +49,7 @@ import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-work
 import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.module';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
+import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-
       Nsps4tCompliancePeriodWorkspaceRepository,
       EmissionsReviewSubmitRepository,
       LongTermFuelFlowWorkspaceRepository,
+      EmissionsReviewSubmitGlobalRepository,
     ]),
     Logger,
     HttpModule,
@@ -103,5 +105,6 @@ import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-
     EmissionsReviewSubmitMap,
     LongTermFuelFlowWorkspaceService,
   ],
+  exports: [ReviewSubmitService],
 })
 export class EmissionsWorkspaceModule {}

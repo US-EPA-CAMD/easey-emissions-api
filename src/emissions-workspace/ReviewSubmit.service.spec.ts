@@ -5,6 +5,7 @@ import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 
 const mockRepo = () => ({
   find: jest.fn().mockImplementation(args => {
@@ -34,6 +35,10 @@ describe('ReviewSubmitService', () => {
         { provide: EmissionsReviewSubmitMap, useFactory: mockMap },
         {
           provide: EmissionsReviewSubmitRepository,
+          useFactory: mockRepo,
+        },
+        {
+          provide: EmissionsReviewSubmitGlobalRepository,
           useFactory: mockRepo,
         },
         EmissionsReviewSubmitMap,
