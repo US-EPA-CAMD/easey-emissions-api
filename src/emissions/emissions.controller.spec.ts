@@ -70,8 +70,10 @@ import { ReviewSubmitService } from '../emissions-workspace/ReviewSubmit.service
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
-import {DailyBackstopService} from "../daily-backstop/daily-backstop.service";
+import { DailyBackstopService } from '../daily-backstop/daily-backstop.service';
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
+
+jest.mock('../emissions-workspace/ReviewSubmit.service');
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsController;
@@ -149,10 +151,11 @@ describe('-- Emissions Controller --', () => {
         LongTermFuelFlowService,
         LongTermFuelFlowRepository,
         LongTermFuelFlowMap,
+        ReviewSubmitService,
         {
           provide: DailyBackstopService,
-          useValue: jest.mock("../daily-backstop/daily-backstop.service")
-        }
+          useValue: jest.mock('../daily-backstop/daily-backstop.service'),
+        },
       ],
     }).compile();
 
