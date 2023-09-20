@@ -61,7 +61,7 @@ export class DailyCalibrationWorkspaceService {
       objectList.push({
         id: randomUUID(),
         dailyTestSumId: dailyTestSumId,
-        onlineOfflineInd: dataChunk.onLineOffLineIndicator,
+        onlineOfflineInd: dataChunk.onlineOfflineIndicator,
         upscaleGasLevelCode: dataChunk.upscaleGasCode,
         zeroInjectionDate: dataChunk.zeroInjectionDate,
         zeroInjectionHour: dataChunk.zeroInjectionHour,

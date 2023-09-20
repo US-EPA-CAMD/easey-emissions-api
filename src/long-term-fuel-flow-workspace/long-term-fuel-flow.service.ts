@@ -91,7 +91,7 @@ export class LongTermFuelFlowWorkspaceService {
           ] || null,
         fuelFlowPeriodCd: longTermFuelFlowDatum.fuelFlowPeriodCode,
         longTermFuelFlowValue: longTermFuelFlowDatum.longTermFuelFlowValue,
-        ltffUomCd: longTermFuelFlowDatum.longTermFuelFlowUomCode,
+        ltffUomCd: longTermFuelFlowDatum.longTermFuelFlowUnitsOfMeasureCode,
         grossCalorificValue: longTermFuelFlowDatum.grossCalorificValue,
         gcvUomCd: longTermFuelFlowDatum.gcvUnitsOfMeasureCode,
         totalHeatInput: longTermFuelFlowDatum.totalHeatInput,

@@ -17,7 +17,7 @@ export class DailyCalibrationMap extends BaseMap<
       id: entity.id,
       dailyTestSumId: entity.dailyTestSummaryId,
       reportingPeriodId: entity.reportingPeriodId,
-      onLineOffLineIndicator: entity.onLineOffLineIndicator,
+      onlineOfflineIndicator: entity.onLineOffLineIndicator,
       calcOnlineOfflineIndicator: entity.calcOnlineOfflineIndicator,
       upscaleGasCode: entity.upscaleGasCode,
       zeroInjectionDate: entity.zeroInjectionDate,

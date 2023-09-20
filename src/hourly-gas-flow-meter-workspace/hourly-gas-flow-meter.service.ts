@@ -9,7 +9,6 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class HourlyGasFlowMeterWorkspaceService {
@@ -44,10 +43,10 @@ export class HourlyGasFlowMeterWorkspaceService {
         monitorLocationId,
         reportingPeriodId,
         beginEndHourFlag: dataChunk.beginEndHourFlag,
-        hourlyGfmReading: dataChunk.hourlyGfmReading,
-        avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
-        samplingRateUom: dataChunk.samplingRateUom,
-        hourlySfsrRatio: dataChunk.hourlySfsrRatio,
+        hourlyGfmReading: dataChunk.hourlyGFMReading,
+        avgHourlySamplingRate: dataChunk.averageHourlySamplingRate,
+        samplingRateUom: dataChunk.samplingRateUnitsOfMeasureCode,
+        hourlySfsrRatio: dataChunk.hourlySFSRRatio,
         addDate: currentTime,
         updateDate: currentTime,
         userId: identifiers?.userId,

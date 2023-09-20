@@ -8,13 +8,13 @@ export const genSamplingTrainImportDto = (amount = 1) => {
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
       componentId: faker.datatype.string(),
-      sorbentTrapSn: faker.datatype.string(),
+      sorbentTrapSN: faker.datatype.string(),
       mainTrapHg: optionalValue(faker.datatype.string()),
       btTrapHg: optionalValue(faker.datatype.string()),
       spikeTrapHg: optionalValue(faker.datatype.string()),
       spikeReferenceValue: optionalValue(faker.datatype.string()),
-      totalSampleVolumeDscm: optionalValue(faker.datatype.number()),
-      referenceSfsrRatio: optionalValue(faker.datatype.number()),
+      totalSampleVolumeDSCM: optionalValue(faker.datatype.number()),
+      referenceSFSRRatio: optionalValue(faker.datatype.number()),
       hgConcentration: optionalValue(faker.datatype.string()),
       percentBreakthrough: optionalValue(faker.datatype.number()),
       percentSpikeRecovery: optionalValue(faker.datatype.number()),
