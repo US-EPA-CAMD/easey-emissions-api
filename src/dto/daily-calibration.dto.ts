@@ -58,7 +58,7 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-10000000000)
   @Max(10000000000)
   zeroMeasuredValue?: number;
 
