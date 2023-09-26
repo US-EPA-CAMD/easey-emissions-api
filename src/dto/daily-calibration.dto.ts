@@ -58,13 +58,13 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(-10000000000)
+  @Min(-9999999999.999)
   @Max(10000000000)
   zeroMeasuredValue?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-9999999999.999)
   @Max(10000000000)
   upscaleMeasuredValue?: number;
 

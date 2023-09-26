@@ -26,13 +26,13 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-9999999999.99)
   @Max(9999999999.99)
   hourlyGFMReading?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-9999999999.99)
   @Max(9999999999.99)
   averageHourlySamplingRate?: number;
 
