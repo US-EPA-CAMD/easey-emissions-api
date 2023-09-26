@@ -291,7 +291,6 @@ export class EmissionsWorkspaceService {
           reportingPeriodId,
           evalStatusCd: 'EVAL',
           needsEvalFlag: 'Y',
-          updatedStatusFlg: 'Y',
           submissionAvailabilityCd: 'GRANTED',
           lastUpdated: new Date(),
         }),
