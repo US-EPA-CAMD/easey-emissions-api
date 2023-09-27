@@ -79,7 +79,7 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-999999)
   @Max(999999)
   matsHourLoad?: number;
 
