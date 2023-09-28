@@ -15,7 +15,7 @@ export class WeeklySystemIntegrityBaseDTO {
   referenceValue?: number;
 
   @IsNumber()
-  @Min(0)
+  @Min(-9999999999.999)
   @Max(9999999999.999)
   measuredValue?: number;
 

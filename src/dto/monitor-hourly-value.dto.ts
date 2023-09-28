@@ -19,7 +19,7 @@ export class MonitorHourlyValueBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-9999999999.9999)
   @Max(9999999999.9999)
   unadjustedHourlyValue?: number;
 

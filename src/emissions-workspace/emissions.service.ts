@@ -27,12 +27,11 @@ import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-worksp
 import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
-import { DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
+import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
 import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
-
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -67,8 +66,8 @@ export class EmissionsWorkspaceService {
     private readonly nsps4tSummaryWorkspaceService: Nsps4tSummaryWorkspaceService,
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
-    private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService
-  ) { }
+    private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService,
+  ) {}
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -114,7 +113,9 @@ export class EmissionsWorkspaceService {
       promises.push(
         this.longTermFuelFlowWorkspaceService.export(locationIds, params),
       );
-      promises.push(this.dailyBackstopWorkspaceService.export(locationIds, params));
+      promises.push(
+        this.dailyBackstopWorkspaceService.export(locationIds, params),
+      );
 
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
@@ -124,7 +125,8 @@ export class EmissionsWorkspaceService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData =
+        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
@@ -269,7 +271,6 @@ export class EmissionsWorkspaceService {
         identifiers,
         currentTime,
       ),
-
     ];
 
     const importResults = await Promise.allSettled(importPromises);
@@ -290,8 +291,7 @@ export class EmissionsWorkspaceService {
           reportingPeriodId,
           evalStatusCd: 'EVAL',
           needsEvalFlag: 'Y',
-          updatedStatusFlg: 'Y',
-          submissionAvailabilityCd: 'REQUIRE',
+          submissionAvailabilityCd: 'GRANTED',
           lastUpdated: new Date(),
         }),
       );
