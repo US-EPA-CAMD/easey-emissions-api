@@ -472,7 +472,7 @@ export class EmissionsWorkspaceService {
       true,
     );
     const formulaIdentifiers = objectValuesByKey<string>(
-      'formulaIdentifier',
+      'formulaId',
       emissionsImport,
       true,
     );
