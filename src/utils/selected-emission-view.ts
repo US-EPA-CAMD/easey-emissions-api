@@ -1,28 +1,20 @@
+import { Request } from 'express';
 import { getManager } from 'typeorm';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { Request } from 'express';
+
 export async function getSelectedView(
   viewCode: string,
   schema: string,
   req: Request,
   params: EmissionsViewParamsDTO,
+  rptPeriods: any[],
 ) {
   const mgr = getManager();
   const groupCode = 'EMVIEW';
   const unitIds = params.unitIds ?? [{}];
   const monitorPlanId = params.monitorPlanId;
-  const reportingPeriods = params.reportingPeriod;
   const stackPipeIds = params.stackPipeIds ?? [{}];
   const viewCodeUpperCase = viewCode.toUpperCase();
-
-  const rptPeriod = await mgr
-    .createQueryBuilder()
-    .select('rp.id AS id')
-    .from('camdecmpsmd.reporting_period', 'rp')
-    .where('rp.periodAbbreviation IN (:...reportingPeriods)', {
-      reportingPeriods,
-    })
-    .getRawMany();
 
   const monLocs = await mgr
     .createQueryBuilder()
@@ -32,7 +24,7 @@ export async function getSelectedView(
     .leftJoin('ml.unit', 'u')
     .leftJoin('ml.stackPipe', 'sp')
     .where('mp.id = :monitorPlanId', { monitorPlanId })
-    .andWhere('u.name IN (:...unitIds) OR sp.name IN (:...stackPipeIds)', {
+    .andWhere('u.name = ANY(:unitIds) OR sp.name = ANY(:stackPipeIds)', {
       unitIds,
       stackPipeIds,
     })
@@ -54,12 +46,11 @@ export async function getSelectedView(
   let columnList = columns.map(i => `${i.columnname} AS "${i.columnalias}"`);
 
   const viewData = await (
-    await mgr.query(
-      `
-    SELECT ${columnList.join(',')}
-    FROM ${schema}.emission_view_${viewCode.toLowerCase()}
-    WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2) AND mon_plan_id = $3;`,
-      [rptPeriod.map(i => i.id), monLocs.map(i => i.id), monitorPlanId],
+    await mgr.query(`
+      SELECT ${columnList.join(',')}
+      FROM ${schema}.emission_view_${viewCode.toLowerCase()}
+      WHERE rpt_period_id = ANY($1) AND mon_loc_id = ANY($2) AND mon_plan_id = $3;`,
+      [rptPeriods.map(i => i.id), monLocs.map(i => i.id), monitorPlanId],
     )
   ).map(item => {
     const props = Object.entries(item)

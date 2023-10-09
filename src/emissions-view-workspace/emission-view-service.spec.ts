@@ -9,11 +9,19 @@ describe('EmissionsViewService', () => {
   let req: any;
   let params = new EmissionsViewParamsDTO();
 
+  const mockRepository = {
+    find: jest.fn(),
+    query: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmissionsViewWorkspaceService,
-        EmissionsViewWorkspaceRepository,
+        {
+          provide: EmissionsViewWorkspaceRepository,
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
@@ -27,7 +35,7 @@ describe('EmissionsViewService', () => {
   it('should return selected view data', async () => {
     const mockSelectedView = jest
       .spyOn(selectedEmissionView, 'getSelectedView')
-      .mockReturnValueOnce(null);
+      .mockResolvedValue(null);
     const result = await service.getView('dailyCal', req, params);
     expect(result).toEqual(null);
     expect(mockSelectedView).toHaveBeenCalled();

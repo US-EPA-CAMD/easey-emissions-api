@@ -29,6 +29,32 @@ export class EmissionsViewService {
     req: Request,
     params: EmissionsViewParamsDTO,
   ) {
-    return getSelectedView(viewCode, 'camdecmps', req, params);
+    const rptPeriods = await this.repository.query(`
+      SELECT rpt_period_id as id
+      FROM camdecmpsmd.reporting_period
+      WHERE period_abbreviation = ANY($1);`
+      , [params.reportingPeriod]
+    );
+
+    const counts = await getSelectedView('COUNTS', 'camdecmps', req, params, rptPeriods);
+
+    const refreshAndRetrieve = async (rp: { id: number }) => {
+      let rpCounts = counts.filter(c => c.rptPeriodId === Number(rp.id));
+      if (rpCounts && rpCounts.length === 0) {
+        await this.repository.query(`
+          CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`
+          , [params.monitorPlanId, rp.id]
+        );
+      }
+    }
+
+    const promises = [];
+    rptPeriods.forEach(async (rp: { id: number }) => {
+      promises.push(refreshAndRetrieve(rp));
+    });
+
+    await Promise.all(promises);
+    
+    return getSelectedView(viewCode, 'camdecmps', req, params, rptPeriods);
   }
 }

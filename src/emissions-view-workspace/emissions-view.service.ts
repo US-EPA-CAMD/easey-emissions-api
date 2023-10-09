@@ -29,6 +29,12 @@ export class EmissionsViewWorkspaceService {
     req: Request,
     params: EmissionsViewParamsDTO,
   ) {
-    return getSelectedView(viewCode, 'camdecmpswks', req, params);
+    const rptPeriods = await this.repository.query(`
+      SELECT rpt_period_id as id
+      FROM camdecmpsmd.reporting_period
+      WHERE period_abbreviation = ANY($1);`
+      , [params.reportingPeriod]
+    );
+    return getSelectedView(viewCode, 'camdecmpswks', req, params, rptPeriods);
   }
 }
