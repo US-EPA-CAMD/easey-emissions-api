@@ -8,6 +8,7 @@ import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 
 const mockRepository = {
   find: jest.fn(),
+  query: jest.fn(),
 };
 
 describe('EmissionsViewService', () => {
@@ -50,7 +51,9 @@ describe('EmissionsViewService', () => {
   it('should return selected view data', async () => {
     const mockSelectedView = jest
       .spyOn(selectedEmissionView, 'getSelectedView')
-      .mockReturnValueOnce(null);
+      .mockResolvedValue(null);
+    repository.query.mockResolvedValue([]);
+
     const result = await service.getView('dailyCal', req, params);
     expect(result).toEqual(null);
     expect(mockSelectedView).toHaveBeenCalled();
