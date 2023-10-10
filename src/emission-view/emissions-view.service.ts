@@ -38,6 +38,9 @@ export class EmissionsViewService {
 
     const counts = await getSelectedView('COUNTS', 'camdecmps', req, params, rptPeriods);
 
+    if (viewCode === 'COUNTS')
+      return counts;
+
     const refreshAndRetrieve = async (rp: { id: number }) => {
       let rpCounts = counts.filter(c => c.rptPeriodId === Number(rp.id));
       if (rpCounts && rpCounts.length === 0) {
