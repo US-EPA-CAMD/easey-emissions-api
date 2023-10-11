@@ -42,7 +42,10 @@ export class EmissionsViewService {
       return counts;
 
     const refreshAndRetrieve = async (rp: { id: number }) => {
-      let rpCounts = counts.filter(c => c.rptPeriodId === Number(rp.id));
+      let rpCounts = counts.filter(c => {
+        return c.rptPeriodId === Number(rp.id) && c.dataSetCode == viewCode;
+      });
+
       if (rpCounts && rpCounts.length === 0) {
         await this.repository.query(`
           CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`
