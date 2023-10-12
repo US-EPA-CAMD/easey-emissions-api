@@ -39,17 +39,17 @@ export class HourlyGasFlowMeterWorkspaceService {
       objectList.push({
         id: randomUUID(),
         hourId,
-        componentId: identifiers?.components?.[dataChunk.componentId],
         monitorLocationId,
         reportingPeriodId,
+        componentId: identifiers?.components?.[dataChunk.componentId],
         beginEndHourFlag: dataChunk.beginEndHourFlag,
         hourlyGfmReading: dataChunk.hourlyGFMReading,
         avgHourlySamplingRate: dataChunk.averageHourlySamplingRate,
         samplingRateUom: dataChunk.samplingRateUnitsOfMeasureCode,
         hourlySfsrRatio: dataChunk.hourlySFSRRatio,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
       });
     }
   }
@@ -61,17 +61,17 @@ export class HourlyGasFlowMeterWorkspaceService {
         [
           'hrly_gas_flow_meter_id',
           'hour_id',
-          'component_id',
           'mon_loc_id',
           'rpt_period_id',
+          'component_id',
           'begin_end_hour_flg',
           'gfm_reading',
           'avg_sampling_rate',
           'sampling_rate_uom',
           'flow_to_sampling_ratio',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
         ],
       );
 

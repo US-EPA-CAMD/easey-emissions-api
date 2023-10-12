@@ -86,20 +86,20 @@ export class HourlyFuelFlowWorkspaceService {
       parentObjectList.push({
         id: uid,
         hourId,
+        monitoringSystemId:
+          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         fuelCode: dataChunk.fuelCode,
         fuelUsageTime: dataChunk.fuelUsageTime,
         volumetricFlowRate: dataChunk.volumetricFlowRate,
-        volumetricUnitsOfMeasureCode: dataChunk.volumetricUnitsOfMeasureCode,
         sourceOfDataVolumetricCode: dataChunk.sourceOfDataVolumetricCode,
         massFlowRate: dataChunk.massFlowRate,
         sourceOfDataMassCode: dataChunk.sourceOfDataMassCode,
-        monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
-        monitoringLocationId: monitorLocationId,
-        reportingPeriodId: reportingPeriodId,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
+        volumetricUnitsOfMeasureCode: dataChunk.volumetricUnitsOfMeasureCode,
+        reportingPeriodId: reportingPeriodId,
+        monitoringLocationId: monitorLocationId,
       });
     }
 
@@ -132,19 +132,19 @@ export class HourlyFuelFlowWorkspaceService {
         [
           'hrly_fuel_flow_id',
           'hour_id',
+          'mon_sys_id',
           'fuel_cd',
           'fuel_usage_time',
           'volumetric_flow_rate',
-          'volumetric_uom_cd',
           'sod_volumetric_cd',
           'mass_flow_rate',
           'sod_mass_cd',
-          'mon_sys_id',
-          'mon_loc_id',
-          'rpt_period_id',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
+          'volumetric_uom_cd',
+          'rpt_period_id',
+          'mon_loc_id',
         ],
       );
 

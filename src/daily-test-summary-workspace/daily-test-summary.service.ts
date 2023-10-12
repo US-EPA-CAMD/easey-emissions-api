@@ -134,9 +134,7 @@ export class DailyTestSummaryWorkspaceService {
         updateDate: currentTime,
         spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
         monSysId:
-          identifiers?.monitoringSystems?.[
-            dailyTestSummaryDatum.monitoringSystemId
-          ] || null,
+          identifiers?.monitoringSystems?.[dailyTestSummaryDatum.monitoringSystemId] || null,
       });
     }
 
