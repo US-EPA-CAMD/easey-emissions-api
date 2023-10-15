@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { getManager } from 'typeorm';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
+import { ReportingPeriod } from '../entities/reporting-period.entity';
 
 export async function getSelectedView(
   viewCode: string,
@@ -41,15 +42,16 @@ export async function getSelectedView(
     .orderBy('col.columnOrder')
     .getRawMany();
 
-  let columnList = columns.map(i => `${i.columnname} AS "${i.columnalias}"`);
-
+  let columnList = columns.map(i => `vw.${i.columnname} AS "${i.columnalias}"`);
+  
   let viewData = await mgr.createQueryBuilder()
-    .select(columnList.join(','))
-    .from(`${schema}.emission_view_${viewCode.toLowerCase()}`, 'vw')
-    .where('mon_plan_id = :monitorPlanId', { monitorPlanId })
-    .andWhere('mon_loc_id IN (:...locations)', { locations: monLocs.map(i => i.id) })
-    .andWhere('rpt_period_id IN (:...reportPeriods)', { reportPeriods: rptPeriods.map(i => i.id) })
-    .getRawMany();
+  .select(`${columnList.join(',')}, rp.calendar_year as rptYear, rp.quarter as rptQuarter`)
+  .from(`${schema}.emission_view_${viewCode.toLowerCase()}`, 'vw')
+  .innerJoin(ReportingPeriod, 'rp', 'vw.rpt_period_id=rp.id')
+  .where('mon_plan_id = :monitorPlanId', { monitorPlanId })
+  .andWhere('mon_loc_id IN (:...locations)', { locations: monLocs.map(i => i.id) })
+  .andWhere('vw.rpt_period_id IN (:...reportPeriods)', { reportPeriods: rptPeriods.map(i => i.id) })
+  .getRawMany();
   
   viewData = viewData.map(item => {
     const props = Object.entries(item)
@@ -94,9 +96,8 @@ export async function getFileName(
 
   const unitIds = params.unitIds ? ` ${params.unitIds}` : '';
   const stackPipeIds = params.stackPipeIds ? ` ${params.stackPipeIds}` : '';
-  let name = `${facility?.name}${unitIds}${stackPipeIds} ${
-    params.reportingPeriod
-  } ${viewCode?.toUpperCase().trim()} emissions`;
+  let name = `${facility?.name}${unitIds}${stackPipeIds} ${params.reportingPeriod
+    } ${viewCode?.toUpperCase().trim()} emissions`;
   const nameSplit = name.split('|');
   const formatedName = nameSplit.join(',');
   return formatedName;
