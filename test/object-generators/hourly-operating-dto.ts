@@ -10,7 +10,6 @@ import {
   GenHourlyFuelFlowImportDtoConfig,
 } from './hourly-fuel-flow-dto';
 import { genMatsMonitorHourlyValueImportDto } from './mats-monitor-hourly-value-dto';
-import { HourlyOperatingParamsDto } from '../../src/dto/hourly-operating.params.dto';
 
 export type HourlyOperatingImportDtoConfig = {
   include?: Array<
@@ -84,35 +83,6 @@ export const genHourlyOperatingImportDto = (
       hourlyGFMData: config?.include?.includes('hourlyGFMData')
         ? [new HourlyGasFlowMeterImportDTO()]
         : undefined,
-    });
-  }
-
-  return dtos;
-};
-
-export const genHourlyOperatingParamsDto = (
-  amount = 1,
-): HourlyOperatingParamsDto[] => {
-  const dtos: HourlyOperatingParamsDto[] = [];
-
-  const orisCode = () => {
-    return faker.datatype.string(6);
-  };
-
-  for (let i = 0; i < amount; i++) {
-    dtos.push({
-      beginDate: (faker.date.soon().toISOString() as unknown) as Date,
-      endDate: (faker.date.soon().toISOString() as unknown) as Date,
-      locationName: optionalValue(
-        (faker.helpers
-          .uniqueArray(faker.datatype.string, 3)
-          .join('|') as unknown) as string[],
-      ),
-      orisCode: optionalValue(
-        (faker.helpers
-          .uniqueArray(orisCode, 3)
-          .join('|') as unknown) as number[],
-      ),
     });
   }
 
