@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DerivedHourlyValueService } from './derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
-import {
-  genDerivedHourlyValueParamsDto,
-  genDerivedHrlyValues,
-} from '../../test/object-generators/derived-hourly-value';
+import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { mockDerivedHourlyValueRepository } from '../../test/mocks/mock-derived-hourly-value-repository';
 import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
