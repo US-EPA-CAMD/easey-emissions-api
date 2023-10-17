@@ -21,7 +21,7 @@ export class Nsps4tAnnualBaseDTO {
   annualEnergySoldTypeCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 99999999)
   annualPotentialElectricOutput?: number;
 }
