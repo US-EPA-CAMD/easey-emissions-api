@@ -7,13 +7,11 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class HourlyFuelFlowBaseDTO {
   @IsString()
@@ -26,14 +24,12 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber()
   @IsOptional()
-  @Min(0)
-  @Max(9.99)
+  @IsInRange(0, 9.99)
   fuelUsageTime?: number;
 
   @IsNumber()
   @IsOptional()
-  @Min(0)
-  @Max(9999999999.9)
+  @IsInRange(0, 9999999999.9)
   volumetricFlowRate?: number;
 
   @IsString()
@@ -56,8 +52,7 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber()
   @IsOptional()
-  @Min(0)
-  @Max(9999999999.9)
+  @IsInRange(0, 9999999999.9)
   massFlowRate?: number;
 
   @IsString()

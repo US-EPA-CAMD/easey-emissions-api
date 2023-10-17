@@ -5,15 +5,15 @@ import {
   IsNumber,
   IsDateString,
   Matches,
-  Min,
-  Max,
   IsIn,
-  ArrayMinSize,
+ArrayMinSize,
   ArrayMaxSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class SorbentTrapBaseDTO {
   @IsOptional()
@@ -30,16 +30,14 @@ export class SorbentTrapBaseDTO {
   beginDate: Date;
 
   @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInRange(0, 23)
   beginHour: number;
 
   @IsDateString()
   endDate: Date;
 
   @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInRange(0, 23)
   endHour: number;
 
   @IsString()
@@ -47,9 +45,8 @@ export class SorbentTrapBaseDTO {
   monitoringSystemId: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999.9)
+  @IsNumber( { maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-999.99, 999.99)
   pairedTrapAgreement?: number;
 
   @IsOptional()

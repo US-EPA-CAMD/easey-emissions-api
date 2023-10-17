@@ -6,8 +6,6 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -36,6 +34,8 @@ import {
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class HourlyOperatingBaseDTO {
   @IsOptional()
@@ -52,20 +52,17 @@ export class HourlyOperatingBaseDTO {
   date: Date;
 
   @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInRange(0, 23)
   hour: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(9.99)
+  @IsInRange(-9.99, 9.99)
   operatingTime?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(999999)
+  @IsInRange(0, 999999)
   hourLoad?: number;
 
   @IsOptional()
@@ -79,38 +76,32 @@ export class HourlyOperatingBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(-999999)
-  @Max(999999)
+  @IsInRange(-999999, 999999)
   matsHourLoad?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(20)
+  @IsInRange(0, 20)
   loadRange?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(20)
+  @IsInRange(1, 20)
   commonStackLoadRange?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999.9, 9999999.9)
   fcFactor?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999.9)  
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999.9, 9999999.9)
   fdFactor?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999.9, 9999999.9)
   fwFactor?: number;
 
   @IsOptional()

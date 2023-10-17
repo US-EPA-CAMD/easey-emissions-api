@@ -5,8 +5,6 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -14,6 +12,7 @@ import {
   DailyCalibrationImportDTO,
 } from './daily-calibration.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class DailyTestSummaryBaseDTO {
   @IsOptional()
@@ -30,14 +29,12 @@ export class DailyTestSummaryBaseDTO {
   date: Date;
 
   @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInRange(0, 23)
   hour: number;
 
   @IsNumber()
   @IsOptional()
-  @Min(0)
-  @Max(59)
+  @IsInRange(0, 59)
   minute: number;
 
   @IsOptional()

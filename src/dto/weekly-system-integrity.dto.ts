@@ -1,4 +1,6 @@
-import { IsIn, IsNumber, IsString, Max, Min, ValidationArguments } from 'class-validator';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsIn, IsNumber, IsString } from 'class-validator';
 
 export class WeeklySystemIntegrityBaseDTO {
   @IsString()
@@ -9,23 +11,20 @@ export class WeeklySystemIntegrityBaseDTO {
   // })
   gasLevelCode?: string;
 
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999.999)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(0, 9999999999.999)
   referenceValue?: number;
 
-  @IsNumber()
-  @Min(-9999999999.999)
-  @Max(9999999999.999)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999999999.999, 9999999999.999)
   measuredValue?: number;
 
   @IsNumber()
   @IsIn([0, 1])
   apsIndicator?: number;
 
-  @IsNumber()
-  @Min(0)
-  @Max(9999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999.9, 9999.9)
   systemIntegrityError?: number;
 }
 

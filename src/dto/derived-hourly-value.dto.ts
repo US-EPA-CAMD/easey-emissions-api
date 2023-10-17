@@ -3,10 +3,10 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, FORMULA_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class DerivedHourlyValueBaseDTO {
   @IsString()
@@ -17,16 +17,14 @@ export class DerivedHourlyValueBaseDTO {
   // })
   parameterCode: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
   @IsOptional()
-  @Min(-9999999999.9999)
-  @Max(9999999999.9999)
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   unadjustedHourlyValue: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
   @IsOptional()
-  @Min(0)
-  @Max(9999999999.9999)
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   adjustedHourlyValue: number;
 
   @IsString()
@@ -48,10 +46,9 @@ export class DerivedHourlyValueBaseDTO {
   @Matches(FORMULA_ID_REGEX)
   formulaId: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
   @IsOptional()
-  @Min(0)
-  @Max(999.9)
+  @IsInRange(-999.9, 999.9)
   percentAvailable: number;
 
   @IsString()

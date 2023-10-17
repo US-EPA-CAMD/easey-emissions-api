@@ -1,42 +1,36 @@
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsIn,
   IsNumber,
   IsOptional,
   IsString,
-  Max,
   MaxLength,
-  Min,
 } from 'class-validator';
 
 export class Nsps4tCompliancePeriodBaseDTO {
   @IsOptional()
   @IsNumber()
-  @Min(2000)
-  @Max(2099)
+  @IsInRange(2000, 2099)
   beginYear?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(12)
+  @IsInRange(1, 12)
   beginMonth?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(2000)
-  @Max(2099)
+  @IsInRange(2000, 2099)
   endYear?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(12)
+  @IsInRange(1, 12)
   endMonth?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(99999)
+  @IsInRange(0, 99999)
   averageCO2EmissionRate?: number;
 
   @IsOptional()
@@ -50,8 +44,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(100)
+  @IsInRange(0.0, 100.0)
   percentValidOpHours?: number;
 
   @IsOptional()

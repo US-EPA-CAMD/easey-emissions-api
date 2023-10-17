@@ -1,14 +1,14 @@
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
-  Min,
 } from 'class-validator';
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @IsInRange(0, 99999999)
   annualEnergySold?: number;
 
   @IsOptional()
@@ -22,7 +22,7 @@ export class Nsps4tAnnualBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @IsInRange(0, 99999999)
   annualPotentialElectricOutput?: number;
 }
 

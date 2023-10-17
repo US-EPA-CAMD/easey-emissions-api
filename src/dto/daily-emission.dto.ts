@@ -5,12 +5,12 @@ import {
   IsNumber,
   IsDateString,
   Matches,
-  Min,
-  Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class DailyEmissionBaseDTO {
   @IsOptional()
@@ -35,33 +35,28 @@ export class DailyEmissionBaseDTO {
   date: Date;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   totalDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   adjustedDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   sorbentRelatedMassEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   unadjustedDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   totalCarbonBurned?: number;
 }
 

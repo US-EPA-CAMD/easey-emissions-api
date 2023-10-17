@@ -3,10 +3,9 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, FORMULA_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class HourlyParamFuelFlowBaseDTO {
   @IsString()
@@ -19,8 +18,7 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(99999999.99999)
+  @IsInRange(0, 99999999.99999)
   parameterValueForFuel?: number;
 
   @IsOptional()

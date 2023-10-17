@@ -6,8 +6,6 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -16,6 +14,7 @@ import {
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
@@ -32,13 +31,11 @@ export class WeeklyTestSummaryBaseDTO {
   date: Date;
 
   @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInRange(0, 23)
   hour: number;
 
   @IsNumber()
-  @Min(0)
-  @Max(59)
+  @IsInRange(0, 59)
   minute?: number;
 
   @IsString()
