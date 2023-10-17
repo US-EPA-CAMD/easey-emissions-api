@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-import { DerivedHourlyValueParamsDto } from '../dto/derived-hourly-value-params.dto';
-import { DerivedHourlyValueDTO } from '../dto/derived-hourly-value.dto';
-import { exportSupplementaryDerivedHourlyValues } from '../derived-hourly-value-functions/derived-hourly-value-export';
 
 @Injectable()
 export class DerivedHourlyValueService {
@@ -21,11 +18,5 @@ export class DerivedHourlyValueService {
     });
 
     return Promise.all(promises);
-  }
-
-  async supplementaryExport(
-    params: DerivedHourlyValueParamsDto,
-  ): Promise<DerivedHourlyValueDTO[]> {
-    return exportSupplementaryDerivedHourlyValues(params, this.repository);
   }
 }
