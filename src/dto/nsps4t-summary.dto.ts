@@ -40,7 +40,7 @@ export class Nsps4tSummaryBaseDTO {
   co2EmissionStandardCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 99999)
   modusValue?: number;
 
