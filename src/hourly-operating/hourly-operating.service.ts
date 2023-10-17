@@ -10,8 +10,6 @@ import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
 import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
 import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
-import { HourlyOperatingParamsDto } from '../dto/hourly-operating.params.dto';
-import { exportSupplementaryHourlyOperatingData } from '../hourly-operating-functions/hourly-operating-export';
 
 @Injectable()
 export class HourlyOperatingService {
@@ -81,11 +79,5 @@ export class HourlyOperatingService {
     }
 
     return hourlyOperating;
-  }
-
-  async supplementaryExport(
-    params: HourlyOperatingParamsDto,
-  ): Promise<HourlyOperatingDTO[]> {
-    return exportSupplementaryHourlyOperatingData(params, this.repository);
   }
 }

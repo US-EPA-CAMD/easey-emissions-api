@@ -17,7 +17,6 @@ import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyOperatingController } from './hourly-operating.controller';
 
 @Module({
   imports: [
@@ -32,7 +31,7 @@ import { HourlyOperatingController } from './hourly-operating.controller';
     MatsDerivedHourlyValueModule,
     HourlyGasFlowMeterModule,
   ],
-  controllers: [HourlyOperatingController],
+  controllers: [],
   providers: [
     HourlyFuelFlowMap,
     HourlyParameterFuelFlowService,

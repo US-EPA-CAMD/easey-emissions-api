@@ -42,8 +42,7 @@ export class DerivedHourlyValueWorkspaceService {
         id: randomUUID(),
         hourId: hourId,
         monSysId:
-          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] ||
-          null,
+          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         monFormId:
           identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
         parameterCode: dataChunk.parameterCode,
