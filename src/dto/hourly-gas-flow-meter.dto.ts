@@ -4,6 +4,7 @@ import { DbLookup } from '../pipes/db-lookup.pipe';
 import { BeginEndHourFlag } from '../entities/begin-end-hour-flag.entity';
 import { FindOneOptions } from 'typeorm';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class HourlyGasFlowMeterBaseDTO {
   @IsString()
@@ -26,12 +27,12 @@ export class HourlyGasFlowMeterBaseDTO {
   beginEndHourFlag?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2}, {message: ErrorMessages.MaxDecimalPlaces})
   @IsInRange(-9999999999.99, 9999999999.99)
   hourlyGFMReading?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2}, {message: ErrorMessages.MaxDecimalPlaces})
   @IsInRange(-9999999999.99, 9999999999.99)
   averageHourlySamplingRate?: number;
 
@@ -40,8 +41,8 @@ export class HourlyGasFlowMeterBaseDTO {
   samplingRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
-  @IsInRange(0, 999.9)
+  @IsNumber({ maxDecimalPlaces: 1}, {message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-999.9, 999.9)
   hourlySFSRRatio?: number;
 }
 

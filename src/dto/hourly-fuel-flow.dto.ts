@@ -52,7 +52,7 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber()
   @IsOptional()
-  @IsInRange(0, 9999999999.9)
+  @IsInRange(-9999999999.9, 9999999999.9)
   massFlowRate?: number;
 
   @IsString()

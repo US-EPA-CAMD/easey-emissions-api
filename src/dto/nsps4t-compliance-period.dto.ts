@@ -1,3 +1,4 @@
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsIn,
@@ -43,7 +44,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
   co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsInRange(0.0, 100.0)
   percentValidOpHours?: number;
 

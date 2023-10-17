@@ -18,7 +18,7 @@ export class HourlyParamFuelFlowBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @IsInRange(0, 99999999.99999)
+  @IsInRange(-99999999.99999, 99999999.99999)
   parameterValueForFuel?: number;
 
   @IsOptional()
