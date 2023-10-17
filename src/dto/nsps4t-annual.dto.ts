@@ -7,7 +7,7 @@ import {
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 99999999)
   annualEnergySold?: number;
 
