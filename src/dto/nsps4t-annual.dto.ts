@@ -1,6 +1,6 @@
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
 } from 'class-validator';
