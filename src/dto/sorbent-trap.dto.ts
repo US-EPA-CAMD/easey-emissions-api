@@ -3,16 +3,16 @@ import {
   IsString,
   ValidateNested,
   IsNumber,
-  IsDateString,
   Matches,
   IsIn,
 ArrayMinSize,
   ArrayMaxSize,
+  IsInt,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SamplingTrainDTO, SamplingTrainImportDTO } from './sampling-train.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
-import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class SorbentTrapBaseDTO {
@@ -26,14 +26,16 @@ export class SorbentTrapBaseDTO {
   @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   beginDate: Date;
 
   @IsNumber()
   @IsInRange(0, 23)
   beginHour: number;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   endDate: Date;
 
   @IsNumber()
@@ -78,7 +80,7 @@ export class SorbentTrapBaseDTO {
   apsCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   rataIndicator?: number;
 }

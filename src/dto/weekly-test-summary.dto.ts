@@ -1,7 +1,6 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
-  IsDateString,
   IsNumber,
   IsOptional,
   IsString,
@@ -14,7 +13,7 @@ import {
   WeeklySystemIntegrityImportDTO,
 } from './weekly-system-integrity.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
-import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 
 export class WeeklyTestSummaryBaseDTO {
   @IsOptional()
@@ -27,7 +26,8 @@ export class WeeklyTestSummaryBaseDTO {
   @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   date: Date;
 
   @IsNumber()

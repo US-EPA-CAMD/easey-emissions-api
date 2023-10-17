@@ -2,6 +2,7 @@ import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -49,7 +50,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
   percentValidOpHours?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   violationOfCO2StandardIndicator?: number;
 

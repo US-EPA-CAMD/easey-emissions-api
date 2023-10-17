@@ -12,6 +12,7 @@ import {
 import { Type } from 'class-transformer';
 import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class HourlyFuelFlowBaseDTO {
   @IsString()
@@ -22,12 +23,12 @@ export class HourlyFuelFlowBaseDTO {
   // })
   fuelCode: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsOptional()
   @IsInRange(0, 9.99)
   fuelUsageTime?: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsOptional()
   @IsInRange(0, 9999999999.9)
   volumetricFlowRate?: number;
@@ -50,7 +51,7 @@ export class HourlyFuelFlowBaseDTO {
   // })
   sourceOfDataVolumetricCode?: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsOptional()
   @IsInRange(-9999999999.9, 9999999999.9)
   massFlowRate?: number;

@@ -1,8 +1,8 @@
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
-import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import {
-  IsDateString,
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,7 +11,7 @@ import {
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   onlineOfflineIndicator?: number;
 
@@ -25,7 +25,8 @@ export class DailyCalibrationBaseDTO {
   upscaleGasCode?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   zeroInjectionDate?: Date;
 
   @IsOptional()
@@ -38,7 +39,8 @@ export class DailyCalibrationBaseDTO {
   zeroInjectionMinute?: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   upscaleInjectionDate?: Date;
 
   @IsOptional()
@@ -62,13 +64,13 @@ export class DailyCalibrationBaseDTO {
   upscaleMeasuredValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
   @IsNumber()
-  @IsIn([0, 1])
+  @IsInt()
   upscaleAPSIndicator?: number;
 
   @IsOptional()
@@ -118,7 +120,8 @@ export class DailyCalibrationBaseDTO {
   vendorIdentifier?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   expirationDate?: Date;
 
   @IsOptional()

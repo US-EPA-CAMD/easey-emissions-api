@@ -2,6 +2,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -62,7 +63,7 @@ export class Nsps4tSummaryBaseDTO {
   electricalLoadCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   noCompliancePeriodEndedIndicator?: number;
 

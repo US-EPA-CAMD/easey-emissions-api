@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import {
-  IsDateString,
   IsIn,
   IsNumber,
   IsOptional,
@@ -34,7 +33,7 @@ import {
   MatsDerivedHourlyValueImportDTO,
 } from './mats-derived-hourly-value.dto';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
-import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class HourlyOperatingBaseDTO {
@@ -48,7 +47,8 @@ export class HourlyOperatingBaseDTO {
   @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   date: Date;
 
   @IsNumber()
@@ -56,7 +56,7 @@ export class HourlyOperatingBaseDTO {
   hour: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsInRange(-9.99, 9.99)
   operatingTime?: number;
 

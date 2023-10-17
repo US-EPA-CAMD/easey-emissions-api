@@ -3,13 +3,12 @@ import {
   IsString,
   ValidateNested,
   IsNumber,
-  IsDateString,
   Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
-import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class DailyEmissionBaseDTO {
@@ -31,7 +30,8 @@ export class DailyEmissionBaseDTO {
   // })
   parameterCode: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   date: Date;
 
   @IsOptional()

@@ -1,14 +1,15 @@
+import { IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import {
 IsString,
 IsNumber,
-IsDateString,
 } from 'class-validator';
 
 export class DailyBackstopBaseDTO {
     @IsString()
     unitId?: string;
     
-    @IsDateString()
+    @IsIsoFormat()
+    @IsValidDate()
     date: Date;
   
     @IsNumber()

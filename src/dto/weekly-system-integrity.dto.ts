@@ -1,6 +1,6 @@
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
-import { IsIn, IsNumber, IsString } from 'class-validator';
+import { IsIn, IsInt, IsNumber, IsString } from 'class-validator';
 
 export class WeeklySystemIntegrityBaseDTO {
   @IsString()
@@ -19,7 +19,7 @@ export class WeeklySystemIntegrityBaseDTO {
   @IsInRange(-9999999999.999, 9999999999.999)
   measuredValue?: number;
 
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   apsIndicator?: number;
 
