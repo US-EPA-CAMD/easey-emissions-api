@@ -2,6 +2,7 @@ import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,7 +12,7 @@ import {
 export class DailyCalibrationBaseDTO {
   @IsOptional()
   @IsNumber()
-  @IsInRange(0, 1)
+  @IsIn([0, 1])
   onlineOfflineIndicator?: number;
 
   @IsOptional()
@@ -62,12 +63,12 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @IsInRange(0, 1)
+  @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
   @IsNumber()
-  @IsInRange(0, 1)
+  @IsIn([0, 1])
   upscaleAPSIndicator?: number;
 
   @IsOptional()

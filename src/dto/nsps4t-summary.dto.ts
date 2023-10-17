@@ -63,7 +63,7 @@ export class Nsps4tSummaryBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @IsInRange(0, 1)
+  @IsIn([0, 1])
   noCompliancePeriodEndedIndicator?: number;
 
   @IsOptional()
