@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -51,7 +52,7 @@ export class HourlyOperatingBaseDTO {
   @IsValidDate()
   date: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   hour: number;
 
@@ -61,7 +62,7 @@ export class HourlyOperatingBaseDTO {
   operatingTime?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 999999)
   hourLoad?: number;
 
@@ -75,17 +76,17 @@ export class HourlyOperatingBaseDTO {
   loadUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(-999999, 999999)
   matsHourLoad?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 20)
   loadRange?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(1, 20)
   commonStackLoadRange?: number;
 

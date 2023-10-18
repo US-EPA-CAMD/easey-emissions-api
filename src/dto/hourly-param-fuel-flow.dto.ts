@@ -1,4 +1,5 @@
 import {
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -6,6 +7,7 @@ import {
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, FORMULA_ID_REGEX } from '../constants/regex-list';
 import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class HourlyParamFuelFlowBaseDTO {
   @IsString()
@@ -17,7 +19,7 @@ export class HourlyParamFuelFlowBaseDTO {
   parameterCode: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 5 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsInRange(-99999999.99999, 99999999.99999)
   parameterValueForFuel?: number;
 
@@ -50,7 +52,7 @@ export class HourlyParamFuelFlowBaseDTO {
   operatingConditionCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   segmentNumber?: number;
 
   @IsOptional()

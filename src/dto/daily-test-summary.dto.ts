@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsDateString,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
@@ -29,11 +28,11 @@ export class DailyTestSummaryBaseDTO {
   @IsValidDate()
   date: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   hour: number;
 
-  @IsNumber()
+  @IsInt()
   @IsOptional()
   @IsInRange(0, 59)
   minute: number;

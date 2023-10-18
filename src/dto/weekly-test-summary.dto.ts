@@ -1,7 +1,7 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
@@ -30,11 +30,11 @@ export class WeeklyTestSummaryBaseDTO {
   @IsValidDate()
   date: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   hour: number;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 59)
   minute?: number;
 

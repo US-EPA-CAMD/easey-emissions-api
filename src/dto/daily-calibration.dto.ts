@@ -30,11 +30,12 @@ export class DailyCalibrationBaseDTO {
   zeroInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   zeroInjectionHour?: number;
 
   @IsOptional()
+  @IsInt()
   @IsInRange(0, 59)
   zeroInjectionMinute?: number;
 
@@ -44,12 +45,12 @@ export class DailyCalibrationBaseDTO {
   upscaleInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   upscaleInjectionHour?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 59)
   upscaleInjectionMinute?: number;
 
@@ -69,7 +70,6 @@ export class DailyCalibrationBaseDTO {
   zeroAPSIndicator?: number;
 
   @IsOptional()
-  @IsNumber()
   @IsInt()
   upscaleAPSIndicator?: number;
 

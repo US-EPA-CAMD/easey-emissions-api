@@ -25,12 +25,12 @@ export class HourlyFuelFlowBaseDTO {
 
   @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces})
   @IsOptional()
-  @IsInRange(0, 9.99)
+  @IsInRange(-9.99, 9.99)
   fuelUsageTime?: number;
 
-  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
   @IsOptional()
-  @IsInRange(0, 9999999999.9)
+  @IsInRange(-9999999999.9, 9999999999.9)
   volumetricFlowRate?: number;
 
   @IsString()

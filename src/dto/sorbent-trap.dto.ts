@@ -30,7 +30,7 @@ export class SorbentTrapBaseDTO {
   @IsValidDate()
   beginDate: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   beginHour: number;
 
@@ -38,7 +38,7 @@ export class SorbentTrapBaseDTO {
   @IsValidDate()
   endDate: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 23)
   endHour: number;
 
@@ -52,7 +52,7 @@ export class SorbentTrapBaseDTO {
   pairedTrapAgreement?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   absoluteDifferenceIndicator?: number;
 

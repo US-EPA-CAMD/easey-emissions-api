@@ -3,7 +3,6 @@ import {
   ArrayMinSize,
   IsIn,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   Matches,

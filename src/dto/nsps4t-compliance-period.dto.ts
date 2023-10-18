@@ -16,7 +16,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
   beginYear?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(1, 12)
   beginMonth?: number;
 
