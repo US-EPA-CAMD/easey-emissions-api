@@ -31,7 +31,7 @@ export class Nsps4tCompliancePeriodBaseDTO {
   endMonth?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsInRange(0, 99999)
   averageCO2EmissionRate?: number;
 
