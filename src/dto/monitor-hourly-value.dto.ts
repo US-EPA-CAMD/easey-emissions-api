@@ -3,10 +3,10 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class MonitorHourlyValueBaseDTO {
   @IsString()
@@ -18,15 +18,13 @@ export class MonitorHourlyValueBaseDTO {
   parameterCode: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(-9999999999.9999)
-  @Max(9999999999.9999)
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   unadjustedHourlyValue?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999.9999)
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   adjustedHourlyValue?: number;
 
   @IsOptional()
@@ -49,9 +47,8 @@ export class MonitorHourlyValueBaseDTO {
   componentId?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999.9, 999.9)
   percentAvailable?: number;
 
   @IsOptional()

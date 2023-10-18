@@ -3,10 +3,10 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class LongTermFuelFlowBaseDTO {
   @IsOptional()
@@ -32,9 +32,7 @@ export class LongTermFuelFlowBaseDTO {
   // })
   fuelFlowPeriodCode?: string;
 
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999)
+  @IsNumber({ maxDecimalPlaces: 0}, { message: ErrorMessages.MaxDecimalPlaces })
   longTermFuelFlowValue: number;
 
   @IsString()
@@ -46,9 +44,8 @@ export class LongTermFuelFlowBaseDTO {
   longTermFuelFlowUnitsOfMeasureCode: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1}, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   grossCalorificValue?: number;
 
   @IsOptional()
@@ -61,9 +58,7 @@ export class LongTermFuelFlowBaseDTO {
   gcvUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999999999.9)
+  @IsNumber({ maxDecimalPlaces: 0}, { message: ErrorMessages.MaxDecimalPlaces })
   totalHeatInput?: number;
 }
 

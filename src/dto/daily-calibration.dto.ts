@@ -1,17 +1,17 @@
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import {
-  IsDateString,
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
-  Max,
   MaxLength,
-  Min,
 } from 'class-validator';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   onlineOfflineIndicator?: number;
 
@@ -25,81 +25,72 @@ export class DailyCalibrationBaseDTO {
   upscaleGasCode?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   zeroInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInt()
+  @IsInRange(0, 23)
   zeroInjectionHour?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(59)
+  @IsInt()
+  @IsInRange(0, 59)
   zeroInjectionMinute?: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   upscaleInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInt()
+  @IsInRange(0, 23)
   upscaleInjectionHour?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(59)
+  @IsInt()
+  @IsInRange(0, 59)
   upscaleInjectionMinute?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(-9999999999.999)
-  @Max(10000000000)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   zeroMeasuredValue?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(-9999999999.999)
-  @Max(10000000000)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   upscaleMeasuredValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
-  @IsNumber()
-  @IsIn([0, 1])
+  @IsInt()
   upscaleAPSIndicator?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999.99)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999.99, 9999.99)
   zeroCalibrationError?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999.99)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999.99, 9999.99)
   upscaleCalibrationError?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(10000000000)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   zeroReferenceValue?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(10000000000)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   upscaleReferenceValue?: number;
 
   @IsOptional()
@@ -129,7 +120,8 @@ export class DailyCalibrationBaseDTO {
   vendorIdentifier?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   expirationDate?: Date;
 
   @IsOptional()

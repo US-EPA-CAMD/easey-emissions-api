@@ -1,12 +1,9 @@
 import { Type } from 'class-transformer';
 import {
-  IsDateString,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -14,6 +11,7 @@ import {
   DailyCalibrationImportDTO,
 } from './daily-calibration.dto';
 import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 
 export class DailyTestSummaryBaseDTO {
   @IsOptional()
@@ -26,18 +24,17 @@ export class DailyTestSummaryBaseDTO {
   @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   date: Date;
 
-  @IsNumber()
-  @Min(0)
-  @Max(23)
+  @IsInt()
+  @IsInRange(0, 23)
   hour: number;
 
-  @IsNumber()
+  @IsInt()
   @IsOptional()
-  @Min(0)
-  @Max(59)
+  @IsInRange(0, 59)
   minute: number;
 
   @IsOptional()
