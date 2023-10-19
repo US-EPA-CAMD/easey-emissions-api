@@ -1,54 +1,63 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
+  IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
+  MaxLength,
 } from 'class-validator';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tCompliancePeriodBaseDTO {
   @IsOptional()
   @IsNumber()
+  @IsInRange(2000, 2099)
   beginYear?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(1, 12)
   beginMonth?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsInRange(2000, 2099)
   endYear?: number;
 
   @IsOptional()
   @IsNumber()
+  @IsInRange(1, 12)
   endMonth?: number;
 
   @IsOptional()
-  @IsNumber()
-  averageCo2EmissionRate?: number;
+  @IsInt()
+  @IsInRange(0, 99999)
+  averageCO2EmissionRate?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
-  co2EmissionRateUomCode?: string;
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
+  co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(0.0, 100.0)
   percentValidOpHours?: number;
 
   @IsOptional()
-  @IsNumber()
-  violationOfCo2StandardIndicator?: number;
+  @IsInt()
+  @IsIn([0, 1])
+  violationOfCO2StandardIndicator?: number;
 
   @IsOptional()
   @IsString()
-  violationOfCo2StandardComment?: string;
+  @MaxLength(3500)
+  violationOfCO2StandardComment?: string;
 }
 
 export class Nsps4tCompliancePeriodRecordDTO extends Nsps4tCompliancePeriodBaseDTO {

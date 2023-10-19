@@ -33,23 +33,28 @@ export class MonitorHourlyValueWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
+        hourId,
         monitoringSystemId:
           identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        componentId:
+          identifiers.components?.[dataChunk.componentId] || null,
         parameterCode: dataChunk.parameterCode,
         unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+        adjustedHourlyValue: dataChunk.adjustedHourlyValue,
         modcCode: dataChunk.modcCode,
-        componentId: identifiers.components?.[dataChunk.componentId] || null,
         percentAvailable: dataChunk.percentAvailable,
         moistureBasis: dataChunk.moistureBasis,
-        monitoringLocationId: monitorLocationId,
-        reportingPeriodId: reportingPeriodId,
-        hourId,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
+        reportingPeriodId: reportingPeriodId,
+        monitoringLocationId: monitorLocationId,
       });
     }
   }
@@ -60,19 +65,20 @@ export class MonitorHourlyValueWorkspaceService {
         'camdecmpswks.monitor_hrly_value',
         [
           'monitor_hrly_val_id',
+          'hour_id',
           'mon_sys_id',
+          'component_id',
           'parameter_cd',
           'unadjusted_hrly_value',
+          'adjusted_hrly_value',
           'modc_cd',
-          'component_id',
           'pct_available',
           'moisture_basis',
-          'mon_loc_id',
-          'rpt_period_id',
-          'hour_id',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
+          'rpt_period_id',
+          'mon_loc_id',
         ],
       );
 

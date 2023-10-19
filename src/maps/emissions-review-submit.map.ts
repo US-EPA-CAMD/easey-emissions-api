@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-import { EmissionsReviewSubmit } from '../entities/emissions-review-submit.entity';
+import { EmissionsReviewSubmit } from '../entities/workspace/emissions-review-submit.entity';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { EmissionsReviewSubmitGlobal } from '../entities/emissions-review-submit.entity';
 
 @Injectable()
 export class EmissionsReviewSubmitMap extends BaseMap<
@@ -9,7 +10,7 @@ export class EmissionsReviewSubmitMap extends BaseMap<
   EmissionsReviewSubmitDTO
 > {
   public async one(
-    entity: EmissionsReviewSubmit,
+    entity: EmissionsReviewSubmit | EmissionsReviewSubmitGlobal,
   ): Promise<EmissionsReviewSubmitDTO> {
     return {
       orisCode: entity.orisCode,

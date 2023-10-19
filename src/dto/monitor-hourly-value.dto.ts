@@ -1,50 +1,54 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
+  Matches,
 } from 'class-validator';
-import { ParameterCode } from '../entities/parameter-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ModcCode } from '../entities/modc-code.entity';
+import { COMPONENT_MONITOR_SYS_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class MonitorHourlyValueBaseDTO {
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   unadjustedHourlyValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 4 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.9999, 9999999999.9999)
   adjustedHourlyValue?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(ModcCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ModcCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   modcCode?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   componentId?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999.9, 999.9)
   percentAvailable?: number;
 
   @IsOptional()

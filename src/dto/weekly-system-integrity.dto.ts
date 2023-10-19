@@ -1,27 +1,30 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { IsNumber, IsString, ValidationArguments } from 'class-validator';
-import { GasLevelCode } from '../entities/gas-level-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { IsIn, IsInt, IsNumber, IsString } from 'class-validator';
 
 export class WeeklySystemIntegrityBaseDTO {
   @IsString()
-  @IsValidCode(GasLevelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(GasLevelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   gasLevelCode?: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(0, 9999999999.999)
   referenceValue?: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999999999.999, 9999999999.999)
   measuredValue?: number;
 
-  @IsNumber()
+  @IsInt()
+  @IsIn([0, 1])
   apsIndicator?: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999.9, 9999.9)
   systemIntegrityError?: number;
 }
 

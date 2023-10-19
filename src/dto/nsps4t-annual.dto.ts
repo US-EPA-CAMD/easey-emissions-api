@@ -1,29 +1,28 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
-  ValidationArguments,
 } from 'class-validator';
-import { Nsps4tElectricalLoadCode } from '../entities/nsps4t-electrical-load-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class Nsps4tAnnualBaseDTO {
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 99999999)
   annualEnergySold?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(Nsps4tElectricalLoadCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(Nsps4tElectricalLoadCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   annualEnergySoldTypeCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 99999999)
   annualPotentialElectricOutput?: number;
 }
 

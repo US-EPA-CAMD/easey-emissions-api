@@ -22,7 +22,7 @@ export class MatsDerivedHourlyValueMap extends BaseMap<
       parameterCode: entity.parameterCode,
       unadjustedHourlyValue: entity.unadjustedHourlyValue,
       modcCode: entity.modcCode,
-      formulaIdentifier: formulaIdentifier,
+      formulaId: formulaIdentifier,
       monitoringFormulaRecordId: entity.monFormId,
       calcUnadjustedHrlyValue: entity.calcUnadjustedHrlyValue,
       calcPctDiluent: entity.calcPctDiluent,

@@ -36,7 +36,8 @@ import { EmissionsViewWorkspaceModule } from '../emissions-view-workspace/emissi
 import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
 import { LongTermFuelFlowModule } from '../long-term-fuel-flow/long-term-fuel-flow.module';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
-import {DailyBackstopModule} from "../daily-backstop/daily-backstop.module";
+import { DailyBackstopModule } from '../daily-backstop/daily-backstop.module';
+import { EmissionsWorkspaceModule } from '../emissions-workspace/emissions.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import {DailyBackstopModule} from "../daily-backstop/daily-backstop.module";
     SummaryValueModule,
     LongTermFuelFlowModule,
     DailyBackstopModule,
+    EmissionsWorkspaceModule,
   ],
   controllers: [EmissionsController],
   providers: [

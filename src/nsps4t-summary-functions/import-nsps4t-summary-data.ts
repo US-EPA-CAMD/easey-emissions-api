@@ -24,7 +24,7 @@ export const importNsps4tSummaryData = async ({
       id: randomUUID(),
       co2EmissionStandardCode: data.co2EmissionStandardCode,
       modusValue: data.modusValue,
-      modusUomCode: data.modusUomCode,
+      modusUomCode: data.modusUnitsOfMeasureCode,
       electricalLoadCode: data.electricalLoadCode,
       noCompliancePeriodEndedIndicator: data.noCompliancePeriodEndedIndicator,
       noCompliancePeriodEndedComment: data.noCompliancePeriodEndedComment,

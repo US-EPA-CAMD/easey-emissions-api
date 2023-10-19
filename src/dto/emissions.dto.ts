@@ -5,6 +5,9 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  MaxLength,
+  Min,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
@@ -32,6 +35,7 @@ import {
 } from './weekly-test-summary.dto';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { DailyBackstopDTO, DailyBackstopImportDTO } from './daily-backstop.dto';
+import { IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -50,11 +54,16 @@ export class EmissionsBaseDTO {
   @IsNumber()
   orisCode: number;
   @IsNumber()
+  @Min(2000)
+  @Max(2099)
   year: number;
   @IsNumber()
+  @Min(1)
+  @Max(4)
   quarter: number;
   @IsOptional()
   @IsString()
+  @MaxLength(3500)
   submissionComment?: string;
 
   constructor(values: Object={}) {
@@ -68,7 +77,8 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   @IsNumber()
   reportingPeriodId: number;
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   lastUpdated?: string;
   @IsOptional()
   @IsString()

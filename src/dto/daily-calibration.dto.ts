@@ -1,83 +1,96 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import {
-  IsDateString,
+  IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
+  MaxLength,
 } from 'class-validator';
-import { GasLevelCode } from '../entities/gas-level-code.entity';
-import { InjectionProtocolCode } from '../entities/injection-protocol-codes.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyCalibrationBaseDTO {
   @IsOptional()
-  @IsNumber()
-  onLineOffLineIndicator?: number;
+  @IsInt()
+  @IsIn([0, 1])
+  onlineOfflineIndicator?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(GasLevelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(GasLevelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   upscaleGasCode?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   zeroInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 23)
   zeroInjectionHour?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 59)
   zeroInjectionMinute?: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   upscaleInjectionDate?: Date;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 23)
   upscaleInjectionHour?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsInRange(0, 59)
   upscaleInjectionMinute?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   zeroMeasuredValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   upscaleMeasuredValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsIn([0, 1])
   zeroAPSIndicator?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   upscaleAPSIndicator?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999.99, 9999.99)
   zeroCalibrationError?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999.99, 9999.99)
   upscaleCalibrationError?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   zeroReferenceValue?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999.999, 9999999999.999)
   upscaleReferenceValue?: number;
 
   @IsOptional()
@@ -87,23 +100,37 @@ export class DailyCalibrationBaseDTO {
 
   @IsOptional()
   @IsString()
+  @MaxLength(25)
   cylinderIdentifier?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(8)
+  // @DbLookup(
+  //   ProtocolGasVendor,
+  //   (args: ValidationArguments): FindOneOptions<ProtocolGasVendor> => {
+  //     return { where: { id: args.value } };
+  //   },
+  //   {
+  //     message: (args: ValidationArguments) => {
+  //       return `${args.property} has an invalid value of ${args.value}`;
+  //     },
+  //   },
+  // )
   vendorIdentifier?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   expirationDate?: Date;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(InjectionProtocolCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(InjectionProtocolCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   injectionProtocolCode?: string;
 }
 

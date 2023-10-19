@@ -1,61 +1,64 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
+  Matches,
 } from 'class-validator';
-import { FuelFlowPeriodCode } from '../entities/fuel-flow-period-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { UnitsOfMeasureCode } from '../entities/units-of-measure.entity';
+import { COMPONENT_MONITOR_SYS_REGEX, STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class LongTermFuelFlowBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsString()
+  @Matches(COMPONENT_MONITOR_SYS_REGEX)
   monitoringSystemId: string;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(FuelFlowPeriodCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(FuelFlowPeriodCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   fuelFlowPeriodCode?: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 0}, { message: ErrorMessages.MaxDecimalPlaces })
   longTermFuelFlowValue: number;
 
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
-  longTermFuelFlowUomCode: string;
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
+  longTermFuelFlowUnitsOfMeasureCode: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1}, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   grossCalorificValue?: number;
 
   @IsOptional()
   @IsString()
-  @IsValidCode(UnitsOfMeasureCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(UnitsOfMeasureCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   gcvUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 0}, { message: ErrorMessages.MaxDecimalPlaces })
   totalHeatInput?: number;
 }
 

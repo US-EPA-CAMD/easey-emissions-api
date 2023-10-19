@@ -34,15 +34,17 @@ export class DerivedHourlyValueWorkspaceService {
     buildObject: Array<object>,
     currentTime: string,
   ) {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       buildObject.push({
         id: randomUUID(),
         hourId: hourId,
         monSysId:
-          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] ||
-          null,
+          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         monFormId:
-          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
+          identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
         parameterCode: dataChunk.parameterCode,
         unadjustedHrlyValue: dataChunk.unadjustedHourlyValue,
         adjustedHourlyValue: dataChunk.adjustedHourlyValue,

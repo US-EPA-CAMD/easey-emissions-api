@@ -9,7 +9,6 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class HourlyGasFlowMeterWorkspaceService {
@@ -33,21 +32,24 @@ export class HourlyGasFlowMeterWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
         hourId,
-        componentId: identifiers?.components?.[dataChunk.componentId],
         monitorLocationId,
         reportingPeriodId,
+        componentId: identifiers?.components?.[dataChunk.componentId],
         beginEndHourFlag: dataChunk.beginEndHourFlag,
-        hourlyGfmReading: dataChunk.hourlyGfmReading,
-        avgHourlySamplingRate: dataChunk.avgHourlySamplingRate,
-        samplingRateUom: dataChunk.samplingRateUom,
-        hourlySfsrRatio: dataChunk.hourlySfsrRatio,
+        hourlyGfmReading: dataChunk.hourlyGFMReading,
+        avgHourlySamplingRate: dataChunk.averageHourlySamplingRate,
+        samplingRateUom: dataChunk.samplingRateUnitsOfMeasureCode,
+        hourlySfsrRatio: dataChunk.hourlySFSRRatio,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
       });
     }
   }
@@ -59,17 +61,17 @@ export class HourlyGasFlowMeterWorkspaceService {
         [
           'hrly_gas_flow_meter_id',
           'hour_id',
-          'component_id',
           'mon_loc_id',
           'rpt_period_id',
+          'component_id',
           'begin_end_hour_flg',
           'gfm_reading',
           'avg_sampling_rate',
           'sampling_rate_uom',
           'flow_to_sampling_ratio',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
         ],
       );
 

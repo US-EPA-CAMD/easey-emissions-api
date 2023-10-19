@@ -26,12 +26,11 @@ describe('NSPS4TCompliancePeriodMap', () => {
           beginMonth: param.beginMonth,
           endYear: param.endYear,
           endMonth: param.endMonth,
-          averageCo2EmissionRate: param.averageCo2EmissionRate,
-          co2EmissionRateUomCode: param.co2EmissionRateUomCode,
+          averageCO2EmissionRate: param.averageCo2EmissionRate,
+          co2EmissionRateUnitsOfMeasureCode: param.co2EmissionRateUomCode,
           percentValidOpHours: param.percentValidOpHours,
-          violationOfCo2StandardIndicator:
-            param.violationOfCo2StandardIndicator,
-          violationOfCo2StandardComment: param.violationOfCo2StandardComment,
+          violationOfCO2StandardIndicator: param.violationOfCo2StandardIndicator,
+          violationOfCO2StandardComment: param.violationOfCo2StandardComment,
         };
       }),
     );

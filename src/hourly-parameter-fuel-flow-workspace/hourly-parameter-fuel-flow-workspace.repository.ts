@@ -5,12 +5,12 @@ import { HrlyParamFuelFlow } from '../entities/workspace/hrly-param-fuel-flow.en
 export class HourlyParameterFuelFlowWorkspaceRepository extends Repository<
   HrlyParamFuelFlow
 > {
-  async export(hourlyFuelFlowId: string) {
+  async export(hourlyFuelFlowIds: string[]) {
     return this.createQueryBuilder('hrlyParam')
       .leftJoinAndSelect('hrlyParam.monitorFormula', 'monitorFormula')
       .leftJoinAndSelect('hrlyParam.monitorSystem', 'ms')
-      .where('hrlyParam.hrly_fuel_flow_id = :hourlyFuelFlowId', {
-        hourlyFuelFlowId,
+      .where('hrlyParam.hrly_fuel_flow_id IN (:...hourlyFuelFlowIds)', {
+        hourlyFuelFlowIds,
       })
       .getMany();
   }

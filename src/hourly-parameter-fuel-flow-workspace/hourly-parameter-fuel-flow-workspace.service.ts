@@ -18,8 +18,8 @@ export class HourlyParameterFuelFlowWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(hourlyFuelFlowId: string): Promise<HourlyParamFuelFlowDTO[]> {
-    const hrlyParams = await this.repository.export(hourlyFuelFlowId);
+  async export(hourlyFuelFlowIds: string[]): Promise<HourlyParamFuelFlowDTO[]> {
+    const hrlyParams = await this.repository.export(hourlyFuelFlowIds);
 
     return this.map.many(hrlyParams);
   }
@@ -37,21 +37,21 @@ export class HourlyParameterFuelFlowWorkspaceService {
       objectList.push({
         id: randomUUID(),
         parentId: parentId,
-        parameterCode: dataChunk.parameterCode,
-        parameterValueForFuel: dataChunk.parameterValueForFuel,
-        formulaIdentifier:
-          identifiers.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
-        sampleTypeCode: dataChunk.sampleTypeCode,
         monitoringSystemId:
           identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        formulaIdentifier:
+          identifiers.monitorFormulas?.[dataChunk.formulaId] || null,
+        parameterCode: dataChunk.parameterCode,
+        parameterValueForFuel: dataChunk.parameterValueForFuel,
+        sampleTypeCode: dataChunk.sampleTypeCode,
         operatingConditionCode: dataChunk.operatingConditionCode,
         segmentNumber: dataChunk.segmentNumber,
-        parameterUomCode: dataChunk.parameterUomCode,
-        monitoringLocationId: monitorLocationId,
-        reportingPeriodId: reportingPeriodId,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
+        parameterUomCode: dataChunk.parameterUnitsOfMeasureCode,
+        reportingPeriodId: reportingPeriodId,
+        monitoringLocationId: monitorLocationId,
       });
     }
   }
@@ -63,19 +63,19 @@ export class HourlyParameterFuelFlowWorkspaceService {
         [
           'hrly_param_ff_id',
           'hrly_fuel_flow_id',
+          'mon_sys_id',
+          'mon_form_id',
           'parameter_cd',
           'param_val_fuel',
-          'mon_form_id',
           'sample_type_cd',
-          'mon_sys_id',
           'operating_condition_cd',
           'segment_num',
-          'parameter_uom_cd',
-          'mon_loc_id',
-          'rpt_period_id',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
+          'parameter_uom_cd',
+          'rpt_period_id',
+          'mon_loc_id',
         ],
       );
 

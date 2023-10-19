@@ -33,22 +33,25 @@ export class MatsMonitorHourlyValueWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
-        monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
-        unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
-        percentAvailable: dataChunk.percentAvailable,
-        parameterCode: dataChunk.parameterCode,
-        modcCode: dataChunk.modcCode,
-        componentId: identifiers.components?.[dataChunk.componentId] || null,
         hourId,
         monitoringLocationId: monitorLocationId,
         reportingPeriodId: reportingPeriodId,
+        parameterCode: dataChunk.parameterCode,
+        monitoringSystemId:
+          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        componentId: identifiers.components?.[dataChunk.componentId] || null,
+        unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
+        modcCode: dataChunk.modcCode,
+        percentAvailable: dataChunk.percentAvailable,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
       });
     }
   }
@@ -59,18 +62,18 @@ export class MatsMonitorHourlyValueWorkspaceService {
         'camdecmpswks.mats_monitor_hrly_value',
         [
           'mats_mhv_id',
-          'mon_sys_id',
-          'unadjusted_hrly_value',
-          'pct_available',
-          'parameter_cd',
-          'modc_cd',
-          'component_id',
           'hour_id',
           'mon_loc_id',
           'rpt_period_id',
+          'parameter_cd',
+          'mon_sys_id',
+          'component_id',
+          'unadjusted_hrly_value',
+          'modc_cd',
+          'pct_available',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
         ],
       );
 

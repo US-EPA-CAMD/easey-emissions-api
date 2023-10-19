@@ -5,12 +5,17 @@ import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { In } from 'typeorm';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 
 @Injectable()
 export class ReviewSubmitService {
   constructor(
     @InjectRepository(EmissionsReviewSubmitRepository)
-    private readonly repository: EmissionsReviewSubmitRepository,
+    private readonly workspaceRepository: EmissionsReviewSubmitRepository,
+
+    @InjectRepository(EmissionsReviewSubmitGlobalRepository)
+    private readonly globalRepository: EmissionsReviewSubmitGlobalRepository,
+
     private readonly map: EmissionsReviewSubmitMap,
   ) {}
 
@@ -18,15 +23,23 @@ export class ReviewSubmitService {
     orisCodes: number[],
     monPlanIds: string[],
     quarters: string[],
+    isWorkspace: boolean = true
   ): Promise<EmissionsReviewSubmitDTO[]> {
     if (!quarters || quarters.length === 0) {
       return [];
     }
 
+    let repository; 
+    if(isWorkspace){
+      repository = this.workspaceRepository;
+    }else{
+      repository = this.globalRepository;
+    }
+
     try {
       if (monPlanIds && monPlanIds.length > 0) {
         return this.map.many(
-          await this.repository.find({
+          await repository.find({
             where: {
               monPlanId: In(monPlanIds),
               periodAbbreviation: In(quarters),
@@ -35,7 +48,7 @@ export class ReviewSubmitService {
         );
       }
       return this.map.many(
-        await this.repository.find({
+        await repository.find({
           where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
         }),
       );

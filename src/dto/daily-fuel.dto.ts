@@ -1,31 +1,32 @@
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
 } from 'class-validator';
-import { FuelCode } from '../entities/fuel-code.entity';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
 
 export class DailyFuelBaseDTO {
   @IsString()
-  @IsValidCode(FuelCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(FuelCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   fuelCode: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   dailyFuelFeed?: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-99999.9, 99999.9)
   carbonContentUsed: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   fuelCarbonBurned?: number;
 }
 

@@ -32,20 +32,23 @@ export class MatsDerivedHourlyValueWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
+        hourId: hourId,
         parameterCode: dataChunk.parameterCode,
         unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
         modcCode: dataChunk.modcCode,
         monFormId:
-          identifiers?.monitorFormulas?.[dataChunk.formulaIdentifier] || null,
-        hourId: hourId,
-        monLod: monitorLocationId,
+          identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
+        monLoc: monitorLocationId,
         rptPeriod: reportingPeriodId,
+        userId: identifiers?.userId,
         addDate: currentTime,
         updateDate: currentTime,
-        userId: identifiers?.userId,
       });
     }
   }
@@ -56,16 +59,16 @@ export class MatsDerivedHourlyValueWorkspaceService {
         'camdecmpswks.mats_derived_hrly_value',
         [
           'mats_dhv_id',
+          'hour_id',
           'parameter_cd',
           'unadjusted_hrly_value',
           'modc_cd',
           'mon_form_id',
-          'hour_id',
           'mon_loc_id',
           'rpt_period_id',
+          'userid',
           'add_date',
           'update_date',
-          'userid',
         ],
       );
 

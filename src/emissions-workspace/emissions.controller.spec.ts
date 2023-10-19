@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { EmissionsWorkspaceController } from './emissions.controller';
 import { EmissionsWorkspaceService } from './emissions.service';
-import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsMap } from '../maps/emissions.map';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -85,8 +85,9 @@ import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-work
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
-import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
-import {DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
+import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
+import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
+import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -96,7 +97,7 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule, BulkLoadModule, ],
+      imports: [LoggerModule, HttpModule, BulkLoadModule],
       controllers: [EmissionsWorkspaceController],
       providers: [
         DailyEmissionWorkspaceService,
@@ -186,9 +187,12 @@ describe('-- Emissions Controller --', () => {
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
+        EmissionsReviewSubmitGlobalRepository,
         {
           provide: DailyBackstopWorkspaceService,
-          useValue: jest.mock('../daily-backstop-workspace/daily-backstop.service')
+          useValue: jest.mock(
+            '../daily-backstop-workspace/daily-backstop.service',
+          ),
         },
       ],
     }).compile();
@@ -206,9 +210,10 @@ describe('-- Emissions Controller --', () => {
   describe('* export', () => {
     it('should export a record', async () => {
       const params = new EmissionsParamsDTO();
-      const expectedResult = new EmissionsDTO();
-      jest.spyOn(service, 'export').mockResolvedValue(expectedResult);
-      expect(await controller.export(params)).toBe(expectedResult);
+      const mockedValues = genEmissionsRecordDto(1);
+      console.log(mockedValues[0]);
+      jest.spyOn(service, 'export').mockResolvedValue(mockedValues[0]);
+      expect(await controller.export(params)).toBe(mockedValues[0]);
     });
   });
 

@@ -5,6 +5,7 @@ import { HrlyFuelFlow } from '../entities/hrly-fuel-flow.entity';
 export class HourlyFuelFlowRepository extends Repository<HrlyFuelFlow> {
   async export(hourlyOperatingIds: string[]) {
     return this.createQueryBuilder('hourlyFuelFlow')
+      .leftJoinAndSelect('hourlyFuelFlow.monitorSystem', 'ms')
       .where('hourlyFuelFlow.hour_id IN (:...hourlyOperatingIds)', {
         hourlyOperatingIds,
       })

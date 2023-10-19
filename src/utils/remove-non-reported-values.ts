@@ -20,6 +20,7 @@ import { Nsps4tSummaryDTO } from "../dto/nsps4t-summary.dto";
 import { Nsps4tAnnualDTO } from "../dto/nsps4t-annual.dto";
 import { Nsps4tCompliancePeriodDTO } from "../dto/nsps4t-compliance-period.dto";
 import { LongTermFuelFlowDTO } from "../dto/long-term-fuel-flow.dto";
+import { DailyBackstopDTO } from "src/dto/daily-backstop.dto";
 
 export async function removeNonReportedValues(dto: EmissionsDTO) {
   const promises = [];
@@ -31,6 +32,7 @@ export async function removeNonReportedValues(dto: EmissionsDTO) {
   promises.push(removeSummaryValueNonReportedValues(dto.summaryValueData));
   promises.push(removeNSPS4TSummaryNonReportedValues(dto.nsps4tSummaryData));
   promises.push(removeLongTermFuelFlowNonReportedValues(dto.longTermFuelFlowData));
+  promises.push(removeDailyBackstopEmissionsNonReportedValues(dto.dailyBackstopData))
 
   delete dto.monitorPlanId;
   delete dto.reportingPeriodId;
@@ -250,12 +252,23 @@ async function removeDailyEmissionsNonReportedValues(dailyEmissionData: DailyEmi
   await Promise.all(promises);
 }
 
+async function removeDailyBackstopEmissionsNonReportedValues(dailyBackstopData: DailyBackstopDTO[]) {
+  dailyBackstopData.forEach(dto => {
+    delete dto.id;
+    delete dto.monitoringLocationId;
+    delete dto.reportingPeriodId;
+    delete dto.userId;
+    delete dto.updateDate;
+  });
+}
+
 async function removeDailyFuelNonReportedValues(dailyFuelData: DailyFuelDTO[]) {
   dailyFuelData.forEach(dto => {
     delete dto.id;
     delete dto.dailyEmissionId;
     delete dto.reportingPeriodId;
     delete dto.calcFuelCarbonBurned;
+    delete dto.monitoringLocationId;
     delete dto.userId;
     delete dto.addDate;
     delete dto.updateDate;
@@ -320,6 +333,7 @@ async function removeWeeklySystemIntegrityNonReportedValues(weeklySystemIntegrit
     delete dto.id;
     delete dto.weeklyTestSumId;
     delete dto.reportingPeriodId;
+    delete dto.monitoringLocationId;
     delete dto.calcSystemIntegrityError;
     delete dto.calcApsInd;
     delete dto.userId;

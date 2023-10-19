@@ -3,53 +3,60 @@ import {
   IsString,
   ValidateNested,
   IsNumber,
-  IsDateString,
-  ValidationArguments,
+  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DailyFuelDTO, DailyFuelImportDTO } from './daily-fuel.dto';
-import { IsValidCode } from '@us-epa-camd/easey-common/pipes';
-import { ImportCodeErrorMessage } from '../utils/validator.const';
-import { ParameterCode } from '../entities/parameter-code.entity';
+import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange, IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class DailyEmissionBaseDTO {
   @IsOptional()
   @IsString()
+  @Matches(STACK_PIPE_ID_REGEX)
   stackPipeId?: string;
 
   @IsOptional()
   @IsString()
+  @Matches(UNIT_ID_REGEX)
   unitId?: string;
 
   @IsString()
-  @IsValidCode(ParameterCode, {
-    message: (args: ValidationArguments) => {
-      return ImportCodeErrorMessage(args.property, args.value);
-    },
-  })
+  // @IsValidCode(ParameterCode, {
+  //   message: (args: ValidationArguments) => {
+  //     return ImportCodeErrorMessage(args.property, args.value);
+  //   },
+  // })
   parameterCode: string;
 
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   date: Date;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   totalDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   adjustedDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   sorbentRelatedMassEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999999999.9, 999999999.9)
   unadjustedDailyEmissions?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   totalCarbonBurned?: number;
 }
 
