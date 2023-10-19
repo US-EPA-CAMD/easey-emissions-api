@@ -4,7 +4,7 @@
   "description": "EPA CAMD Emissions Management API",
   "license": "MIT",
   "private": true,
-  "repository": {
+  "repository": { 
     "type": "git",
     "url": "git+https://github.com/US-EPA-CAMD/easey-emissions-api.git"
   },
