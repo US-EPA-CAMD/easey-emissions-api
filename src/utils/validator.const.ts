@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { IsNotEmpty } from 'class-validator';
+import { ArrayNotContains, IsNotEmpty, ValidateIf } from 'class-validator';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 import {
   IsInDateRange,
@@ -110,7 +110,39 @@ export function OpYear() {
   );
 }
 
-export function ImportCodeErrorMessage(property, value){
+export function OzoneDate() {
+  return applyDecorators(
+    IsInDateRange(new Date(1995, 0), true, false, false, {
+      each: true,
+      message: ErrorMessages.DateRange(
+        'year',
+        true,
+        `a year between 1995 and the quarter ending on 09/30/${new Date().getFullYear()}`,
+      ),
+    }),
+    IsYearFormat({
+      each: true,
+      message: ErrorMessages.MultipleFormat('year', 'YYYY format'),
+    }),
+    IsNotEmptyString({ message: ErrorMessages.RequiredProperty() }),
+    ValidateIf(o => {
+      const year = new Date().getFullYear();
+      if (o.year.includes(year.toString()) && new Date() <= new Date(`October 01 ${year}`)) {
+        return true
+      }
+      return false
+    }),
+    ArrayNotContains([new Date().getFullYear().toString()], {
+      message: ErrorMessages.DateRange(
+        'year',
+        true,
+        `a year between 1995 and the quarter ending on 09/30/${new Date().getFullYear()}`,
+      ),
+    })
+  );
+}
+
+export function ImportCodeErrorMessage(property, value) {
   return `You reported an invalid ${property} of ${value}.`
 
 }
