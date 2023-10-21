@@ -35,6 +35,7 @@ import {
 } from './weekly-test-summary.dto';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { DailyBackstopDTO, DailyBackstopImportDTO } from './daily-backstop.dto';
+import { IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -76,7 +77,8 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   @IsNumber()
   reportingPeriodId: number;
   @IsOptional()
-  @IsDateString()
+  @IsIsoFormat()
+  @IsValidDate()
   lastUpdated?: string;
   @IsOptional()
   @IsString()

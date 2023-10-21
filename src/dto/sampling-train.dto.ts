@@ -3,12 +3,12 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class SamplingTrainBaseDTO {
   @IsString()
@@ -42,14 +42,12 @@ export class SamplingTrainBaseDTO {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  @Max(9999999999.9999)
+  @IsInRange(0, 9999999999.9999)
   totalSampleVolumeDSCM?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999.9, 999.9)
   referenceSFSRRatio?: number;
 
   @IsOptional()
@@ -58,15 +56,13 @@ export class SamplingTrainBaseDTO {
   hgConcentration?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(-10000)
-  @Max(10000)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-10000.0, 10000.0)
   percentBreakthrough?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-999.9, 999.9)
   percentSpikeRecovery?: number;
 
   @IsOptional()

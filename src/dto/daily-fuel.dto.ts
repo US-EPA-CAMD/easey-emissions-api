@@ -1,9 +1,9 @@
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsNumber,
   IsOptional,
   IsString,
-  Max,
-  Min,
 } from 'class-validator';
 
 export class DailyFuelBaseDTO {
@@ -16,20 +16,17 @@ export class DailyFuelBaseDTO {
   fuelCode: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   dailyFuelFeed?: number;
 
-  @IsNumber()
-  @Min(0)
-  @Max(99999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-99999.9, 99999.9)
   carbonContentUsed: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999999.9)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces })
+  @IsInRange(-9999999999999.9, 9999999999999.9)
   fuelCarbonBurned?: number;
 }
 

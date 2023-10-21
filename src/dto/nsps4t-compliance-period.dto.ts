@@ -1,42 +1,38 @@
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 import {
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
-  Max,
   MaxLength,
-  Min,
 } from 'class-validator';
 
 export class Nsps4tCompliancePeriodBaseDTO {
   @IsOptional()
   @IsNumber()
-  @Min(2000)
-  @Max(2099)
+  @IsInRange(2000, 2099)
   beginYear?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(12)
+  @IsInt()
+  @IsInRange(1, 12)
   beginMonth?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(2000)
-  @Max(2099)
+  @IsInRange(2000, 2099)
   endYear?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(12)
+  @IsInRange(1, 12)
   endMonth?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(99999)
+  @IsInt()
+  @IsInRange(0, 99999)
   averageCO2EmissionRate?: number;
 
   @IsOptional()
@@ -49,13 +45,12 @@ export class Nsps4tCompliancePeriodBaseDTO {
   co2EmissionRateUnitsOfMeasureCode?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(100)
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(0.0, 100.0)
   percentValidOpHours?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   violationOfCO2StandardIndicator?: number;
 

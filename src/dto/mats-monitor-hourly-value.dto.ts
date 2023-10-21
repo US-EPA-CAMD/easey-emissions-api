@@ -3,10 +3,9 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { COMPONENT_MONITOR_SYS_REGEX, SCIENTIFIC_NOTATION_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class MatsMonitorHourlyValueBaseDTO {
   @IsString()
@@ -42,9 +41,8 @@ export class MatsMonitorHourlyValueBaseDTO {
   componentId?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(999.9)
+  @IsNumber({ maxDecimalPlaces: 1 })
+  @IsInRange(-999.9, 999.9)
   percentAvailable?: number;
 }
 

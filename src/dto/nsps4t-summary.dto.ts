@@ -2,13 +2,11 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsIn,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
-  Max,
   MaxLength,
-  Min,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -18,6 +16,7 @@ import {
 } from './nsps4t-compliance-period.dto';
 import { Nsps4tAnnualDTO, Nsps4tAnnualImportDTO } from './nsps4t-annual.dto';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
 
 export class Nsps4tSummaryBaseDTO {
   @IsOptional()
@@ -40,9 +39,8 @@ export class Nsps4tSummaryBaseDTO {
   co2EmissionStandardCode?: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(99999)
+  @IsInt()
+  @IsInRange(0, 99999)
   modusValue?: number;
 
   @IsOptional()
@@ -64,7 +62,7 @@ export class Nsps4tSummaryBaseDTO {
   electricalLoadCode?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @IsIn([0, 1])
   noCompliancePeriodEndedIndicator?: number;
 

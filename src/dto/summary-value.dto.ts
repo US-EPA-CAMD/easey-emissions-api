@@ -3,10 +3,10 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
-  Min,
 } from 'class-validator';
 import { STACK_PIPE_ID_REGEX, UNIT_ID_REGEX } from '../constants/regex-list';
+import { IsInRange } from '@us-epa-camd/easey-common/pipes';
+import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
 
 export class SummaryValueBaseDTO {
   @IsOptional()
@@ -28,21 +28,18 @@ export class SummaryValueBaseDTO {
   parameterCode: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999.999)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999999999.999, 9999999999.999)
   currentReportingPeriodTotal?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999.999)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999999999.999, 9999999999.999)
   ozoneSeasonToDateTotal?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(9999999999.999)
+  @IsNumber({ maxDecimalPlaces: 3 }, { message: ErrorMessages.MaxDecimalPlaces})
+  @IsInRange(-9999999999.999, 9999999999.999)
   yearToDateTotal?: number;
 }
 
