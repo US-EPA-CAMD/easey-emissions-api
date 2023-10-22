@@ -76,7 +76,3 @@ export const splitArrayInChunks = (inputArray, perChunk = 1000) => {
 
   return result;
 };
-
-export const mergeChunkArrays = (inputArray, depth = 1) => {
-  return inputArray.flat(depth);
-};

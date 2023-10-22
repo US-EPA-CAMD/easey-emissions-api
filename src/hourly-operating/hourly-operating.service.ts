@@ -10,7 +10,7 @@ import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats
 import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
 import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
 import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
-import { mergeChunkArrays, splitArrayInChunks } from '../utils/utils';
+import { splitArrayInChunks } from '../utils/utils';
 
 @Injectable()
 export class HourlyOperatingService {
@@ -49,9 +49,7 @@ export class HourlyOperatingService {
     let resultPromises = [];
 
     if (hourlyOperating) {
-      const hourlyOperatingDataChunks = await splitArrayInChunks(
-        hourlyOperating,
-      );
+      const hourlyOperatingDataChunks = splitArrayInChunks(hourlyOperating);
 
       const getChildrenData = async hourlyOperatingChunk => {
         const hourlyOperatingIds = hourlyOperatingChunk.map(i => i.id);
@@ -92,6 +90,6 @@ export class HourlyOperatingService {
     }
     let results = await Promise.all(resultPromises);
 
-    return mergeChunkArrays(results);
+    return results.flat(1);
   }
 }

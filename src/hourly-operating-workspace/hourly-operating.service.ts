@@ -15,7 +15,6 @@ import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-v
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import {
   isUndefinedOrNull,
-  mergeChunkArrays,
   splitArrayInChunks,
 } from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
@@ -74,9 +73,7 @@ export class HourlyOperatingWorkspaceService {
     let resultPromises = [];
 
     if (hourlyOperating) {
-      const hourlyOperatingDataChunks = await splitArrayInChunks(
-        hourlyOperating,
-      );
+      const hourlyOperatingDataChunks = splitArrayInChunks(hourlyOperating);
 
       const getChildrenData = async hourlyOperatingChunk => {
         const hourlyOperatingIds = hourlyOperatingChunk.map(i => i.id);
@@ -117,7 +114,7 @@ export class HourlyOperatingWorkspaceService {
     }
     let results = await Promise.all(resultPromises);
 
-    return mergeChunkArrays(results);
+    return results.flat(1);
   }
 
   async delete(criteria: FindConditions<HrlyOpData>): Promise<void> {
