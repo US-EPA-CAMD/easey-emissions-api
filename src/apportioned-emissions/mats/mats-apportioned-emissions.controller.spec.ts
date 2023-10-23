@@ -3,11 +3,12 @@ import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
-import { ApplicableMatsApportionedEmissionsAttributesDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
 import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsService } from './hourly/hourly-mats-apportioned-emissions.service';
+import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { UnitFactRepository } from '../unit-fact.repository';
+import { genApplicableApportionedEmissionsAttributesDto } from '../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -31,6 +32,7 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
         MatsApportionedEmissionsService,
         HourlyMatsApportionedEmissionsService,
         HourUnitMatsDataRepository,
+        UnitFactRepository,
       ],
     }).compile();
 
@@ -45,11 +47,11 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
   });
 
   describe('* getApplicableEmissions', () => {
-    it('should return test 1', async () => {
-      const expectedResult: ApplicableMatsApportionedEmissionsAttributesDTO[] = [];
-      const paramsDto = new ApplicableMatsApportionedEmissionsAttributesParamsDTO();
+    it('calls MatsApportionedEmissionsService.getApplicableApportionedEmissionsAttributes() and gets all emissions data', async () => {
+      const expectedResult = genApplicableApportionedEmissionsAttributesDto();
+      const paramsDto = new ApplicableApportionedEmissionsAttributesParamsDTO();
       jest
-        .spyOn(service, 'getApplicableEmissions')
+        .spyOn(service, 'getApplicableApportionedEmissionsAttributes')
         .mockResolvedValue(expectedResult);
       expect(await controller.getApplicableEmissions(paramsDto)).toBe(
         expectedResult,
