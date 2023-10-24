@@ -130,6 +130,7 @@ hourly.push(
   ...commonCharacteristics,
   {...propertyMetadata.unit_id.fieldLabels},
   { ...propertyMetadata.associatedStacks.fieldLabels },
+  {...propertyMetadata.year.fieldLabels},
   ...hourlyCharacteristics,
   { ...propertyMetadata.grossLoadHourly.fieldLabels },
   { ...propertyMetadata.steamLoadHourly.fieldLabels },
