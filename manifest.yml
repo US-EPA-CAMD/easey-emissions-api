@@ -3,7 +3,6 @@ applications:
     memory: ((memory))M
     disk_quota: ((disk))M
     instances: ((instances))
-    stack: cflinuxfs4
     buildpacks:
       - nodejs_buildpack
     env:
