@@ -13,7 +13,10 @@ import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-work
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
-import { isUndefinedOrNull } from '../utils/utils';
+import {
+  isUndefinedOrNull,
+  splitArrayInChunks,
+} from '../utils/utils';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -67,38 +70,51 @@ export class HourlyOperatingWorkspaceService {
       params,
     );
 
-    if (hourlyOperating) {
-      const hourlyOperatingIds = hourlyOperating.map(i => i.id);
-      if (hourlyOperatingIds?.length > 0) {
-        const values = await Promise.all([
-          this.monitorHourlyValueService.export(hourlyOperatingIds),
-          this.derivedHourlyValueService.export(hourlyOperatingIds),
-          this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
-          this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
-          this.hourlyGasFlowMeterService.export(hourlyOperatingIds),
-          this.hourlyFuelFlowService.export(hourlyOperatingIds),
-        ]);
+    let resultPromises = [];
 
-        hourlyOperating?.forEach(hourlyOp => {
-          hourlyOp.monitorHourlyValueData =
-            values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-          hourlyOp.derivedHourlyValueData =
-            values?.[1]?.filter(derivedHourlyDatum => {
-              return derivedHourlyDatum.hourId === hourlyOp.id;
-            }) ?? [];
-          hourlyOp.matsMonitorHourlyValueData =
-            values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-          hourlyOp.matsDerivedHourlyValueData =
-            values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-          hourlyOp.hourlyGFMData =
-            values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-          hourlyOp.hourlyFuelFlowData =
-            values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-        });
+    if (hourlyOperating) {
+      const hourlyOperatingDataChunks = splitArrayInChunks(hourlyOperating);
+
+      const getChildrenData = async hourlyOperatingChunk => {
+        const hourlyOperatingIds = hourlyOperatingChunk.map(i => i.id);
+
+        if (hourlyOperatingIds?.length > 0) {
+          const values = await Promise.all([
+            this.monitorHourlyValueService.export(hourlyOperatingIds),
+            this.derivedHourlyValueService.export(hourlyOperatingIds),
+            this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
+            this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
+            this.hourlyGasFlowMeterService.export(hourlyOperatingIds),
+            this.hourlyFuelFlowService.export(hourlyOperatingIds),
+          ]);
+
+          hourlyOperatingChunk?.forEach(hourlyOp => {
+            hourlyOp.monitorHourlyValueData =
+              values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+            hourlyOp.derivedHourlyValueData =
+              values?.[1]?.filter(derivedHourlyDatum => {
+                return derivedHourlyDatum.hourId === hourlyOp.id;
+              }) ?? [];
+            hourlyOp.matsMonitorHourlyValueData =
+              values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+            hourlyOp.matsDerivedHourlyValueData =
+              values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+            hourlyOp.hourlyGFMData =
+              values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+            hourlyOp.hourlyFuelFlowData =
+              values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          });
+        }
+        return hourlyOperatingChunk;
+      };
+
+      for (const chunk of hourlyOperatingDataChunks) {
+        resultPromises.push(getChildrenData(chunk));
       }
     }
+    let results = await Promise.all(resultPromises);
 
-    return hourlyOperating;
+    return results.flat(1);
   }
 
   async delete(criteria: FindConditions<HrlyOpData>): Promise<void> {
