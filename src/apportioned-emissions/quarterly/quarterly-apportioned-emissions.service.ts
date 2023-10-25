@@ -22,7 +22,7 @@ import {
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 
 @Injectable()
 export class QuarterlyApportionedEmissionsService {
@@ -45,7 +45,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -72,7 +72,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -102,7 +102,7 @@ export class QuarterlyApportionedEmissionsService {
     try {
       query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -133,7 +133,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
