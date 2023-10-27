@@ -64,7 +64,7 @@ export default registerAs('app', () => ({
     'EASEY_EMISSIONS_API_SUBMISSION_DAYS',
     38,
   ),
-  reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '30mb'),
+  reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '60mb'),
   // ENABLES DEBUG CONSOLE LOGS
   enableDebug: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_DEBUG'),
   // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
