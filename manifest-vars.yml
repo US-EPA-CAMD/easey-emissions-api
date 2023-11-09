@@ -10,3 +10,4 @@ title: Emissions Management
 description: Emissions management API endpoints for apportioned emissions data (e.g. hourly, daily, monthly, annual, and ozone season)
 environment: development
 apiHost: api.epa.gov/easey/dev
+dbSvc: camd-pg-db
