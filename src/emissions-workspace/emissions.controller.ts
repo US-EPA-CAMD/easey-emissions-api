@@ -43,44 +43,50 @@ export class EmissionsWorkspaceController {
 
   @Get('export')
   @ApiOperation({
-    summary: 'Exports emissions data for the specified Monitor Plan & Reporting Period'
+    summary:
+      'Exports emissions data for the specified Monitor Plan & Reporting Period',
   })
   @ApiOkResponse({
     description: 'Successfull export of emissions data',
     content: {
       'application/json': {
         schema: {
-          oneOf: refs(
-            EmissionsDTO,
-            EmissionsImportDTO,
-          )
+          oneOf: refs(EmissionsDTO, EmissionsImportDTO),
         },
         examples: {
           fullExport: {
             summary: 'Full Export',
-            description: 'Full export of all data including database primary keys, calculated values, & audit properties',
-            value: "Reference EmissionsDTO schema for definition",
+            description:
+              'Full export of all data including database primary keys, calculated values, & audit properties',
+            value: 'Reference EmissionsDTO schema for definition',
           },
           reportedValuesExport: {
             summary: 'Reported Values Export',
-            description: 'Export of reported values only matching import schema',
-            value: "Reference EmissionsImportDTO schema for definition",
-          }
-        }
-      }
-    }
+            description:
+              'Export of reported values only matching import schema',
+            value: 'Reference EmissionsImportDTO schema for definition',
+          },
+        },
+      },
+    },
   })
-  @RoleGuard({
+  @RoleGuard(
+    {
       enforceCheckout: false,
-      queryParam: 'monitorPlanId'
+      queryParam: 'monitorPlanId',
+      enforceEvalSubmitCheck: false,
     },
     LookupType.MonitorPlan,
   )
   @UseInterceptors(ClassSerializerInterceptor)
-  async export(@Query() params: EmissionsParamsDTO): Promise<EmissionsDTO | EmissionsImportDTO> {
+  async export(
+    @Query() params: EmissionsParamsDTO,
+  ): Promise<EmissionsDTO | EmissionsImportDTO> {
     const data = await this.service.export(params, params.reportedValuesOnly);
-    if(Object.keys(data).length === 0){
-      throw new NotFoundException("Export unsuccessful there is no data for this reporting period");
+    if (Object.keys(data).length === 0) {
+      throw new NotFoundException(
+        'Export unsuccessful there is no data for this reporting period',
+      );
     }
     return data;
   }
@@ -103,6 +109,8 @@ export class EmissionsWorkspaceController {
         'sorbentTrapData',
         'nsps4tSummaryData',
       ],
+      permissionsForFacility: ['DSEM', 'DPEM'],
+      requiredRoles: ['Preparer', 'Submitter', 'Sponsor'],
     },
     LookupType.Location,
   )
@@ -136,7 +144,12 @@ export class EmissionsWorkspaceController {
     explode: false,
   })
   @RoleGuard(
-    { enforceCheckout: false, queryParam: 'orisCodes', isPipeDelimitted: true },
+    {
+      enforceCheckout: false,
+      queryParam: 'orisCodes',
+      isPipeDelimitted: true,
+      enforceEvalSubmitCheck: false,
+    },
     LookupType.Facility,
   )
   async getEmissions(
