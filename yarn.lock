@@ -1229,10 +1229,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@us-epa-camd/easey-common@^17.1.0":
-  version "17.2.0"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.0/ab1c06a8a6ac2155334b3a8e930cbbe34484da81#ab1c06a8a6ac2155334b3a8e930cbbe34484da81"
-  integrity sha512-mJYj4BPU1UA3BBnk64rc289aeH2H8zL2nHx31c2uJpJ/8KU+wtTOfKodYTHHD+/houAS5KPsUL53KtG6GAHEHQ==
+"@us-epa-camd/easey-common@^17.2.3":
+  version "17.2.3"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.3/65573fa8aae47757379969cf4b598adece481575#65573fa8aae47757379969cf4b598adece481575"
+  integrity sha512-1WqTxRDaeGnSPXUhA/5pp3HE2hJu+4iTzmsscumKhH9mSwPG/uSLQQE37JcXVl3E0r1Nf+S3HfMB+bX7p49fNQ==
   dependencies:
     "@golevelup/ts-jest" "^0.3.4"
     "@nestjs/axios" "0.0.3"
@@ -1240,7 +1240,6 @@
     "@nestjs/config" "^1.0.2"
     "@nestjs/core" "^8.4.7"
     "@nestjs/swagger" "^5.1.2"
-    "@nestjs/typeorm" "8.0.3"
     class-validator "^0.14.0"
     dotenv "^10.0.0"
     express "^4.17.3"
