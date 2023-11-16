@@ -50,6 +50,7 @@ import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspac
 import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
 import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { CodeChecksModule } from '../code-checks/code-checks.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repo
     SummaryValueWorkspaceModule,
     LongTermFuelFlowWorkspaceModule,
     DailyBackstopWorkspaceModule,
+    CodeChecksModule,
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

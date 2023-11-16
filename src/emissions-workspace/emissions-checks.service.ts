@@ -12,6 +12,8 @@ import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan
 import moment from 'moment';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { ModcCode } from '../entities/modc-code.entity';
+import { CodeChecksService } from '../code-checks/code-checks.service';
 
 @Injectable()
 export class EmissionsChecksService {
@@ -21,6 +23,7 @@ export class EmissionsChecksService {
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
+    private readonly codeCheckService: CodeChecksService, 
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {
     this.logger.setContext('EmissionsChecksService');
@@ -54,6 +57,8 @@ export class EmissionsChecksService {
       this.throwIfErrors(['No data found in payload']);
     }
 
+    const codeErrors = await this.codeCheckService.runChecks(payload);
+
     // IMPORT-29: Inappropriate Children Records for Daily Test Summary
     const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(
       payload,
@@ -78,6 +83,7 @@ export class EmissionsChecksService {
     );
 
     errorList.push(
+      ...codeErrors,
       ...weeklyTestSummaryCheckErrors,
       ...invalidDatesCheckErrors,
       ...locationErrors,
