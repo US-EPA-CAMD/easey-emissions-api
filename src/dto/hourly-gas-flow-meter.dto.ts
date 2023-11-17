@@ -13,17 +13,17 @@ export class HourlyGasFlowMeterBaseDTO {
 
   @IsOptional()
   @IsString()
-  @DbLookup(
-    BeginEndHourFlag,
-    (args: ValidationArguments): FindOneOptions<BeginEndHourFlag> => {
-      return { where: { id: args.value } };
-    },
-    {
-      message: (args: ValidationArguments) => {
-        return `${args.property} has an invalid value of ${args.value}`;
-      },
-    },
-  )
+  // @DbLookup(
+  //   BeginEndHourFlag,
+  //   (args: ValidationArguments): FindOneOptions<BeginEndHourFlag> => {
+  //     return { where: { id: args.value } };
+  //   },
+  //   {
+  //     message: (args: ValidationArguments) => {
+  //       return `${args.property} has an invalid value of ${args.value}`;
+  //     },
+  //   },
+  // )
   beginEndHourFlag?: string;
 
   @IsOptional()
