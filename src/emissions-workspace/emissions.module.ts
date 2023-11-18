@@ -51,6 +51,7 @@ import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspa
 import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 import { CodeChecksModule } from '../code-checks/code-checks.module';
+import { CodeChecksService } from '../code-checks/code-checks.service';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { CodeChecksModule } from '../code-checks/code-checks.module';
     DailyFuelMap,
     DailyFuelWorkspaceService,
     DailyTestSummaryCheckService,
+    CodeChecksService,
     EmissionsMap,
     EmissionsWorkspaceService,
     EmissionsSubmissionsProgressMap,

@@ -104,6 +104,7 @@ import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-
 import {DailyBackstopWorkspaceRepository} from "../daily-backstop-workspace/daily-backstop.repository";
 import {DailyBackstopMap} from "../maps/daily-backstop.map";
 import {DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
+import { CodeChecksService } from '../code-checks/code-checks.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -133,6 +134,7 @@ describe('Emissions Workspace Service', () => {
         DailyCalibrationWorkspaceService,
         EmissionsMap,
         EmissionsChecksService,
+        CodeChecksService,
         Logger,
         DailyTestSummaryMap,
         DailyCalibrationMap,
