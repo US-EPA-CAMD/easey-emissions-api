@@ -1229,10 +1229,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@us-epa-camd/easey-common@^17.2.3":
-  version "17.2.3"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.3/65573fa8aae47757379969cf4b598adece481575#65573fa8aae47757379969cf4b598adece481575"
-  integrity sha512-1WqTxRDaeGnSPXUhA/5pp3HE2hJu+4iTzmsscumKhH9mSwPG/uSLQQE37JcXVl3E0r1Nf+S3HfMB+bX7p49fNQ==
+"@us-epa-camd/easey-common@^17.2.7":
+  version "17.2.7"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.7/e68bb2be340e79753389b2bcc7b09558f36a2968#e68bb2be340e79753389b2bcc7b09558f36a2968"
+  integrity sha512-rb0FLPZHtYDrMLLnCescFNC5xuvLhp2KUm7zO04ybu9aFi6Qm3ivHs/srxvLQrkDqItTb8fZ7CZlOSc2zQY0Hg==
   dependencies:
     "@golevelup/ts-jest" "^0.3.4"
     "@nestjs/axios" "0.0.3"
@@ -1248,6 +1248,7 @@
     pg-copy-streams "^6.0.5"
     reflect-metadata "^0.1.13"
     rxjs "^7.8.0"
+    tls "^0.0.1"
     typeorm "0.2.45"
     uuid "^9.0.0"
     winston "^3.8.2"
@@ -5871,6 +5872,11 @@ through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
+
+tls@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/tls/-/tls-0.0.1.tgz#0ab2bf5968d71df2f8c0e1515d24a2240b98aac8"
+  integrity sha512-GzHpG+hwupY8VMR6rYsnAhTHqT/97zT45PG8WD5eTT1lq+dFE0nN+1PYpsoBcHJgSmTz5ceK2Cv88IkPmIPOtQ==
 
 tmp@^0.0.33:
   version "0.0.33"
