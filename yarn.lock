@@ -1229,10 +1229,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@us-epa-camd/easey-common@^17.2.6":
-  version "17.2.6"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.6/684271ddc9243a7c5c64bbf99767c1869ed52032#684271ddc9243a7c5c64bbf99767c1869ed52032"
-  integrity sha512-D2CX4VPboV1DGVbPnB0+VJkzOnyyhwF4ieQuOtxe4EWiEGEdzec04pLUEl+Qotj/QMlD/7IeaI+rszNJ9f1k7A==
+"@us-epa-camd/easey-common@^17.2.7":
+  version "17.2.7"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/17.2.7/e68bb2be340e79753389b2bcc7b09558f36a2968#e68bb2be340e79753389b2bcc7b09558f36a2968"
+  integrity sha512-rb0FLPZHtYDrMLLnCescFNC5xuvLhp2KUm7zO04ybu9aFi6Qm3ivHs/srxvLQrkDqItTb8fZ7CZlOSc2zQY0Hg==
   dependencies:
     "@golevelup/ts-jest" "^0.3.4"
     "@nestjs/axios" "0.0.3"
