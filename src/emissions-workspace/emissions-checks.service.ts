@@ -12,7 +12,6 @@ import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan
 import moment from 'moment';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
-import { ModcCode } from '../entities/modc-code.entity';
 import { CodeChecksService } from '../code-checks/code-checks.service';
 
 @Injectable()
