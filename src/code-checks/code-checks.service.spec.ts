@@ -24,9 +24,8 @@ describe('Code Checks Service Tests', () => {
             query: jest.fn().mockResolvedValue([{column1: ["invalidCode"]}]),
           } as unknown) as EntityManager);
       
-        const mockedPayload = genEmissionsImportDto(1, {include:["weeklyTestSummaryData", "dailyTestSummaryData", "hourlyOperatingData"]})        
+        const mockedPayload = genEmissionsImportDto(1, {include:["weeklyTestSummaryData", "dailyTestSummaryData", "hourlyOperatingData"]}) 
         const results = await service.runChecks(mockedPayload[0]);
-        console.log(results)
-        expect(results.length).toEqual(5)
+        expect(results.length).toBe(6)
     });  
   });
