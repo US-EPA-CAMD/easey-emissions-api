@@ -3,7 +3,7 @@ import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EmissionsImportDTO } from "../dto/emissions.dto";
 import { DailyEmissionImportDTO } from "../dto/daily-emission.dto";
 import { isUndefinedOrNull } from "../utils/utils";
-import { CodeFieldRepo, getErrorMessage, getInvalidCodes } from "./code-checks-utils";
+import { CodeFieldRepo, getErrorMessage, getInvalidCodes, getCodeFieldRepoList } from "./code-checks-utils";
 import { WeeklyTestSummaryImportDTO } from "../dto/weekly-test-summary.dto";
 import { SummaryValueImportDTO } from "../dto/summary-value.dto";
 import { DailyTestSummaryImportDTO } from "../dto/daily-test-summary.dto";
@@ -12,7 +12,6 @@ import { LongTermFuelFlowImportDTO } from "../dto/long-term-fuel-flow.dto";
 import { SorbentTrapImportDTO } from "../dto/sorbent-trap.dto";
 import { Nsps4tSummaryImportDTO } from "../dto/nsps4t-summary.dto";
 import { EaseyException } from "@us-epa-camd/easey-common/exceptions/easey.exception";
-import { getCodeFieldRepoList } from "./code-checks-utils";
 
 
 @Injectable()
