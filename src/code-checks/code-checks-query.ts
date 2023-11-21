@@ -5,7 +5,6 @@ export const getInvalidCodes = async <EntityType extends BaseEntity>( codeSet: S
     if( !codeSet || codeSet.size === 0)
         return [];
 
-    console.log(entityRepo.metadata.primaryColumns[0].databaseName)
     const tableName = entityRepo.metadata.tableName;
     const codeColumn = entityRepo.metadata.primaryColumns[0].databaseName;
 
@@ -19,7 +18,6 @@ export const getInvalidCodes = async <EntityType extends BaseEntity>( codeSet: S
     SELECT ${codeColumn} FROM ${tableName}
     `;
 
-    console.log(sql)
     return await manager.query(sql)
 
 }

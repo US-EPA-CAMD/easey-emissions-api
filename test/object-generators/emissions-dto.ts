@@ -38,6 +38,7 @@ import {
 } from './hourly-operating-dto';
 import { genHourlyOpValues } from './hourly-op-data-values';
 import { DailyBackstopDTO, DailyBackstopImportDTO } from '../../src/dto/daily-backstop.dto';
+import { genWeeklyTestSummaryDto } from './weekly-test-summary-dto';
 
 type GenEmissionsDtoConfig = {
   include?: Array<
@@ -52,6 +53,7 @@ type GenEmissionsDtoConfig = {
     | 'dailyBackstopData'
   >;
   dailyTestSummaryAmount?: number;
+  weeklyTestSummaryAmount?: number;
   hourlyOperatingAmount?: number;
   hourlyOperatingImportConfig?: HourlyOperatingImportDtoConfig;
 };
@@ -99,7 +101,7 @@ export const genEmissionsImportDto = (
         ? [new DailyEmissionImportDTO()]
         : undefined,
       weeklyTestSummaryData: config?.include?.includes('weeklyTestSummaryData')
-        ? [new WeeklyTestSummaryImportDTO()]
+        ? genWeeklyTestSummaryDto(config?.weeklyTestSummaryAmount, {include: ["weeklySystemIntegrity"]})
         : undefined,
       summaryValueData: config?.include?.includes('summaryValueData')
         ? [new SummaryValueImportDTO()]

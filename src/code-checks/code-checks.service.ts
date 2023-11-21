@@ -37,11 +37,9 @@ const getErrorMessage = (property, value) => `You reported an invalid ${property
 @Injectable()
 export class CodeChecksService {
 
-
     constructor(private readonly logger: Logger) {
         this.logger.setContext('CodeChecksService');
     }
-
 
     async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
         this.logger.log('Running Code Checks');
@@ -92,15 +90,15 @@ export class CodeChecksService {
         const invalidAnnualEnergySoldTypeCodes = getInvalidCodes<Nsps4tElectricalLoadCode>(codesMap.get("annualEnergySoldTypeCode"), Nsps4tElectricalLoadCode.getRepository());
         const invalidCo2RateUomCodes = getInvalidCodes<TrainQaStatusCode>(codesMap.get("co2EmissionRateUnitsOfMeasureCode"), TrainQaStatusCode.getRepository());
 
-        try{
-            const results = await Promise.all([invalidParameterCode, invalidFuelCodes, invalidTestTypeCodes, 
-                                                invalidTestResultCodes, invalidSpanScaleCodes, invalidGasLevelCodes, invalidUpscaleGasLevelCodes, 
-                                                invalidInjProtocolCodes, invalidVendors, invalidLoadUomCodes, invalidModcCodes, invalidOpCondCodes,
-                                                invalidVolUomCodes, invalidSodVolCodes, invalidSodMassCodes, invalidSampleCodes, invalidParamUomCodes,
-                                                invalidHourFlags, invalidFuelFlowPeriodCodes, invalidLtffUomCodes, invalidGcvUomCodes, invalidApsCodes,
-                                                invalidSrcResultCodes, invalidPlcResultCodes, invalidTrainQaStatusCodes, invalidCo2EmStdCodes, 
-                                                invalidModusUomCodes, invalidElectricalLoadCodes, invalidAnnualEnergySoldTypeCodes, invalidCo2RateUomCodes])
-            
+        try {
+            const results = await Promise.all([invalidParameterCode, invalidFuelCodes, invalidTestTypeCodes,
+                invalidTestResultCodes, invalidSpanScaleCodes, invalidGasLevelCodes, invalidUpscaleGasLevelCodes,
+                invalidInjProtocolCodes, invalidVendors, invalidLoadUomCodes, invalidModcCodes, invalidOpCondCodes,
+                invalidVolUomCodes, invalidSodVolCodes, invalidSodMassCodes, invalidSampleCodes, invalidParamUomCodes,
+                invalidHourFlags, invalidFuelFlowPeriodCodes, invalidLtffUomCodes, invalidGcvUomCodes, invalidApsCodes,
+                invalidSrcResultCodes, invalidPlcResultCodes, invalidTrainQaStatusCodes, invalidCo2EmStdCodes,
+                invalidModusUomCodes, invalidElectricalLoadCodes, invalidAnnualEnergySoldTypeCodes, invalidCo2RateUomCodes])
+
             // The results of the query come back with a list of invalid codes which are used to generate the error msgs                                    
             const parameterCodeErrors = results[0].map(invalidCodeObj => getErrorMessage("parameterCode", invalidCodeObj.column1))
             const fuelCodeErrors = results[1].map(invalidCodeObj => getErrorMessage("fuelCode", invalidCodeObj.column1))
@@ -134,20 +132,23 @@ export class CodeChecksService {
             const co2EmissionRateUnitsOfMeasureCodeErrors = results[29].map(invalidCodeObj => getErrorMessage("co2EmissionRateUnitsOfMeasureCode", invalidCodeObj.column1))
 
             errorList.push(...parameterCodeErrors, ...fuelCodeErrors, ...testTypeCodeErrors, ...testResultCodeErrors, ...spanScaleCodeErrors, ...gasLevelCodeErrors,
-                ...upscaleGasCodeErrors, ...injectionProtocolCodeErrors, ...vendorIdentifierErrors, ...loadUnitsOfMeasureCodeErrors, ...modcCodeErrors, 
-                ...operatingConditionCodeErrors, ...volumetricUnitsOfMeasureCodeErrors, ...sourceOfDataVolumetricCodeErrors, ...sourceOfDataMassCodeErrors, 
+                ...upscaleGasCodeErrors, ...injectionProtocolCodeErrors, ...vendorIdentifierErrors, ...loadUnitsOfMeasureCodeErrors, ...modcCodeErrors,
+                ...operatingConditionCodeErrors, ...volumetricUnitsOfMeasureCodeErrors, ...sourceOfDataVolumetricCodeErrors, ...sourceOfDataMassCodeErrors,
                 ...sampleTypeCodeErrors, ...parameterUnitsOfMeasureCodeErrors, ...beginEndHourFlagErrors, ...fuelFlowPeriodCodeErrors, ...longTermFuelFlowUnitsOfMeasureCodeErrors,
-                 ...gcvUnitsOfMeasureCodeErrors, ...apsCodeErrors, ...samplingRatioCheckResultCodeErrors, ...postLeakCheckResultCodeErrors, ...trainQAStatusCodeErrors,
-                 ...co2EmissionStandardCodeErrors, ...modusUnitsOfMeasureCodeErrors, ...electricalLoadCodeErrors, ...annualEnergySoldTypeCodeErrors, ...co2EmissionRateUnitsOfMeasureCodeErrors)
-            
+                ...gcvUnitsOfMeasureCodeErrors, ...apsCodeErrors, ...samplingRatioCheckResultCodeErrors, ...postLeakCheckResultCodeErrors, ...trainQAStatusCodeErrors,
+                ...co2EmissionStandardCodeErrors, ...modusUnitsOfMeasureCodeErrors, ...electricalLoadCodeErrors, ...annualEnergySoldTypeCodeErrors, ...co2EmissionRateUnitsOfMeasureCodeErrors)
+
             return errorList;
-    
-        }catch(err){
+
+        } catch (err) {
             throw new EaseyException(err, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 
     collectDailyEmissionsCodes(payload: DailyEmissionImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
         payload.forEach(dailyEm => {
 
             this.collectCode(dailyEm, "parameterCode", codesMap);
@@ -159,6 +160,9 @@ export class CodeChecksService {
     }
 
     collectWeeklyTestSummaryCodes(payload: WeeklyTestSummaryImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
         payload.forEach(wts => {
             this.collectCode(wts, "testTypeCode", codesMap);
             this.collectCode(wts, "testResultCode", codesMap);
@@ -171,106 +175,136 @@ export class CodeChecksService {
     }
 
     collectSummaryValueCodes(payload: SummaryValueImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
         payload.forEach(summaryVal => {
             this.collectCode(summaryVal, "parameterCode", codesMap);
         })
     }
 
     collectDailyTestSummary(payload: DailyTestSummaryImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
         payload.forEach(dts => {
             this.collectCode(dts, "testTypeCode", codesMap);
             this.collectCode(dts, "testResultCode", codesMap);
             this.collectCode(dts, "spanScaleCode", codesMap);
 
-            dts.dailyCalibrationData.forEach(dailyCal => {
-                this.collectCode(dailyCal, "upscaleGasCode", codesMap);
-                this.collectCode(dailyCal, "injectionProtocolCode", codesMap);
-                this.collectCode(dailyCal, "vendorIdentifier", codesMap);
-            })
+            if (dts.dailyCalibrationData)
+                dts.dailyCalibrationData.forEach(dailyCal => {
+                    this.collectCode(dailyCal, "upscaleGasCode", codesMap);
+                    this.collectCode(dailyCal, "injectionProtocolCode", codesMap);
+                    this.collectCode(dailyCal, "vendorIdentifier", codesMap);
+                })
         })
     }
 
     collectHourlyOperatingData(payload: HourlyOperatingImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
         payload.forEach(hourlyOp => {
             this.collectCode(hourlyOp, "loadUnitsOfMeasureCode", codesMap);
             this.collectCode(hourlyOp, "fuelCode", codesMap);
 
-            hourlyOp.monitorHourlyValueData.forEach(mhv => {
-                this.collectCode(mhv, "parameterCode", codesMap);
-                this.collectCode(mhv, "modcCode", codesMap);
-            });
-
-            hourlyOp.matsMonitorHourlyValueData.forEach(mmhv => {
-                this.collectCode(mmhv, "parameterCode", codesMap);
-                this.collectCode(mmhv, "modcCode", codesMap);
-            });
-
-            hourlyOp.derivedHourlyValueData.forEach(dhv => {
-                this.collectCode(dhv, "parameterCode", codesMap);
-                this.collectCode(dhv, "modcCode", codesMap);
-                this.collectCode(dhv, "operatingConditionCode", codesMap);
-                this.collectCode(dhv, "fuelCode", codesMap);
-            });
-
-            hourlyOp.matsDerivedHourlyValueData.forEach(mdhv => {
-                this.collectCode(mdhv, "parameterCode", codesMap);
-                this.collectCode(mdhv, "modcCode", codesMap);
-            });
-
-            hourlyOp.hourlyFuelFlowData.forEach(hff => {
-                this.collectCode(hff, "fuelCode", codesMap);
-                this.collectCode(hff, "volumetricUnitsOfMeasureCode", codesMap);
-                this.collectCode(hff, "sourceOfDataVolumetricCode", codesMap);
-                this.collectCode(hff, "sourceOfDataMassCode", codesMap);
-
-                hff.hourlyParameterFuelFlowData.forEach(hpff => {
-                    this.collectCode(hpff, "parameterCode", codesMap);
-                    this.collectCode(hpff, "sampleTypeCode", codesMap);
-                    this.collectCode(hpff, "operatingConditionCode", codesMap);
-                    this.collectCode(hpff, "parameterUnitsOfMeasureCode", codesMap);
+            if (hourlyOp.monitorHourlyValueData)
+                hourlyOp.monitorHourlyValueData.forEach(mhv => {
+                    this.collectCode(mhv, "parameterCode", codesMap);
+                    this.collectCode(mhv, "modcCode", codesMap);
                 });
-            });
 
-            hourlyOp.hourlyGFMData.forEach(hgfm => {
-                this.collectCode(hgfm, "beginEndHourFlag", codesMap);
-            });
+            if (hourlyOp.matsMonitorHourlyValueData)
+                hourlyOp.matsMonitorHourlyValueData.forEach(mmhv => {
+                    this.collectCode(mmhv, "parameterCode", codesMap);
+                    this.collectCode(mmhv, "modcCode", codesMap);
+                });
+
+            if (hourlyOp.derivedHourlyValueData)
+                hourlyOp.derivedHourlyValueData.forEach(dhv => {
+                    this.collectCode(dhv, "parameterCode", codesMap);
+                    this.collectCode(dhv, "modcCode", codesMap);
+                    this.collectCode(dhv, "operatingConditionCode", codesMap);
+                    this.collectCode(dhv, "fuelCode", codesMap);
+                });
+
+            if (hourlyOp.matsDerivedHourlyValueData)
+                hourlyOp.matsDerivedHourlyValueData.forEach(mdhv => {
+                    this.collectCode(mdhv, "parameterCode", codesMap);
+                    this.collectCode(mdhv, "modcCode", codesMap);
+                });
+
+            if (hourlyOp.hourlyFuelFlowData)
+                hourlyOp.hourlyFuelFlowData.forEach(hff => {
+                    this.collectCode(hff, "fuelCode", codesMap);
+                    this.collectCode(hff, "volumetricUnitsOfMeasureCode", codesMap);
+                    this.collectCode(hff, "sourceOfDataVolumetricCode", codesMap);
+                    this.collectCode(hff, "sourceOfDataMassCode", codesMap);
+
+                    if (hff.hourlyParameterFuelFlowData)
+                        hff.hourlyParameterFuelFlowData.forEach(hpff => {
+                            this.collectCode(hpff, "parameterCode", codesMap);
+                            this.collectCode(hpff, "sampleTypeCode", codesMap);
+                            this.collectCode(hpff, "operatingConditionCode", codesMap);
+                            this.collectCode(hpff, "parameterUnitsOfMeasureCode", codesMap);
+                        });
+                });
+
+            if (hourlyOp.hourlyGFMData)
+                hourlyOp.hourlyGFMData.forEach(hgfm => {
+                    this.collectCode(hgfm, "beginEndHourFlag", codesMap);
+                });
         })
     }
 
-    collectLongTermFuelFlowData(payload: LongTermFuelFlowImportDTO[], codesMap: Map<string, Set<string>>){
-        payload.forEach(ltff=>{
+    collectLongTermFuelFlowData(payload: LongTermFuelFlowImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
+        payload.forEach(ltff => {
             this.collectCode(ltff, "fuelFlowPeriodCode", codesMap);
             this.collectCode(ltff, "longTermFuelFlowUnitsOfMeasureCode", codesMap);
             this.collectCode(ltff, "gcvUnitsOfMeasureCode", codesMap);
         });
     }
 
-    collectSorbentTrapData(payload: SorbentTrapImportDTO[], codesMap: Map<string, Set<string>>){
-        payload.forEach(sorbentTrp =>{
+    collectSorbentTrapData(payload: SorbentTrapImportDTO[], codesMap: Map<string, Set<string>>) {
+        if (!payload)
+            return;
+
+        payload.forEach(sorbentTrp => {
             this.collectCode(sorbentTrp, "modcCode", codesMap);
             this.collectCode(sorbentTrp, "apsCode", codesMap);
 
-            sorbentTrp.samplingTrainData.forEach(st => {
-                this.collectCode(st, "samplingRatioCheckResultCode", codesMap);
-                this.collectCode(st, "postLeakCheckResultCode", codesMap);
-                this.collectCode(st, "trainQAStatusCode", codesMap);
-            });
+            if (sorbentTrp.samplingTrainData)
+                sorbentTrp.samplingTrainData.forEach(st => {
+                    this.collectCode(st, "samplingRatioCheckResultCode", codesMap);
+                    this.collectCode(st, "postLeakCheckResultCode", codesMap);
+                    this.collectCode(st, "trainQAStatusCode", codesMap);
+                });
         });
     }
 
-    collectNsps4tSummary(payload: Nsps4tSummaryImportDTO[], codesMap: Map<string, Set<string>>){
-        payload.forEach(nsps4t =>{
+    collectNsps4tSummary(payload: Nsps4tSummaryImportDTO[], codesMap: Map<string, Set<string>>) {
+
+        if (!payload)
+            return;
+
+        payload.forEach(nsps4t => {
             this.collectCode(nsps4t, "co2EmissionStandardCode", codesMap);
             this.collectCode(nsps4t, "modusUnitsOfMeasureCode", codesMap);
             this.collectCode(nsps4t, "electricalLoadCode", codesMap);
 
-            nsps4t.nsps4tFourthQuarterData.forEach(nfq => {
-                this.collectCode(nfq, "annualEnergySoldTypeCode", codesMap);
-            });
+            if (nsps4t.nsps4tFourthQuarterData)
+                nsps4t.nsps4tFourthQuarterData.forEach(nfq => {
+                    this.collectCode(nfq, "annualEnergySoldTypeCode", codesMap);
+                });
 
-            nsps4t.nsps4tCompliancePeriodData.forEach( ncp => {
-                this.collectCode(ncp, "co2EmissionRateUnitsOfMeasureCode", codesMap);
-            });
+            if (nsps4t.nsps4tCompliancePeriodData)
+                nsps4t.nsps4tCompliancePeriodData.forEach(ncp => {
+                    this.collectCode(ncp, "co2EmissionRateUnitsOfMeasureCode", codesMap);
+                });
         })
     }
 
