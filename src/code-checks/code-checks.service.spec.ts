@@ -25,6 +25,7 @@ describe('Code Checks Service Tests', () => {
           } as unknown) as EntityManager);
       
         const mockedPayload = genEmissionsImportDto(1, {include:["weeklyTestSummaryData", "dailyTestSummaryData", "hourlyOperatingData"]}) 
+
         const results = await service.runChecks(mockedPayload[0]);
         expect(results.length).toBe(6)
     });  
