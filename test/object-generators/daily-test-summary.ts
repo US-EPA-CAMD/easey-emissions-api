@@ -28,7 +28,7 @@ export const genDailyTestSummary = <RepoType>(
       id: faker.datatype.string(),
       reportingPeriodId: faker.datatype.number(),
       monitoringLocationId: faker.datatype.string(),
-      componentId: optionalValue(faker.datatype.string()),
+      componentId: faker.datatype.string(),
       date: faker.datatype.datetime(),
       hour: faker.datatype.number(),
       minute: optionalValue(faker.datatype.number()),

@@ -88,6 +88,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { CodeChecksService } from '../code-checks/code-checks.service';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -105,6 +106,7 @@ describe('-- Emissions Controller --', () => {
         DailyFuelMap,
         DailyFuelWorkspaceService,
         DailyTestSummaryCheckService,
+        CodeChecksService,
         EmissionsMap,
         EmissionsWorkspaceService,
         EmissionsSubmissionsProgressMap,

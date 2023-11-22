@@ -41,6 +41,7 @@ import { MonitorLocation } from '../entities/monitor-location.entity';
 import { Unit } from '../entities/unit.entity';
 import { StackPipe } from '../entities/stack-pipe.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { CodeChecksService } from '../code-checks/code-checks.service';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -92,6 +93,12 @@ describe('Emissions Checks Service Tests', () => {
         },
         {
           provide: WeeklyTestSummaryCheckService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockReturnValue([]),
+          }),
+        },
+        {
+          provide: CodeChecksService,
           useFactory: () => ({
             runChecks: jest.fn().mockReturnValue([]),
           }),
