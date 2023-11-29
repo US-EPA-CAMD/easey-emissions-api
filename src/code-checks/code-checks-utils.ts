@@ -169,7 +169,7 @@ export const getCodeFieldRepoList = (): CodeFieldRepo[] =>{
         },
         {
             codeField: "co2EmissionRateUnitsOfMeasureCode",
-            codeRepo: TrainQaStatusCode.getRepository()
+            codeRepo: UnitsOfMeasureCode.getRepository()
         },
     ]);
 };
