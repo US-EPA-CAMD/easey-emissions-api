@@ -12,6 +12,7 @@ import { MonitorLocation } from './monitor-location.entity';
 import { ReportingPeriod } from './reporting-period.entity';
 import { MonitorSystem } from './monitor-system.entity';
 import { SamplingTrain } from './sampling-train.entity';
+import { SorbentTrapApsCode } from './sorbent-trap-aps-code.entity';
 
 @Entity({ name: 'camdecmps.sorbent_trap' })
 export class SorbentTrap extends BaseEntity {
@@ -123,6 +124,13 @@ export class SorbentTrap extends BaseEntity {
   )
   @JoinColumn({ name: 'rpt_period_id' })
   reportingPeriod: ReportingPeriod;
+
+  @ManyToOne(
+    () => SorbentTrapApsCode,
+    o => o.apsCode,
+  )
+  @JoinColumn({ name: 'sorbent_trap_aps_cd' })
+  sorbentTrapApsCode: SorbentTrapApsCode;
 
   @OneToMany(
     () => SamplingTrain,
