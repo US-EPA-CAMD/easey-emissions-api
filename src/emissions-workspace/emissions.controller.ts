@@ -109,7 +109,7 @@ export class EmissionsWorkspaceController {
         'sorbentTrapData',
         'nsps4tSummaryData',
       ],
-      permissionsForFacility: ['DSEM', 'DPEM'],
+      permissionsForFacility: ['DSEM'],
       requiredRoles: ['Preparer', 'Submitter', 'Sponsor'],
     },
     LookupType.Location,
