@@ -23,11 +23,11 @@ describe('Daily Backstop Map Test', () => {
         updateDate: mock.updateDate?.toISOString() ?? null,
         reportingPeriodId: mock.reportingPeriodId,
         date: mock.date,
-        dailyNOxEmissions: mock.dailyNoxEmissions,
+        dailyNoxEmissions: mock.dailyNoxEmissions,
         dailyHeatInput: mock.dailyHeatInput,
-        dailyAverageNOxRate: mock.dailyAverageNoxRate,
-        dailyNOxExceedence: mock.dailyNoxExceedence,
-        cumulativeOSNOxExceedence: mock.cumulativeOsNoxExceedence,
+        dailyAverageNoxRate: mock.dailyAverageNoxRate,
+        dailyNoxExceedence: mock.dailyNoxExceedence,
+        cumulativeOsNoxExceedence: mock.cumulativeOsNoxExceedence,
   });
     };
 

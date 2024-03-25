@@ -62,21 +62,21 @@ export class DailyBackstopWorkspaceService {
         
           const {
             date,
-            dailyNOxEmissions,
+            dailyNoxEmissions,
             dailyHeatInput,
-            dailyAverageNOxRate,
-            dailyNOxExceedence,
-            cumulativeOSNOxExceedence,
+            dailyAverageNoxRate,
+            dailyNoxExceedence,
+            cumulativeOsNoxExceedence,
           } = dailyBackstopDatum;
     
           bulkLoadStream.writeObject({
             unitId: monitoringLocation?.unit?.id ?? null,
             date,
-            dailyNOxEmissions,
+            dailyNoxEmissions,
             dailyHeatInput,
-            dailyAverageNOxRate,
-            dailyNOxExceedence,
-            cumulativeOSNOxExceedence,
+            dailyAverageNoxRate,
+            dailyNoxExceedence,
+            cumulativeOsNoxExceedence,
             monitoringLocationId: monitoringLocation?.id ?? null,
             reportingPeriodId,
             userId: identifiers?.userId,

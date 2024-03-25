@@ -13,19 +13,19 @@ export class DailyBackstopBaseDTO {
     date: Date;
   
     @IsNumber()
-    dailyNOxEmissions?: number;
+    dailyNoxEmissions?: number;
   
     @IsNumber()
     dailyHeatInput?: number;
     
     @IsNumber()
-    dailyAverageNOxRate?: number;
+    dailyAverageNoxRate?: number;
   
     @IsNumber()
-    dailyNOxExceedence?: number;
+    dailyNoxExceedence?: number;
 
     @IsNumber()
-    cumulativeOSNOxExceedence?: number;
+    cumulativeOsNoxExceedence?: number;
   }
 
 export class DailyBackstopRecordDTO extends DailyBackstopBaseDTO{
