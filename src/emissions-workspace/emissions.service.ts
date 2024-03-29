@@ -370,7 +370,7 @@ export class EmissionsWorkspaceService {
           && ((other['unitId'] !== null && other['unitId'] === elem['unitId'])
               || (other['stackPipeId'] !== null && other['stackPipeId'] === elem['stackPipeId']))
   }
-  
+  if (emissionsImport.summaryValueData && emissionsImport.summaryValueData.length>0)
   emissionsImport.summaryValueData = emissionsImport.summaryValueData.reduce((acc, elem) => {
       const isDuplicate = acc.some(existingElem => areDuplicates(elem, existingElem));
       if (!isDuplicate) {
