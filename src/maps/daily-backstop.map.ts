@@ -24,11 +24,11 @@ export class DailyBackstopMap extends BaseMap<
             updateDate: entity.updateDate?.toISOString() ?? null,
             reportingPeriodId: entity.reportingPeriodId,
             date: entity.date,
-            dailyNOxEmissions: entity.dailyNoxEmissions,
+            dailyNoxEmissions: entity.dailyNoxEmissions,
             dailyHeatInput: entity.dailyHeatInput,
-            dailyAverageNOxRate: entity.dailyAverageNoxRate,
-            dailyNOxExceedence: entity.dailyNoxExceedence,
-            cumulativeOSNOxExceedence: entity.cumulativeOsNoxExceedence,
+            dailyAverageNoxRate: entity.dailyAverageNoxRate,
+            dailyNoxExceedence: entity.dailyNoxExceedence,
+            cumulativeOsNoxExceedence: entity.cumulativeOsNoxExceedence,
         };
     }
 }

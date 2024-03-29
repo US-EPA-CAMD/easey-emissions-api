@@ -67,8 +67,17 @@ export default registerAs('app', () => ({
   reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '60mb'),
   // ENABLES DEBUG CONSOLE LOGS
   enableDebug: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_DEBUG'),
-  // NEEDS TO BE SET IN .ENV FILE FOR LOCAL DEVELOPMENT
-  // FORMAT: { "userId": "", "roles": [ { "orisCode": 3, "role": "P" } ] }
+  /**
+   * Needs to be set in .env file for local development if `EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN` is false.
+   * Format:
+   *   {
+   *       "facilities": [
+   *           { "facId": number, "orisCode": number, "permissions": string[] }
+   *       ],
+   *       "roles": <"Preparer" | "Submitter" | "Sponsor">[],
+   *       "userId": string
+   *   }
+   */
   currentUser: getConfigValue(
     'EASEY_EMISSIONS_API_CURRENT_USER',
     '{"userId": ""}',

@@ -4,6 +4,7 @@ package-lock.json
 # dependencies
 /node_modules
 /npm-packages-offline-cache
+.npmrc
 
 # production
 /dist
@@ -12,6 +13,7 @@ package-lock.json
 .DS_Store
 .env
 .env.*
+.envrc
 
 npm-debug.log*
 
