@@ -365,6 +365,20 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
+    function areDuplicates(elem, other) {
+      return other['parameterCode'] === elem['parameterCode']
+          && ((other['unitId'] !== null && other['unitId'] === elem['unitId'])
+              || (other['stackPipeId'] !== null && other['stackPipeId'] === elem['stackPipeId']))
+  }
+  
+  emissionsImport.summaryValueData = emissionsImport.summaryValueData.reduce((acc, elem) => {
+      const isDuplicate = acc.some(existingElem => areDuplicates(elem, existingElem));
+      if (!isDuplicate) {
+          acc.push(elem)
+      }
+      return acc;
+  }, []);
+
     await this.summaryValueService.import(
       emissionsImport,
       monitoringLocations,
