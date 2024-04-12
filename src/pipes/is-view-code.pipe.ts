@@ -14,7 +14,7 @@ import { DataSet } from '../entities/dataset.entity';
 export class IsViewCode implements PipeTransform<string, Promise<string>> {
   async transform(value: string, _metadata: ArgumentMetadata): Promise<string> {
     const manager = ConnectionService.getEntityManager();
-    const found = await manager.findOne(DataSet, {
+    const found = await manager.findOneBy(DataSet, {
       code: ILike(value),
       groupCode: 'EMVIEW',
     });

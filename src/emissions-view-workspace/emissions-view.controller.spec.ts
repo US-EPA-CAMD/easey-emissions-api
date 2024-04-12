@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 import { EntityManager } from 'typeorm';
 
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -21,6 +22,10 @@ describe('EmissionsViewWorkspaceController', () => {
         EmissionsViewWorkspaceService,
         EntityManager,
         ConfigService,
+        {
+          provide: DataSource,
+          useValue: {},
+        },
       ],
     }).compile();
 

@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult, FindConditions } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { LongTermFuelFlow } from '../entities/workspace/long-term-fuel-flow.entity';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
 
 @Injectable()
 export class LongTermFuelFlowWorkspaceService {
@@ -20,7 +19,7 @@ export class LongTermFuelFlowWorkspaceService {
   ) {}
 
   async delete(
-    criteria: FindConditions<LongTermFuelFlow>,
+    criteria: Parameters<typeof this.repository.delete>[0],
   ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }

@@ -1,29 +1,24 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { FindConditions, InsertResult } from 'typeorm';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
 
-import { HourlyOperatingMap } from '../maps/hourly-operating.map';
+import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import {
   HourlyOperatingDTO,
   HourlyOperatingImportDTO,
 } from '../dto/hourly-operating.dto';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
-import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
-import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
-import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
-import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
-import {
-  isUndefinedOrNull,
-  splitArrayInChunks,
-} from '../utils/utils';
-import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
+import { HourlyOperatingMap } from '../maps/hourly-operating.map';
+import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
+import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
+import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { isUndefinedOrNull, splitArrayInChunks } from '../utils/utils';
+import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
   reportingPeriodId: number;
@@ -117,7 +112,9 @@ export class HourlyOperatingWorkspaceService {
     return results.flat(1);
   }
 
-  async delete(criteria: FindConditions<HrlyOpData>): Promise<void> {
+  async delete(
+    criteria: Parameters<typeof this.repository.delete>[0],
+  ): Promise<void> {
     await this.repository.delete(criteria);
   }
 

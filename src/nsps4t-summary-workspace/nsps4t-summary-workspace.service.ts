@@ -1,17 +1,17 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
-import { arrayPushCreate, hasArrayValues } from '../utils/utils';
-import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { DeleteResult, FindConditions } from 'typeorm';
-import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
+import { DeleteResult } from 'typeorm';
+
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
 import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
+import { arrayPushCreate, hasArrayValues } from '../utils/utils';
+import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
 
 @Injectable()
 export class Nsps4tSummaryWorkspaceService {
@@ -22,7 +22,9 @@ export class Nsps4tSummaryWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(criteria: FindConditions<Nsps4tSummary>): Promise<DeleteResult> {
+  async delete(
+    criteria: Parameters<typeof this.repository.delete>[0],
+  ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

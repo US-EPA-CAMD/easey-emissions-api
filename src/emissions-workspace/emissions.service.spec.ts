@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EntityManager } from 'typeorm';
-import * as typeorm_functions from 'typeorm/globals';
 
 import { mockEmissionsWorkspaceRepository } from '../../test/mocks/emissions-workspace-repository';
 import { mockHourlyOperatingWorkspaceRepository } from '../../test/mocks/hourly-operating-workspace-repository';
@@ -112,6 +111,7 @@ describe('Emissions Workspace Service', () => {
   let emissionsService: EmissionsWorkspaceService;
   let emissionsMap: EmissionsMap;
   let plantRepository: PlantRepository;
+  let manager: EntityManager;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -258,6 +258,7 @@ describe('Emissions Workspace Service', () => {
     emissionsService = module.get(EmissionsWorkspaceService);
     emissionsMap = module.get(EmissionsMap);
     plantRepository = module.get(PlantRepository);
+    manager = module.get(EntityManager);
   });
 
   it('should have a emissions service', function() {
@@ -285,10 +286,8 @@ describe('Emissions Workspace Service', () => {
 
   it('should successfully import', async function() {
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
-    jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
-      findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
-      query: jest.fn(),
-    } as unknown) as EntityManager);
+    jest.spyOn(manager, 'findOne').mockResolvedValue(new ReportingPeriod());
+    jest.spyOn(manager, 'query').mockImplementation();
 
     const emissionsDtoMock = genEmissionsImportDto(1, {
       include: ['longTermFuelFlowData'],

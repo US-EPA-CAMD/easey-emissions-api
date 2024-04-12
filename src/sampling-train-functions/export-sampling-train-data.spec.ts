@@ -1,15 +1,22 @@
-import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { genSamplingTrain } from '../../test/object-generators/sampling-train';
 import { SamplingTrain } from '../entities/sampling-train.entity';
 import { SamplingTrainMap } from '../maps/sampling-train.map';
-import { faker } from '@faker-js/faker';
+import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
 
 describe('ExportSamplingTrainData', () => {
   let samplingTrainRepository;
   let exportSamplingTrainModule: typeof import('./export-sampling-train-data');
 
   beforeAll(async () => {
-    samplingTrainRepository = new SamplingTrainRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, SamplingTrainRepository],
+    }).compile();
+
+    samplingTrainRepository = module.get(SamplingTrainRepository);
     exportSamplingTrainModule = await import('./export-sampling-train-data');
   });
 

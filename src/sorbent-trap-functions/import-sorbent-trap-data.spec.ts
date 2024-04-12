@@ -1,3 +1,5 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
 import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorbent-trap-workspace.repository';
 import { faker } from '@faker-js/faker';
 import { genSorbentTrapImportDto } from '../../test/object-generators/sorbent-trap-dto';
@@ -7,7 +9,11 @@ describe('ImportSorbentTrapData', () => {
   let importSorbentTrapModule: typeof import('./import-sorbent-trap-data');
 
   beforeAll(async () => {
-    repository = new SorbentTrapWorkspaceRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, SorbentTrapWorkspaceRepository],
+    }).compile();
+
+    repository = module.get(SorbentTrapWorkspaceRepository);
     importSorbentTrapModule = await import('./import-sorbent-trap-data');
   });
 

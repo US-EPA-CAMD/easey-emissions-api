@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { randomUUID } from 'crypto';
+import { DeleteResult } from 'typeorm';
+
 import { exportDailyEmissionData } from '../daily-emission-functions/export-daily-emission-data';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
-import { randomUUID } from 'crypto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyEmissionImportDTO } from '../dto/daily-emission.dto';
-import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { DeleteResult, FindConditions } from 'typeorm';
-import { DailyEmission } from '../entities/workspace/daily-emission.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
 
 export type DailyEmissionWorkspaceCreate = DailyEmissionImportDTO & {
   reportingPeriodId: number;
@@ -27,7 +27,9 @@ export class DailyEmissionWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(criteria: FindConditions<DailyEmission>): Promise<DeleteResult> {
+  async delete(
+    criteria: Parameters<typeof this.repository.delete>[0],
+  ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

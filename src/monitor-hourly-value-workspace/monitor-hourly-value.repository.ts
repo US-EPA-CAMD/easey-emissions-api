@@ -1,4 +1,5 @@
-import { EntityManager } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
 import { MonitorHrlyValue } from '../entities/workspace/monitor-hrly-value.entity';
 

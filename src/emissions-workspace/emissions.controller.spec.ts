@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { Test } from '@nestjs/testing';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
 import { CodeChecksService } from '../code-checks/code-checks.service';
@@ -192,6 +192,10 @@ describe('-- Emissions Controller --', () => {
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
         EmissionsReviewSubmitGlobalRepository,
+        {
+          provide: DataSource,
+          useValue: {},
+        },
         {
           provide: DailyBackstopWorkspaceService,
           useValue: jest.mock(
