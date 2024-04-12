@@ -1,4 +1,5 @@
-import { BaseEntity, Repository, getManager } from 'typeorm';
+import { BaseEntity, EntityManager, Repository } from 'typeorm';
+import { ConnectionService } from '@us-epa-camd/easey-common/connection';
 import { ParameterCode } from '../entities/parameter-code.entity';
 import { FuelCode } from '../entities/fuel-code.entity';
 import { TestTypeCode } from '../entities/test-type-code.entity';
@@ -31,13 +32,13 @@ export const getErrorMessage = (property, value) =>
 export const getInvalidCodes = async (
   codeSet: Set<string>,
   entityRepo: Repository<BaseEntity>,
+  manager: EntityManager,
 ) => {
   if (!codeSet || codeSet.size === 0) return [];
 
   const tableName = entityRepo.metadata.tableName;
   const codeColumn = entityRepo.metadata.primaryColumns[0].databaseName;
 
-  const manager = getManager();
   const codeList = Array.from(codeSet);
 
   const formattedCodes = codeList.map(code => `('${code}')`);

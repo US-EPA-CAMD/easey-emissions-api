@@ -3,7 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { getManager } from 'typeorm';
+import { DbLookupValidator } from '@us-epa-camd/easey-common/validators';
 
 import { ProgramCode } from '../entities/program-code.entity';
 
@@ -17,17 +17,19 @@ export function IsEmissionsProgram(validationOptions?: ValidationOptions) {
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: {
-        async validate(value: any, args: ValidationArguments) {
-          const manager = getManager();
-
-          const found = await manager.findOne(ProgramCode, {
-            programCode: value.toUpperCase(),
-            emissionsUIFilter: 1,
-          });
-          return found != null;
+      constraints: [
+        {
+          type: ProgramCode,
+          ignoreEmpty: false,
+          findOption: (args: ValidationArguments) => ({
+            where: {
+              programCode: args.value.toUpperCase(),
+              emissionsUIFilter: 1,
+            },
+          }),
         },
-      },
+      ],
+      validator: DbLookupValidator,
     });
   };
 }

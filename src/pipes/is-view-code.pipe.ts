@@ -4,15 +4,16 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { getManager, ILike } from 'typeorm';
+import { ILike } from 'typeorm';
 import { ApiConfigService } from '@us-epa-camd/easey-common/constants';
+import { ConnectionService } from '@us-epa-camd/easey-common/connection';
 
 import { DataSet } from '../entities/dataset.entity';
 
 @Injectable()
 export class IsViewCode implements PipeTransform<string, Promise<string>> {
-  async transform(value: string, metadata: ArgumentMetadata): Promise<string> {
-    const manager = getManager();
+  async transform(value: string, _metadata: ArgumentMetadata): Promise<string> {
+    const manager = ConnectionService.getEntityManager();
     const found = await manager.findOne(DataSet, {
       code: ILike(value),
       groupCode: 'EMVIEW',

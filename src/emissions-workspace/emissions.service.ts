@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
-import { DeleteResult, FindConditions, getManager } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
@@ -50,6 +50,7 @@ export type ImportIdentifiers = {
 @Injectable()
 export class EmissionsWorkspaceService {
   constructor(
+    private readonly entityManager: EntityManager,
     private readonly map: EmissionsMap,
     private readonly checksService: EmissionsChecksService,
     private readonly repository: EmissionsWorkspaceRepository,
@@ -70,7 +71,7 @@ export class EmissionsWorkspaceService {
   ) {}
 
   async delete(
-    criteria: FindConditions<EmissionEvaluation>,
+    criteria: Parameters<typeof this.repository.delete>[0],
   ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
@@ -169,8 +170,7 @@ export class EmissionsWorkspaceService {
       throw new NotFoundException('Multiple active monitor plans found.');
     }
 
-    const manager = getManager();
-    const reportingPeriod = await manager.findOne(ReportingPeriod, {
+    const reportingPeriod = await this.entityManager.findOne(ReportingPeriod, {
       where: {
         year: params.year,
         quarter: params.quarter,
@@ -196,7 +196,7 @@ export class EmissionsWorkspaceService {
     await this.checksService.invalidFormulasCheck(params, monitoringLocations);
 
     for (const monitorPlan of monitorPlans) {
-      await manager.query(
+      await this.entityManager.query(
         'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
         [monitorPlan.id, reportingPeriodId],
       );
