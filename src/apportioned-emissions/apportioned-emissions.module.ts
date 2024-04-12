@@ -27,6 +27,5 @@ import { UnitFactRepository } from './unit-fact.repository';
   ],
   controllers: [ApportionedEmissionsController],
   providers: [UnitFactRepository, ApportionedEmissionsService],
-  exports: [UnitFactRepository],
 })
 export class ApportionedEmissionsModule {}

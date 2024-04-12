@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
+import { DeleteResult } from 'typeorm';
 
-import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
-import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { exportSorbentTrapData } from '../sorbent-trap-functions/export-sorbent-trap-data';
 import { hasArrayValues } from '../utils/utils';
-import { DeleteResult, FindConditions } from 'typeorm';
-import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
 
 @Injectable()
 export class SorbentTrapWorkspaceService {
@@ -20,7 +19,9 @@ export class SorbentTrapWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(criteria: FindConditions<SorbentTrap>): Promise<DeleteResult> {
+  async delete(
+    criteria: Parameters<typeof this.repository.delete>[0],
+  ): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository';
 import { MonitorHrlyValue } from '../entities/workspace/monitor-hrly-value.entity';
+import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository';
 
 const mockQueryBuilder = () => ({
   leftJoinAndSelect: jest.fn(),
@@ -16,6 +16,7 @@ describe('-- MonitorHourlyValueRepository --', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         MonitorHourlyValueRepository,
         { provide: SelectQueryBuilder, useFactory: mockQueryBuilder },
       ],

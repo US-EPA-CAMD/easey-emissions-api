@@ -1,18 +1,18 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
-import { MonthUnitDataRepository } from './month-unit-data.repository';
-import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
-import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
-import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
 import {
   genMonthlyApportionedEmissionsFacilityDto,
   genMonthlyApportionedEmissionsNationalDto,
   genMonthlyApportionedEmissionsStateDto,
   genMonthUnitData,
 } from '../../../test/object-generators/apportioned-emissions';
+import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
+import { MonthUnitDataRepository } from './month-unit-data.repository';
+import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
+import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 
 const mockRequest = (url: string) => {
   return {
@@ -32,7 +32,11 @@ describe('-- Monthly Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [MonthlyApportionedEmissionsController],
-      providers: [MonthlyApportionedEmissionsService, MonthUnitDataRepository],
+      providers: [
+        EntityManager,
+        MonthlyApportionedEmissionsService,
+        MonthUnitDataRepository,
+      ],
     }).compile();
 
     controller = module.get(MonthlyApportionedEmissionsController);

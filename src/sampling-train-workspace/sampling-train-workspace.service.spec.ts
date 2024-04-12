@@ -1,11 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SamplingTrainWorkspaceService } from './sampling-train-workspace.service';
-import { SamplingTrainWorkspaceRepository } from './sampling-train-workspace.repository';
-import { ComponentRepository } from '../component/component.repository';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
-import { SamplingTrainMap } from '../maps/sampling-train.map';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genSamplingTrain } from '../../test/object-generators/sampling-train';
+import { ComponentRepository } from '../component/component.repository';
+import { SamplingTrainMap } from '../maps/sampling-train.map';
+import { SamplingTrainWorkspaceRepository } from './sampling-train-workspace.repository';
+import { SamplingTrainWorkspaceService } from './sampling-train-workspace.service';
 
 describe('SamplingTrainWorkspaceService', () => {
   let service: SamplingTrainWorkspaceService;
@@ -15,6 +17,7 @@ describe('SamplingTrainWorkspaceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         ComponentRepository,
         SamplingTrainWorkspaceService,
         SamplingTrainWorkspaceRepository,

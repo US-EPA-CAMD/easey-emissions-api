@@ -1,19 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { Nsps4tSummaryWorkspaceService } from './nsps4t-summary-workspace.service';
-import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
-import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
-import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
-import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
-import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
-import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
-import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
-import { Nsps4tSummaryMap } from '../maps/nsps4t-summary.map';
-import * as exportNsps4tSummaryData from '../nsps4t-summary-functions/export-nsps4t-summary-data';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
+import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
+import { Nsps4tSummaryMap } from '../maps/nsps4t-summary.map';
+import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
+import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
+import * as exportNsps4tSummaryData from '../nsps4t-summary-functions/export-nsps4t-summary-data';
+import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
+import { Nsps4tSummaryWorkspaceService } from './nsps4t-summary-workspace.service';
 
 describe('Nsps4tSummaryWorkspaceNewService', () => {
   let service: Nsps4tSummaryWorkspaceService;
@@ -26,6 +28,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         Nsps4tAnnualWorkspaceRepository,
         Nsps4tAnnualWorkspaceService,
         Nsps4tCompliancePeriodWorkspaceRepository,

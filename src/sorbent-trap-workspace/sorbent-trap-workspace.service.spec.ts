@@ -1,19 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
-import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
-import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
-import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
-import { ComponentRepository } from '../component/component.repository';
-import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
-import { SorbentTrapMap } from '../maps/sorbent-trap.map';
-import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
-import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
-import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
+import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
+import { ComponentRepository } from '../component/component.repository';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
+import { SorbentTrapMap } from '../maps/sorbent-trap.map';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
+import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
+import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
 
 describe('SorbentTrapWorkspaceService', () => {
   let service: SorbentTrapWorkspaceService;
@@ -24,6 +26,7 @@ describe('SorbentTrapWorkspaceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         ComponentRepository,
         MonitorSystemRepository,
         SamplingTrainWorkspaceService,

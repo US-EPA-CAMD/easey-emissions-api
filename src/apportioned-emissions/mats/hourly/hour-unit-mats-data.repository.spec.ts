@@ -1,26 +1,19 @@
 import { Test } from '@nestjs/testing';
-import * as typeorm_functions from 'typeorm/globals';
 import {
-  Repository,
-  SelectQueryBuilder,
-  getManager,
-  EntityManager,
-} from 'typeorm';
-
-import {
-  State,
-  UnitType,
-  UnitFuelType,
   ControlTechnology,
+  State,
+  UnitFuelType,
+  UnitType,
 } from '@us-epa-camd/easey-common/enums';
-
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
+import * as typeorm_functions from 'typeorm/globals';
 
-import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
-import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
-import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
+import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
+import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 
 jest.mock('../../../utils/query-builder.helper');
 
@@ -92,6 +85,7 @@ describe('HourUnitMatsDataRepository', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourUnitMatsDataRepository,
         {
           provide: SelectQueryBuilder,

@@ -1,16 +1,17 @@
 import { Test } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
 
-import { DailyTestSummaryService } from './daily-test-summary.service';
-import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
-import { DailyCalibrationService } from '../daily-calibration/daily-calibration.service';
-import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
-import { DailyCalibrationMap } from '../maps/daily-calibration.map';
-import { DailyTestSummaryRepository } from './daily-test-summary.repository';
+import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
 import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
-import { DailyTestSummary } from '../entities/daily-test-summary.entity';
-import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
 import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
+import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
+import { DailyCalibrationService } from '../daily-calibration/daily-calibration.service';
+import { DailyTestSummary } from '../entities/daily-test-summary.entity';
+import { DailyCalibrationMap } from '../maps/daily-calibration.map';
+import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { DailyTestSummaryRepository } from './daily-test-summary.repository';
+import { DailyTestSummaryService } from './daily-test-summary.service';
 
 describe('Daily Test Summary Service', () => {
   let service: DailyTestSummaryService;
@@ -26,6 +27,7 @@ describe('Daily Test Summary Service', () => {
         DailyCalibrationService,
         DailyCalibrationRepository,
         DailyCalibrationMap,
+        EntityManager,
         {
           provide: DailyTestSummaryRepository,
           useValue: mockDailyTestSummaryRepository,

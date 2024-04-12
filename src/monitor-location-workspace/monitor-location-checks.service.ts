@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
+import { DailyBackstopImportDTO } from '../dto/daily-backstop.dto';
 import { DailyTestSummaryImportDTO } from '../dto/daily-test-summary.dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { HourlyOperatingImportDTO } from '../dto/hourly-operating.dto';
-import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
-import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { LongTermFuelFlowImportDTO } from '../dto/long-term-fuel-flow.dto';
+import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
+import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { SummaryValueImportDTO } from '../dto/summary-value.dto';
+import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
-
-import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
-import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { isUndefinedOrNull } from '../utils/utils';
-import { Nsps4tSummaryImportDTO } from '../dto/nsps4t-summary.dto';
-import { DailyBackstopImportDTO } from '../dto/daily-backstop.dto';
+import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 
 // the following types have componentId field (and possibly other fields later on) which is needed for addLocation()
 type ForLocationType =
@@ -31,7 +29,6 @@ type ForLocationType =
 @Injectable()
 export class MonitorLocationChecksService {
   constructor(
-    @InjectRepository(MonitorLocationWorkspaceRepository)
     private readonly repository: MonitorLocationWorkspaceRepository,
   ) {}
 
@@ -39,11 +36,11 @@ export class MonitorLocationChecksService {
     const locations: LocationIdentifiers[] = [];
 
     const addLocation = (i: ForLocationType) => {
-      const unitId = i["unitId"];
-      const stackPipeId = i["stackPipeId"];
+      const unitId = i['unitId'];
+      const stackPipeId = i['stackPipeId'];
       let location = locations.find(l => {
-        const locationUnitId = l["unitId"];
-        const locationStackPipeId = l["stackPipeId"];
+        const locationUnitId = l['unitId'];
+        const locationStackPipeId = l['stackPipeId'];
         if (unitId) return locationUnitId === unitId;
         if (stackPipeId) return locationStackPipeId === stackPipeId;
       });
@@ -52,7 +49,7 @@ export class MonitorLocationChecksService {
         location = {
           unitId: i.unitId,
           locationId: null,
-          stackPipeId: i["stackPipeId"],
+          stackPipeId: i['stackPipeId'],
           componentIds: new Set<string>(),
           monitoringSystemIds: new Set<string>(),
           ltffMonitoringSystemIds: new Set<string>(),

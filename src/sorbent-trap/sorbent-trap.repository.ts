@@ -1,5 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { SorbentTrap } from '../entities/sorbent-trap.entity';
 
-@EntityRepository(SorbentTrap)
-export class SorbentTrapRepository extends Repository<SorbentTrap> {}
+@Injectable()
+export class SorbentTrapRepository extends Repository<SorbentTrap> {
+  constructor(entityManager: EntityManager) {
+    super(SorbentTrap, entityManager);
+  }
+}

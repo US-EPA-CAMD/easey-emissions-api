@@ -1,47 +1,49 @@
 import { Test } from '@nestjs/testing';
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { EmissionsChecksService } from './emissions-checks.service';
-import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
-import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
-import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
-import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
-import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
-import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
-import { DailyCalibrationMap } from '../maps/daily-calibration.map';
-import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
-import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
+
+import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
-import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
-import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
-import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
-import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
-import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
+import { CodeChecksService } from '../code-checks/code-checks.service';
+import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
+import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
+import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
+import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-workspace/daily-test-summary.repository';
+import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { WeeklyTestSummaryDTO } from '../dto/weekly-test-summary.dto';
+import { MonitorLocation } from '../entities/monitor-location.entity';
+import { StackPipe } from '../entities/stack-pipe.entity';
+import { Unit } from '../entities/unit.entity';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
-import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
+import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
+import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
+import { DailyCalibrationMap } from '../maps/daily-calibration.map';
+import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
-import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorHourlyValueWorkspaceRepository } from '../monitor-hourly-value-workspace/monitor-hourly-value.repository';
+import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
+import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
 import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integrity-workspace/weekly-system-integrity.repository';
+import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
+import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/weekly-test-summary-check.service';
 import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
-import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
-import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
-import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
-import { LongTermFuelFlowWorkspaceRepository } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.repository';
-import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
-import { LongTermFuelFlowRepository } from '../long-term-fuel-flow/long-term-fuel-flow.repository';
-import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
-import { MonitorLocation } from '../entities/monitor-location.entity';
-import { Unit } from '../entities/unit.entity';
-import { StackPipe } from '../entities/stack-pipe.entity';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
-import { CodeChecksService } from '../code-checks/code-checks.service';
+import { EmissionsChecksService } from './emissions-checks.service';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -53,6 +55,7 @@ describe('Emissions Checks Service Tests', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule, CheckCatalogService, BulkLoadModule],
       providers: [
+        EntityManager,
         DailyCalibrationMap,
         DailyCalibrationWorkspaceService,
         DailyTestSummaryMap,

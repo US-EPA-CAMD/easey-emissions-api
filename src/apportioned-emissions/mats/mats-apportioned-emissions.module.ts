@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
-import { HourlyMatsApportionedEmissionsModule } from './hourly/hourly-mats-apportioned-emissions.module';
 import { UnitFactRepository } from '../unit-fact.repository';
+import { HourlyMatsApportionedEmissionsModule } from './hourly/hourly-mats-apportioned-emissions.module';
+import { MatsApportionedEmissionsController } from './mats-apportioned-emissions.controller';
+import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 
 @Module({
   imports: [
@@ -13,7 +13,11 @@ import { UnitFactRepository } from '../unit-fact.repository';
     HourlyMatsApportionedEmissionsModule,
   ],
   controllers: [MatsApportionedEmissionsController],
-  providers: [ConfigService, MatsApportionedEmissionsService],
+  providers: [
+    ConfigService,
+    MatsApportionedEmissionsService,
+    UnitFactRepository,
+  ],
   exports: [TypeOrmModule],
 })
 export class MatsApportionedEmissionsModule {}

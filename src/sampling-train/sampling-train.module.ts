@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { SamplingTrainService } from './sampling-train.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { SamplingTrainRepository } from './sampling-train.repository';
+import { SamplingTrainService } from './sampling-train.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SamplingTrainRepository])],
-  providers: [SamplingTrainService],
+  providers: [SamplingTrainRepository, SamplingTrainService],
 })
 export class SamplingTrainModule {}

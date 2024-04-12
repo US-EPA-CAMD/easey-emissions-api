@@ -1,8 +1,14 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { WeeklyTestSummary } from '../entities/weekly-test-summary.entity';
 
-@EntityRepository(WeeklyTestSummary)
+@Injectable()
 export class WeeklyTestSummaryRepository extends Repository<WeeklyTestSummary> {
+  constructor(entityManager: EntityManager) {
+    super(WeeklyTestSummary, entityManager);
+  }
+
   async export(monitoringLocationIds: string[], year: number, quarter: number) {
     const query = this.createQueryBuilder('wts')
       .innerJoinAndSelect('wts.monitorLocation', 'l')

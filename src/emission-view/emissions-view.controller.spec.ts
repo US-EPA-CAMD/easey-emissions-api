@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewController } from './emissions-view.controller';
 import { EmissionsViewRepository } from './emissions-view.repository';
@@ -14,6 +16,7 @@ describe('EmissionsViewController', () => {
         EmissionsViewRepository,
         EmissionsViewController,
         EmissionsViewService,
+        EntityManager,
       ],
     }).compile();
 

@@ -1,9 +1,10 @@
 import { Test } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
 import { MatsMonitorHourlyValueWorkspaceRepository } from './mats-monitor-hourly-value.repository';
 import { MatsMonitorHourlyValueWorkspaceService } from './mats-monitor-hourly-value.service';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { MatsMonitorHourlyValueImportDTO } from '../dto/mats-monitor-hourly-value.dto';
 
 const mockMap = {
   many: () => null,
@@ -19,6 +20,7 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         MatsMonitorHourlyValueWorkspaceService,
         MatsMonitorHourlyValueWorkspaceRepository,
         {

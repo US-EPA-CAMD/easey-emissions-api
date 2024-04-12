@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DailyEmissionService } from './daily-emission.service';
-import { DailyEmissionRepository } from './daily-emission.repository';
-import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
+import { EntityManager } from 'typeorm';
+
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
-import { DailyFuelDTO } from '../dto/daily-fuel.dto';
+import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
 import { DailyEmissionDTO } from '../dto/daily-emission.dto';
+import { DailyFuelDTO } from '../dto/daily-fuel.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { DailyEmissionRepository } from './daily-emission.repository';
+import { DailyEmissionService } from './daily-emission.service';
 
 describe('DailyEmissionDataService', () => {
   let service: DailyEmissionService;
@@ -22,6 +24,7 @@ describe('DailyEmissionDataService', () => {
         DailyEmissionRepository,
         DailyFuelService,
         DailyFuelRepository,
+        EntityManager,
         {
           provide: DailyFuelService,
           useValue: mockDailyFuelService,

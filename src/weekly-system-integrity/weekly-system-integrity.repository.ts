@@ -1,8 +1,13 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
 import { WeeklySystemIntegrity } from '../entities/weekly-system-integrity.entity';
 
-@EntityRepository(WeeklySystemIntegrity)
+@Injectable()
 export class WeeklySystemIntegrityRepository extends Repository<
   WeeklySystemIntegrity
-> {}
+> {
+  constructor(entityManager: EntityManager) {
+    super(WeeklySystemIntegrity, entityManager);
+  }
+}

@@ -1,8 +1,14 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { SummaryValue } from '../entities/summary-value.entity';
 
-@EntityRepository(SummaryValue)
+@Injectable()
 export class SummaryValueRepository extends Repository<SummaryValue> {
+  constructor(entityManager: EntityManager) {
+    super(SummaryValue, entityManager);
+  }
+
   async export(monitoringLocationIds: string[], year: number, quarter: number) {
     const query = this.createQueryBuilder('sv')
       .innerJoinAndSelect('sv.monitorLocation', 'ml')

@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
+
 import { MonitorLocationWorkspaceRepository } from './monitor-location.repository';
 
 const mockQueryBuilder = () => ({
@@ -17,6 +18,7 @@ describe('location repository tests', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         MonitorLocationWorkspaceRepository,
         {
           provide: SelectQueryBuilder,

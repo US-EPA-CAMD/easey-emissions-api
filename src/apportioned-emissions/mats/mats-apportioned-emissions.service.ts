@@ -1,19 +1,16 @@
-import { plainToClass } from 'class-transformer';
-import { InjectRepository } from '@nestjs/typeorm';
 import { HttpStatus, Injectable } from '@nestjs/common';
-
-import { Logger } from '@us-epa-camd/easey-common/logger';
-
-import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
-import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
-import { UnitFactRepository } from '../unit-fact.repository';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { Logger } from '@us-epa-camd/easey-common/logger';
+import { plainToClass } from 'class-transformer';
+
+import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
+import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { UnitFactRepository } from '../unit-fact.repository';
 
 @Injectable()
 export class MatsApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(UnitFactRepository)
     private readonly unitFactRepository: UnitFactRepository,
   ) {
     this.logger.setContext('MatsApportionedEmissionsService');

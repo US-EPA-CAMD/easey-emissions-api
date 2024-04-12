@@ -1,5 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { SamplingTrain } from '../entities/sampling-train.entity';
 
-@EntityRepository(SamplingTrain)
-export class SamplingTrainRepository extends Repository<SamplingTrain> {}
+@Injectable()
+export class SamplingTrainRepository extends Repository<SamplingTrain> {
+  constructor(entityManager: EntityManager) {
+    super(SamplingTrain, entityManager);
+  }
+}
