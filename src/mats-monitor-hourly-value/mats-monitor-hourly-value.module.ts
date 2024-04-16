@@ -7,11 +7,14 @@ import { MatsMonitorHourlyValueService } from './mats-monitor-hourly-value.servi
 
 @Module({
   imports: [TypeOrmModule.forFeature([MatsMonitorHourlyValueRepository])],
-  providers: [MatsMonitorHourlyValueMap, MatsMonitorHourlyValueService],
+  providers: [
+    MatsMonitorHourlyValueMap,
+    MatsMonitorHourlyValueRepository,
+    MatsMonitorHourlyValueService,
+  ],
   exports: [
     TypeOrmModule,
     MatsMonitorHourlyValueMap,
-    MatsMonitorHourlyValueRepository,
     MatsMonitorHourlyValueService,
   ],
 })

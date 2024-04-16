@@ -8,17 +8,29 @@ import {
   IsValidNumber,
   IsYearFormat,
 } from '@us-epa-camd/easey-common/pipes';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+
 import { IsInYearAndQuarterRange } from '../pipes/is-in-year-and-quarter-range.pipe';
 import { MonitorPlan } from '../entities/monitor-plan.entity';
 
 export class EmissionsParamsDTO {
   @ApiProperty()
   @IsNotEmptyString({ message: ErrorMessages.RequiredProperty() })
-  @IsValidCode(MonitorPlan, {
-    message: (args: ValidationArguments) => {
-      return `The reported ${args.property} is invalid.`;
+  @IsValidCode(
+    MonitorPlan,
+    {
+      message: (args: ValidationArguments) => {
+        return `The reported ${args.property} is invalid.`;
+      },
     },
-  })
+    (args: ValidationArguments): FindOneOptions<MonitorPlan> => {
+      return {
+        where: {
+          id: args.value,
+        },
+      };
+    },
+  )
   monitorPlanId: string;
 
   @ApiProperty()
@@ -46,6 +58,6 @@ export class EmissionsParamsDTO {
 
   @IsOptional()
   @ApiProperty()
-  @Transform(({ value }) => value === "true")
+  @Transform(({ value }) => value === 'true')
   reportedValuesOnly?: boolean;
 }

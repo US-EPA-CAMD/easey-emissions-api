@@ -1,5 +1,4 @@
 import { BaseEntity, EntityManager, Repository } from 'typeorm';
-import { ConnectionService } from '@us-epa-camd/easey-common/connection';
 import { ParameterCode } from '../entities/parameter-code.entity';
 import { FuelCode } from '../entities/fuel-code.entity';
 import { TestTypeCode } from '../entities/test-type-code.entity';
@@ -51,127 +50,127 @@ export const getInvalidCodes = async (
   return await manager.query(sql);
 };
 
-export const getCodeFieldRepoList = (): CodeFieldRepo[] => {
+export const getCodeFieldRepoList = (mgr: EntityManager): CodeFieldRepo[] => {
   return [
     {
       codeField: 'parameterCode',
-      codeRepo: ParameterCode.getRepository(),
+      codeRepo: mgr.getRepository(ParameterCode),
     },
     {
       codeField: 'fuelCode',
-      codeRepo: FuelCode.getRepository(),
+      codeRepo: mgr.getRepository(FuelCode),
     },
     {
       codeField: 'testTypeCode',
-      codeRepo: TestTypeCode.getRepository(),
+      codeRepo: mgr.getRepository(TestTypeCode),
     },
     {
       codeField: 'testResultCode',
-      codeRepo: TestResultCode.getRepository(),
+      codeRepo: mgr.getRepository(TestResultCode),
     },
     {
       codeField: 'spanScaleCode',
-      codeRepo: SpanScaleCode.getRepository(),
+      codeRepo: mgr.getRepository(SpanScaleCode),
     },
     {
       codeField: 'gasLevelCode',
-      codeRepo: GasLevelCode.getRepository(),
+      codeRepo: mgr.getRepository(GasLevelCode),
     },
     {
       codeField: 'upscaleGasCode',
-      codeRepo: GasLevelCode.getRepository(),
+      codeRepo: mgr.getRepository(GasLevelCode),
     },
     {
       codeField: 'injectionProtocolCode',
-      codeRepo: InjectionProtocolCode.getRepository(),
+      codeRepo: mgr.getRepository(InjectionProtocolCode),
     },
     {
       codeField: 'vendorIdentifier',
-      codeRepo: ProtocolGasVendor.getRepository(),
+      codeRepo: mgr.getRepository(ProtocolGasVendor),
     },
     {
       codeField: 'loadUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'modcCode',
-      codeRepo: ModcCode.getRepository(),
+      codeRepo: mgr.getRepository(ModcCode),
     },
     {
       codeField: 'operatingConditionCode',
-      codeRepo: OperatingConditionCode.getRepository(),
+      codeRepo: mgr.getRepository(OperatingConditionCode),
     },
     {
       codeField: 'volumetricUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'sourceOfDataVolumetricCode',
-      codeRepo: SodVolumetricCode.getRepository(),
+      codeRepo: mgr.getRepository(SodVolumetricCode),
     },
     {
       codeField: 'sourceOfDataMassCode',
-      codeRepo: SodMassCode.getRepository(),
+      codeRepo: mgr.getRepository(SodMassCode),
     },
     {
       codeField: 'sampleTypeCode',
-      codeRepo: SampleTypeCode.getRepository(),
+      codeRepo: mgr.getRepository(SampleTypeCode),
     },
     {
       codeField: 'parameterUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'beginEndHourFlag',
-      codeRepo: BeginEndHourFlag.getRepository(),
+      codeRepo: mgr.getRepository(BeginEndHourFlag),
     },
     {
       codeField: 'fuelFlowPeriodCode',
-      codeRepo: FuelFlowPeriodCode.getRepository(),
+      codeRepo: mgr.getRepository(FuelFlowPeriodCode),
     },
     {
       codeField: 'longTermFuelFlowUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'gcvUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'apsCode',
-      codeRepo: SorbentTrapApsCode.getRepository(),
+      codeRepo: mgr.getRepository(SorbentTrapApsCode),
     },
     {
       codeField: 'samplingRatioCheckResultCode',
-      codeRepo: TestResultCode.getRepository(),
+      codeRepo: mgr.getRepository(TestResultCode),
     },
     {
       codeField: 'postLeakCheckResultCode',
-      codeRepo: TestResultCode.getRepository(),
+      codeRepo: mgr.getRepository(TestResultCode),
     },
     {
       codeField: 'trainQAStatusCode',
-      codeRepo: TrainQaStatusCode.getRepository(),
+      codeRepo: mgr.getRepository(TrainQaStatusCode),
     },
     {
       codeField: 'co2EmissionStandardCode',
-      codeRepo: Nsps4tEmissionStandardCode.getRepository(),
+      codeRepo: mgr.getRepository(Nsps4tEmissionStandardCode),
     },
     {
       codeField: 'modusUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
     {
       codeField: 'electricalLoadCode',
-      codeRepo: Nsps4tElectricalLoadCode.getRepository(),
+      codeRepo: mgr.getRepository(Nsps4tElectricalLoadCode),
     },
     {
       codeField: 'annualEnergySoldTypeCode',
-      codeRepo: Nsps4tElectricalLoadCode.getRepository(),
+      codeRepo: mgr.getRepository(Nsps4tElectricalLoadCode),
     },
     {
       codeField: 'co2EmissionRateUnitsOfMeasureCode',
-      codeRepo: UnitsOfMeasureCode.getRepository(),
+      codeRepo: mgr.getRepository(UnitsOfMeasureCode),
     },
   ];
 };

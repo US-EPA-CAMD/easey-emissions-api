@@ -7,12 +7,11 @@ import { HourlyGasFlowMeterService } from './hourly-gas-flow-meter.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([HourlyGasFlowMeterRepository])],
-  providers: [HourlyGasFlowMeterMap, HourlyGasFlowMeterService],
-  exports: [
-    TypeOrmModule,
+  providers: [
     HourlyGasFlowMeterMap,
     HourlyGasFlowMeterRepository,
     HourlyGasFlowMeterService,
   ],
+  exports: [TypeOrmModule, HourlyGasFlowMeterMap, HourlyGasFlowMeterService],
 })
 export class HourlyGasFlowMeterModule {}
