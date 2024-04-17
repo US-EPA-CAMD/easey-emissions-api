@@ -8,6 +8,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { exportSorbentTrapData } from '../sorbent-trap-functions/export-sorbent-trap-data';
+import { DeleteCriteria } from '../types';
 import { hasArrayValues } from '../utils/utils';
 import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
 
@@ -19,9 +20,7 @@ export class SorbentTrapWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

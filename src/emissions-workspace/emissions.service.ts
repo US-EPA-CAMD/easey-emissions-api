@@ -1,37 +1,36 @@
-import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 import { DeleteResult, EntityManager } from 'typeorm';
 
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
-
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
-import { EmissionsMap } from '../maps/emissions.map';
-import { EmissionsWorkspaceRepository } from './emissions.repository';
+import { ComponentRepository } from '../component/component.repository';
+import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
+import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
-import { PlantRepository } from '../plant/plant.repository';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { MonitorLocation } from '../entities/monitor-location.entity';
+import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { HourlyOperatingWorkspaceService } from '../hourly-operating-workspace/hourly-operating.service';
+import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
+import { EmissionsMap } from '../maps/emissions.map';
+import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
+import { PlantRepository } from '../plant/plant.repository';
+import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
+import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
+import { DeleteCriteria } from '../types';
+import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 import {
   arrayFilterUndefinedNull,
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
 } from '../utils/utils';
-import { EmissionsChecksService } from './emissions-checks.service';
-import { ComponentRepository } from '../component/component.repository';
-import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
-import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
-import { DailyEmissionWorkspaceService } from '../daily-emission-workspace/daily-emission-workspace.service';
-import { SummaryValueWorkspaceService } from '../summary-value-workspace/summary-value.service';
-import { SorbentTrapWorkspaceService } from '../sorbent-trap-workspace/sorbent-trap-workspace.service';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
-import { Nsps4tSummaryWorkspaceService } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.service';
-import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
-import { LongTermFuelFlowWorkspaceService } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.service';
-import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
-import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
-import { MonitorLocation } from '../entities/monitor-location.entity';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
-import { removeNonReportedValues } from '../utils/remove-non-reported-values';
+import { EmissionsChecksService } from './emissions-checks.service';
+import { EmissionsWorkspaceRepository } from './emissions.repository';
 
 // Import Identifier: Table Id
 export type ImportIdentifiers = {
@@ -70,9 +69,7 @@ export class EmissionsWorkspaceService {
     private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

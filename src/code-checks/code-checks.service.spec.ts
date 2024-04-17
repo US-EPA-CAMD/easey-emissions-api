@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { BaseEntity, EntityManager } from 'typeorm';
-import * as typeorm_functions from 'typeorm/globals';
+import { EntityManager } from 'typeorm';
 
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
 import { CodeChecksService } from './code-checks.service';

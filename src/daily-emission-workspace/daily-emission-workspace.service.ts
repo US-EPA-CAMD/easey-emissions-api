@@ -10,6 +10,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
+import { DeleteCriteria } from '../types';
 import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
 
 export type DailyEmissionWorkspaceCreate = DailyEmissionImportDTO & {
@@ -27,9 +28,7 @@ export class DailyEmissionWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

@@ -11,6 +11,7 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { DeleteCriteria } from '../types';
 import { isUndefinedOrNull } from '../utils/utils';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
 
@@ -42,9 +43,7 @@ export class DailyTestSummaryWorkspaceService {
     return this.map.many(results);
   }
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<void> {
+  async delete(criteria: DeleteCriteria): Promise<void> {
     await this.repository.delete(criteria);
   }
 

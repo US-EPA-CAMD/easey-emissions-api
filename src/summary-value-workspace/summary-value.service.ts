@@ -11,6 +11,7 @@ import {
 } from '../dto/summary-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
+import { DeleteCriteria } from '../types';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 
 export type SummaryValueCreate = SummaryValueImportDTO & {
@@ -27,9 +28,7 @@ export class SummaryValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

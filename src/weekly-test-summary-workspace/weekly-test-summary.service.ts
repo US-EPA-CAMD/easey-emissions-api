@@ -11,6 +11,7 @@ import {
 } from '../dto/weekly-test-summary.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { DeleteCriteria } from '../types';
 import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 
@@ -29,9 +30,7 @@ export class WeeklyTestSummaryWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

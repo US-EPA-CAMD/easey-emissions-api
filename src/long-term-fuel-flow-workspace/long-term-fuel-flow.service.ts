@@ -8,6 +8,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { LongTermFuelFlowDTO } from '../dto/long-term-fuel-flow.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { LongTermFuelFlowMap } from '../maps/long-term-fuel-flow.map';
+import { DeleteCriteria } from '../types';
 import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
 
 @Injectable()
@@ -18,9 +19,7 @@ export class LongTermFuelFlowWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

@@ -10,6 +10,7 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
 import { Nsps4tCompliancePeriodWorkspaceService } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.service';
 import { exportNsps4tSummaryData } from '../nsps4t-summary-functions/export-nsps4t-summary-data';
+import { DeleteCriteria } from '../types';
 import { arrayPushCreate, hasArrayValues } from '../utils/utils';
 import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
 
@@ -22,9 +23,7 @@ export class Nsps4tSummaryWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

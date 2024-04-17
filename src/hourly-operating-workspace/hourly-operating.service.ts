@@ -17,6 +17,7 @@ import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.service';
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
+import { DeleteCriteria } from '../types';
 import { isUndefinedOrNull, splitArrayInChunks } from '../utils/utils';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 
@@ -112,9 +113,7 @@ export class HourlyOperatingWorkspaceService {
     return results.flat(1);
   }
 
-  async delete(
-    criteria: Parameters<typeof this.repository.delete>[0],
-  ): Promise<void> {
+  async delete(criteria: DeleteCriteria): Promise<void> {
     await this.repository.delete(criteria);
   }
 
