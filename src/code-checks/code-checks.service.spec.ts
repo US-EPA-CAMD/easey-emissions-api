@@ -21,7 +21,7 @@ describe('Code Checks Service Tests', () => {
   });
 
   it('tests runChecks()', async () => {
-    jest.spyOn(BaseEntity, 'getRepository').mockImplementation(
+    jest.spyOn(manager, 'getRepository').mockImplementation(
       jest.fn().mockReturnValue({
         metadata: {
           tableName: 'table',
