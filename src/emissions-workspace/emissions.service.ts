@@ -32,7 +32,6 @@ import { ReportingPeriod } from '../entities/workspace/reporting-period.entity';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
-import { SummaryValueImportDTO } from 'src/dto/summary-value.dto';
 
 type Dictionary = { [index: string]: string }
 
@@ -365,20 +364,6 @@ export class EmissionsWorkspaceService {
     identifiers: ImportIdentifiers,
     currentTime: string,
   ): Promise<void> {
-    const areDuplicates = (elem: SummaryValueImportDTO, existingElem: SummaryValueImportDTO) => {
-      return existingElem['parameterCode'] === elem['parameterCode']
-        && ((existingElem['unitId'] !== null && existingElem['unitId'] === elem['unitId'])
-          || (existingElem['stackPipeId'] !== null && existingElem['stackPipeId'] === elem['stackPipeId']))
-    }
-    if (emissionsImport.summaryValueData && emissionsImport.summaryValueData.length > 0)
-      emissionsImport.summaryValueData = emissionsImport.summaryValueData.reduce((acc, elem) => {
-        const isDuplicate = acc.some(existingElem => areDuplicates(elem, existingElem));
-        if (!isDuplicate) {
-          acc.push(elem)
-        }
-        return acc;
-      }, []);
-
     await this.summaryValueService.import(
       emissionsImport,
       monitoringLocations,
