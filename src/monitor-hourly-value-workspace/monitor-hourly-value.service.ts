@@ -41,9 +41,9 @@ export class MonitorHourlyValueWorkspaceService {
         id: randomUUID(),
         hourId,
         monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+          identifiers.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         componentId:
-          identifiers.components?.[dataChunk.componentId] || null,
+          identifiers.locations[monitorLocationId]?.components?.[dataChunk.componentId] || null,
         parameterCode: dataChunk.parameterCode,
         unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
         adjustedHourlyValue: dataChunk.adjustedHourlyValue,

@@ -86,7 +86,7 @@ export class LongTermFuelFlowWorkspaceService {
         reportingPeriodId: reportingPeriodId,
         monLocId: monitoringLocationId,
         monSysId:
-          identifiers?.monitoringSystems?.[
+          identifiers?.locations[monitoringLocationId]?.monitoringSystems?.[
             longTermFuelFlowDatum.monitoringSystemId
           ] || null,
         fuelFlowPeriodCd: longTermFuelFlowDatum.fuelFlowPeriodCode,

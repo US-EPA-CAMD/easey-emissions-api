@@ -123,7 +123,7 @@ export class DailyTestSummaryWorkspaceService {
         rptPeriodId: reportingPeriodId,
         monLocId: monitoringLocationId,
         componentId:
-          identifiers?.components?.[dailyTestSummaryDatum.componentId] || null,
+          identifiers?.locations[monitoringLocationId]?.components?.[dailyTestSummaryDatum.componentId] || null,
         dailyTestDate: dailyTestSummaryDatum.date,
         dailyTestHour: dailyTestSummaryDatum.hour,
         dailyTestMin: dailyTestSummaryDatum.minute,
@@ -134,7 +134,7 @@ export class DailyTestSummaryWorkspaceService {
         updateDate: currentTime,
         spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
         monSysId:
-          identifiers?.monitoringSystems?.[dailyTestSummaryDatum.monitoringSystemId] || null,
+          identifiers?.locations[monitoringLocationId]?.monitoringSystems?.[dailyTestSummaryDatum.monitoringSystemId] || null,
       });
     }
 
