@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
 import { LongTermFuelFlowWorkspaceService } from './long-term-fuel-flow.service';
@@ -57,18 +59,15 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
     const locations = [{ unit: { name: '1' }, id: 1 }];
 
     longTermFuelFlow[0].unitId = '1';
-    const identifiers = ({
-      components: [],
-      monitorFormulas: [],
-      monitoringSystems: [],
-      userId: '',
-    } as unknown) as ImportIdentifiers;
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await expect(
       service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),
     ).resolves;
   });
-  it('should get long term fuel flow by location ids', async function() {
+  it('should get long term fuel flow by location ids', async function () {
     const genLongTermFuelFlowValues = genLongTermFuelFlow<LongTermFuelFlow>(1);
     const promises = [];
     genLongTermFuelFlowValues.forEach(value => {

@@ -101,9 +101,9 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { ConfigService } from '@nestjs/config';
 import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-backstop.module';
-import {DailyBackstopWorkspaceRepository} from "../daily-backstop-workspace/daily-backstop.repository";
-import {DailyBackstopMap} from "../maps/daily-backstop.map";
-import {DailyBackstopWorkspaceService} from "../daily-backstop-workspace/daily-backstop.service";
+import { DailyBackstopWorkspaceRepository } from "../daily-backstop-workspace/daily-backstop.repository";
+import { DailyBackstopMap } from "../maps/daily-backstop.map";
+import { DailyBackstopWorkspaceService } from "../daily-backstop-workspace/daily-backstop.service";
 import { CodeChecksService } from '../code-checks/code-checks.service';
 
 describe('Emissions Workspace Service', () => {
@@ -246,7 +246,7 @@ describe('Emissions Workspace Service', () => {
         {
           provide: DailyBackstopWorkspaceRepository,
           useValue: jest.mock(
-              '../daily-backstop-workspace/daily-backstop.repository',
+            '../daily-backstop-workspace/daily-backstop.repository',
           ),
         },
       ],
@@ -261,17 +261,17 @@ describe('Emissions Workspace Service', () => {
     plantRepository = module.get(PlantRepository);
   });
 
-  it('should have a emissions service', function() {
+  it('should have a emissions service', function () {
     expect(emissionsService).toBeDefined();
   });
 
-  it('should delete a record', async function() {
+  it('should delete a record', async function () {
     await expect(
       emissionsService.delete({ monitorPlanId: '123', reportingPeriodId: 2 }),
     ).resolves.toEqual(undefined);
   });
 
-  it('should successfully export emissions data', async function() {
+  it('should successfully export emissions data', async function () {
     const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>();
     const dtoMocks = genEmissionsRecordDto();
 
@@ -284,7 +284,7 @@ describe('Emissions Workspace Service', () => {
     );
   });
 
-  it('should successfully import', async function() {
+  it('should successfully import', async function () {
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
     jest.spyOn(typeorm_functions, 'getManager').mockReturnValue(({
       findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
@@ -319,7 +319,7 @@ describe('Emissions Workspace Service', () => {
     );
   });
 
-  it('should import daily test summaries', async function() {
+  it('should import daily test summaries', async function () {
     const emissionsDtoMock = genEmissionsImportDto();
     const dtoMockWithDailyTest = genEmissionsImportDto(1, {
       include: ['dailyTestSummaryData'],
@@ -329,12 +329,15 @@ describe('Emissions Workspace Service', () => {
     jest.spyOn(dailyTestsummaryService, 'import').mockReturnValue(undefined);
 
     const monitoringLocation = new MonitorLocation();
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
     await expect(
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
         [monitoringLocation],
         faker.datatype.number(),
-        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        identifiers,
         new Date().toISOString(),
       ),
     ).resolves.toBeUndefined();
@@ -344,7 +347,7 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         [monitoringLocation],
         faker.datatype.number(),
-        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        identifiers,
         new Date().toISOString(),
       ),
     ).resolves;

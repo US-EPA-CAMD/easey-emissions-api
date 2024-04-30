@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import { DailyEmissionWorkspaceService } from './daily-emission-workspace.service';
 import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
@@ -62,7 +64,7 @@ describe('DailyEmissionWorkspaceService', () => {
   });
 
   describe('import', () => {
-    it('should import a record', async function() {
+    it('should import a record', async function () {
       const dailyEmission = genDailyEmission<DailyEmission>(1, {
         include: ['dailyFuelData'],
       });
@@ -80,12 +82,9 @@ describe('DailyEmissionWorkspaceService', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

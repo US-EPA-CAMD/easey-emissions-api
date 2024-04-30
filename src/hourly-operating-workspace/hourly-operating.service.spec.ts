@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
 
 import {
   HourlyOperatingWorkspaceService,
@@ -221,16 +222,15 @@ describe('HourlyOperatingWorskpaceService', () => {
         new HourlyOperatingImportDTO(),
       ];
 
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
       await service.import(
         dto,
         [MonitorLocation],
         1,
-        {
-          components: {},
-          userId: '',
-          monitorFormulas: {},
-          monitoringSystems: {},
-        },
+        identifiers,
         new Date().toISOString(),
       );
 

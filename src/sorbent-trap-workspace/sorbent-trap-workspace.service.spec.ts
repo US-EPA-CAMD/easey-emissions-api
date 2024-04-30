@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
 import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
 import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
@@ -67,7 +69,7 @@ describe('SorbentTrapWorkspaceService', () => {
     );
   });
 
-  it('should successfully import', async function() {
+  it('should successfully import', async function () {
     const mockedValues = genSorbentTrap<SorbentTrap>(1, {
       include: ['samplingTrains'],
       samplingTrainAmount: 1,
@@ -86,12 +88,9 @@ describe('SorbentTrapWorkspaceService', () => {
     const locations = [{ unit: { name: '1' }, id: 1 }];
 
     sorbentTrapData[0].unitId = '1';
-    const identifiers = ({
-      components: [],
-      monitorFormulas: [],
-      monitoringSystems: [],
-      userId: '',
-    } as unknown) as ImportIdentifiers;
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await expect(
       service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),

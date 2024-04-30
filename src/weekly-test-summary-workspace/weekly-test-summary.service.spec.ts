@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
 
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
@@ -101,12 +102,9 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;
