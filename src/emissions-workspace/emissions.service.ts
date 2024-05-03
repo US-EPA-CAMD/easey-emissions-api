@@ -33,19 +33,18 @@ import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 
-// Import Identifier: Table Id
+type Dictionary = { [index: string]: string }
+
+type IdentifierDictionaries = {
+  components: Dictionary,
+  monitorFormulas: Dictionary,
+  monitoringSystems: Dictionary,
+}
+
 export type ImportIdentifiers = {
-  components: {
-    [key: string]: string;
-  };
-  monitorFormulas: {
-    [key: string]: string;
-  };
-  monitoringSystems: {
-    [key: string]: string;
-  };
-  userId?: string;
-};
+  locations: { [key: string]: IdentifierDictionaries },
+  userId: string,
+}
 
 @Injectable()
 export class EmissionsWorkspaceService {
@@ -67,7 +66,7 @@ export class EmissionsWorkspaceService {
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
     private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService,
-  ) {}
+  ) { }
 
   async delete(
     criteria: FindConditions<EmissionEvaluation>,
@@ -459,7 +458,7 @@ export class EmissionsWorkspaceService {
     monitoringLocationId: string,
     userId: string,
   ) {
-    const identifiers: ImportIdentifiers = {
+    const identifiers = {
       components: {},
       monitorFormulas: {},
       monitoringSystems: {},
@@ -537,10 +536,8 @@ export class EmissionsWorkspaceService {
     locations: MonitorLocation[],
     userId: string,
   ) {
-    const identifiers = {
-      components: {},
-      monitorFormulas: {},
-      monitoringSystems: {},
+    let identifiers = {
+      locations: {},
       userId,
     };
 
@@ -565,15 +562,8 @@ export class EmissionsWorkspaceService {
           partialIdentifiers.monitoringSystems[key] === undefined &&
           delete partialIdentifiers.monitoringSystems[key],
       );
-      Object.assign(identifiers.components, partialIdentifiers.components);
-      Object.assign(
-        identifiers.monitorFormulas,
-        partialIdentifiers.monitorFormulas,
-      );
-      Object.assign(
-        identifiers.monitoringSystems,
-        partialIdentifiers.monitoringSystems,
-      );
+
+      identifiers.locations[location.id] = { components: partialIdentifiers.components, monitorFormulas: partialIdentifiers.monitorFormulas, monitoringSystems: partialIdentifiers.monitoringSystems };
     }
 
     return identifiers;

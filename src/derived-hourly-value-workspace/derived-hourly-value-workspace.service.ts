@@ -42,9 +42,9 @@ export class DerivedHourlyValueWorkspaceService {
         id: randomUUID(),
         hourId: hourId,
         monSysId:
-          identifiers?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+          identifiers?.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         monFormId:
-          identifiers?.monitorFormulas?.[dataChunk.formulaId] || null,
+          identifiers?.locations[monitorLocationId]?.monitorFormulas?.[dataChunk.formulaId] || null,
         parameterCode: dataChunk.parameterCode,
         unadjustedHrlyValue: dataChunk.unadjustedHourlyValue,
         adjustedHourlyValue: dataChunk.adjustedHourlyValue,

@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import { Nsps4tSummaryWorkspaceService } from './nsps4t-summary-workspace.service';
 import { Nsps4tSummaryWorkspaceRepository } from './nsps4t-summary-workspace.repository';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';
@@ -71,7 +73,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     );
   });
 
-  it('should successfully import', async function() {
+  it('should successfully import', async function () {
     const entityMocks = genNsps4tSummary<Nsps4tSummary>(1, {
       include: ['nsps4tAnnualData', 'nsps4tCompliancePeriodData'],
       nsps4tCompliancePeriodDataAmount: 1,
@@ -92,12 +94,9 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     const locations = [{ unit: { name: '1' }, id: 1 }];
 
     nsps4tSummaryData[0].unitId = '1';
-    const identifiers = ({
-      components: [],
-      monitorFormulas: [],
-      monitoringSystems: [],
-      userId: '',
-    } as unknown) as ImportIdentifiers;
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await expect(
       service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),

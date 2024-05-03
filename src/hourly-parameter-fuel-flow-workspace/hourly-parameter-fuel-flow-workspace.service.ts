@@ -38,9 +38,9 @@ export class HourlyParameterFuelFlowWorkspaceService {
         id: randomUUID(),
         parentId: parentId,
         monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+          identifiers?.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         formulaIdentifier:
-          identifiers.monitorFormulas?.[dataChunk.formulaId] || null,
+          identifiers?.locations[monitorLocationId]?.monitorFormulas?.[dataChunk.formulaId] || null,
         parameterCode: dataChunk.parameterCode,
         parameterValueForFuel: dataChunk.parameterValueForFuel,
         sampleTypeCode: dataChunk.sampleTypeCode,
