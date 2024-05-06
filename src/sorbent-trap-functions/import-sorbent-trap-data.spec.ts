@@ -17,7 +17,7 @@ describe('ImportSorbentTrapData', () => {
     importSorbentTrapModule = await import('./import-sorbent-trap-data');
   });
 
-  it('should import data', async function() {
+  it('should import data', async function () {
     const importReturn = [
       ...genSorbentTrapImportDto(3),
       ...genSorbentTrapImportDto(3, { include: ['samplingTrainData'] }),
@@ -30,17 +30,16 @@ describe('ImportSorbentTrapData', () => {
 
     await Promise.all(
       importReturn.map(data => {
+        const identifiers = { locations: {}, userId: '' };
+        const monitoringLocationId = faker.datatype.string();
+        identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
         expect(
           importSorbentTrapModule.importSorbentTrapData({
             data: {
               ...data,
               reportingPeriodId: faker.datatype.number(),
-              monitoringLocationId: faker.datatype.string(),
-              identifiers: {
-                monitoringSystems: {},
-                monitorFormulas: {},
-                components: {},
-              },
+              monitoringLocationId: monitoringLocationId,
+              identifiers,
             },
             repository,
           }),

@@ -25,7 +25,7 @@ export const importSamplingTrainData = async ({
       sorbentTrapId: data.sorbentTrapId,
       monitoringLocationId: data.monitoringLocationId,
       reportingPeriodId: data.reportingPeriodId,
-      componentId: data.identifiers?.components?.[data.componentId],
+      componentId: data.identifiers?.locations[data.monitoringLocationId]?.components?.[data.componentId],
       sorbentTrapSn: data.sorbentTrapSN,
       mainTrapHg: data.mainTrapHg,
       btTrapHg: data.btTrapHg,

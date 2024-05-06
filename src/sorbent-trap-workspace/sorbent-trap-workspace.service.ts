@@ -104,7 +104,7 @@ export class SorbentTrapWorkspaceService {
         endDate: sorbentTrapDatum.endDate,
         endHour: sorbentTrapDatum.endHour,
         monSysId:
-          identifiers?.monitoringSystems?.[
+          identifiers?.locations[monitoringLocationId]?.monitoringSystems?.[
             sorbentTrapDatum.monitoringSystemId
           ] || null,
         pairedTrapAgreement: sorbentTrapDatum.pairedTrapAgreement,

@@ -18,12 +18,16 @@ describe('ImportNsps4tAnnualData', () => {
     importNsps4tAnnualModule = await import('./import-nsps4t-annual-data');
   });
 
-  it('should import data', async function() {
+  it('should import data', async function () {
     const imports = [...genNsps4tAnnualImportDto(3)];
 
     // @ts-expect-error force as undefined
     jest.spyOn(repository, 'create').mockResolvedValue(undefined);
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
+
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await Promise.all(
       imports.map(data => {
@@ -34,11 +38,7 @@ describe('ImportNsps4tAnnualData', () => {
               monitoringLocationId: faker.datatype.string(),
               reportingPeriodId: faker.datatype.number(),
               nsps4tSumId: faker.datatype.string(),
-              identifiers: {
-                monitoringSystems: {},
-                components: {},
-                monitorFormulas: {},
-              },
+              identifiers,
             },
             repository,
           }),

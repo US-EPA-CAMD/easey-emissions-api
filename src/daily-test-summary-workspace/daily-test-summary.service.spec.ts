@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
@@ -117,16 +118,15 @@ describe('Daily Summary Workspace Service', () => {
       new DailyTestSummaryImportDTO(),
     ];
 
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
     await dailyTestSummaryService.import(
       emissionsDto,
       [new MonitorLocation()],
       1,
-      {
-        components: {},
-        monitorFormulas: {},
-        monitoringSystems: {},
-        userId: '',
-      },
+      identifiers,
       new Date().toISOString(),
     );
 

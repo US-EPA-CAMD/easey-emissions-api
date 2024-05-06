@@ -44,8 +44,8 @@ export class MatsMonitorHourlyValueWorkspaceService {
         reportingPeriodId: reportingPeriodId,
         parameterCode: dataChunk.parameterCode,
         monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
-        componentId: identifiers.components?.[dataChunk.componentId] || null,
+          identifiers.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+        componentId: identifiers.locations[monitorLocationId]?.components?.[dataChunk.componentId] || null,
         unadjustedHourlyValue: dataChunk.unadjustedHourlyValue,
         modcCode: dataChunk.modcCode,
         percentAvailable: dataChunk.percentAvailable,

@@ -327,12 +327,19 @@ describe('Emissions Workspace Service', () => {
     jest.spyOn(dailyTestsummaryService, 'import').mockReturnValue(undefined);
 
     const monitoringLocation = new MonitorLocation();
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = {
+      components: {},
+      monitorFormulas: {},
+      monitoringSystems: {},
+    };
     await expect(
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
         [monitoringLocation],
         faker.datatype.number(),
-        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        identifiers,
         new Date().toISOString(),
       ),
     ).resolves.toBeUndefined();
@@ -342,7 +349,7 @@ describe('Emissions Workspace Service', () => {
         dtoMockWithDailyTest[0],
         [monitoringLocation],
         faker.datatype.number(),
-        { monitoringSystems: {}, components: {}, monitorFormulas: {} },
+        identifiers,
         new Date().toISOString(),
       ),
     ).resolves;

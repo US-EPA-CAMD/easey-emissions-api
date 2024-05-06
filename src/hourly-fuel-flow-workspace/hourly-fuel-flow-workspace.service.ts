@@ -87,7 +87,7 @@ export class HourlyFuelFlowWorkspaceService {
         id: uid,
         hourId,
         monitoringSystemId:
-          identifiers.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+          identifiers?.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
         fuelCode: dataChunk.fuelCode,
         fuelUsageTime: dataChunk.fuelUsageTime,
         volumetricFlowRate: dataChunk.volumetricFlowRate,

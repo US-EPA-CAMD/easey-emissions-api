@@ -25,6 +25,10 @@ describe('ImportSamplingTrainData', () => {
     jest.spyOn(repository, 'create').mockResolvedValue(undefined);
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
     await Promise.all(
       importReturn.map(data => {
         expect(
@@ -34,11 +38,7 @@ describe('ImportSamplingTrainData', () => {
               sorbentTrapId: faker.datatype.string(),
               reportingPeriodId: faker.datatype.number(),
               monitoringLocationId: faker.datatype.string(),
-              identifiers: {
-                monitorFormulas: {},
-                monitoringSystems: {},
-                components: {},
-              },
+              identifiers,
             },
             repository,
           }),

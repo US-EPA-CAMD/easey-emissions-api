@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
@@ -7,7 +8,6 @@ import { mockWeeklyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
@@ -103,12 +103,13 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+      };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

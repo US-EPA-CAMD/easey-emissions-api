@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
@@ -7,7 +8,6 @@ import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
 import { ComponentRepository } from '../component/component.repository';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
 import { SorbentTrapMap } from '../maps/sorbent-trap.map';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
@@ -89,12 +89,13 @@ describe('SorbentTrapWorkspaceService', () => {
     const locations = [{ unit: { name: '1' }, id: 1 }];
 
     sorbentTrapData[0].unitId = '1';
-    const identifiers = ({
-      components: [],
-      monitorFormulas: [],
-      monitoringSystems: [],
-      userId: '',
-    } as unknown) as ImportIdentifiers;
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = {
+      components: {},
+      monitorFormulas: {},
+      monitoringSystems: {},
+    };
 
     await expect(
       service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),

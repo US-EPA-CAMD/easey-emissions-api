@@ -18,7 +18,7 @@ describe('ImportNsps4tSummaryData', () => {
     importNsps4tSummaryModule = await import('./import-nsps4t-summary-data');
   });
 
-  it('should import data', async function() {
+  it('should import data', async function () {
     const imports = [
       ...genNsps4tSummaryImportDto(),
       ...genNsps4tSummaryImportDto(1, { include: ['nsps4tFourthQuarterData'] }),
@@ -35,6 +35,10 @@ describe('ImportNsps4tSummaryData', () => {
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
     jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
     await Promise.all(
       imports.map(data => {
         expect(
@@ -43,11 +47,7 @@ describe('ImportNsps4tSummaryData', () => {
               ...data,
               monitoringLocationId: faker.datatype.string(),
               reportingPeriodId: faker.datatype.number(),
-              identifiers: {
-                monitorFormulas: {},
-                components: {},
-                monitoringSystems: {},
-              },
+              identifiers,
             },
             repository,
           }),

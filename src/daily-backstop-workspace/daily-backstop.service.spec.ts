@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
@@ -6,7 +7,6 @@ import { EntityManager } from 'typeorm';
 import { genDailyBackstopImportDto } from '../../test/object-generators/daily-backstop-dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { DailyBackstop } from '../entities/workspace/daily-backstop.entity';
 import { DailyBackstopMap } from '../maps/daily-backstop.map';
 import { DailyBackstopWorkspaceRepository } from './daily-backstop.repository';
@@ -79,12 +79,13 @@ describe('Daily Backstop Workspace Service Test', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       emissionsDto.dailyBackstopData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+      };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

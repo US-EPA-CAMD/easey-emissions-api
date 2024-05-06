@@ -129,7 +129,7 @@ export class WeeklyTestSummaryWorkspaceService {
         uid,
         reportingPeriodId,
         monitoringLocationId,
-        componentId: identifiers?.components?.[componentId] || null,
+        componentId: identifiers?.locations[monitoringLocationId]?.components?.[componentId] || null,
         date,
         hour,
         minute,
