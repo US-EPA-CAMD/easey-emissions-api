@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
@@ -18,6 +20,7 @@ describe('EmissionsViewService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmissionsViewWorkspaceService,
+        EntityManager,
         {
           provide: EmissionsViewWorkspaceRepository,
           useValue: mockRepository,

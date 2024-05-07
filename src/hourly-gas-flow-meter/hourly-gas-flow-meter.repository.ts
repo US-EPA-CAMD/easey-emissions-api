@@ -1,8 +1,14 @@
-import { HrlyGasFlowMeter } from '../entities/hrly-gas-flow-meter.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(HrlyGasFlowMeter)
+import { HrlyGasFlowMeter } from '../entities/hrly-gas-flow-meter.entity';
+
+@Injectable()
 export class HourlyGasFlowMeterRepository extends Repository<HrlyGasFlowMeter> {
+  constructor(entityManager: EntityManager) {
+    super(HrlyGasFlowMeter, entityManager);
+  }
+
   async export(hourIds: string[]) {
     const query = this.createQueryBuilder('hgfm')
       .leftJoinAndSelect('hgfm.component', 'c')

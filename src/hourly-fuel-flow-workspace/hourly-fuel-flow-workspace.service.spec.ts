@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HourlyFuelFlowWorkspaceService } from './hourly-fuel-flow-workspace.service';
-import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
-import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
-import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
-import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { genHourlyOperatingImportDto } from '../../test/object-generators/hourly-operating-dto';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
+import { mockHourlyFuelFlowWorkspaceRepository } from '../../test/mocks/mock-hourly-fuel-flow-workspace-repository';
 import { genHourlyFuelFlow } from '../../test/object-generators/hourly-fuel-flow';
 import { HrlyFuelFlow } from '../entities/workspace/hrly-fuel-flow.entity';
-import { HourlyFuelFlowImportDTO } from '../dto/hourly-fuel-flow.dto';
-import { mockHourlyFuelFlowWorkspaceRepository } from '../../test/mocks/mock-hourly-fuel-flow-workspace-repository';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowWorkspaceService } from './hourly-fuel-flow-workspace.service';
 
 const writeObjectMock = jest.fn();
 
@@ -27,6 +27,7 @@ describe('HourlyFuelFlowService Workspace', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyFuelFlowWorkspaceService,
         {
           provide: HourlyFuelFlowWorkspaceRepository,

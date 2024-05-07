@@ -1,15 +1,22 @@
-import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
-import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
-import { SorbentTrapMap } from '../maps/sorbent-trap.map';
-import { SorbentTrap } from '../entities/sorbent-trap.entity';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
+import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
+import { SorbentTrap } from '../entities/sorbent-trap.entity';
+import { SorbentTrapMap } from '../maps/sorbent-trap.map';
+import { SorbentTrapRepository } from '../sorbent-trap/sorbent-trap.repository';
 
 describe('ExportSorbentTrapData', () => {
   let exportSorbentTrapModule: typeof import('./export-sorbent-trap-data');
   let sorbentTrapRepository;
 
   beforeAll(async () => {
-    sorbentTrapRepository = new SorbentTrapRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, SorbentTrapRepository],
+    }).compile();
+
+    sorbentTrapRepository = module.get(SorbentTrapRepository);
     exportSorbentTrapModule = await import('./export-sorbent-trap-data');
   });
 

@@ -1,8 +1,14 @@
-import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(EmissionEvaluation)
+import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
+
+@Injectable()
 export class EmissionsRepository extends Repository<EmissionEvaluation> {
+  constructor(entityManager: EntityManager) {
+    super(EmissionEvaluation, entityManager);
+  }
+
   async export(
     monitorPlanId: string,
     year: number,

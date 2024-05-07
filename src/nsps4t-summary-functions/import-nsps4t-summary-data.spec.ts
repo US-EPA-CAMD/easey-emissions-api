@@ -1,13 +1,20 @@
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
-import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
+import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 
 describe('ImportNsps4tSummaryData', () => {
   let repository: Nsps4tSummaryWorkspaceRepository;
   let importNsps4tSummaryModule: typeof import('./import-nsps4t-summary-data');
 
   beforeAll(async () => {
-    repository = new Nsps4tSummaryWorkspaceRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, Nsps4tSummaryWorkspaceRepository],
+    }).compile();
+
+    repository = module.get(Nsps4tSummaryWorkspaceRepository);
     importNsps4tSummaryModule = await import('./import-nsps4t-summary-data');
   });
 

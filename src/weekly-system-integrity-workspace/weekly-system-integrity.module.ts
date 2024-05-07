@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
-import { WeeklySystemIntegrityWorkspaceService } from './weekly-system-integrity.service';
 import { WeeklySystemIntegrityWorkspaceRepository } from './weekly-system-integrity.repository';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { WeeklySystemIntegrityWorkspaceService } from './weekly-system-integrity.service';
 
 @Module({
   imports: [
@@ -13,6 +13,7 @@ import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
   ],
   providers: [
     WeeklySystemIntegrityMap,
+    WeeklySystemIntegrityWorkspaceRepository,
     WeeklySystemIntegrityWorkspaceService,
     BulkLoadService,
   ],

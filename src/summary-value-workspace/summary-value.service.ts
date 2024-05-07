@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
-import { SummaryValue } from '../entities/workspace/summary-value.entity';
-import { DeleteResult, FindConditions } from 'typeorm';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { randomUUID } from 'crypto';
+import { DeleteResult } from 'typeorm';
+
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import {
   SummaryValueDTO,
   SummaryValueImportDTO,
 } from '../dto/summary-value.dto';
-import { SummaryValueMap } from '../maps/summary-value.map';
-import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { SummaryValueMap } from '../maps/summary-value.map';
+import { DeleteCriteria } from '../types';
+import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 
 export type SummaryValueCreate = SummaryValueImportDTO & {
   reportingPeriodId: number;
@@ -27,7 +28,7 @@ export class SummaryValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(criteria: FindConditions<SummaryValue>): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

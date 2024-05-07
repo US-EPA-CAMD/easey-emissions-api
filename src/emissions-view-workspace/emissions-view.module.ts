@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { EmissionsViewWorkspaceController } from './emissions-view.controller';
 import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
 import { EmissionsViewWorkspaceService } from './emissions-view.service';
@@ -11,6 +12,6 @@ import { EmissionsViewWorkspaceService } from './emissions-view.service';
     HttpModule,
   ],
   controllers: [EmissionsViewWorkspaceController],
-  providers: [EmissionsViewWorkspaceService],
+  providers: [EmissionsViewWorkspaceRepository, EmissionsViewWorkspaceService],
 })
 export class EmissionsViewWorkspaceModule {}

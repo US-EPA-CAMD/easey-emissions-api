@@ -1,5 +1,11 @@
-import { DailyBackstop } from '../entities/daily-backstop.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(DailyBackstop)
-export class DailyBackstopRepository extends Repository<DailyBackstop> {}
+import { DailyBackstop } from '../entities/daily-backstop.entity';
+
+@Injectable()
+export class DailyBackstopRepository extends Repository<DailyBackstop> {
+  constructor(entityManager: EntityManager) {
+    super(DailyBackstop, entityManager);
+  }
+}

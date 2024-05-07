@@ -1,20 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import {
   applySwagger,
   applyMiddleware,
 } from '@us-epa-camd/easey-common/nestjs';
+import { useContainer } from 'class-validator';
 
 import { AppModule } from './app.module';
 
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  await CheckCatalogService.load(
-    'camdecmpsmd.vw_emissions_api_check_catalog_results',
-  );
-
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await applyMiddleware(AppModule, app, true);
   await applySwagger(app);
 

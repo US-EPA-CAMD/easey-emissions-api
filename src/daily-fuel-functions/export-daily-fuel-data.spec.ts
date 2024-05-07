@@ -1,15 +1,22 @@
+import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { genDailyFuel } from '../../test/object-generators/daily-fuel';
+import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuel } from '../entities/daily-fuel.entity';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
-import { faker } from '@faker-js/faker';
-import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 
 describe('ExportDailyFuelData', () => {
   let dailyFuelRepository;
   let exportDailyFuelModule: typeof import('./export-daily-fuel-data');
 
   beforeAll(async () => {
-    dailyFuelRepository = new DailyFuelRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, DailyFuelRepository],
+    }).compile();
+
+    dailyFuelRepository = module.get(DailyFuelRepository);
     exportDailyFuelModule = await import('./export-daily-fuel-data');
   });
 

@@ -1,7 +1,13 @@
-import { DailyCalibration } from '../entities/workspace/daily-calibration.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(DailyCalibration)
+import { DailyCalibration } from '../entities/workspace/daily-calibration.entity';
+
+@Injectable()
 export class DailyCalibrationWorkspaceRepository extends Repository<
   DailyCalibration
-> {}
+> {
+  constructor(entityManager: EntityManager) {
+    super(DailyCalibration, entityManager);
+  }
+}

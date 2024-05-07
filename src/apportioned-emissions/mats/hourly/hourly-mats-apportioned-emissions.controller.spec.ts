@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
+import { genHourUnitMatsDataView } from '../../../../test/object-generators/apportioned-emissions';
+import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { HourlyMatsApportionedEmissionsController } from './hourly-mats-apportioned-emissions.controller';
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
-import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
-import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
-import { genHourUnitMatsDataView } from '../../../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -28,6 +28,7 @@ describe('-- Hourly MATS Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [HourlyMatsApportionedEmissionsController],
       providers: [
+        EntityManager,
         HourlyMatsApportionedEmissionsService,
         HourUnitMatsDataRepository,
       ],

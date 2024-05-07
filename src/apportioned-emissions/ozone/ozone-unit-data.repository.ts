@@ -1,17 +1,21 @@
-import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 import {
   OzoneApportionedEmissionsParamsDTO,
   PaginatedOzoneApportionedEmissionsParamsDTO,
 } from '../../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 
-@EntityRepository(OzoneUnitDataView)
+@Injectable()
 export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
+  constructor(entityManager: EntityManager) {
+    super(OzoneUnitDataView, entityManager);
+  }
+
   async getEmissions(
     req: Request,
     columns: any[],

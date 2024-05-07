@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { HourlyOperatingRepository } from './hourly-operating.repository';
-import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { HrlyOpData } from '../entities/workspace/hrly-op-data.entity';
+import { HourlyOperatingRepository } from './hourly-operating.repository';
 
 let filters = new EmissionsParamsDTO();
 
@@ -14,6 +14,7 @@ describe('-- HourlyOperatingRepository --', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyOperatingRepository,
         { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],

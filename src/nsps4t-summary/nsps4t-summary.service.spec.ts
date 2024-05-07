@@ -1,15 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Nsps4tSummaryService } from './nsps4t-summary.service';
-import { Nsps4tSummaryRepository } from './nsps4t-summary.repository';
+import { EntityManager } from 'typeorm';
+
+import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { Nsps4tSummary } from '../entities/nsps4t-summary.entity';
+import { Nsps4tSummaryMap } from '../maps/nsps4t-summary.map';
 import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { Nsps4tAnnualService } from '../nsps4t-annual/nsps4t-annual.service';
 import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 import { Nsps4tCompliancePeriodService } from '../nsps4t-compliance-period/nsps4t-compliance-period.service';
-import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
-import { Nsps4tSummary } from '../entities/nsps4t-summary.entity';
-import { Nsps4tSummaryMap } from '../maps/nsps4t-summary.map';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import * as exportNsps4tSummaryData from '../nsps4t-summary-functions/export-nsps4t-summary-data';
+import { Nsps4tSummaryRepository } from './nsps4t-summary.repository';
+import { Nsps4tSummaryService } from './nsps4t-summary.service';
 
 describe('Nsps4tSummaryService', () => {
   let service: Nsps4tSummaryService;
@@ -22,6 +24,7 @@ describe('Nsps4tSummaryService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         Nsps4tAnnualRepository,
         Nsps4tAnnualService,
         Nsps4tCompliancePeriodRepository,

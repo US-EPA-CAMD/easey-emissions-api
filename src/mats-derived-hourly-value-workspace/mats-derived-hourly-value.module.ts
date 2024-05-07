@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
-import { MatsDerivedHourlyValueWorkspaceService } from './mats-derived-hourly-value.service';
-import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+
+import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
+import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
+import { MatsDerivedHourlyValueWorkspaceService } from './mats-derived-hourly-value.service';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
   ],
   providers: [
     MatsDerivedHourlyValueMap,
+    MatsDerivedHourlyValueWorkspaceRepository,
     MatsDerivedHourlyValueWorkspaceService,
   ],
   exports: [

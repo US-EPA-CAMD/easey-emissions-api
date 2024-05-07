@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -8,7 +9,10 @@ import { getSelectedView } from '../utils/selected-emission-view';
 
 @Injectable()
 export class EmissionsViewService {
-  constructor(private readonly repository: EmissionsViewRepository) {}
+  constructor(
+    private readonly entityManager: EntityManager,
+    private readonly repository: EmissionsViewRepository,
+  ) {}
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
     const results = await this.repository.find({
@@ -29,17 +33,24 @@ export class EmissionsViewService {
     req: Request,
     params: EmissionsViewParamsDTO,
   ) {
-    const rptPeriods = await this.repository.query(`
+    const rptPeriods = await this.repository.query(
+      `
       SELECT rpt_period_id as id
       FROM camdecmpsmd.reporting_period
-      WHERE period_abbreviation = ANY($1);`
-      , [params.reportingPeriod]
+      WHERE period_abbreviation = ANY($1);`,
+      [params.reportingPeriod],
     );
 
-    const counts = await getSelectedView('COUNTS', 'camdecmps', req, params, rptPeriods);
+    const counts = await getSelectedView(
+      'COUNTS',
+      'camdecmps',
+      req,
+      params,
+      rptPeriods,
+      this.entityManager,
+    );
 
-    if (viewCode === 'COUNTS')
-      return counts;
+    if (viewCode === 'COUNTS') return counts;
 
     const promises = [];
     rptPeriods.forEach(async (rp: { id: number }) => {
@@ -49,18 +60,26 @@ export class EmissionsViewService {
 
       if (rpCounts && rpCounts.length === 0) {
         promises.push(
-          this.repository.query(`
-            CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`
-            , [params.monitorPlanId, rp.id]
-          )
+          this.repository.query(
+            `
+            CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
+            [params.monitorPlanId, rp.id],
+          ),
         );
       }
     });
 
-    if (promises.length > 0)  {
+    if (promises.length > 0) {
       await Promise.all(promises);
     }
-    
-    return getSelectedView(viewCode, 'camdecmps', req, params, rptPeriods);
+
+    return getSelectedView(
+      viewCode,
+      'camdecmps',
+      req,
+      params,
+      rptPeriods,
+      this.entityManager,
+    );
   }
 }

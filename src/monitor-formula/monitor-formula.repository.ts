@@ -1,4 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { MonitorFormula } from '../entities/workspace/monitor-formula.entity';
 
 export type GetOneFormulaIdMonLocIdProperties = {
@@ -6,8 +8,12 @@ export type GetOneFormulaIdMonLocIdProperties = {
   monitoringLocationId: string;
 };
 
-@EntityRepository(MonitorFormula)
+@Injectable()
 export class MonitorFormulaRepository extends Repository<MonitorFormula> {
+  constructor(entityManager: EntityManager) {
+    super(MonitorFormula, entityManager);
+  }
+
   async getOneFormulaIdsMonLocId({
     formulaIdentifier,
     monitoringLocationId,

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
+import { DeleteResult } from 'typeorm';
 
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
-import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 import {
   WeeklyTestSummaryDTO,
   WeeklyTestSummaryImportDTO,
 } from '../dto/weekly-test-summary.dto';
-import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { DeleteResult, FindConditions } from 'typeorm';
-import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
+import { DeleteCriteria } from '../types';
+import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
+import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 
 export type WeeklyTestSummaryCreate = WeeklyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -30,9 +30,7 @@ export class WeeklyTestSummaryWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async delete(
-    criteria: FindConditions<WeeklyTestSummary>,
-  ): Promise<DeleteResult> {
+  async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
   }
 

@@ -1,11 +1,13 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Nsps4tAnnualWorkspaceService } from './nsps4t-annual-workspace.service';
-import { Nsps4tAnnualWorkspaceRepository } from './nsps4t-annual-workspace.repository';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genNsps4tAnnual } from '../../test/object-generators/nsps4t-annual';
 import { Nsps4tAnnual } from '../entities/workspace/nsps4t-annual.entity';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { Nsps4tAnnualMap } from '../maps/nsps4t-annual.map';
-import { ConfigService } from '@nestjs/config';
+import { Nsps4tAnnualWorkspaceRepository } from './nsps4t-annual-workspace.repository';
+import { Nsps4tAnnualWorkspaceService } from './nsps4t-annual-workspace.service';
 
 describe('Nsps4tAnnualWorkspaceService', () => {
   let service: Nsps4tAnnualWorkspaceService;
@@ -15,6 +17,7 @@ describe('Nsps4tAnnualWorkspaceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         Nsps4tAnnualWorkspaceService,
         Nsps4tAnnualWorkspaceRepository,
         Nsps4tAnnualMap,

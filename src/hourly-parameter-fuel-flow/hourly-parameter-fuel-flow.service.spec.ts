@@ -1,9 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { HourlyParameterFuelFlowRepository } from './hourly-parameter-fuel-flow.repository';
-import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyParameterFuelFlowService } from './hourly-parameter-fuel-flow.service';
+import { EntityManager } from 'typeorm';
+
 import { genHourlyParamFuelFlow } from '../../test/object-generators/hourly-param-fuel-flow';
 import { HrlyParamFuelFlow } from '../entities/hrly-param-fuel-flow.entity';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyParameterFuelFlowRepository } from './hourly-parameter-fuel-flow.repository';
+import { HourlyParameterFuelFlowService } from './hourly-parameter-fuel-flow.service';
 
 describe('HourlyParameterFuelFlowWoskpaceService', () => {
   let service: HourlyParameterFuelFlowService;
@@ -12,6 +14,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyParameterFuelFlowService,
         HourlyParameterFuelFlowRepository,
         HourlyParameterFuelFlowMap,

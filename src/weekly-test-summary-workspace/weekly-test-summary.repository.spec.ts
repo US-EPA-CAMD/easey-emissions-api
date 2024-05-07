@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
-import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
+import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 
 let filters = new EmissionsParamsDTO();
 
@@ -15,6 +15,7 @@ describe('-- WeeklyTestSummaryWorkspaceRepository --', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         WeeklyTestSummaryWorkspaceRepository,
         { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],

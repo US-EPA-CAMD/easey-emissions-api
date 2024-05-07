@@ -1,15 +1,24 @@
-import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { genNsps4tCompliancePeriod } from '../../test/object-generators/nsps4t-compliance-period';
 import { Nsps4tCompliancePeriod } from '../entities/nsps4t-compliance-period.entity';
 import { Nsps4tCompliancePeriodMap } from '../maps/nsps4t-compliance-period.map';
+import { Nsps4tCompliancePeriodRepository } from '../nsps4t-compliance-period/nsps4t-compliance-period.repository';
 
 describe('ExportNsps4tCompliancePeriodData', () => {
   let nsps4tCompliancePeriodRepository: Nsps4tCompliancePeriodRepository;
   let exportNsps4tCompliancePeriodModule: typeof import('./export-nsps4t-compliance-period-data');
 
   beforeAll(async () => {
-    nsps4tCompliancePeriodRepository = new Nsps4tCompliancePeriodRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, Nsps4tCompliancePeriodRepository],
+    }).compile();
+
+    nsps4tCompliancePeriodRepository = module.get(
+      Nsps4tCompliancePeriodRepository,
+    );
     exportNsps4tCompliancePeriodModule = await import(
       './export-nsps4t-compliance-period-data'
     );

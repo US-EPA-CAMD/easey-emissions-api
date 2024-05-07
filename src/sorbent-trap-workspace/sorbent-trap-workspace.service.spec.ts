@@ -1,21 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
-
-import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
-import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
-import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
-import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
-import { ComponentRepository } from '../component/component.repository';
-import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
-import { SorbentTrapMap } from '../maps/sorbent-trap.map';
-import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
-import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
-import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
+import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
+import { ComponentRepository } from '../component/component.repository';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { SorbentTrap } from '../entities/workspace/sorbent-trap.entity';
+import { SorbentTrapMap } from '../maps/sorbent-trap.map';
+import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
+import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
+import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
+import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
+import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
 
 describe('SorbentTrapWorkspaceService', () => {
   let service: SorbentTrapWorkspaceService;
@@ -26,6 +26,7 @@ describe('SorbentTrapWorkspaceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         ComponentRepository,
         MonitorSystemRepository,
         SamplingTrainWorkspaceService,
@@ -69,7 +70,7 @@ describe('SorbentTrapWorkspaceService', () => {
     );
   });
 
-  it('should successfully import', async function () {
+  it('should successfully import', async function() {
     const mockedValues = genSorbentTrap<SorbentTrap>(1, {
       include: ['samplingTrains'],
       samplingTrainAmount: 1,
@@ -90,7 +91,11 @@ describe('SorbentTrapWorkspaceService', () => {
     sorbentTrapData[0].unitId = '1';
     const identifiers = { locations: {}, userId: '' };
     const monitoringLocationId = faker.datatype.string();
-    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+    identifiers.locations[monitoringLocationId] = {
+      components: {},
+      monitorFormulas: {},
+      monitoringSystems: {},
+    };
 
     await expect(
       service.import(emissionsDto, locations, '1', identifiers, '2019-01-01'),

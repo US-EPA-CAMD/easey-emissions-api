@@ -1,14 +1,15 @@
 import { Test } from '@nestjs/testing';
-import { HourlyParameterFuelFlowWorkspaceRepository } from './hourly-parameter-fuel-flow-workspace.repository';
-import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyParameterFuelFlowWorkspaceService } from './hourly-parameter-fuel-flow-workspace.service';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genHourlyParamFuelFlow } from '../../test/object-generators/hourly-param-fuel-flow';
 import { HrlyParamFuelFlow } from '../entities/workspace/hrly-param-fuel-flow.entity';
-import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
+import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParamFuelFlowImportDTO } from '../dto/hourly-param-fuel-flow.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { HourlyParameterFuelFlowWorkspaceRepository } from './hourly-parameter-fuel-flow-workspace.repository';
+import { HourlyParameterFuelFlowWorkspaceService } from './hourly-parameter-fuel-flow-workspace.service';
 
 const writeObjectMock = jest.fn();
 
@@ -19,6 +20,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyParameterFuelFlowWorkspaceService,
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowMap,

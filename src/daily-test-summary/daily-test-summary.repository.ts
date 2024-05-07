@@ -1,8 +1,14 @@
-import { DailyTestSummary } from '../entities/daily-test-summary.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(DailyTestSummary)
+import { DailyTestSummary } from '../entities/daily-test-summary.entity';
+
+@Injectable()
 export class DailyTestSummaryRepository extends Repository<DailyTestSummary> {
+  constructor(entityManager: EntityManager) {
+    super(DailyTestSummary, entityManager);
+  }
+
   async export(monitoringLocationIds: string[], year: number, quarter: number) {
     const query = this.createQueryBuilder('dts')
       .innerJoinAndSelect('dts.monitorLocation', 'l')

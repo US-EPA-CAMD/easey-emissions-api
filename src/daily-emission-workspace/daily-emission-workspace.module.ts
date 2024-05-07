@@ -15,7 +15,12 @@ import { DailyFuelWorkspaceModule } from '../daily-fuel-workspace/daily-fuel-wor
     DailyFuelWorkspaceModule,
     BulkLoadModule,
   ],
-  providers: [DailyEmissionMap, DailyEmissionWorkspaceService, BulkLoadService],
+  providers: [
+    DailyEmissionMap,
+    DailyEmissionWorkspaceRepository,
+    DailyEmissionWorkspaceService,
+    BulkLoadService,
+  ],
   exports: [
     TypeOrmModule,
     DailyEmissionMap,

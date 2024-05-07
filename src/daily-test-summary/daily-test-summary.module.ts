@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DailyCalibrationModule } from '../daily-calibration/daily-calibration.module';
-
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
-import { DailyTestSummaryService } from './daily-test-summary.service';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
+import { DailyTestSummaryService } from './daily-test-summary.service';
 
 @Module({
   imports: [
@@ -13,7 +12,11 @@ import { DailyTestSummaryRepository } from './daily-test-summary.repository';
     DailyCalibrationModule,
   ],
   controllers: [],
-  providers: [DailyTestSummaryMap, DailyTestSummaryService],
+  providers: [
+    DailyTestSummaryMap,
+    DailyTestSummaryRepository,
+    DailyTestSummaryService,
+  ],
   exports: [TypeOrmModule, DailyTestSummaryMap, DailyTestSummaryService],
 })
 export class DailyTestSummaryModule {}

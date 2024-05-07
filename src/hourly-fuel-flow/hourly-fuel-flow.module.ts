@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
-import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
+
+import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
+import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
 
 @Module({
   imports: [
@@ -15,7 +16,9 @@ import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow
     ]),
   ],
   providers: [
+    HourlyFuelFlowRepository,
     HourlyFuelFlowService,
+    HourlyParameterFuelFlowRepository,
     HourlyParameterFuelFlowService,
     HourlyFuelFlowMap,
     HourlyParameterFuelFlowMap,

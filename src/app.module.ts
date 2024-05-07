@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from '@us-epa-camd/easey-common/config';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options';
+import { CheckCatalogModule } from '@us-epa-camd/easey-common/check-catalog';
+import { ConnectionModule } from '@us-epa-camd/easey-common/connection';
+import { DbLookupValidator } from '@us-epa-camd/easey-common/validators';
 
 import routes from './routes';
 import appConfig from './config/app.config';
@@ -45,6 +48,10 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    CheckCatalogModule.register(
+      'camdecmpsmd.vw_emissions_api_check_catalog_results',
+    ),
+    ConnectionModule,
     LoggerModule,
     CorsOptionsModule,
     EmissionsModule,
@@ -72,5 +79,6 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
     WhatHasDataModule,
     HttpModule,
   ],
+  providers: [DbLookupValidator],
 })
 export class AppModule {}

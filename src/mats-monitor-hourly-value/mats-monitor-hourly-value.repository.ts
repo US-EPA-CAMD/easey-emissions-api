@@ -1,10 +1,16 @@
-import { MatsMonitorHrlyValue } from '../entities/mats-monitor-hrly-value.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(MatsMonitorHrlyValue)
+import { MatsMonitorHrlyValue } from '../entities/mats-monitor-hrly-value.entity';
+
+@Injectable()
 export class MatsMonitorHourlyValueRepository extends Repository<
   MatsMonitorHrlyValue
 > {
+  constructor(entityManager: EntityManager) {
+    super(MatsMonitorHrlyValue, entityManager);
+  }
+
   async export(hourIds: string[]) {
     const query = this.createQueryBuilder('mmhv')
       .leftJoinAndSelect('mmhv.monitorSystem', 'ms')

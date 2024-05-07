@@ -1,5 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
 
-@EntityRepository(DailyFuel)
-export class DailyFuelWorkspaceRepository extends Repository<DailyFuel> {}
+@Injectable()
+export class DailyFuelWorkspaceRepository extends Repository<DailyFuel> {
+  constructor(entityManager: EntityManager) {
+    super(DailyFuel, entityManager);
+  }
+}

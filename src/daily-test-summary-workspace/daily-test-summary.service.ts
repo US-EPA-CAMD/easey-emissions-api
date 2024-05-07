@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { randomUUID } from 'crypto';
+
+import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import {
   DailyTestSummaryDTO,
   DailyTestSummaryImportDTO,
 } from '../dto/daily-test-summary.dto';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-
-import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
-import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
-import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { FindConditions } from 'typeorm';
-import { randomUUID } from 'crypto';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { isUndefinedOrNull } from '../utils/utils';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { DailyTestSummary } from '../entities/workspace/daily-test-summary.entity';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
+import { DeleteCriteria } from '../types';
+import { isUndefinedOrNull } from '../utils/utils';
+import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
 
 export type DailyTestSummaryCreate = DailyTestSummaryImportDTO & {
   reportingPeriodId: number;
@@ -44,7 +43,7 @@ export class DailyTestSummaryWorkspaceService {
     return this.map.many(results);
   }
 
-  async delete(criteria: FindConditions<DailyTestSummary>): Promise<void> {
+  async delete(criteria: DeleteCriteria): Promise<void> {
     await this.repository.delete(criteria);
   }
 
@@ -123,7 +122,9 @@ export class DailyTestSummaryWorkspaceService {
         rptPeriodId: reportingPeriodId,
         monLocId: monitoringLocationId,
         componentId:
-          identifiers?.locations[monitoringLocationId]?.components?.[dailyTestSummaryDatum.componentId] || null,
+          identifiers?.locations[monitoringLocationId]?.components?.[
+            dailyTestSummaryDatum.componentId
+          ] || null,
         dailyTestDate: dailyTestSummaryDatum.date,
         dailyTestHour: dailyTestSummaryDatum.hour,
         dailyTestMin: dailyTestSummaryDatum.minute,
@@ -134,7 +135,9 @@ export class DailyTestSummaryWorkspaceService {
         updateDate: currentTime,
         spanScaleCd: dailyTestSummaryDatum.spanScaleCode,
         monSysId:
-          identifiers?.locations[monitoringLocationId]?.monitoringSystems?.[dailyTestSummaryDatum.monitoringSystemId] || null,
+          identifiers?.locations[monitoringLocationId]?.monitoringSystems?.[
+            dailyTestSummaryDatum.monitoringSystemId
+          ] || null,
       });
     }
 

@@ -1,8 +1,14 @@
-import { MonitorPlan } from '../entities/workspace/monitor-plan.entity';
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(MonitorPlan)
+import { MonitorPlan } from '../entities/workspace/monitor-plan.entity';
+
+@Injectable()
 export class MonitorPlanWorkspaceRepository extends Repository<MonitorPlan> {
+  constructor(entityManager: EntityManager) {
+    super(MonitorPlan, entityManager);
+  }
+
   async getMonitorPlansByLocationIds(
     monitoringLocationIds: string[],
   ): Promise<MonitorPlan[]> {

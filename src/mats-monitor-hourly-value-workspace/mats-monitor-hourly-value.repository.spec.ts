@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
 import { MatsMonitorHrlyValue } from '../entities/mats-monitor-hrly-value.entity';
 import { MatsMonitorHourlyValueWorkspaceRepository } from './mats-monitor-hourly-value.repository';
@@ -16,6 +16,7 @@ describe('-- MatsMonitorHourlyValueWorkspaceRepository --', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         MatsMonitorHourlyValueWorkspaceRepository,
         { provide: SelectQueryBuilder, useFactory: mockQueryBuilder },
       ],

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DailyBackstopMap } from '../maps/daily-backstop.map';
-import { DailyBackstopWorkspaceService } from './daily-backstop.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
+
+import { DailyBackstopMap } from '../maps/daily-backstop.map';
+import { DailyBackstopWorkspaceRepository } from './daily-backstop.repository';
+import { DailyBackstopWorkspaceService } from './daily-backstop.service';
 
 @Module({
   imports: [
@@ -11,7 +12,11 @@ import {DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
     TypeOrmModule.forFeature([DailyBackstopWorkspaceRepository]),
   ],
   controllers: [],
-  providers: [DailyBackstopWorkspaceService, DailyBackstopMap],
+  providers: [
+    DailyBackstopWorkspaceRepository,
+    DailyBackstopWorkspaceService,
+    DailyBackstopMap,
+  ],
   exports: [TypeOrmModule, DailyBackstopWorkspaceService, DailyBackstopMap],
 })
 export class DailyBackstopWorkspaceModule {}
