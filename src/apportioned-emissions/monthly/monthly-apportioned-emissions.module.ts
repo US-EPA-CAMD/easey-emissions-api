@@ -14,6 +14,6 @@ import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissi
     MonthlyApportionedEmissionsService,
     MonthUnitDataRepository,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, MonthUnitDataRepository],
 })
 export class MonthlyApportionedEmissionsModule {}

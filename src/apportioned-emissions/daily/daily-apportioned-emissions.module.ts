@@ -14,6 +14,6 @@ import { DayUnitDataRepository } from './day-unit-data.repository';
     DayUnitDataRepository,
     DailyApportionedEmissionsService,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, DayUnitDataRepository],
 })
 export class DailyApportionedEmissionsModule {}

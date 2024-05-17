@@ -7,5 +7,10 @@ import { Nsps4tCompliancePeriodService } from './nsps4t-compliance-period.servic
 @Module({
   imports: [TypeOrmModule.forFeature([Nsps4tCompliancePeriodRepository])],
   providers: [Nsps4tCompliancePeriodRepository, Nsps4tCompliancePeriodService],
+  exports: [
+    TypeOrmModule,
+    Nsps4tCompliancePeriodRepository,
+    Nsps4tCompliancePeriodService,
+  ],
 })
 export class Nsps4tCompliancePeriodModule {}

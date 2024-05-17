@@ -24,6 +24,7 @@ import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
   exports: [
     TypeOrmModule,
     DailyTestSummaryMap,
+    DailyTestSummaryWorkspaceRepository,
     DailyTestSummaryWorkspaceService,
     DailyTestSummaryCheckService,
   ],

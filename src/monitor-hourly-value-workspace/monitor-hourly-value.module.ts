@@ -19,6 +19,7 @@ import { MonitorHourlyValueWorkspaceService } from './monitor-hourly-value.servi
   exports: [
     TypeOrmModule,
     MonitorHourlyValueMap,
+    MonitorHourlyValueWorkspaceRepository,
     MonitorHourlyValueWorkspaceService,
   ],
 })

@@ -13,5 +13,11 @@ import { DerivedHourlyValueService } from './derived-hourly-value.service';
     DerivedHourlyValueMap,
   ],
   controllers: [],
+  exports: [
+    TypeOrmModule,
+    DerivedHourlyValueRepository,
+    DerivedHourlyValueService,
+    DerivedHourlyValueMap,
+  ],
 })
 export class DerivedHourlyValueModule {}

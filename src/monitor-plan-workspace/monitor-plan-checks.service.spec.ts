@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { MonitorPlanChecksService } from './monitor-plan-checks.service';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { MonitorPlanWorkspaceRepository } from './monitor-plan-repository';
+import { MonitorPlanWorkspaceRepository } from './monitor-plan.repository';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { genMonitorPlan } from '../../test/object-generators/monitor-plan';

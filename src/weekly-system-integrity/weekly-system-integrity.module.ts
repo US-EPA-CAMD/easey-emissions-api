@@ -15,6 +15,7 @@ import { WeeklySystemIntegrityService } from './weekly-system-integrity.service'
   exports: [
     TypeOrmModule,
     WeeklySystemIntegrityMap,
+    WeeklySystemIntegrityRepository,
     WeeklySystemIntegrityService,
   ],
 })

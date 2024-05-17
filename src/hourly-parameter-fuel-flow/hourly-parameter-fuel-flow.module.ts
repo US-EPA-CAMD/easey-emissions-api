@@ -12,5 +12,11 @@ import { HourlyParameterFuelFlowService } from './hourly-parameter-fuel-flow.ser
     HourlyParameterFuelFlowService,
     HourlyParameterFuelFlowMap,
   ],
+  exports: [
+    TypeOrmModule,
+    HourlyParameterFuelFlowRepository,
+    HourlyParameterFuelFlowService,
+    HourlyParameterFuelFlowMap,
+  ],
 })
 export class HourlyParameterFuelFlowModule {}

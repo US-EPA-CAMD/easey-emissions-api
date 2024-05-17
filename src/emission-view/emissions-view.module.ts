@@ -8,6 +8,6 @@ import { EmissionsViewService } from './emissions-view.service';
 @Module({
   imports: [TypeOrmModule.forFeature([EmissionsViewRepository])],
   controllers: [EmissionsViewController],
-  providers: [EmissionsViewRepository, EmissionsViewService],
+  providers: [TypeOrmModule, EmissionsViewRepository, EmissionsViewService],
 })
 export class EmissionsViewModule {}

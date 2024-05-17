@@ -9,6 +9,11 @@ import { SummaryValueService } from './summary-value.service';
   imports: [TypeOrmModule.forFeature([SummaryValueRepository])],
   controllers: [],
   providers: [SummaryValueRepository, SummaryValueService, SummaryValueMap],
-  exports: [TypeOrmModule, SummaryValueService, SummaryValueMap],
+  exports: [
+    TypeOrmModule,
+    SummaryValueRepository,
+    SummaryValueService,
+    SummaryValueMap,
+  ],
 })
 export class SummaryValueModule {}
