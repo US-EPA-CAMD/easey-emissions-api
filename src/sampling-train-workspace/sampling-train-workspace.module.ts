@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  BulkLoadModule,
-  BulkLoadService,
-} from '@us-epa-camd/easey-common/bulk-load';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 import { SamplingTrainMap } from 'src/maps/sampling-train.map';
 import { SamplingTrainWorkspaceRepository } from './sampling-train-workspace.repository';
@@ -17,9 +14,13 @@ import { SamplingTrainWorkspaceService } from './sampling-train-workspace.servic
   providers: [
     SamplingTrainWorkspaceRepository,
     SamplingTrainWorkspaceService,
-    BulkLoadService,
     SamplingTrainMap,
   ],
-  exports: [TypeOrmModule, SamplingTrainMap, BulkLoadService],
+  exports: [
+    TypeOrmModule,
+    SamplingTrainWorkspaceRepository,
+    SamplingTrainMap,
+    SamplingTrainWorkspaceService,
+  ],
 })
 export class SamplingTrainWorkspaceModule {}

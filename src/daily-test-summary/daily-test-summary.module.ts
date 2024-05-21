@@ -17,6 +17,11 @@ import { DailyTestSummaryService } from './daily-test-summary.service';
     DailyTestSummaryRepository,
     DailyTestSummaryService,
   ],
-  exports: [TypeOrmModule, DailyTestSummaryMap, DailyTestSummaryService],
+  exports: [
+    TypeOrmModule,
+    DailyTestSummaryMap,
+    DailyTestSummaryRepository,
+    DailyTestSummaryService,
+  ],
 })
 export class DailyTestSummaryModule {}

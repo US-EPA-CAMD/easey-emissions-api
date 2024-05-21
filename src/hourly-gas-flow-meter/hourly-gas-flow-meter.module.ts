@@ -12,6 +12,11 @@ import { HourlyGasFlowMeterService } from './hourly-gas-flow-meter.service';
     HourlyGasFlowMeterRepository,
     HourlyGasFlowMeterService,
   ],
-  exports: [TypeOrmModule, HourlyGasFlowMeterMap, HourlyGasFlowMeterService],
+  exports: [
+    TypeOrmModule,
+    HourlyGasFlowMeterRepository,
+    HourlyGasFlowMeterMap,
+    HourlyGasFlowMeterService,
+  ],
 })
 export class HourlyGasFlowMeterModule {}

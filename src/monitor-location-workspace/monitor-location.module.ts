@@ -8,6 +8,10 @@ import { MonitorLocationWorkspaceRepository } from './monitor-location.repositor
   imports: [TypeOrmModule.forFeature([MonitorLocationWorkspaceRepository])],
   controllers: [],
   providers: [MonitorLocationWorkspaceRepository, MonitorLocationChecksService],
-  exports: [TypeOrmModule, MonitorLocationChecksService],
+  exports: [
+    TypeOrmModule,
+    MonitorLocationWorkspaceRepository,
+    MonitorLocationChecksService,
+  ],
 })
 export class MonitorLocationWorkspaceModule {}

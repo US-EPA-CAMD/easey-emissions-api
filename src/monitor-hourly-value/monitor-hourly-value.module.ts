@@ -12,6 +12,11 @@ import { MonitorHourlyValueService } from './monitor-hourly-value.service';
     MonitorHourlyValueRepository,
     MonitorHourlyValueService,
   ],
-  exports: [TypeOrmModule, MonitorHourlyValueMap, MonitorHourlyValueService],
+  exports: [
+    TypeOrmModule,
+    MonitorHourlyValueMap,
+    MonitorHourlyValueRepository,
+    MonitorHourlyValueService,
+  ],
 })
 export class MonitorHourlyValueModule {}

@@ -17,6 +17,11 @@ import { SummaryValueWorkspaceService } from './summary-value.service';
     SummaryValueWorkspaceService,
     SummaryValueMap,
   ],
-  exports: [TypeOrmModule, SummaryValueWorkspaceService, SummaryValueMap],
+  exports: [
+    TypeOrmModule,
+    SummaryValueWorkspaceRepository,
+    SummaryValueWorkspaceService,
+    SummaryValueMap,
+  ],
 })
 export class SummaryValueWorkspaceModule {}

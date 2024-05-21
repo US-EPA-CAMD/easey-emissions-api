@@ -16,5 +16,11 @@ import { DerivedHourlyValueWorkspaceService } from './derived-hourly-value-works
     DerivedHourlyValueWorkspaceService,
     DerivedHourlyValueMap,
   ],
+  exports: [
+    TypeOrmModule,
+    DerivedHourlyValueWorkspaceRepository,
+    DerivedHourlyValueWorkspaceService,
+    DerivedHourlyValueMap,
+  ],
 })
 export class DerivedHourlyValueWorkspaceModule {}

@@ -13,5 +13,10 @@ import { EmissionsViewWorkspaceService } from './emissions-view.service';
   ],
   controllers: [EmissionsViewWorkspaceController],
   providers: [EmissionsViewWorkspaceRepository, EmissionsViewWorkspaceService],
+  exports: [
+    TypeOrmModule,
+    EmissionsViewWorkspaceRepository,
+    EmissionsViewWorkspaceService,
+  ],
 })
 export class EmissionsViewWorkspaceModule {}

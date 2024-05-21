@@ -19,6 +19,7 @@ import { HourlyGasFlowMeterWorkspaceService } from './hourly-gas-flow-meter.serv
   exports: [
     TypeOrmModule,
     HourlyGasFlowMeterMap,
+    HourlyGasFlowMeterWorkspaceRepository,
     HourlyGasFlowMeterWorkspaceService,
   ],
 })

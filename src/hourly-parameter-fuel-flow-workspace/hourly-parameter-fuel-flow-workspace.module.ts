@@ -16,5 +16,11 @@ import { HourlyParameterFuelFlowWorkspaceService } from './hourly-parameter-fuel
     HourlyParameterFuelFlowWorkspaceService,
     HourlyParameterFuelFlowMap,
   ],
+  exports: [
+    TypeOrmModule,
+    HourlyParameterFuelFlowWorkspaceRepository,
+    HourlyParameterFuelFlowWorkspaceService,
+    HourlyParameterFuelFlowMap,
+  ],
 })
 export class HourlyParameterFuelFlowWorkspaceModule {}

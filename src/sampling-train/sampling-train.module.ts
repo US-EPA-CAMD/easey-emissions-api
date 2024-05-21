@@ -7,5 +7,6 @@ import { SamplingTrainService } from './sampling-train.service';
 @Module({
   imports: [TypeOrmModule.forFeature([SamplingTrainRepository])],
   providers: [SamplingTrainRepository, SamplingTrainService],
+  exports: [TypeOrmModule, SamplingTrainRepository, SamplingTrainService],
 })
 export class SamplingTrainModule {}

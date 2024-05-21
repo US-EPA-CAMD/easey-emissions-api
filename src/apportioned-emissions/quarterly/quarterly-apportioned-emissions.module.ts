@@ -14,6 +14,6 @@ import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-em
     QuarterlyApportionedEmissionsService,
     QuarterUnitDataRepository,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, QuarterUnitDataRepository],
 })
 export class QuarterlyApportionedEmissionsModule {}

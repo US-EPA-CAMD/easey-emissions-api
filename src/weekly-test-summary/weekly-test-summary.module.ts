@@ -17,6 +17,11 @@ import { WeeklyTestSummaryService } from './weekly-test-summary.service';
     WeeklyTestSummaryRepository,
     WeeklyTestSummaryService,
   ],
-  exports: [TypeOrmModule, WeeklyTestSummaryMap, WeeklyTestSummaryService],
+  exports: [
+    TypeOrmModule,
+    WeeklyTestSummaryMap,
+    WeeklyTestSummaryRepository,
+    WeeklyTestSummaryService,
+  ],
 })
 export class WeeklyTestSummaryModule {}

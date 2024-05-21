@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
-import { MonitorPlanWorkspaceRepository } from './monitor-plan-repository';
+import { MonitorPlanWorkspaceRepository } from './monitor-plan.repository';
 
 describe('Monitor plan repository tests', () => {
   let repository: MonitorPlanWorkspaceRepository;

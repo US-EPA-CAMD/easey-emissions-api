@@ -14,6 +14,6 @@ import { AnnualApportionedEmissionsController } from './annual-apportioned-emiss
     AnnualUnitDataRepository,
     AnnualApportionedEmissionsService,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, AnnualUnitDataRepository],
 })
 export class AnnualApportionedEmissionsModule {}

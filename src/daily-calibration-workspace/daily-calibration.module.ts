@@ -20,6 +20,7 @@ import { DailyCalibrationWorkspaceService } from './daily-calibration.service';
   exports: [
     TypeOrmModule,
     DailyCalibrationMap,
+    DailyCalibrationWorkspaceRepository,
     DailyCalibrationWorkspaceService,
   ],
 })
