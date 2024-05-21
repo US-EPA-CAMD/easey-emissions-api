@@ -63,7 +63,7 @@ import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-work
 import { MonitorLocationChecksService } from '../monitor-location-workspace/monitor-location-checks.service';
 import { MonitorLocationWorkspaceRepository } from '../monitor-location-workspace/monitor-location.repository';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
-import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan-repository';
+import { MonitorPlanWorkspaceRepository } from '../monitor-plan-workspace/monitor-plan.repository';
 import { MonitorSystemRepository } from '../monitor-system/monitor-system.repository';
 import { Nsps4tAnnualWorkspaceRepository } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.repository';
 import { Nsps4tAnnualWorkspaceService } from '../nsps4t-annual-workspace/nsps4t-annual-workspace.service';

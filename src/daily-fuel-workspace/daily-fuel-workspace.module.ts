@@ -16,6 +16,11 @@ import { DailyFuelWorkspaceService } from './daily-fuel-workspace.service';
     DailyFuelWorkspaceRepository,
     DailyFuelWorkspaceService,
   ],
-  exports: [TypeOrmModule, DailyFuelMap, DailyFuelWorkspaceService],
+  exports: [
+    TypeOrmModule,
+    DailyFuelMap,
+    DailyFuelWorkspaceRepository,
+    DailyFuelWorkspaceService,
+  ],
 })
 export class DailyFuelWorkspaceModule {}

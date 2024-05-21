@@ -3,7 +3,7 @@ import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
 import { MonitorPlan } from '../entities/workspace/monitor-plan.entity';
 import { LocationIdentifiers } from '../interfaces/location-identifiers.interface';
-import { MonitorPlanWorkspaceRepository } from './monitor-plan-repository';
+import { MonitorPlanWorkspaceRepository } from './monitor-plan.repository';
 
 @Injectable()
 export class MonitorPlanChecksService {

@@ -14,6 +14,6 @@ import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
     OzoneApportionedEmissionsService,
     OzoneUnitDataRepository,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, OzoneUnitDataRepository],
 })
 export class OzoneApportionedEmissionsModule {}

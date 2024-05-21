@@ -12,6 +12,11 @@ import { LongTermFuelFlowService } from './long-term-fuel-flow.service';
     LongTermFuelFlowService,
     LongTermFuelFlowMap,
   ],
-  exports: [TypeOrmModule, LongTermFuelFlowMap, LongTermFuelFlowService],
+  exports: [
+    TypeOrmModule,
+    LongTermFuelFlowRepository,
+    LongTermFuelFlowMap,
+    LongTermFuelFlowService,
+  ],
 })
 export class LongTermFuelFlowModule {}

@@ -18,6 +18,6 @@ import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.se
     MatsApportionedEmissionsService,
     UnitFactRepository,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, UnitFactRepository],
 })
 export class MatsApportionedEmissionsModule {}

@@ -14,6 +14,6 @@ import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned
     HourUnitMatsDataRepository,
     HourlyMatsApportionedEmissionsService,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, HourUnitMatsDataRepository],
 })
 export class HourlyMatsApportionedEmissionsModule {}

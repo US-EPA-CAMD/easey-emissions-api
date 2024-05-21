@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityWorkspaceModule } from '../weekly-system-integrity-workspace/weekly-system-integrity.module';
 
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { WeeklyTestSummaryCheckService } from './weekly-test-summary-check.service';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
@@ -12,7 +12,7 @@ import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service
   imports: [
     TypeOrmModule.forFeature([WeeklyTestSummaryWorkspaceRepository]),
     WeeklySystemIntegrityWorkspaceModule,
-    BulkLoadService,
+    BulkLoadModule,
   ],
   controllers: [],
   providers: [
@@ -22,6 +22,8 @@ import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service
     WeeklyTestSummaryCheckService,
   ],
   exports: [
+    TypeOrmModule,
+    WeeklyTestSummaryWorkspaceRepository,
     WeeklyTestSummaryCheckService,
     WeeklyTestSummaryMap,
     WeeklyTestSummaryWorkspaceService,

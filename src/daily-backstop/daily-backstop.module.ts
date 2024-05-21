@@ -9,6 +9,11 @@ import { DailyBackstopService } from './daily-backstop.service';
   imports: [TypeOrmModule.forFeature([DailyBackstopRepository])],
   controllers: [],
   providers: [DailyBackstopRepository, DailyBackstopService, DailyBackstopMap],
-  exports: [TypeOrmModule, DailyBackstopService, DailyBackstopMap],
+  exports: [
+    TypeOrmModule,
+    DailyBackstopRepository,
+    DailyBackstopService,
+    DailyBackstopMap,
+  ],
 })
 export class DailyBackstopModule {}

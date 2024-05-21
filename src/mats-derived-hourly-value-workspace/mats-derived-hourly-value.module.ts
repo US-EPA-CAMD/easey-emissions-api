@@ -19,6 +19,7 @@ import { MatsDerivedHourlyValueWorkspaceService } from './mats-derived-hourly-va
   exports: [
     TypeOrmModule,
     MatsDerivedHourlyValueMap,
+    MatsDerivedHourlyValueWorkspaceRepository,
     MatsDerivedHourlyValueWorkspaceService,
   ],
 })

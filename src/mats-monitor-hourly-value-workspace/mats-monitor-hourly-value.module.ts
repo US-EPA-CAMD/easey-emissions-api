@@ -19,6 +19,7 @@ import { MatsMonitorHourlyValueWorkspaceService } from './mats-monitor-hourly-va
   exports: [
     TypeOrmModule,
     MatsMonitorHourlyValueMap,
+    MatsMonitorHourlyValueWorkspaceRepository,
     MatsMonitorHourlyValueWorkspaceService,
   ],
 })

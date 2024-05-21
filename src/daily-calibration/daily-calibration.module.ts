@@ -13,6 +13,11 @@ import { DailyCalibrationService } from './daily-calibration.service';
     DailyCalibrationRepository,
     DailyCalibrationService,
   ],
-  exports: [TypeOrmModule, DailyCalibrationMap, DailyCalibrationService],
+  exports: [
+    TypeOrmModule,
+    DailyCalibrationRepository,
+    DailyCalibrationMap,
+    DailyCalibrationService,
+  ],
 })
 export class DailyCalibrationModule {}

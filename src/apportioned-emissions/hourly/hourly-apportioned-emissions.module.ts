@@ -14,6 +14,6 @@ import { HourlyApportionedEmissionsService } from './hourly-apportioned-emission
     HourUnitDataRepository,
     HourlyApportionedEmissionsService,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, HourUnitDataRepository],
 })
 export class HourlyApportionedEmissionsModule {}

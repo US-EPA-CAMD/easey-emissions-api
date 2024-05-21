@@ -17,6 +17,11 @@ import { DailyBackstopWorkspaceService } from './daily-backstop.service';
     DailyBackstopWorkspaceService,
     DailyBackstopMap,
   ],
-  exports: [TypeOrmModule, DailyBackstopWorkspaceService, DailyBackstopMap],
+  exports: [
+    TypeOrmModule,
+    DailyBackstopWorkspaceRepository,
+    DailyBackstopWorkspaceService,
+    DailyBackstopMap,
+  ],
 })
 export class DailyBackstopWorkspaceModule {}
