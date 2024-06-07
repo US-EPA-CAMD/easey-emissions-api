@@ -1,21 +1,17 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { In } from 'typeorm';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { In } from 'typeorm';
+
+import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 
 @Injectable()
 export class ReviewSubmitService {
   constructor(
-    @InjectRepository(EmissionsReviewSubmitRepository)
     private readonly workspaceRepository: EmissionsReviewSubmitRepository,
-
-    @InjectRepository(EmissionsReviewSubmitGlobalRepository)
     private readonly globalRepository: EmissionsReviewSubmitGlobalRepository,
-
     private readonly map: EmissionsReviewSubmitMap,
   ) {}
 
@@ -23,16 +19,16 @@ export class ReviewSubmitService {
     orisCodes: number[],
     monPlanIds: string[],
     quarters: string[],
-    isWorkspace: boolean = true
+    isWorkspace: boolean = true,
   ): Promise<EmissionsReviewSubmitDTO[]> {
     if (!quarters || quarters.length === 0) {
       return [];
     }
 
-    let repository; 
-    if(isWorkspace){
+    let repository;
+    if (isWorkspace) {
       repository = this.workspaceRepository;
-    }else{
+    } else {
       repository = this.globalRepository;
     }
 

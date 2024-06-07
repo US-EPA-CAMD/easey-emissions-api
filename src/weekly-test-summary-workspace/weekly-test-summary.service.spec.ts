@@ -1,19 +1,20 @@
+import { faker } from '@faker-js/faker';
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
 
-import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
-import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
-import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
+import { mockWeeklyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-weekly-test-summary-workspace-repository';
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
+import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityWorkspaceRepository } from '../weekly-system-integrity-workspace/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityWorkspaceService } from '../weekly-system-integrity-workspace/weekly-system-integrity.service';
-import { mockWeeklyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-weekly-test-summary-workspace-repository';
-import { WeeklyTestSummary } from '../entities/workspace/weekly-test-summary.entity';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
-import { ConfigService } from '@nestjs/config';
+import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
+import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
 
 describe('--WeeklyTestSummaryWorkspaceService--', () => {
   let map: WeeklyTestSummaryMap;
@@ -25,6 +26,7 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         WeeklyTestSummaryMap,
         WeeklyTestSummaryWorkspaceService,
         WeeklySystemIntegrityWorkspaceService,
@@ -101,12 +103,13 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+      };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

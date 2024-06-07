@@ -1,34 +1,25 @@
-import { Request } from 'express';
-import { plainToClass } from 'class-transformer';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import {
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { plainToClass } from 'class-transformer';
+import { Request } from 'express';
 
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import {
-  fieldMappings,
-  fieldMappingHeader,
   excludableColumnHeader,
+  fieldMappingHeader,
+  fieldMappings,
 } from '../../constants/field-mappings';
-
-import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
-import { AnnualUnitDataRepository } from './annual-unit-data.repository';
-import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
 import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 
 @Injectable()
 export class AnnualApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(AnnualUnitDataRepository)
     private readonly repository: AnnualUnitDataRepository,
   ) {}
 

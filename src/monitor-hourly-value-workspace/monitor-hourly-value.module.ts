@@ -1,20 +1,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueWorkspaceService } from './monitor-hourly-value.service';
-import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([MonitorHourlyValueWorkspaceRepository]),
     BulkLoadModule,
   ],
-  providers: [MonitorHourlyValueMap, MonitorHourlyValueWorkspaceService],
+  providers: [
+    MonitorHourlyValueMap,
+    MonitorHourlyValueWorkspaceRepository,
+    MonitorHourlyValueWorkspaceService,
+  ],
   exports: [
     TypeOrmModule,
     MonitorHourlyValueMap,
+    MonitorHourlyValueWorkspaceRepository,
     MonitorHourlyValueWorkspaceService,
   ],
 })

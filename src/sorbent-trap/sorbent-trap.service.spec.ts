@@ -1,13 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SorbentTrapService } from './sorbent-trap.service';
-import { SorbentTrapRepository } from './sorbent-trap.repository';
-import { SamplingTrainService } from '../sampling-train/sampling-train.service';
-import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
-import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
+import { EntityManager } from 'typeorm';
+
 import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
-import { SorbentTrapMap } from '../maps/sorbent-trap.map';
-import { SorbentTrap } from '../entities/sorbent-trap.entity';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { SorbentTrap } from '../entities/sorbent-trap.entity';
+import { SorbentTrapMap } from '../maps/sorbent-trap.map';
+import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { SamplingTrainService } from '../sampling-train/sampling-train.service';
+import * as exportSorbentTrapData from '../sorbent-trap-functions/export-sorbent-trap-data';
+import { SorbentTrapRepository } from './sorbent-trap.repository';
+import { SorbentTrapService } from './sorbent-trap.service';
 
 describe('SorbentTrapService', () => {
   let service: SorbentTrapService;
@@ -17,6 +19,7 @@ describe('SorbentTrapService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         SamplingTrainService,
         SamplingTrainRepository,
         SorbentTrapService,

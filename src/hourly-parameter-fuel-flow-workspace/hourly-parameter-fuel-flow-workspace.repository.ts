@@ -1,10 +1,16 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { HrlyParamFuelFlow } from '../entities/workspace/hrly-param-fuel-flow.entity';
 
-@EntityRepository(HrlyParamFuelFlow)
+@Injectable()
 export class HourlyParameterFuelFlowWorkspaceRepository extends Repository<
   HrlyParamFuelFlow
 > {
+  constructor(entityManager: EntityManager) {
+    super(HrlyParamFuelFlow, entityManager);
+  }
+
   async export(hourlyFuelFlowIds: string[]) {
     return this.createQueryBuilder('hrlyParam')
       .leftJoinAndSelect('hrlyParam.monitorFormula', 'monitorFormula')

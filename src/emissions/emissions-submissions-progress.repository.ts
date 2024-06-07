@@ -1,10 +1,16 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
 
-@EntityRepository(EmissionsSubmissionsProgress)
+@Injectable()
 export class EmissionsSubmissionsProgressRepository extends Repository<
   EmissionsSubmissionsProgress
 > {
+  constructor(entityManager: EntityManager) {
+    super(EmissionsSubmissionsProgress, entityManager);
+  }
+
   async getSubmissionProgress(periodDate: Date, submissionDays: number) {
     return this.createQueryBuilder('submissions')
       .where(

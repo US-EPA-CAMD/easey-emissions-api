@@ -1,8 +1,14 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { HrlyOpData } from '../entities/hrly-op-data.entity';
 
-@EntityRepository(HrlyOpData)
+@Injectable()
 export class HourlyOperatingRepository extends Repository<HrlyOpData> {
+  constructor(entityManager: EntityManager) {
+    super(HrlyOpData, entityManager);
+  }
+
   async export(monitoringLocationIds: string[], year: number, quarter: number) {
     const query = this.createQueryBuilder('hod')
       .innerJoinAndSelect('hod.monitorLocation', 'l')

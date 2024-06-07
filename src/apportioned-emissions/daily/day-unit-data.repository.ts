@@ -1,17 +1,21 @@
-import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 import {
   DailyApportionedEmissionsParamsDTO,
   PaginatedDailyApportionedEmissionsParamsDTO,
 } from '../../dto/daily-apportioned-emissions.params.dto';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 
-@EntityRepository(DayUnitDataView)
+@Injectable()
 export class DayUnitDataRepository extends Repository<DayUnitDataView> {
+  constructor(entityManager: EntityManager) {
+    super(DayUnitDataView, entityManager);
+  }
+
   async getEmissions(
     req: Request,
     columns: any[],

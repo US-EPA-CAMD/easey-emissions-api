@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { Nsps4tCompliancePeriodWorkspaceService } from './nsps4t-compliance-period-workspace.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Nsps4tCompliancePeriodWorkspaceRepository } from './nsps4t-compliance-period-workspace.repository';
-import {
-  BulkLoadModule,
-  BulkLoadService,
-} from '@us-epa-camd/easey-common/bulk-load';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+
 import { Nsps4tCompliancePeriodMap } from '../maps/nsps4t-compliance-period.map';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from './nsps4t-compliance-period-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceService } from './nsps4t-compliance-period-workspace.service';
 
 @Module({
   imports: [
@@ -14,10 +12,15 @@ import { Nsps4tCompliancePeriodMap } from '../maps/nsps4t-compliance-period.map'
     BulkLoadModule,
   ],
   providers: [
+    Nsps4tCompliancePeriodWorkspaceRepository,
     Nsps4tCompliancePeriodWorkspaceService,
-    BulkLoadService,
     Nsps4tCompliancePeriodMap,
   ],
-  exports: [TypeOrmModule, Nsps4tCompliancePeriodMap, BulkLoadService],
+  exports: [
+    TypeOrmModule,
+    Nsps4tCompliancePeriodMap,
+    Nsps4tCompliancePeriodWorkspaceRepository,
+    Nsps4tCompliancePeriodWorkspaceService,
+  ],
 })
 export class Nsps4tCompliancePeriodWorkspaceModule {}

@@ -1,20 +1,18 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
-
 import {
-  State,
-  UnitType,
-  UnitFuelType,
   ControlTechnology,
   Program,
+  State,
+  UnitFuelType,
+  UnitType,
 } from '@us-epa-camd/easey-common/enums';
-
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { fieldMappings } from './../../constants/field-mappings';
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { fieldMappings } from './../../constants/field-mappings';
+import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 
 jest.mock('../../utils/query-builder.helper');
 
@@ -72,6 +70,7 @@ describe('QuarterUnitDataRepository', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         QuarterUnitDataRepository,
         {
           provide: SelectQueryBuilder,

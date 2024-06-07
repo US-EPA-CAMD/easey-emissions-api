@@ -1,15 +1,22 @@
-import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { genNsps4tAnnual } from '../../test/object-generators/nsps4t-annual';
 import { Nsps4tAnnual } from '../entities/nsps4t-annual.entity';
 import { Nsps4tAnnualMap } from '../maps/nsps4t-annual.map';
+import { Nsps4tAnnualRepository } from '../nsps4t-annual/nsps4t-annual.repository';
 
 describe('ExportNsps4tAnnualData', () => {
   let nsps4tAnnualRepository: Nsps4tAnnualRepository;
   let exportNsps4tAnnualModule: typeof import('./export-nsps4t-annual-data');
 
   beforeAll(async () => {
-    nsps4tAnnualRepository = new Nsps4tAnnualRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, Nsps4tAnnualRepository],
+    }).compile();
+
+    nsps4tAnnualRepository = module.get(Nsps4tAnnualRepository);
     exportNsps4tAnnualModule = await import('./export-nsps4t-annual-data');
   });
 

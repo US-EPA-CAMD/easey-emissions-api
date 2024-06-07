@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
@@ -15,6 +15,7 @@ describe('Emisions Repository Test', () => {
     const module = await Test.createTestingModule({
       providers: [
         EmissionsRepository,
+        EntityManager,
         { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],
     }).compile();

@@ -1,29 +1,28 @@
 import { Module } from '@nestjs/common';
-import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+
+import { SorbentTrapMap } from '../maps/sorbent-trap.map';
+import { SamplingTrainWorkspaceModule } from '../sampling-train-workspace/sampling-train-workspace.module';
 import { SorbentTrapWorkspaceRepository } from './sorbent-trap-workspace.repository';
-import { SamplingTrainWorkspaceService } from '../sampling-train-workspace/sampling-train-workspace.service';
-import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
-import {
-  BulkLoadModule,
-  BulkLoadService,
-} from '@us-epa-camd/easey-common/bulk-load';
-import { SorbentTrapMap } from 'src/maps/sorbent-trap.map';
+import { SorbentTrapWorkspaceService } from './sorbent-trap-workspace.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      SamplingTrainWorkspaceRepository,
-      SorbentTrapWorkspaceRepository,
-    ]),
+    TypeOrmModule.forFeature([SorbentTrapWorkspaceRepository]),
     BulkLoadModule,
+    SamplingTrainWorkspaceModule,
   ],
   providers: [
-    SamplingTrainWorkspaceService,
-    SorbentTrapWorkspaceService,
-    BulkLoadService,
     SorbentTrapMap,
+    SorbentTrapWorkspaceRepository,
+    SorbentTrapWorkspaceService,
   ],
-  exports: [TypeOrmModule, SorbentTrapMap, BulkLoadService],
+  exports: [
+    TypeOrmModule,
+    SorbentTrapWorkspaceRepository,
+    SorbentTrapMap,
+    SorbentTrapWorkspaceService,
+  ],
 })
 export class SorbentTrapWorkspaceModule {}

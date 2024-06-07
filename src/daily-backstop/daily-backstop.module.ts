@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { DailyBackstopMap } from '../maps/daily-backstop.map';
+import { DailyBackstopRepository } from './daily-backstop.repository';
 import { DailyBackstopService } from './daily-backstop.service';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {DailyBackstopRepository} from "./daily-backstop.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([DailyBackstopRepository])],
   controllers: [],
-  providers: [DailyBackstopService, DailyBackstopMap],
-  exports: [TypeOrmModule, DailyBackstopService, DailyBackstopMap],
+  providers: [DailyBackstopRepository, DailyBackstopService, DailyBackstopMap],
+  exports: [
+    TypeOrmModule,
+    DailyBackstopRepository,
+    DailyBackstopService,
+    DailyBackstopMap,
+  ],
 })
 export class DailyBackstopModule {}

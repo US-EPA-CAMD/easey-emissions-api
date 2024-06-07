@@ -1,17 +1,24 @@
-import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
-import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
+import { genNsps4tSummaryImportDto } from '../../test/object-generators/nsps4t-summary-dto';
+import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
 
 describe('ImportNsps4tSummaryData', () => {
   let repository: Nsps4tSummaryWorkspaceRepository;
   let importNsps4tSummaryModule: typeof import('./import-nsps4t-summary-data');
 
   beforeAll(async () => {
-    repository = new Nsps4tSummaryWorkspaceRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, Nsps4tSummaryWorkspaceRepository],
+    }).compile();
+
+    repository = module.get(Nsps4tSummaryWorkspaceRepository);
     importNsps4tSummaryModule = await import('./import-nsps4t-summary-data');
   });
 
-  it('should import data', async function() {
+  it('should import data', async function () {
     const imports = [
       ...genNsps4tSummaryImportDto(),
       ...genNsps4tSummaryImportDto(1, { include: ['nsps4tFourthQuarterData'] }),
@@ -28,6 +35,10 @@ describe('ImportNsps4tSummaryData', () => {
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
     jest.spyOn(repository, 'delete').mockResolvedValue(undefined);
 
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
     await Promise.all(
       imports.map(data => {
         expect(
@@ -36,11 +47,7 @@ describe('ImportNsps4tSummaryData', () => {
               ...data,
               monitoringLocationId: faker.datatype.string(),
               reportingPeriodId: faker.datatype.number(),
-              identifiers: {
-                monitorFormulas: {},
-                components: {},
-                monitoringSystems: {},
-              },
+              identifiers,
             },
             repository,
           }),

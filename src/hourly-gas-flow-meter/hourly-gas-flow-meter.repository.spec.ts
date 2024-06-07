@@ -1,7 +1,8 @@
-import { HourlyGasFlowMeterRepository } from './hourly-gas-flow-meter.repository';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
+
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
-import { SelectQueryBuilder } from 'typeorm';
 import { HrlyGasFlowMeter } from '../entities/workspace/hrly-gas-flow-meter.entity';
+import { HourlyGasFlowMeterRepository } from './hourly-gas-flow-meter.repository';
 
 import { Test } from '@nestjs/testing';
 
@@ -12,6 +13,7 @@ describe('--HourlyGasFlowMeterRepository--', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyGasFlowMeterRepository,
         { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],

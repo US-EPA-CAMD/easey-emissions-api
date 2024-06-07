@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 
-import { EmissionsDataTypes } from '../enums/emissions-data-types.enum';
 import { EmissionsRepository } from '../emissions/emissions.repository';
+import { EmissionsDataTypes } from '../enums/emissions-data-types.enum';
 
 const commonSQL = (schema: string) => {
   return `
@@ -27,10 +26,7 @@ const commonSQL = (schema: string) => {
 
 @Injectable()
 export class WhatHasDataService {
-  constructor(
-    @InjectRepository(EmissionsRepository)
-    private readonly repository: EmissionsRepository,
-  ) {}
+  constructor(private readonly repository: EmissionsRepository) {}
 
   async whatHasData(
     dataType: EmissionsDataTypes,

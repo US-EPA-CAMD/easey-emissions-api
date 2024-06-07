@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { mockQueryBuilder } from '../../test/mocks/mock-query-builder';
-import { SummaryValueRepository } from './summary-value.repository';
-import { SummaryValue } from '../entities/workspace/summary-value.entity';
 import { genSummaryValue } from '../../test/object-generators/summary-value';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { SummaryValue } from '../entities/workspace/summary-value.entity';
+import { SummaryValueRepository } from './summary-value.repository';
 
 let filters = new EmissionsParamsDTO();
 
@@ -18,6 +18,7 @@ describe('Summary Value Repository Test', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         SummaryValueRepository,
         { provide: SelectQueryBuilder, useValue: mockQueryBuilder },
       ],

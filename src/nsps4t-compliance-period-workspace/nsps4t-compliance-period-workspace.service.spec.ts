@@ -1,11 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { Nsps4tCompliancePeriodWorkspaceService } from './nsps4t-compliance-period-workspace.service';
-import { Nsps4tCompliancePeriodWorkspaceRepository } from './nsps4t-compliance-period-workspace.repository';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
-import { Nsps4tAnnualMap } from '../maps/nsps4t-annual.map';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genNsps4tCompliancePeriod } from '../../test/object-generators/nsps4t-compliance-period';
 import { Nsps4tCompliancePeriod } from '../entities/workspace/nsps4t-compliance-period.entity';
+import { Nsps4tAnnualMap } from '../maps/nsps4t-annual.map';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from './nsps4t-compliance-period-workspace.repository';
+import { Nsps4tCompliancePeriodWorkspaceService } from './nsps4t-compliance-period-workspace.service';
 
 describe('Nsps4tCompliancePeriodWorkspaceService', () => {
   let service: Nsps4tCompliancePeriodWorkspaceService;
@@ -15,6 +17,7 @@ describe('Nsps4tCompliancePeriodWorkspaceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         Nsps4tCompliancePeriodWorkspaceService,
         Nsps4tCompliancePeriodWorkspaceRepository,
         BulkLoadService,

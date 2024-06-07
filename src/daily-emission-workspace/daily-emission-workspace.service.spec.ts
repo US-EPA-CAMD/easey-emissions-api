@@ -1,20 +1,22 @@
+import { faker } from '@faker-js/faker';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DailyEmissionWorkspaceService } from './daily-emission-workspace.service';
-import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
-import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
-import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genDailyEmission } from '../../test/object-generators/daily-emission';
+import { DailyFuelWorkspaceRepository } from '../daily-fuel-workspace/daily-fuel-workspace.repository';
+import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
+import { DailyEmissionDTO } from '../dto/daily-emission.dto';
+import { DailyFuelDTO } from '../dto/daily-fuel.dto';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { DailyEmission } from '../entities/workspace/daily-emission.entity';
+import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
-import { DailyFuelDTO } from '../dto/daily-fuel.dto';
-import { DailyEmissionDTO } from '../dto/daily-emission.dto';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { ConfigService } from '@nestjs/config';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
-import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { DailyEmissionWorkspaceRepository } from './daily-emission-workspace.repository';
+import { DailyEmissionWorkspaceService } from './daily-emission-workspace.service';
 
 describe('DailyEmissionWorkspaceService', () => {
   let map: DailyEmissionMap;
@@ -36,6 +38,7 @@ describe('DailyEmissionWorkspaceService', () => {
         DailyEmissionWorkspaceService,
         DailyEmissionWorkspaceRepository,
         DailyFuelWorkspaceRepository,
+        EntityManager,
         BulkLoadService,
         ConfigService,
         {
@@ -80,12 +83,13 @@ describe('DailyEmissionWorkspaceService', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = {
+        components: {},
+        monitorFormulas: {},
+        monitoringSystems: {},
+      };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
+import { genApplicableApportionedEmissionsAttributesDto } from '../../test/object-generators/apportioned-emissions';
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { UnitFactRepository } from './unit-fact.repository';
-import { genApplicableApportionedEmissionsAttributesDto } from '../../test/object-generators/apportioned-emissions';
 
 const mockRequest = (url: string) => {
   return {
@@ -25,7 +25,11 @@ describe('-- Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [ApportionedEmissionsController],
-      providers: [ApportionedEmissionsService, UnitFactRepository],
+      providers: [
+        EntityManager,
+        ApportionedEmissionsService,
+        UnitFactRepository,
+      ],
     }).compile();
 
     controller = module.get(ApportionedEmissionsController);

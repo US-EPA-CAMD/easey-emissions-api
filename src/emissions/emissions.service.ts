@@ -18,7 +18,7 @@ import { SummaryValueService } from '../summary-value/summary-value.service';
 import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
-import {DailyBackstopService} from "../daily-backstop/daily-backstop.service";
+import { DailyBackstopService } from '../daily-backstop/daily-backstop.service';
 
 const moment = require('moment');
 
@@ -81,7 +81,8 @@ export class EmissionsService {
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
       results.sorbentTrapData = promiseResult[SORBENT_TRAP] ?? [];
-      results.weeklyTestSummaryData = promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
+      results.weeklyTestSummaryData =
+        promiseResult[WEEKLY_TEST_SUMMARIES] ?? [];
       results.summaryValueData = promiseResult[SUMMARY_VALUES] ?? [];
       results.nsps4tSummaryData = promiseResult[NSPS4T_SUMMARY] ?? [];
       results.longTermFuelFlowData = promiseResult[LONG_TERM_FUEL_FLOW] ?? [];
@@ -108,7 +109,7 @@ export class EmissionsService {
     const date = moment(periodDate);
     const month = date.get('month') + 1;
 
-    if (queryResult === undefined) {
+    if (!queryResult) {
       if (
         ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),

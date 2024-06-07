@@ -1,13 +1,20 @@
-import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
-import { genNsps4tCompliancePeriodImportDTO } from '../../test/object-generators/nsps4t-compliance-period-dto';
 import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
+import { genNsps4tCompliancePeriodImportDTO } from '../../test/object-generators/nsps4t-compliance-period-dto';
+import { Nsps4tCompliancePeriodWorkspaceRepository } from '../nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.repository';
 
 describe('ImportNsps4tCompliancePeriodData', () => {
   let repository: Nsps4tCompliancePeriodWorkspaceRepository;
   let importNsps4tCompliancePeriodModule: typeof import('./import-nsps4t-compliance-period-data');
 
   beforeAll(async () => {
-    repository = new Nsps4tCompliancePeriodWorkspaceRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, Nsps4tCompliancePeriodWorkspaceRepository],
+    }).compile();
+
+    repository = module.get(Nsps4tCompliancePeriodWorkspaceRepository);
     importNsps4tCompliancePeriodModule = await import(
       './import-nsps4t-compliance-period-data'
     );
@@ -20,6 +27,10 @@ describe('ImportNsps4tCompliancePeriodData', () => {
     jest.spyOn(repository, 'create').mockResolvedValue(undefined);
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
+    const identifiers = { locations: {}, userId: '' };
+    const monitoringLocationId = faker.datatype.string();
+    identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
+
     await Promise.all(
       imports.map(data => {
         expect(
@@ -29,11 +40,7 @@ describe('ImportNsps4tCompliancePeriodData', () => {
               monitoringLocationId: faker.datatype.string(),
               reportingPeriodId: faker.datatype.number(),
               nsps4tSumId: faker.datatype.string(),
-              identifiers: {
-                monitoringSystems: {},
-                components: {},
-                monitorFormulas: {},
-              },
+              identifiers,
             },
             repository,
           }),

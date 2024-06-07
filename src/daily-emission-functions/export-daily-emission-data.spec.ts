@@ -1,15 +1,22 @@
-import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
+import { faker } from '@faker-js/faker';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { genDailyEmission } from '../../test/object-generators/daily-emission';
+import { DailyEmissionRepository } from '../daily-emission/daily-emission.repository';
 import { DailyEmission } from '../entities/daily-emission.entity';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { faker } from '@faker-js/faker';
 
 describe('ExportDailyEmissionData', () => {
   let dailyEmissionRepository;
   let exportDailyEmissionModule: typeof import('./export-daily-emission-data');
 
   beforeAll(async () => {
-    dailyEmissionRepository = new DailyEmissionRepository();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [EntityManager, DailyEmissionRepository],
+    }).compile();
+
+    dailyEmissionRepository = module.get(DailyEmissionRepository);
     exportDailyEmissionModule = await import('./export-daily-emission-data');
   });
 

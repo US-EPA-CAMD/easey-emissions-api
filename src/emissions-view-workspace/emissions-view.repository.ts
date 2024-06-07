@@ -1,5 +1,11 @@
-import { DataSet } from '../entities/dataset.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-@EntityRepository(DataSet)
-export class EmissionsViewWorkspaceRepository extends Repository<DataSet> {}
+import { DataSet } from '../entities/dataset.entity';
+
+@Injectable()
+export class EmissionsViewWorkspaceRepository extends Repository<DataSet> {
+  constructor(entityManager: EntityManager) {
+    super(DataSet, entityManager);
+  }
+}

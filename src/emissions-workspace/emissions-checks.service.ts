@@ -9,10 +9,11 @@ import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/da
 import { isUndefinedOrNull } from '../utils/utils';
 import { MonitorFormulaRepository } from '../monitor-formula/monitor-formula.repository';
 import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan-checks.service';
-import moment from 'moment';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+
+const moment = require('moment');
 
 @Injectable()
 export class EmissionsChecksService {
@@ -22,7 +23,7 @@ export class EmissionsChecksService {
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
-    private readonly codeCheckService: CodeChecksService, 
+    private readonly codeCheckService: CodeChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {
     this.logger.setContext('EmissionsChecksService');
@@ -118,9 +119,7 @@ export class EmissionsChecksService {
         if (!isUndefinedOrNull(derived.formulaId)) {
           identifierMap.set(
             monitoringLocationId,
-            identifierMap
-              .get(monitoringLocationId)
-              .add(derived.formulaId),
+            identifierMap.get(monitoringLocationId).add(derived.formulaId),
           );
         }
       });
@@ -129,9 +128,7 @@ export class EmissionsChecksService {
         if (!isUndefinedOrNull(matsDerived.formulaId)) {
           identifierMap.set(
             monitoringLocationId,
-            identifierMap
-              .get(monitoringLocationId)
-              .add(matsDerived.formulaId),
+            identifierMap.get(monitoringLocationId).add(matsDerived.formulaId),
           );
         }
       });

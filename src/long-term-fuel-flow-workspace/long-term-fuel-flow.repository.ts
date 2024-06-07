@@ -1,10 +1,16 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { LongTermFuelFlow } from '../entities/workspace/long-term-fuel-flow.entity';
 
-@EntityRepository(LongTermFuelFlow)
+@Injectable()
 export class LongTermFuelFlowWorkspaceRepository extends Repository<
   LongTermFuelFlow
 > {
+  constructor(entityManager: EntityManager) {
+    super(LongTermFuelFlow, entityManager);
+  }
+
   async export(monitoringLocationIds: string[], year: number, quarter: number) {
     const query = this.createQueryBuilder('ltff')
       .innerJoinAndSelect('ltff.monitorLocation', 'ml')

@@ -1,37 +1,38 @@
 import { Test } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
 
-import { HourlyOperatingRepository } from './hourly-operating.repository';
-import { HourlyOperatingService } from './hourly-operating.service';
-import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { HourlyOperatingMap } from '../maps/hourly-operating.map';
-import { MonitorHourlyValueService } from '../monitor-hourly-value/monitor-hourly-value.service';
-import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
-import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
-import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.service';
-import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository';
-import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
-import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
-import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
-import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
-import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
-import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
-import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
+import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
+import { DerivedHourlyValueRepository } from '../derived-hourly-value/derived-hourly-value.repository';
+import { DerivedHourlyValueService } from '../derived-hourly-value/derived-hourly-value.service';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { HourlyGasFlowMeterDTO } from '../dto/hourly-gas-flow-meter.dto';
+import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
+import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
+import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
 import { HrlyOpData } from '../entities/hrly-op-data.entity';
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
-import { MatsMonitorHourlyValueDTO } from '../dto/mats-monitor-hourly-value.dto';
-import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
-import { MonitorHourlyValueDTO } from '../dto/monitor-hourly-value.dto';
-import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
+import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
 import { HourlyGasFlowMeterRepository } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.repository';
 import { HourlyGasFlowMeterService } from '../hourly-gas-flow-meter/hourly-gas-flow-meter.service';
-import { HourlyGasFlowMeterDTO } from '../dto/hourly-gas-flow-meter.dto';
-import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.service';
-import { HourlyFuelFlowRepository } from '../hourly-fuel-flow/hourly-fuel-flow.repository';
-import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
+import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
+import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
+import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
+import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
+import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
+import { MatsDerivedHourlyValueRepository } from '../mats-derived-hourly-value/mats-derived-hourly-value.repository';
+import { MatsDerivedHourlyValueService } from '../mats-derived-hourly-value/mats-derived-hourly-value.service';
+import { MatsMonitorHourlyValueRepository } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository';
+import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats-monitor-hourly-value.service';
+import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
+import { MonitorHourlyValueService } from '../monitor-hourly-value/monitor-hourly-value.service';
+import { HourlyOperatingRepository } from './hourly-operating.repository';
+import { HourlyOperatingService } from './hourly-operating.service';
 
 const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   include: [
@@ -87,6 +88,7 @@ describe('HourlyOperatingService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         HourlyOperatingService,
         MonitorHourlyValueRepository,
         MonitorHourlyValueMap,

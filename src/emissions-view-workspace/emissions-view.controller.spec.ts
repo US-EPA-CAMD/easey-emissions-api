@@ -1,10 +1,13 @@
-import { Test } from '@nestjs/testing';
-import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
-import { EmissionsViewWorkspaceController } from './emissions-view.controller';
-import { EmissionsViewWorkspaceService } from './emissions-view.service';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
+import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+import { EntityManager } from 'typeorm';
+
+import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
+import { EmissionsViewWorkspaceController } from './emissions-view.controller';
+import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
+import { EmissionsViewWorkspaceService } from './emissions-view.service';
 
 describe('EmissionsViewWorkspaceController', () => {
   let emissionsViewController: EmissionsViewWorkspaceController;
@@ -17,7 +20,12 @@ describe('EmissionsViewWorkspaceController', () => {
         EmissionsViewWorkspaceRepository,
         EmissionsViewWorkspaceController,
         EmissionsViewWorkspaceService,
+        EntityManager,
         ConfigService,
+        {
+          provide: DataSource,
+          useValue: {},
+        },
       ],
     }).compile();
 

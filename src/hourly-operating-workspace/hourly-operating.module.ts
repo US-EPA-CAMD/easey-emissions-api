@@ -1,32 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
+import { DerivedHourlyValueWorkspaceModule } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.module';
+import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
+import { HourlyGasFlowMeterWorkspaceModule } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.module';
+import { HourlyParameterFuelFlowWorkspaceModule } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.module';
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
+import { MatsDerivedHourlyValueWorkspaceModule } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.module';
+import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.module';
+import { MonitorHourlyValueWorkspaceModule } from '../monitor-hourly-value-workspace/monitor-hourly-value.module';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 import { HourlyOperatingWorkspaceService } from './hourly-operating.service';
-import { MonitorHourlyValueWorkspaceModule } from '../monitor-hourly-value-workspace/monitor-hourly-value.module';
-import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
-import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
-import { MatsMonitorHourlyValueWorkspaceModule } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.module';
-import { MatsDerivedHourlyValueWorkspaceModule } from '../mats-derived-hourly-value-workspace/mats-derived-hourly-value.module';
-import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-import { HourlyGasFlowMeterWorkspaceModule } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.module';
-import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
-import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
-import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.service';
-import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyParameterFuelFlowWorkspaceRepository } from '../hourly-parameter-fuel-flow-workspace/hourly-parameter-fuel-flow-workspace.repository';
-import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      DerivedHourlyValueWorkspaceRepository,
-      HourlyOperatingWorkspaceRepository,
-      HourlyFuelFlowWorkspaceRepository,
-      HourlyParameterFuelFlowWorkspaceRepository,
-    ]),
+    TypeOrmModule.forFeature([HourlyOperatingWorkspaceRepository]),
+    DerivedHourlyValueWorkspaceModule,
+    HourlyFuelFlowWorkspaceModule,
+    HourlyParameterFuelFlowWorkspaceModule,
     MonitorHourlyValueWorkspaceModule,
     MatsMonitorHourlyValueWorkspaceModule,
     MatsDerivedHourlyValueWorkspaceModule,
@@ -35,15 +27,15 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
   ],
   controllers: [],
   providers: [
-    DerivedHourlyValueMap,
-    DerivedHourlyValueWorkspaceService,
-    HourlyFuelFlowMap,
     HourlyOperatingMap,
+    HourlyOperatingWorkspaceRepository,
     HourlyOperatingWorkspaceService,
-    HourlyFuelFlowWorkspaceService,
-    HourlyParameterFuelFlowWorkspaceService,
-    HourlyParameterFuelFlowMap,
   ],
-  exports: [TypeOrmModule, HourlyOperatingMap, HourlyOperatingWorkspaceService],
+  exports: [
+    TypeOrmModule,
+    HourlyOperatingMap,
+    HourlyOperatingWorkspaceRepository,
+    HourlyOperatingWorkspaceService,
+  ],
 })
 export class HourlyOperatingWorkspaceModule {}

@@ -1,11 +1,13 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DailyFuelWorkspaceService } from './daily-fuel-workspace.service';
-import { DailyFuelWorkspaceRepository } from './daily-fuel-workspace.repository';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
+
 import { genDailyFuel } from '../../test/object-generators/daily-fuel';
 import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
-import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { ConfigService } from '@nestjs/config';
+import { DailyFuelWorkspaceRepository } from './daily-fuel-workspace.repository';
+import { DailyFuelWorkspaceService } from './daily-fuel-workspace.service';
 
 describe('DailyFuelWorkspaceService', () => {
   let service: DailyFuelWorkspaceService;
@@ -18,6 +20,7 @@ describe('DailyFuelWorkspaceService', () => {
         DailyFuelMap,
         DailyFuelWorkspaceService,
         DailyFuelWorkspaceRepository,
+        EntityManager,
         BulkLoadService,
         ConfigService,
       ],

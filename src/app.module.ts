@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from '@us-epa-camd/easey-common/config';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options';
+import { CheckCatalogModule } from '@us-epa-camd/easey-common/check-catalog';
+import { ConnectionModule } from '@us-epa-camd/easey-common/connection';
+import { DbLookupValidator } from '@us-epa-camd/easey-common/validators';
 
 import routes from './routes';
 import appConfig from './config/app.config';
@@ -27,6 +30,8 @@ import { SorbentTrapModule } from './sorbent-trap/sorbent-trap.module';
 import { SamplingTrainModule } from './sampling-train/sampling-train.module';
 import { SorbentTrapWorkspaceModule } from './sorbent-trap-workspace/sorbent-trap-workspace.module';
 import { SamplingTrainWorkspaceModule } from './sampling-train-workspace/sampling-train-workspace.module';
+import { MonitorFormulaModule } from './monitor-formula/monitor-formula.module';
+import { MonitorSystemModule } from './monitor-system/monitor-system.module';
 import { Nsps4tAnnualWorkspaceModule } from './nsps4t-annual-workspace/nsps4t-annual-workspace.module';
 import { Nsps4tCompliancePeriodWorkspaceModule } from './nsps4t-compliance-period-workspace/nsps4t-compliance-period-workspace.module';
 import { Nsps4tSummaryWorkspaceModule } from './nsps4t-summary-workspace/nsps4t-summary-workspace.module';
@@ -45,6 +50,10 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    CheckCatalogModule.register(
+      'camdecmpsmd.vw_emissions_api_check_catalog_results',
+    ),
+    ConnectionModule,
     LoggerModule,
     CorsOptionsModule,
     EmissionsModule,
@@ -63,6 +72,8 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
     SamplingTrainModule,
     SorbentTrapWorkspaceModule,
     SamplingTrainWorkspaceModule,
+    MonitorFormulaModule,
+    MonitorSystemModule,
     Nsps4tAnnualWorkspaceModule,
     Nsps4tCompliancePeriodWorkspaceModule,
     Nsps4tSummaryWorkspaceModule,
@@ -72,5 +83,6 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
     WhatHasDataModule,
     HttpModule,
   ],
+  providers: [DbLookupValidator],
 })
 export class AppModule {}

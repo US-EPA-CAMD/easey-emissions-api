@@ -1,8 +1,14 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { Component } from '../entities/component.entity';
 
-@EntityRepository(Component)
+@Injectable()
 export class ComponentRepository extends Repository<Component> {
+  constructor(entityManager: EntityManager) {
+    super(Component, entityManager);
+  }
+
   async findOneByIdentifierAndLocation(
     componentIdentifier: string,
     monitoringLocationId: string,

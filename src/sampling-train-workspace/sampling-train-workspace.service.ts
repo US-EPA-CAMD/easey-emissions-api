@@ -36,7 +36,7 @@ export class SamplingTrainWorkspaceService {
         trapId: sorbentTrapId,
         monLocId: monitoringLocationId,
         rptPeriodId: reportingPeriodId,
-        componentId: identifiers?.components?.[dataChunk.componentId] || null,
+        componentId: identifiers?.locations[monitoringLocationId]?.components?.[dataChunk.componentId] || null,
         sorbentTrapSerialNumber: dataChunk.sorbentTrapSN,
         mainTrapHg: dataChunk.mainTrapHg,
         breakthroughTrapHg: dataChunk.btTrapHg,

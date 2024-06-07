@@ -1,24 +1,26 @@
 import { Module } from '@nestjs/common';
-import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
-import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
+
+import { HourlyParameterFuelFlowModule } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.module';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
-import { HourlyParameterFuelFlowRepository } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
+import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      HourlyFuelFlowRepository,
-      HourlyParameterFuelFlowRepository,
-    ]),
+    TypeOrmModule.forFeature([HourlyFuelFlowRepository]),
+    HourlyParameterFuelFlowModule,
   ],
   providers: [
+    HourlyFuelFlowRepository,
     HourlyFuelFlowService,
-    HourlyParameterFuelFlowService,
     HourlyFuelFlowMap,
-    HourlyParameterFuelFlowMap,
+  ],
+  exports: [
+    TypeOrmModule,
+    HourlyFuelFlowRepository,
+    HourlyFuelFlowService,
+    HourlyFuelFlowMap,
   ],
 })
 export class HourlyFuelFlowModule {}

@@ -1,4 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
+
 import { MonitorLocation } from '../entities/workspace/monitor-location.entity';
 
 export type GetImportLocationsProperties = {
@@ -6,10 +8,14 @@ export type GetImportLocationsProperties = {
   unitIds: string[];
 };
 
-@EntityRepository(MonitorLocation)
+@Injectable()
 export class MonitorLocationWorkspaceRepository extends Repository<
   MonitorLocation
 > {
+  constructor(entityManager: EntityManager) {
+    super(MonitorLocation, entityManager);
+  }
+
   async getImportLocations({
     stackIds,
     unitIds,

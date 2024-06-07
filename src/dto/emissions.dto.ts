@@ -12,7 +12,6 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { Plant } from '../entities/plant.entity';
-import { DbLookup } from '../pipes/db-lookup.pipe';
 import { DailyEmissionDTO, DailyEmissionImportDTO } from './daily-emission.dto';
 import {
   DailyTestSummaryDTO,
@@ -35,7 +34,11 @@ import {
 } from './weekly-test-summary.dto';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { DailyBackstopDTO, DailyBackstopImportDTO } from './daily-backstop.dto';
-import { IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
+import {
+  DbLookup,
+  IsIsoFormat,
+  IsValidDate,
+} from '@us-epa-camd/easey-common/pipes';
 
 export class EmissionsBaseDTO {
   @DbLookup(
@@ -66,7 +69,7 @@ export class EmissionsBaseDTO {
   @MaxLength(3500)
   submissionComment?: string;
 
-  constructor(values: Object={}) {
+  constructor(values: Object = {}) {
     Object.assign(this, values);
   }
 }

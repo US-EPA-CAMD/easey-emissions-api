@@ -1,24 +1,24 @@
-import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-
+import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
-import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
-import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
-import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
-import { HourlyFuelFlowService } from '../../hourly-fuel-flow/hourly-fuel-flow.service';
-import { HourlyFuelFlowRepository } from '../../hourly-fuel-flow/hourly-fuel-flow.repository';
-import { HourlyFuelFlowMap } from '../../maps/hourly-fuel-flow-map';
-import { HourlyParameterFuelFlowService } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
-import { HourlyParameterFuelFlowRepository } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
-import { HourlyParameterFuelFlowMap } from '../../maps/hourly-parameter-fuel-flow.map';
 import {
   genDailyApportionedEmissionsFacilityDto,
   genDailyApportionedEmissionsNationalDto,
   genDailyApportionedEmissionsStateDto,
   genQuarterUnitData,
 } from '../../../test/object-generators/apportioned-emissions';
+import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
+import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
+import { HourlyFuelFlowRepository } from '../../hourly-fuel-flow/hourly-fuel-flow.repository';
+import { HourlyFuelFlowService } from '../../hourly-fuel-flow/hourly-fuel-flow.service';
+import { HourlyParameterFuelFlowRepository } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.repository';
+import { HourlyParameterFuelFlowService } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
+import { HourlyFuelFlowMap } from '../../maps/hourly-fuel-flow-map';
+import { HourlyParameterFuelFlowMap } from '../../maps/hourly-parameter-fuel-flow.map';
+import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -49,6 +49,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
       imports: [LoggerModule],
       providers: [
         ConfigService,
+        EntityManager,
         QuarterlyApportionedEmissionsService,
         HourlyFuelFlowService,
         HourlyFuelFlowRepository,

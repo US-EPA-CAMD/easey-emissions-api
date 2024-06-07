@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+
 import { SummaryValueWorkspaceService } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
@@ -62,12 +64,9 @@ describe('Summary Value Workspace Service Test', () => {
 
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       emissionsDto.summaryValueData[0].unitId = 'a';
-      const identifiers = ({
-        components: [],
-        monitorFormulas: [],
-        monitoringSystems: [],
-        userId: '',
-      } as unknown) as ImportIdentifiers;
+      const identifiers = { locations: {}, userId: '' };
+      const monitoringLocationId = faker.datatype.string();
+      identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
       await expect(service.import(emissionsDto, locations, '', identifiers, ''))
         .resolves;

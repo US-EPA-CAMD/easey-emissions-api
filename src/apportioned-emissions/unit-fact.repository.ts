@@ -1,13 +1,18 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 
-import { UnitFact } from '../entities/unit-fact.entity';
-import { FuelYearDim } from '../entities/fuel-year-dim.entity';
 import { ControlYearDim } from '../entities/control-year-dim.entity';
+import { FuelYearDim } from '../entities/fuel-year-dim.entity';
 import { ProgramYearDim } from '../entities/program-year-dim.entity';
+import { UnitFact } from '../entities/unit-fact.entity';
 import { UnitTypeYearDim } from '../entities/unit-type-year-dim.entity';
 
-@EntityRepository(UnitFact)
+@Injectable()
 export class UnitFactRepository extends Repository<UnitFact> {
+  constructor(entityManager: EntityManager) {
+    super(UnitFact, entityManager);
+  }
+
   async getApplicableApportionedEmissionsAttributes(
     yearArray: number[],
     matsDataOnly = false,

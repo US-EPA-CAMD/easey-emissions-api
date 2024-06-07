@@ -1,34 +1,25 @@
-import { Request } from 'express';
-import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
-
-import {
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-
-import { Logger } from '@us-epa-camd/easey-common/logger';
-
-import {
-  fieldMappings,
-  fieldMappingHeader,
-  excludableColumnHeader,
-} from '../../constants/field-mappings';
-
-import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
-import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
-import { OzoneApportionedEmissionsFacilityAggregationDTO } from '../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
-import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
-import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
+import { Logger } from '@us-epa-camd/easey-common/logger';
+import { plainToClass } from 'class-transformer';
+import { Request } from 'express';
+
+import {
+  excludableColumnHeader,
+  fieldMappingHeader,
+  fieldMappings,
+} from '../../constants/field-mappings';
+import { OzoneApportionedEmissionsFacilityAggregationDTO } from '../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
+import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
+import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
+import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 
 @Injectable()
 export class OzoneApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(OzoneUnitDataRepository)
     private readonly repository: OzoneUnitDataRepository,
   ) {}
 

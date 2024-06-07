@@ -1,10 +1,11 @@
-import { EmissionsViewService } from './emissions-view.service';
-import { EmissionsViewRepository } from './emissions-view.repository';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
-import { getManager } from 'typeorm';
-import * as selectedEmissionView from '../utils/selected-emission-view';
+import { EntityManager } from 'typeorm';
+
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
+import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
+import * as selectedEmissionView from '../utils/selected-emission-view';
+import { EmissionsViewRepository } from './emissions-view.repository';
+import { EmissionsViewService } from './emissions-view.service';
 
 const mockRepository = {
   find: jest.fn(),
@@ -22,10 +23,7 @@ describe('EmissionsViewService', () => {
       providers: [
         EmissionsViewService,
         EmissionsViewRepository,
-        {
-          provide: getManager,
-          useFactory: jest.fn(),
-        },
+        EntityManager,
         {
           provide: EmissionsViewRepository,
           useValue: mockRepository,

@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common';
-import { DailyEmissionService } from './daily-emission.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DailyEmissionRepository } from './daily-emission.repository';
-import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
-import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
+
+import { DailyFuelModule } from '../daily-fuel/daily-fuel.module';
 import { DailyEmissionMap } from '../maps/daily-emission.map';
-import { DailyFuelMap } from '../maps/daily-fuel.map';
+import { DailyEmissionRepository } from './daily-emission.repository';
+import { DailyEmissionService } from './daily-emission.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DailyEmissionRepository, DailyFuelRepository]),
+    TypeOrmModule.forFeature([DailyEmissionRepository]),
+    DailyFuelModule,
   ],
-  providers: [
+  providers: [DailyEmissionMap, DailyEmissionRepository, DailyEmissionService],
+  exports: [
+    TypeOrmModule,
     DailyEmissionMap,
+    DailyEmissionRepository,
     DailyEmissionService,
-    DailyFuelMap,
-    DailyFuelService,
   ],
 })
 export class DailyEmissionModule {}

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueRepository } from './summary-value.repository';
 import { SummaryValueService } from './summary-value.service';
@@ -7,7 +8,12 @@ import { SummaryValueService } from './summary-value.service';
 @Module({
   imports: [TypeOrmModule.forFeature([SummaryValueRepository])],
   controllers: [],
-  providers: [SummaryValueService, SummaryValueMap],
-  exports: [TypeOrmModule, SummaryValueService, SummaryValueMap],
+  providers: [SummaryValueRepository, SummaryValueService, SummaryValueMap],
+  exports: [
+    TypeOrmModule,
+    SummaryValueRepository,
+    SummaryValueService,
+    SummaryValueMap,
+  ],
 })
 export class SummaryValueModule {}

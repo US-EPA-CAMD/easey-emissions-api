@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { SorbentTrapService } from './sorbent-trap.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { SamplingTrainModule } from '../sampling-train/sampling-train.module';
 import { SorbentTrapRepository } from './sorbent-trap.repository';
-import { SamplingTrainService } from '../sampling-train/sampling-train.service';
-import { SamplingTrainRepository } from '../sampling-train/sampling-train.repository';
+import { SorbentTrapService } from './sorbent-trap.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SamplingTrainRepository, SorbentTrapRepository]),
+    TypeOrmModule.forFeature([SorbentTrapRepository]),
+    SamplingTrainModule,
   ],
-  providers: [SamplingTrainService, SorbentTrapService],
+  providers: [SorbentTrapRepository, SorbentTrapService],
+  exports: [TypeOrmModule, SorbentTrapRepository, SorbentTrapService],
 })
 export class SorbentTrapModule {}

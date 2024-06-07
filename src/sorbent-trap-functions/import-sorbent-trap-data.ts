@@ -27,7 +27,7 @@ export const importSorbentTrapData = async ({
     endDate: data.endDate,
     endHour: data.endHour,
     monitoringSystemId:
-      data.identifiers?.monitoringSystems?.[data.monitoringSystemId],
+      data.identifiers?.locations[data.monitoringLocationId]?.monitoringSystems?.[data.monitoringSystemId],
     pairedTrapAgreement: data.pairedTrapAgreement,
     absoluteDifferenceIndicator: data.absoluteDifferenceIndicator,
     modcCode: data.modcCode,
