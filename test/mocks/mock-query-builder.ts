@@ -7,4 +7,5 @@ export const mockQueryBuilder = {
   andWhere: jest.fn(),
   getMany: jest.fn(),
   getOne: jest.fn(),
+  orderBy: jest.fn(),
 };
