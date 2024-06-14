@@ -72,6 +72,7 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 import { EmissionsController } from './emissions.controller';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsService } from './emissions.service';
+import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 
 jest.mock('../emissions-workspace/ReviewSubmit.service');
 
@@ -85,6 +86,7 @@ describe('-- Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [EmissionsController],
       providers: [
+        EaseyContentService,
         EntityManager,
         DerivedHourlyValueMap,
         DerivedHourlyValueService,

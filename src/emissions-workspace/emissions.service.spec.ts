@@ -102,6 +102,7 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
+import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -248,6 +249,14 @@ describe('Emissions Workspace Service', () => {
             '../daily-backstop-workspace/daily-backstop.repository',
           ),
         },
+        {
+          provide: EaseyContentService,
+          useFactory:  () => ({
+            emissionsSchema: jest.fn().mockResolvedValue({
+              version : '1.0.0'
+            }),
+          })
+        }
       ],
     }).compile();
 
