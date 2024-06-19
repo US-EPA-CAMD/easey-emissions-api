@@ -31,6 +31,7 @@ describe('-- HourlyOperatingRepository --', () => {
     queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.where.mockReturnValue(queryBuilder);
     queryBuilder.andWhere.mockReturnValue(queryBuilder);
+    queryBuilder.orderBy.mockReturnValue(queryBuilder);
     queryBuilder.getMany.mockReturnValue('mockHourlyOperating');
   });
 

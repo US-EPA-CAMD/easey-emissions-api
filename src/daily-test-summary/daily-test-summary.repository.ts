@@ -21,7 +21,11 @@ export class DailyTestSummaryRepository extends Repository<DailyTestSummary> {
         monitoringLocationIds: monitoringLocationIds,
       })
       .andWhere('r.year = :year ', { year })
-      .andWhere('r.quarter = :quarter ', { quarter });
+      .andWhere('r.quarter = :quarter ', { quarter })
+      .orderBy({
+        'dts.date': 'ASC',
+        'dts.hour': 'ASC'
+      });
 
     return query.getMany();
   }
