@@ -19,7 +19,11 @@ export class HourlyOperatingRepository extends Repository<HrlyOpData> {
         monitoringLocationIds: monitoringLocationIds,
       })
       .andWhere('r.year = :year ', { year })
-      .andWhere('r.quarter = :quarter ', { quarter });
+      .andWhere('r.quarter = :quarter ', { quarter })
+      .orderBy({
+        'hod.date': 'ASC',
+        'hod.hour': 'ASC'
+      });
 
     return query.getMany();
   }
