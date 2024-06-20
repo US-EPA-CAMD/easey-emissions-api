@@ -31,6 +31,7 @@ import {
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
+import { EaseyContentService} from '../emissions-easey-content/easey-content.service';
 
 type Dictionary = { [index: string]: string }
 
@@ -66,6 +67,7 @@ export class EmissionsWorkspaceService {
     private readonly summaryValueWorkspaceService: SummaryValueWorkspaceService,
     private readonly longTermFuelFlowWorkspaceService: LongTermFuelFlowWorkspaceService,
     private readonly dailyBackstopWorkspaceService: DailyBackstopWorkspaceService,
+    private readonly easeyContentService: EaseyContentService,
   ) { }
 
   async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
@@ -117,7 +119,8 @@ export class EmissionsWorkspaceService {
       const promiseResult = await Promise.all(promises);
       const mappedResults = await this.map.one(emissions);
       // instantiating EmissionsDTO class is necessary for @Transform to work properly
-      const results = new EmissionsDTO(mappedResults);
+      const version = this.easeyContentService.emissionsSchema?.version;
+      const results = {version, ...new EmissionsDTO(mappedResults)};
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] ?? [];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];

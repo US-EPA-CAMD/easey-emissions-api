@@ -19,6 +19,7 @@ import { Nsps4tSummaryService } from '../nsps4t-summary/nsps4t-summary.service';
 import { LongTermFuelFlowService } from '../long-term-fuel-flow/long-term-fuel-flow.service';
 import { removeNonReportedValues } from '../utils/remove-non-reported-values';
 import { DailyBackstopService } from '../daily-backstop/daily-backstop.service';
+import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 
 const moment = require('moment');
 
@@ -39,6 +40,7 @@ export class EmissionsService {
     private readonly nsps4tSummaryService: Nsps4tSummaryService,
     private readonly longTermFuelFlowService: LongTermFuelFlowService,
     private readonly dailyBackstopService: DailyBackstopService,
+    private readonly easeyContentService: EaseyContentService,
   ) {}
 
   async export(
@@ -76,7 +78,8 @@ export class EmissionsService {
       promises.push(this.dailyBackstopService.export(locationIds, params));
 
       const promiseResult = await Promise.all(promises);
-      const results = await this.map.one(emissions);
+      const version = this.easeyContentService.emissionsSchema?.version;
+      const results = {version, ...await this.map.one(emissions)};
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] ?? [];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
