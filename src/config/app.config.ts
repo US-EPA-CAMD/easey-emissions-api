@@ -95,4 +95,10 @@ export default registerAs('app', () => ({
   authApi: {
     uri: getConfigValue('EASEY_AUTH_API', `https://${apiHost}/auth-mgmt`),
   },
+
+  contentApi: {
+    uri: getConfigValue(
+      'EASEY_CONTENT_API', `https://${apiHost}/content-mgmt`,
+    ),
+  },
 }));

@@ -84,6 +84,7 @@ import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/week
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
 import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-summary.repository';
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
+import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
@@ -221,6 +222,14 @@ describe('Emissions Service', () => {
           provide: DailyBackstopRepository,
           useValue: jest.mock('../daily-backstop/daily-backstop.repository'),
         },
+        {
+          provide: EaseyContentService,
+          useFactory:  () => ({
+            emissionsSchema: jest.fn().mockResolvedValue({
+              version : '1.0.0'
+            }),
+          })
+        }
       ],
     }).compile();
 

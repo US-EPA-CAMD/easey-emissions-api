@@ -24,6 +24,7 @@ import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-
 import { EmissionsController } from './emissions.controller';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsService } from './emissions.service';
+import { EaseyContentModule } from '../emissions-easey-content/easey-content.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { EmissionsService } from './emissions.service';
       EmissionsRepository,
       EmissionsSubmissionsProgressRepository,
     ]),
+    EaseyContentModule,
     EmissionsViewWorkspaceModule,
     EmissionsViewModule,
     DailyEmissionModule,

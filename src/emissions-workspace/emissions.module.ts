@@ -47,6 +47,7 @@ import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 import { CodeChecksModule } from '../code-checks/code-checks.module';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+import { EaseyContentModule } from '../emissions-easey-content/easey-content.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { CodeChecksService } from '../code-checks/code-checks.service';
       EmissionsReviewSubmitRepository,
       EmissionsReviewSubmitGlobalRepository,
     ]),
+    EaseyContentModule,
     ComponentModule,
     Logger,
     HttpModule,

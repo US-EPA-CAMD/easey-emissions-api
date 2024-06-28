@@ -98,6 +98,9 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
   @IsOptional()
   @IsString()
   submissionAvailabilityCd?: string;
+  @IsString()
+  @IsOptional()
+  version?: string;
 
   constructor(values: Object = {}) {
     super(values);
