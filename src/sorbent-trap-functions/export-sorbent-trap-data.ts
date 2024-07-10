@@ -29,6 +29,10 @@ export const exportSorbentTrapQuery = ({
     })
     .andWhere('reportingPeriod.year = :year', { year: year })
     .andWhere('reportingPeriod.quarter = :quarter', { quarter: quarter })
+    .orderBy({
+      'sorbentTrap.beginDate': 'ASC',
+      'sorbentTrap.beginHour': 'ASC'
+    })
     .getMany();
 };
 

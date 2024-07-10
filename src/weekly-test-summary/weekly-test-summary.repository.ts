@@ -20,7 +20,11 @@ export class WeeklyTestSummaryRepository extends Repository<WeeklyTestSummary> {
         monitoringLocationIds: monitoringLocationIds,
       })
       .andWhere('r.year = :year ', { year })
-      .andWhere('r.quarter = :quarter ', { quarter });
+      .andWhere('r.quarter = :quarter ', { quarter })
+      .orderBy({
+        'wts.date': 'ASC',
+        'wts.hour': 'ASC'
+      });
 
     return query.getMany();
   }

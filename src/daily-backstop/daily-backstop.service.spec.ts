@@ -39,6 +39,7 @@ describe('Daily Backstop Service Test', () => {
         innerJoin: () => mockQueryBuilder,
         where: () => mockQueryBuilder,
         andWhere: () => mockQueryBuilder,
+        orderBy: () => mockQueryBuilder,
         getMany: jest
           .fn()
           .mockResolvedValue([new DailyBackstop(), new DailyBackstop()]),
