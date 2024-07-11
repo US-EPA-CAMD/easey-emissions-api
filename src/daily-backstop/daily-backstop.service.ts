@@ -23,6 +23,9 @@ export class DailyBackstopService {
             })
             .andWhere('reportingPeriod.year = :year', { year: params.year })
             .andWhere('reportingPeriod.quarter = :quarter', { quarter: params.quarter })
+            .orderBy({
+                'backstop.date': 'ASC',
+            })
             .getMany();
 
         if (!results) {
