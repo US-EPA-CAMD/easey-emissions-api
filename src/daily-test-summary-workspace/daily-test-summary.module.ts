@@ -7,6 +7,7 @@ import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryCheckService } from './daily-test-summary-check.service';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
 import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
+import { PlantRepository } from 'src/plant/plant.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
     DailyTestSummaryWorkspaceRepository,
     DailyTestSummaryWorkspaceService,
     DailyTestSummaryCheckService,
+    PlantRepository,
   ],
   exports: [
     TypeOrmModule,

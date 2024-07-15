@@ -26,4 +26,11 @@ export class WeeklyTestSummaryWorkspaceRepository extends Repository<
 
     return query.getMany();
   }
+
+  async findByTestTypeCode(testTypeCode: string, monitoringLocationId: string): Promise<WeeklyTestSummary> {
+    return this.createQueryBuilder('wts')
+      .where('wts.testTypeCode = :testTypeCode', { testTypeCode })
+      .andWhere('wts.monitoringLocationId = :monitoringLocationId', { monitoringLocationId })
+      .getOne();
+  }
 }

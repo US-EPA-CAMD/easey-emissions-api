@@ -27,4 +27,11 @@ export class DailyTestSummaryWorkspaceRepository extends Repository<
 
     return query.getMany();
   }
+
+  async findByTestTypeCode(testTypeCode: string, monitoringLocationId: string): Promise<DailyTestSummary> {
+    return this.createQueryBuilder('dts')
+      .where('dts.testTypeCode = :testTypeCode', { testTypeCode })
+      .andWhere('dts.monitoringLocationId = :monitoringLocationId', { monitoringLocationId })
+      .getOne();
+  }
 }

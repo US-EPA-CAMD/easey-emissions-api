@@ -7,6 +7,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { WeeklyTestSummaryCheckService } from './weekly-test-summary-check.service';
 import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service';
+import { PlantRepository } from 'src/plant/plant.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { WeeklyTestSummaryWorkspaceService } from './weekly-test-summary.service
     WeeklyTestSummaryWorkspaceRepository,
     WeeklyTestSummaryWorkspaceService,
     WeeklyTestSummaryCheckService,
+    PlantRepository,
   ],
   exports: [
     TypeOrmModule,

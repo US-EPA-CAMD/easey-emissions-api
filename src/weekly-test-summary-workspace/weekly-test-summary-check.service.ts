@@ -4,10 +4,16 @@ import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { WeeklyTestSummaryImportDTO } from '../dto/weekly-test-summary.dto';
 import { TestTypeCodes } from '../enums/test-type-code.enum';
+import { WeeklyTestSummaryWorkspaceRepository } from './weekly-test-summary.repository';
+import { PlantRepository } from 'src/plant/plant.repository';
+import { objectValuesByKey } from 'src/utils/utils';
 
 @Injectable()
 export class WeeklyTestSummaryCheckService {
-  constructor(private readonly logger: Logger) {
+  constructor(private readonly logger: Logger,
+  private readonly wtsRepository: WeeklyTestSummaryWorkspaceRepository,
+  private readonly plantRepository: PlantRepository,
+  ) {
     this.logger.setContext('WeeklyTestSummaryCheckService');
   }
 
@@ -22,6 +28,11 @@ export class WeeklyTestSummaryCheckService {
 
       errorList.push(error);
     });
+
+    const duplicateError = this.checkForDuplicateRecords(payload?.weeklyTestSummaryData[0].testTypeCode, payload);
+    if (duplicateError) {
+      errorList.push("duplicate Error");
+    }
 
     this.logger.log('Completed Weekly Test Summary Checks');
 
@@ -42,6 +53,29 @@ export class WeeklyTestSummaryCheckService {
           testTypeCode: summary.testTypeCode,
         });
       }
+    }
+
+    return null;
+  }
+
+  async checkForDuplicateRecords(testTypeCode: string, payload: EmissionsImportDTO): Promise<string | null> {
+    const stackPipeIds = objectValuesByKey<string>('stackPipeId', payload, true);
+    const unitIds = objectValuesByKey<string>('unitId', payload, true);
+    const plant = await this.plantRepository.getImportPlant({
+      orisCode: payload.orisCode,
+      stackIds: stackPipeIds,
+      unitIds: unitIds,
+    });
+
+    const monitorPlans = plant?.monitorPlans;
+
+    const monitorPlanId = monitorPlans[0].id;
+    const monitoringLocationId = monitorPlans[0].locations[0].id;
+
+    const records = await this.wtsRepository.findByTestTypeCode(testTypeCode, monitoringLocationId);
+
+    if (records) {
+      return "Duplicate records found";
     }
 
     return null;
