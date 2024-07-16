@@ -5,8 +5,8 @@ import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { TestTypeCodes } from '../enums/test-type-code.enum';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { DailyTestSummaryWorkspaceRepository } from './daily-test-summary.repository';
-import { PlantRepository } from 'src/plant/plant.repository';
-import { objectValuesByKey } from 'src/utils/utils';
+import { PlantRepository } from '../plant/plant.repository';
+import { objectValuesByKey } from '../utils/utils';
 
 @Injectable()
 export class DailyTestSummaryCheckService {
@@ -29,11 +29,12 @@ export class DailyTestSummaryCheckService {
       errorList.push(error);
     });
 
-    const duplicateError = this.checkForDuplicateRecords(payload?.dailyTestSummaryData[0].testTypeCode, payload);
+    if (payload?.dailyTestSummaryData?.length > 0) {
+      const duplicateError = this.checkForDuplicateRecords(payload?.dailyTestSummaryData[0].testTypeCode, payload);
       if (duplicateError) {
         errorList.push("duplicate Error");
       }
-
+    }
     this.logger.log('Completed Daily Test Summary Checks');
 
     return errorList.filter(e => e !== null);
@@ -60,13 +61,14 @@ export class DailyTestSummaryCheckService {
 
     const monitorPlans = plant?.monitorPlans;
 
-    const monitorPlanId = monitorPlans[0].id;
-    const monitoringLocationId = monitorPlans[0].locations[0].id;
+    if (monitorPlans && monitorPlans.length > 0) {
+      const monitoringLocationId = monitorPlans[0].locations[0].id;
 
-    const records = await this.dtsRepository.findByTestTypeCode(testTypeCode, monitoringLocationId);
+      const records = await this.dtsRepository.findByTestTypeCode(testTypeCode, monitoringLocationId);
 
-    if (records) {
-      return "Duplicate records found";
+      if (records) {
+        return "Duplicate records found";
+      }
     }
 
     return null;

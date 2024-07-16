@@ -44,6 +44,7 @@ import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/
 import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { PlantRepository } from '../plant/plant.repository';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -82,6 +83,7 @@ describe('Emissions Checks Service Tests', () => {
         LongTermFuelFlowService,
         LongTermFuelFlowMap,
         LongTermFuelFlowRepository,
+        PlantRepository,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository,
