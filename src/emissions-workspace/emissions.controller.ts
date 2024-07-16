@@ -110,7 +110,7 @@ export class EmissionsWorkspaceController {
         'nsps4tSummaryData',
       ],
       permissionsForFacility: ['DSEM'],
-      requiredRoles: ['Preparer', 'Submitter', 'Sponsor'],
+      requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
     },
     LookupType.Location,
   )
