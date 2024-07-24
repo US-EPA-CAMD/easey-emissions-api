@@ -28,6 +28,9 @@ export const exportDailyEmissionQuery = async ({
     })
     .andWhere('reportingPeriod.year = :year', { year })
     .andWhere('reportingPeriod.quarter = :quarter', { quarter })
+    .orderBy({
+      'dailyEmission.date': 'ASC',
+    })
     .getMany();
 };
 
