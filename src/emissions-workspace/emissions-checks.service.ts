@@ -12,6 +12,7 @@ import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 
 const moment = require('moment');
 
@@ -21,6 +22,7 @@ export class EmissionsChecksService {
     private readonly logger: Logger,
     private readonly weeklyTestSummaryCheckService: WeeklyTestSummaryCheckService,
     private readonly dailyTestSummaryCheckService: DailyTestSummaryCheckService,
+    private readonly summaryValueDataCheckService: SummaryValueDataCheckService,
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly codeCheckService: CodeChecksService,
@@ -68,6 +70,10 @@ export class EmissionsChecksService {
       payload,
     );
 
+    const summaryValueDataCheckErrors = this.summaryValueDataCheckService.runChecks(
+      payload,
+    );
+
     const invalidDatesCheckErrors = this.invalidDatesCheck(payload);
 
     // IMPORT-27: All EM Components Present in the Production Database
@@ -85,6 +91,7 @@ export class EmissionsChecksService {
     errorList.push(
       ...codeErrors,
       ...weeklyTestSummaryCheckErrors,
+      ...summaryValueDataCheckErrors,
       ...invalidDatesCheckErrors,
       ...locationErrors,
       ...dailyTestSummaryCheckErrors,

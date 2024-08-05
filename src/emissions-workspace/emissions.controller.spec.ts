@@ -91,6 +91,7 @@ import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
+import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -100,7 +101,7 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule, BulkLoadModule],
+      imports: [LoggerModule, HttpModule, BulkLoadModule, SummaryValueDataCheckService],
       controllers: [EmissionsWorkspaceController],
       providers: [    
         EaseyContentService,
@@ -111,6 +112,7 @@ describe('-- Emissions Controller --', () => {
         DailyFuelWorkspaceService,
         DailyTestSummaryCheckService,
         CodeChecksService,
+        SummaryValueDataCheckService,
         EmissionsMap,
         EmissionsWorkspaceService,
         EmissionsSubmissionsProgressMap,

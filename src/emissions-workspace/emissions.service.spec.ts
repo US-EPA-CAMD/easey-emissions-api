@@ -103,6 +103,7 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
+import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -191,6 +192,7 @@ describe('Emissions Workspace Service', () => {
         LongTermFuelFlowWorkspaceService,
         DailyBackstopWorkspaceService,
         DailyBackstopMap,
+        SummaryValueDataCheckService,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository,
