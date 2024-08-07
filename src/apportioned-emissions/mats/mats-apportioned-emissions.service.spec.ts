@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
+import { genApplicableApportionedEmissionsAttributesDto } from '../../../test/object-generators/apportioned-emissions';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { UnitFactRepository } from '../unit-fact.repository';
-import { genApplicableApportionedEmissionsAttributesDto } from '../../../test/object-generators/apportioned-emissions';
+import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
+import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 
 const mockRepository = () => ({
   getApplicableEmissions: jest.fn(),
@@ -36,6 +36,7 @@ describe('-- MATS Apportioned Emissions Service --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        EntityManager,
         MatsApportionedEmissionsService,
         UnitFactRepository,
         {

@@ -1,17 +1,20 @@
-import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
+import {
+  PaginatedQuarterlyApportionedEmissionsParamsDTO,
+  QuarterlyApportionedEmissionsParamsDTO,
+} from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import {
-  QuarterlyApportionedEmissionsParamsDTO,
-  PaginatedQuarterlyApportionedEmissionsParamsDTO,
-} from '../../dto/quarterly-apportioned-emissions.params.dto';
 
-@EntityRepository(QuarterUnitDataView)
+@Injectable()
 export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
+  constructor(entityManager: EntityManager) {
+    super(QuarterUnitDataView, entityManager);
+  }
 
   async getEmissions(
     req: Request,
@@ -36,12 +39,12 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
   private buildQuery(
     columns: any[],
     params: QuarterlyApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<QuarterUnitDataView> {
     let query = this.createQueryBuilder('qud').select(
       alias
         ? columns.map(col => `qud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `qud.${col.value}`)
+        : columns.map(col => `qud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(
@@ -82,7 +85,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
       'qud.facilityName',
       'qud.facilityId',
       'qud.year',
-      'qud.quarter'
+      'qud.quarter',
     ];
     const orderByColumns = ['qud.facilityId', 'qud.year', 'qud.quarter'];
 

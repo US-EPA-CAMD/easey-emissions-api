@@ -1,35 +1,29 @@
-import { Request } from 'express';
-
-import {
-  Repository,
-  EntityRepository,
-  SelectQueryBuilder,
-  getManager,
-  getRepository,
-} from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
-import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
-import { HourUnitMatsDataArch } from '../../../entities/hour-unit-mats-data-arch.entity';
-import { HourUnitMatsData } from '../../../entities/hour-unit-mats-data.entity';
 import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
-import { UnitFact } from '../../../entities/unit-fact.entity';
-import { UnitTypeYearDim } from '../../../entities/unit-type-year-dim.entity';
-import { FuelYearDim } from '../../../entities/fuel-year-dim.entity';
-import { ControlYearDim } from '../../../entities/control-year-dim.entity';
 import {
   HourlyMatsApportionedEmissionsParamsDTO,
   PaginatedHourlyMatsApportionedEmissionsParamsDTO,
 } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { ControlYearDim } from '../../../entities/control-year-dim.entity';
+import { FuelYearDim } from '../../../entities/fuel-year-dim.entity';
+import { HourUnitMatsDataArch } from '../../../entities/hour-unit-mats-data-arch.entity';
+import { HourUnitMatsData } from '../../../entities/hour-unit-mats-data.entity';
+import { UnitFact } from '../../../entities/unit-fact.entity';
+import { UnitTypeYearDim } from '../../../entities/unit-type-year-dim.entity';
+import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
 
-@EntityRepository(HourUnitMatsDataView)
-@EntityRepository(HourUnitMatsData)
-@EntityRepository(HourUnitMatsDataArch)
+@Injectable()
 export class HourUnitMatsDataRepository extends Repository<
   HourUnitMatsDataView
 > {
+  constructor(private readonly entityManager: EntityManager) {
+    super(HourUnitMatsDataView, entityManager);
+  }
 
   async getEmissions(
     req: Request,
@@ -97,7 +91,8 @@ export class HourUnitMatsDataRepository extends Repository<
     params: HourlyMatsApportionedEmissionsParamsDTO,
     isStreamed = false,
   ): SelectQueryBuilder<HourUnitMatsDataView> {
-    let query = getRepository(HourUnitMatsDataView)
+    let query = this.entityManager
+      .getRepository(HourUnitMatsDataView)
       .createQueryBuilder('humd')
       .select(this.getColumns(isStreamed));
 
@@ -132,7 +127,6 @@ export class HourUnitMatsDataRepository extends Repository<
     isUnion: boolean,
   ): Promise<any[]> {
     let query;
-    const entityManager = getManager();
     const { beginDate, endDate } = params;
 
     if (isUnion) {
@@ -150,7 +144,7 @@ export class HourUnitMatsDataRepository extends Repository<
       );
 
       query = `${curr.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2) UNION ${arch.getQuery()} WHERE "humd"."op_date" BETWEEN ($1) AND ($2)`;
-      return entityManager.query(query, [beginDate, endDate]);
+      return this.entityManager.query(query, [beginDate, endDate]);
     } else {
       query = await this.applicableQueryBuilderHelper(
         isArchived,
@@ -169,8 +163,12 @@ export class HourUnitMatsDataRepository extends Repository<
     isUnion: boolean,
   ): Promise<any> {
     const query = isArchived
-      ? getRepository(HourUnitMatsDataArch).createQueryBuilder('humd')
-      : getRepository(HourUnitMatsData).createQueryBuilder('humd');
+      ? this.entityManager
+          .getRepository(HourUnitMatsDataArch)
+          .createQueryBuilder('humd')
+      : this.entityManager
+          .getRepository(HourUnitMatsData)
+          .createQueryBuilder('humd');
 
     query
       .select(

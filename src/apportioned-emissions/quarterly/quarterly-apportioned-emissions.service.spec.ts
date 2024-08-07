@@ -1,12 +1,12 @@
-import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-
+import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
+import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
-import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 
 const mockRepository = () => ({
   getEmissions: jest.fn(),
@@ -37,6 +37,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
       imports: [LoggerModule],
       providers: [
         ConfigService,
+        EntityManager,
         QuarterlyApportionedEmissionsService,
         {
           provide: QuarterUnitDataRepository,
@@ -65,7 +66,10 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
         const expected = [{ quarter: 1 }];
         repository.getEmissionsFacilityAggregation.mockResolvedValue(expected);
         let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
-        let result = await service.getEmissionsFacilityAggregation(req, filters);
+        let result = await service.getEmissionsFacilityAggregation(
+          req,
+          filters,
+        );
         expect(result).toEqual(expected);
       });
     });
@@ -73,7 +77,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsStateAggregation', () => {
     it('calls QuarterUnitDataRepository.getEmissionsStateAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ quarter: 1 }]
+      const expected = [{ quarter: 1 }];
       repository.getEmissionsStateAggregation.mockResolvedValue(expected);
       let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsStateAggregation(req, filters);
@@ -83,7 +87,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
 
   describe('getEmissionsNationalAggregation', () => {
     it('calls QuarterUnitDataRepository.getEmissionsNationalAggregation() and gets all emissions from the repository', async () => {
-      const expected = [{ quarter: 1 }]
+      const expected = [{ quarter: 1 }];
       repository.getEmissionsNationalAggregation.mockResolvedValue(expected);
       let filters = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       let result = await service.getEmissionsNationalAggregation(req, filters);

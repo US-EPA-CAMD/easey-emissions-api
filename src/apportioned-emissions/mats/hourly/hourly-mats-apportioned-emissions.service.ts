@@ -1,30 +1,21 @@
-import { Request } from 'express';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import {
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { Request } from 'express';
 
 import {
-  fieldMappings,
-  fieldMappingHeader,
   excludableColumnHeader,
+  fieldMappingHeader,
+  fieldMappings,
 } from '../../../constants/field-mappings';
-
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 
 @Injectable()
 export class HourlyMatsApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(HourUnitMatsDataRepository)
     private readonly repository: HourUnitMatsDataRepository,
   ) {}
 
@@ -37,7 +28,7 @@ export class HourlyMatsApportionedEmissionsService {
     try {
       entities = await this.repository.getEmissions(req, params);
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(

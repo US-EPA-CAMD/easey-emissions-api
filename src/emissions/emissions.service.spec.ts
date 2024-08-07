@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { EmissionsService } from './emissions.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
+
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { EmissionsService } from './emissions.service';
 
 describe('Emissions Service', () => {
   let emissionsService: EmissionsService;
@@ -10,6 +12,7 @@ describe('Emissions Service', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        EntityManager,
         EmissionsService,
         EmissionsSubmissionsProgressMap,
         EmissionsSubmissionsProgressRepository,
@@ -24,3 +27,4 @@ describe('Emissions Service', () => {
     expect(emissionsService).toBeDefined();
   });
 });
+

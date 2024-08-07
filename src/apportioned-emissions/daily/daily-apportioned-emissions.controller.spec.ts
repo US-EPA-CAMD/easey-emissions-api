@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
-import { DayUnitDataRepository } from './day-unit-data.repository';
-import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
-import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
 import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
+import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
+import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
+import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
+import { DayUnitDataRepository } from './day-unit-data.repository';
 
 const mockRequest = (url: string) => {
   return {
@@ -26,7 +26,11 @@ describe('-- Daily Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [DailyApportionedEmissionsController],
-      providers: [DayUnitDataRepository, DailyApportionedEmissionsService],
+      providers: [
+        DayUnitDataRepository,
+        DailyApportionedEmissionsService,
+        EntityManager,
+      ],
     }).compile();
 
     controller = module.get(DailyApportionedEmissionsController);

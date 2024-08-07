@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-
+import { EntityManager } from 'typeorm';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
@@ -29,6 +29,7 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
       imports: [LoggerModule],
       controllers: [MatsApportionedEmissionsController],
       providers: [
+        EntityManager,
         MatsApportionedEmissionsService,
         HourlyMatsApportionedEmissionsService,
         HourUnitMatsDataRepository,

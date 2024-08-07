@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { MonthUnitDataRepository } from './month-unit-data.repository';
-import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { MonthlyApportionedEmissionsController } from './monthly-apportioned-emissions.controller';
+import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([MonthUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([MonthUnitDataRepository])],
   controllers: [MonthlyApportionedEmissionsController],
   providers: [
     ConfigService,
-    MonthlyApportionedEmissionsService
+    MonthlyApportionedEmissionsService,
+    MonthUnitDataRepository,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, MonthUnitDataRepository],
 })
 export class MonthlyApportionedEmissionsModule {}

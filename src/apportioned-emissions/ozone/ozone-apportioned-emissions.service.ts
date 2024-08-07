@@ -1,34 +1,25 @@
-import { Request } from 'express';
-import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
-
-import {
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
+import { plainToClass } from 'class-transformer';
+import { Request } from 'express';
 
 import {
-  fieldMappings,
-  fieldMappingHeader,
   excludableColumnHeader,
+  fieldMappingHeader,
+  fieldMappings,
 } from '../../constants/field-mappings';
-
-import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
-import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 import { OzoneApportionedEmissionsFacilityAggregationDTO } from '../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
-import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
-import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
+import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
 import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
+import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 
 @Injectable()
 export class OzoneApportionedEmissionsService {
   constructor(
     private readonly logger: Logger,
-    @InjectRepository(OzoneUnitDataRepository)
     private readonly repository: OzoneUnitDataRepository,
   ) {}
 
@@ -45,7 +36,10 @@ export class OzoneApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(
+        new Error(e.message),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     req.res.setHeader(
@@ -72,7 +66,10 @@ export class OzoneApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(
+        new Error(e.message),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     req.res.setHeader(
@@ -98,12 +95,12 @@ export class OzoneApportionedEmissionsService {
     let query;
 
     try {
-      query = await this.repository.getEmissionsStateAggregation(
-        req,
-        params,
-      );
+      query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(
+        new Error(e.message),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     req.res.setHeader(
@@ -112,13 +109,9 @@ export class OzoneApportionedEmissionsService {
     );
 
     return query.map(item => {
-      return plainToClass(
-        OzoneApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return plainToClass(OzoneApportionedEmissionsStateAggregationDTO, item, {
+        enableImplicitConversion: true,
+      });
     });
   }
 
@@ -134,7 +127,10 @@ export class OzoneApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(
+        new Error(e.message),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     req.res.setHeader(

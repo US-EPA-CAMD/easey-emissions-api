@@ -1,20 +1,18 @@
 import { Test } from '@nestjs/testing';
-import { SelectQueryBuilder } from 'typeorm';
-
 import {
-  State,
-  UnitType,
-  UnitFuelType,
   ControlTechnology,
   Program,
+  State,
+  UnitFuelType,
+  UnitType,
 } from '@us-epa-camd/easey-common/enums';
-
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { fieldMappings } from './../../constants/field-mappings';
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
+import { fieldMappings } from './../../constants/field-mappings';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 
 jest.mock('../../utils/query-builder.helper');
 
@@ -71,6 +69,7 @@ describe('OzoneUnitDataRepository', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        EntityManager,
         OzoneUnitDataRepository,
         {
           provide: SelectQueryBuilder,

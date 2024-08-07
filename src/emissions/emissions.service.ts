@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 import { EmissionsSubmissionsProgress } from '../entities/vw-emissions-submissions-progress.entity';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
-import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
+import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
 
 @Injectable()
 export class EmissionsService {
@@ -25,7 +25,7 @@ export class EmissionsService {
     const date = new Date(periodDate);
     const month = date.getUTCMonth() + 1;
 
-    if (queryResult === undefined) {
+    if (!queryResult) {
       if (
         ['development', 'test', 'local-dev'].includes(
           this.configService.get<string>('app.env'),

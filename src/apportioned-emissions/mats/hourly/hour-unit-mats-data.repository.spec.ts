@@ -1,20 +1,17 @@
 import { Test } from '@nestjs/testing';
-import * as typeorm_functions from 'typeorm/globals';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-
 import {
-  State,
-  UnitType,
-  UnitFuelType,
   ControlTechnology,
+  State,
+  UnitFuelType,
+  UnitType,
 } from '@us-epa-camd/easey-common/enums';
-
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
-import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
-import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
+import { QueryBuilderHelper } from '../../../utils/query-builder.helper';
+import { HourUnitMatsDataView } from './../../../entities/vw-hour-unit-mats-data.entity';
+import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 
 jest.mock('../../../utils/query-builder.helper');
 
@@ -43,18 +40,6 @@ const mockQueryBuilder = () => ({
   getQueryAndParameters: jest.fn().mockResolvedValue('mockEmissions'),
 });
 
-jest.spyOn(typeorm_functions, 'getRepository').mockReturnValue(({
-  createQueryBuilder: jest.fn().mockImplementation(() => ({
-    subQuery: jest.fn().mockReturnThis() as unknown,
-    from: jest.fn().mockReturnThis() as unknown,
-    where: jest.fn().mockReturnThis() as unknown,
-    select: jest.fn().mockReturnThis() as unknown,
-    getQuery: jest.fn().mockReturnThis() as unknown,
-    setParameter: jest.fn().mockReturnThis() as unknown,
-    getMany: jest.fn().mockResolvedValue(new HourUnitMatsDataView()) as unknown,
-  })),
-} as unknown) as Repository<unknown>);
-
 let filters = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
 filters.page = undefined;
 filters.perPage = undefined;
@@ -79,6 +64,29 @@ describe('HourUnitMatsDataRepository', () => {
     const module = await Test.createTestingModule({
       providers: [
         HourUnitMatsDataRepository,
+        {
+          provide: EntityManager,
+          useFactory: () => ({
+            getRepository: jest.fn().mockReturnValue({
+              createQueryBuilder: jest.fn().mockImplementation(() => ({
+                subQuery: jest.fn().mockReturnThis() as unknown,
+                from: jest.fn().mockReturnThis() as unknown,
+                where: jest.fn().mockReturnThis() as unknown,
+                select: jest.fn().mockReturnThis() as unknown,
+                getQuery: jest.fn().mockReturnThis() as unknown,
+                setParameter: jest.fn().mockReturnThis() as unknown,
+                andWhere: jest.fn().mockReturnThis() as unknown,
+                innerJoin: jest.fn().mockReturnThis() as unknown,
+                distinctOn: jest.fn().mockReturnThis() as unknown,
+                getMany: jest
+                  .fn()
+                  .mockResolvedValue(new HourUnitMatsDataView()) as unknown,
+                getRawMany: jest.fn().mockResolvedValue([]) as unknown,
+              })),
+            }),
+            query: jest.fn().mockResolvedValue([]),
+          }),
+        },
         {
           provide: SelectQueryBuilder,
           useFactory: mockQueryBuilder,
