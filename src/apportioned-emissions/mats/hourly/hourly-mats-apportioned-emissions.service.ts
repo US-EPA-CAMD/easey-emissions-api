@@ -28,7 +28,10 @@ export class HourlyMatsApportionedEmissionsService {
     try {
       entities = await this.repository.getEmissions(req, params);
     } catch (e) {
-      throw new EaseyException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new EaseyException(
+        new Error(e.message),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     req.res.setHeader(
