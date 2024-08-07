@@ -67,6 +67,7 @@ export default registerAs('app', () => ({
   reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '60mb'),
   // ENABLES DEBUG CONSOLE LOGS
   enableDebug: getConfigValueBoolean('EASEY_EMISSIONS_API_ENABLE_DEBUG'),
+  statementTimeout: getConfigValueNumber('EASEY_EMISSIONS_API_SUBMISSION_DAYS',300000),
   /**
    * Needs to be set in .env file for local development if `EASEY_EMISSIONS_API_ENABLE_AUTH_TOKEN` is false.
    * Format:

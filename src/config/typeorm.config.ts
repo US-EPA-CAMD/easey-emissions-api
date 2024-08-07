@@ -35,6 +35,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [__dirname + '/../**/*.entity.{js,ts}'],
       synchronize: false,
       ssl: this.tlsOptions,
+      extra: {
+        statement_timeout: this.configService.get<number>('app.statementTimeout'),
+      },
     };
   }
 }
