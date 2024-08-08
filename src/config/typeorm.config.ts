@@ -17,6 +17,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('database.name'),
       entities: [__dirname + '/../**/*.entity.{js,ts}'],
       synchronize: false,
+      extra: {
+        statement_timeout: this.configService.get<number>('app.statementTimeout'),
+      },
     };
   }
 }

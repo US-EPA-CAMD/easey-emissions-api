@@ -2,3 +2,4 @@ instances: 2
 environment: staging
 host: api-easey-stg.app.cloud.gov
 apiHost: api.epa.gov/easey/staging
+statementTimeout: 300000
