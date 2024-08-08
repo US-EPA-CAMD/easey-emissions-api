@@ -11,3 +11,4 @@ description: Emissions management API endpoints for apportioned emissions data (
 environment: development
 apiHost: api.epa.gov/easey/dev
 dbSvc: camd-pg-db
+statementTimeout: 300000
