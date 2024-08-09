@@ -4,7 +4,7 @@ import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { ApportionedEmissionsController } from './apportioned-emissions.controller';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
-import { ProgramYearDimRepository } from './unit-fact.repository';
+import { UnitFactRepository } from './unit-fact.repository';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-apportioned-emissions-attributes.dto';
 
 const mockRequest = (url: string) => {
@@ -25,7 +25,7 @@ describe('-- Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [ApportionedEmissionsController],
-      providers: [ApportionedEmissionsService, ProgramYearDimRepository],
+      providers: [ApportionedEmissionsService, UnitFactRepository],
     }).compile();
 
     controller = module.get(ApportionedEmissionsController);

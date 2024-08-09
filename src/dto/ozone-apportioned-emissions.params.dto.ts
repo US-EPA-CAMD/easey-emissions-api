@@ -9,7 +9,7 @@ import {
 } from '@us-epa-camd/easey-common/constants';
 import { ExcludeApportionedEmissions } from '@us-epa-camd/easey-common/enums';
 
-import { OpYear, Page, PerPage } from '../utils/validator.const';
+import { OzoneDate, Page, PerPage } from '../utils/validator.const';
 import { ApportionedEmissionsParamsDTO } from './apportioned-emissions.params.dto';
 import { fieldMappings } from '../constants/field-mappings';
 
@@ -18,7 +18,7 @@ export class OzoneApportionedEmissionsParamsDTO extends ApportionedEmissionsPara
     isArray: true,
     description: propertyMetadata.year.description,
   })
-  @OpYear()
+  @OzoneDate()
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   year: number[];
 }

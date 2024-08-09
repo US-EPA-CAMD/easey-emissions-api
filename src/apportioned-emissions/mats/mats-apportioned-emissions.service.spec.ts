@@ -3,9 +3,10 @@ import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
-import { ApplicableMatsApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-mats-apportioned-emissions-attributes-params.dto';
 import { HourUnitMatsDataRepository } from './hourly/hour-unit-mats-data.repository';
-import { HourUnitMatsDataArch } from '../../entities/hour-unit-mats-data-arch.entity';
+import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
+import { UnitFactRepository } from '../unit-fact.repository';
+import { genApplicableApportionedEmissionsAttributesDto } from '../../../test/object-generators/apportioned-emissions';
 
 const mockRepository = () => ({
   getApplicableEmissions: jest.fn(),
@@ -21,16 +22,22 @@ const mockRequest = () => {
   };
 };
 
+const programYearRepositoryMock = {
+  getApplicableApportionedEmissionsAttributes: () => jest,
+};
+
 describe('-- MATS Apportioned Emissions Service --', () => {
   let service: MatsApportionedEmissionsService;
   let repository: any;
   let req: any;
+  let unitFactRepository;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
         MatsApportionedEmissionsService,
+        UnitFactRepository,
         {
           provide: HourUnitMatsDataRepository,
           useFactory: mockRepository,
@@ -42,15 +49,33 @@ describe('-- MATS Apportioned Emissions Service --', () => {
     req.res.setHeader.mockReturnValue();
     service = module.get(MatsApportionedEmissionsService);
     repository = module.get(HourUnitMatsDataRepository);
+    unitFactRepository = module.get(UnitFactRepository);
   });
 
   describe('getApplicableEmissions', () => {
     it('calls HourUnitDataRepository.getApplicableEmissions() and gets all applicable emissions attributes from the repository', async () => {
-      const expected: HourUnitMatsDataArch[] = [];
+      const expected = genApplicableApportionedEmissionsAttributesDto();
       repository.getApplicableEmissions.mockResolvedValue(expected);
-      repository.lastArchivedDate.mockResolvedValue('2019-01-01')
-      let filters = new ApplicableMatsApportionedEmissionsAttributesParamsDTO();
-      let result = await service.getApplicableEmissions(filters);
+      repository.lastArchivedDate.mockResolvedValue('2019-01-01');
+      const filters = new ApplicableApportionedEmissionsAttributesParamsDTO();
+
+      jest
+        .spyOn(
+          programYearRepositoryMock,
+          'getApplicableApportionedEmissionsAttributes',
+        )
+        // @ts-expect-error Allow empty array
+        .mockResolvedValue(expected);
+
+      jest
+        .spyOn(
+          unitFactRepository,
+          'getApplicableApportionedEmissionsAttributes',
+        )
+        .mockResolvedValue(expected);
+      const result = await service.getApplicableApportionedEmissionsAttributes(
+        filters,
+      );
       expect(result).toEqual(expected);
     });
   });
