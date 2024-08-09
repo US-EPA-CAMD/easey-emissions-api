@@ -2,3 +2,4 @@ instances: 1
 environment: testing
 host: api-easey-tst.app.cloud.gov
 apiHost: api.epa.gov/easey/test
+statementTimeout: 300000
