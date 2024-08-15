@@ -67,6 +67,7 @@ export default registerAs('app', () => ({
   enableDebug: getConfigValueBoolean(
     'EASEY_EMISSIONS_API_ENABLE_DEBUG',
   ),
+  statementTimeout: getConfigValueNumber('EASEY_DB_STATEMENT_TIMEOUT',300000),
   perPageLimit: PAGINATION_MAX_PER_PAGE,
   apiHost: apiHost,
 }));

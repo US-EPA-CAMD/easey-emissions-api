@@ -20,6 +20,7 @@ applications:
       EASEY_EMISSIONS_API_SUBMISSION_DAYS: 38
       EASEY_EMISSIONS_API_PAGINATION_MAX_PER_PAGE: 500
       EASEY_API_GATEWAY_HOST: ((apiHost))
+      EASEY_DB_STATEMENT_TIMEOUT: ((statementTimeout))
     routes:
       - route: ((host))/((path))
     services:
