@@ -1,17 +1,20 @@
-import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import {
   AnnualApportionedEmissionsParamsDTO,
   PaginatedAnnualApportionedEmissionsParamsDTO,
 } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 
-@EntityRepository(AnnualUnitDataView)
+@Injectable()
 export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
+  constructor(entityManager: EntityManager) {
+    super(AnnualUnitDataView, entityManager);
+  }
 
   async getEmissions(
     req: Request,
@@ -36,12 +39,12 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
   private buildQuery(
     columns: any[],
     params: AnnualApportionedEmissionsParamsDTO,
-    alias: boolean = false
+    alias: boolean = false,
   ): SelectQueryBuilder<AnnualUnitDataView> {
     let query = this.createQueryBuilder('aud').select(
       alias
         ? columns.map(col => `aud.${col.value} AS "${col.value}"`)
-        : columns.map(col => `aud.${col.value}`)
+        : columns.map(col => `aud.${col.value}`),
     );
 
     query = QueryBuilderHelper.createEmissionsQuery(

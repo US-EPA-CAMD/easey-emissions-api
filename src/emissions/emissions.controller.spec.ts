@@ -1,9 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
+
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
-import { EmissionsController } from './emissions.controller';
 import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
+import { EmissionsController } from './emissions.controller';
 import { EmissionsService } from './emissions.service';
 
 const mockEmissionsRepository = () => ({
@@ -19,10 +21,14 @@ describe('Emissions Controller', () => {
       imports: [LoggerModule],
       controllers: [EmissionsController],
       providers: [
+        EntityManager,
         EmissionsService,
         EmissionsSubmissionsProgressMap,
         ConfigService,
-        { provide: EmissionsSubmissionsProgressRepository, useFactory: mockEmissionsRepository },
+        {
+          provide: EmissionsSubmissionsProgressRepository,
+          useFactory: mockEmissionsRepository,
+        },
       ],
     }).compile();
 

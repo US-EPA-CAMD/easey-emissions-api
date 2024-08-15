@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
+import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
 import { HourUnitDataView } from '../../entities/vw-hour-unit-data.entity';
 import { HourUnitDataRepository } from './hour-unit-data.repository';
-import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 import { HourlyApportionedEmissionsController } from './hourly-apportioned-emissions.controller';
-import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-apportioned-emissions.params.dto';
+import { HourlyApportionedEmissionsService } from './hourly-apportioned-emissions.service';
 
 const mockRequest = (url: string) => {
   return {
@@ -26,7 +26,11 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [HourlyApportionedEmissionsController],
-      providers: [HourlyApportionedEmissionsService, HourUnitDataRepository],
+      providers: [
+        EntityManager,
+        HourlyApportionedEmissionsService,
+        HourUnitDataRepository,
+      ],
     }).compile();
 
     controller = module.get(HourlyApportionedEmissionsController);

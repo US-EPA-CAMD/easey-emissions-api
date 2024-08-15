@@ -1,17 +1,21 @@
-import { Request } from 'express';
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
 import { ResponseHeaders } from '@us-epa-camd/easey-common/utilities';
+import { Request } from 'express';
+import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { QueryBuilderHelper } from '../../utils/query-builder.helper';
-import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
 import {
   MonthlyApportionedEmissionsParamsDTO,
   PaginatedMonthlyApportionedEmissionsParamsDTO,
 } from '../../dto/monthly-apportioned-emissions.params.dto';
+import { MonthUnitDataView } from '../../entities/vw-month-unit-data.entity';
+import { QueryBuilderHelper } from '../../utils/query-builder.helper';
 
-@EntityRepository(MonthUnitDataView)
+@Injectable()
 export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
+  constructor(entityManager: EntityManager) {
+    super(MonthUnitDataView, entityManager);
+  }
+
   async getEmissions(
     req: Request,
     columns: any[],

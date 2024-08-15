@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
-import { AnnualUnitDataRepository } from './annual-unit-data.repository';
-import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
-import { AnnualApportionedEmissionsController } from './annual-apportioned-emissions.controller';
 import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
+import { AnnualApportionedEmissionsController } from './annual-apportioned-emissions.controller';
+import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
+import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 
 const mockRequest = (url: string) => {
   return {
@@ -26,7 +26,11 @@ describe('-- Annual Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [AnnualApportionedEmissionsController],
-      providers: [AnnualApportionedEmissionsService, AnnualUnitDataRepository],
+      providers: [
+        AnnualApportionedEmissionsService,
+        AnnualUnitDataRepository,
+        EntityManager,
+      ],
     }).compile();
 
     controller = module.get(AnnualApportionedEmissionsController);

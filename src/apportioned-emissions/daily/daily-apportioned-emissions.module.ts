@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DayUnitDataRepository } from './day-unit-data.repository';
-import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { DailyApportionedEmissionsController } from './daily-apportioned-emissions.controller';
+import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
+import { DayUnitDataRepository } from './day-unit-data.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([DayUnitDataRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([DayUnitDataRepository])],
   controllers: [DailyApportionedEmissionsController],
   providers: [
     ConfigService,
-    DailyApportionedEmissionsService
+    DayUnitDataRepository,
+    DailyApportionedEmissionsService,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, DayUnitDataRepository],
 })
 export class DailyApportionedEmissionsModule {}

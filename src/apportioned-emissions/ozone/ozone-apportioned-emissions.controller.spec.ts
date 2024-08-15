@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { EntityManager } from 'typeorm';
 
-import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
-import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
-import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
+import { OzoneUnitDataView } from '../../entities/vw-ozone-unit-data.entity';
+import { OzoneApportionedEmissionsController } from './ozone-apportioned-emissions.controller';
+import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
+import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 
 const mockRequest = (url: string) => {
   return {
@@ -26,7 +26,11 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule],
       controllers: [OzoneApportionedEmissionsController],
-      providers: [OzoneApportionedEmissionsService, OzoneUnitDataRepository],
+      providers: [
+        EntityManager,
+        OzoneApportionedEmissionsService,
+        OzoneUnitDataRepository,
+      ],
     }).compile();
 
     controller = module.get(OzoneApportionedEmissionsController);
