@@ -5,6 +5,7 @@ import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { SummaryValueWorkspaceService } from './summary-value.service';
+import { SummaryValueDataCheckService } from './summary-value-data-check.service';
 
 @Module({
   imports: [
@@ -16,12 +17,14 @@ import { SummaryValueWorkspaceService } from './summary-value.service';
     SummaryValueWorkspaceRepository,
     SummaryValueWorkspaceService,
     SummaryValueMap,
+    SummaryValueDataCheckService,
   ],
   exports: [
     TypeOrmModule,
     SummaryValueWorkspaceRepository,
     SummaryValueWorkspaceService,
     SummaryValueMap,
+    SummaryValueDataCheckService,
   ],
 })
 export class SummaryValueWorkspaceModule {}

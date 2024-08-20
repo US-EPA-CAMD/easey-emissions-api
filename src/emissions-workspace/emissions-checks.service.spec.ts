@@ -44,6 +44,7 @@ import { WeeklyTestSummaryCheckService } from '../weekly-test-summary-workspace/
 import { WeeklyTestSummaryWorkspaceRepository } from '../weekly-test-summary-workspace/weekly-test-summary.repository';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { EmissionsChecksService } from './emissions-checks.service';
+import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 
 jest.mock('@us-epa-camd/easey-common/check-catalog');
 
@@ -53,7 +54,7 @@ describe('Emissions Checks Service Tests', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, CheckCatalogService, BulkLoadModule],
+      imports: [LoggerModule, CheckCatalogService, BulkLoadModule, SummaryValueDataCheckService],
       providers: [
         EntityManager,
         DailyCalibrationMap,
@@ -82,6 +83,7 @@ describe('Emissions Checks Service Tests', () => {
         LongTermFuelFlowService,
         LongTermFuelFlowMap,
         LongTermFuelFlowRepository,
+        SummaryValueDataCheckService,
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository,
