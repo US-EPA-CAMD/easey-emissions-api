@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
+import { LoggingException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
@@ -36,10 +36,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new EaseyException(
-        new Error(e.message),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -66,10 +63,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new EaseyException(
-        new Error(e.message),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -99,10 +93,7 @@ export class QuarterlyApportionedEmissionsService {
     try {
       query = await this.repository.getEmissionsStateAggregation(req, params);
     } catch (e) {
-      throw new EaseyException(
-        new Error(e.message),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
@@ -133,10 +124,7 @@ export class QuarterlyApportionedEmissionsService {
         params,
       );
     } catch (e) {
-      throw new EaseyException(
-        new Error(e.message),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new LoggingException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     req.res.setHeader(
