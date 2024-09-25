@@ -126,7 +126,8 @@ export const genEmissionsImportDto = (
         : undefined,
       dailyBackstopData: config?.include?.includes('dailyBackstopData')
         ? [new DailyBackstopImportDTO()]
-        : undefined
+        : undefined,
+      version: faker.datatype.string()
     });
   }
 
