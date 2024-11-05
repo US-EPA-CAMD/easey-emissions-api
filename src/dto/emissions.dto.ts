@@ -2,6 +2,7 @@ import { FindOneOptions } from 'typeorm';
 import { Type } from 'class-transformer';
 import {
   IsDateString,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -144,6 +145,10 @@ export class EmissionsImportDTO extends EmissionsBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => DailyBackstopDTO)
   dailyBackstopData: DailyBackstopImportDTO[];
+
+  @IsString()
+  @IsNotEmpty()
+  version: string;
 }
 
 export class EmissionsDTO extends EmissionsRecordDTO {
