@@ -1,5 +1,3 @@
-import { Routes } from 'nest-router';
-
 import { EmissionsModule } from './emissions/emissions.module';
 import { EmissionsWorkspaceModule } from './emissions-workspace/emissions.module';
 import { DailyCalibrationModule } from './daily-calibration/daily-calibration.module';
@@ -17,7 +15,7 @@ import { EmissionsViewWorkspaceModule } from './emissions-view-workspace/emissio
 import { EmissionsViewModule } from './emission-view/emissions-view.module';
 import { WhatHasDataModule } from './what-has-data/what-has-data.module';
 
-const routes: Routes = [
+const routes = [
   {
     path: '/what-has-data',
     module: WhatHasDataModule,
