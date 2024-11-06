@@ -26,6 +26,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "up": "yarn && yarn start:dev"
   },
+  "resolutions": {
+    "xml2js": "^0.5.0"
+  },
   "dependencies": {
     "@nestjs/axios": "^3.1.1",
     "@nestjs/common": "^10.4.7",
