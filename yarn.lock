@@ -1150,10 +1150,10 @@
     "@typescript-eslint/types" "5.1.0"
     eslint-visitor-keys "^3.0.0"
 
-"@us-epa-camd/easey-common@11.4.9":
-  version "11.4.9"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/11.4.9/f8ac8dbd84a4016af4e505576d7a3f8ca0246995#f8ac8dbd84a4016af4e505576d7a3f8ca0246995"
-  integrity sha512-ZL0eqKtMBXLHtAViNgW3vqaJ+qF7cBCDOCbucRVinToFLLtyJIibVmIpxZtWVvQSrqp/hexZHHFs0MCWu9H0MQ==
+"@us-epa-camd/easey-common@11.4.11":
+  version "11.4.11"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/11.4.11/0eea6cb08cda3c57fad5502cab2f6a1937b23bff#0eea6cb08cda3c57fad5502cab2f6a1937b23bff"
+  integrity sha512-OO9jaG+lAI4WE7nznUlZ7t5fVIcr4kikkTTI7c6Wqff9d9pFWa3eQ1xNbijUy4Y3UDHdHYi/Ea6JgeWeiKiPSQ==
   dependencies:
     "@nestjs/axios" "0.0.3"
     "@nestjs/common" "^8.1.1"
@@ -1172,7 +1172,7 @@
     reflect-metadata "^0.1.13"
     rxjs "^7.4.0"
     typeorm "0.3.0"
-    uuid "^8.3.2"
+    uuid "8.3.2"
     winston "^3.3.3"
 
 "@webassemblyjs/ast@1.11.1":
