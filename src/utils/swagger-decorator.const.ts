@@ -2,9 +2,12 @@ import { applyDecorators } from '@nestjs/common';
 
 import {
   ApiBadRequestResponse,
+  ApiExcludeController,
+  ApiExcludeEndpoint,
   ApiNotFoundResponse,
   ApiQuery,
 } from '@nestjs/swagger';
+import { getConfigValue } from '@us-epa-camd/easey-common/utilities';
 
 export const BadRequestResponse = () =>
   ApiBadRequestResponse({
@@ -127,4 +130,15 @@ export function ApiLocationNameQuery() {
       explode: false,
     }),
   );
+}
+
+const env = getConfigValue('EASEY_EMISSIONS_API_ENV', 'local-dev');
+const disable = ['local-dev','development','testing'].includes(env) ? false : true;
+
+export function ApiExcludeControllerByEnv() {
+  return applyDecorators(ApiExcludeController(disable));
+}
+
+export function ApiExcludeEndpointByEnv() {
+  return applyDecorators(ApiExcludeEndpoint(disable));
 }

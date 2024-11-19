@@ -17,6 +17,7 @@ import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeEndpointByEnv } from '../utils/swagger-decorator.const';
 
 @Controller()
 @ApiTags('Emissions Views')
@@ -71,6 +72,7 @@ export class EmissionsViewWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @ApiExcludeEndpointByEnv()
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

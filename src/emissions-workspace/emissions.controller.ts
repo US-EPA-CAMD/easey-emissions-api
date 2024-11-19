@@ -30,6 +30,7 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeEndpointByEnv } from '../utils/swagger-decorator.const';
 
 @Controller()
 @ApiTags('Emissions')
@@ -78,6 +79,7 @@ export class EmissionsWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @ApiExcludeEndpointByEnv()
   @UseInterceptors(ClassSerializerInterceptor)
   async export(
     @Query() params: EmissionsParamsDTO,
@@ -114,6 +116,7 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Location,
   )
+  @ApiExcludeEndpointByEnv()
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
@@ -152,6 +155,7 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Facility,
   )
+  @ApiExcludeEndpointByEnv()
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
   ): Promise<EmissionsReviewSubmitDTO[]> {
