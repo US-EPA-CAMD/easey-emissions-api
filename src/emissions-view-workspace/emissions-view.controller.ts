@@ -31,6 +31,7 @@ export class EmissionsViewWorkspaceController {
     description:
       'Retrieves a list of workspace Emissions data views that are available',
   })
+  @ApiExcludeEndpointByEnv()
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();
   }
