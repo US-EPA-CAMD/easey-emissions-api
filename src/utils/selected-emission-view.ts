@@ -4,6 +4,7 @@ import { EntityManager } from 'typeorm';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { ReportingPeriod } from '../entities/reporting-period.entity';
 
+//#6424
 export async function getSelectedView(
   viewCode: string,
   schema: string,
@@ -12,6 +13,7 @@ export async function getSelectedView(
   rptPeriods: any[],
   mgr: EntityManager,
 ) {
+  console.log('we are in emissions api - selected emission view - getSelectedView');
   const groupCode = 'EMVIEW';
   const unitIds = params.unitIds ?? [{}];
   const monitorPlanId = params.monitorPlanId;
@@ -71,7 +73,7 @@ export async function getSelectedView(
         if (val !== null && val !== undefined) {
           if (typeof val === 'object') {
             return `"${key}": "${(val as Date).toLocaleDateString()}"`;
-          } else if (typeof val === 'string' && isNaN(Number(val))) {
+          } else if (typeof val === 'string') {
             return `"${key}": "${val}"`;
           } else {
             return `"${key}": ${Number(val)}`;
