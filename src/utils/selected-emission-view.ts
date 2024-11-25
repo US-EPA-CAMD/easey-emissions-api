@@ -4,7 +4,6 @@ import { EntityManager } from 'typeorm';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { ReportingPeriod } from '../entities/reporting-period.entity';
 
-//#6424
 export async function getSelectedView(
   viewCode: string,
   schema: string,
@@ -13,7 +12,6 @@ export async function getSelectedView(
   rptPeriods: any[],
   mgr: EntityManager,
 ) {
-  console.log('we are in emissions api - selected emission view - getSelectedView');
   const groupCode = 'EMVIEW';
   const unitIds = params.unitIds ?? [{}];
   const monitorPlanId = params.monitorPlanId;
