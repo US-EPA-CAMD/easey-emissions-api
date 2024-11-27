@@ -1,10 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { readFileSync } from 'fs';
+import { TlsOptions } from 'tls';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  constructor(private readonly configService: ConfigService) {}
+  private tlsOptions: TlsOptions = { requestCert: true };
+
+  constructor(private readonly configService: ConfigService) {
+    const host = configService.get<string>('database.host');
+    this.tlsOptions.rejectUnauthorized = host !== 'localhost';
+    this.tlsOptions.ca =
+      host !== 'localhost'
+        ? readFileSync('./us-gov-west-1-bundle.pem').toString()
+        : null;
+    console.log('TLS/SSL Config:', {
+      ...this.tlsOptions,
+      ca:
+        this.tlsOptions.ca !== null
+          ? `${this.tlsOptions.ca.slice(0, 30)}...(truncated for display only)`
+          : null,
+    });
+  }
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
@@ -17,9 +35,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('database.name'),
       entities: [__dirname + '/../**/*.entity.{js,ts}'],
       synchronize: false,
-      extra: {
-        statement_timeout: this.configService.get<number>('app.statementTimeout'),
-      },
+      ssl: this.tlsOptions,
     };
   }
 }
