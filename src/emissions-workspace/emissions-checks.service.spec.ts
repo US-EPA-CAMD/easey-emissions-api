@@ -54,7 +54,7 @@ describe('Emissions Checks Service Tests', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, CheckCatalogService, BulkLoadModule, SummaryValueDataCheckService],
+      imports: [LoggerModule, CheckCatalogService, BulkLoadModule],
       providers: [
         EntityManager,
         DailyCalibrationMap,

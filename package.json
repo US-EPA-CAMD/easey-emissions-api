@@ -87,6 +87,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/node/axios.cjs"
+    },
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
