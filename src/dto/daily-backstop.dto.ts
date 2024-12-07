@@ -22,10 +22,10 @@ export class DailyBackstopBaseDTO {
     dailyAverageNoxRate?: number;
   
     @IsNumber()
-    dailyNoxExceedence?: number;
+    dailyNoxExceedance?: number;
 
     @IsNumber()
-    cumulativeOsNoxExceedence?: number;
+    cumulativeOsNoxExceedance?: number;
   }
 
 export class DailyBackstopRecordDTO extends DailyBackstopBaseDTO{
