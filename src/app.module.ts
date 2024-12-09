@@ -1,7 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { RouterModule } from 'nest-router';
 import { ConfigModule } from '@nestjs/config';
+import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { dbConfig } from '@us-epa-camd/easey-common/config';
@@ -42,7 +42,7 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
 
 @Module({
   imports: [
-    RouterModule.forRoutes(routes),
+    RouterModule.register(routes),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [dbConfig, appConfig],
