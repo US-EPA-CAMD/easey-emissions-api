@@ -71,7 +71,7 @@ export async function getSelectedView(
         if (val !== null && val !== undefined) {
           if (typeof val === 'object') {
             return `"${key}": "${(val as Date).toLocaleDateString()}"`;
-          } else if (typeof val === 'string' && isNaN(Number(val))) {
+          } else if (typeof val === 'string') {
             return `"${key}": "${val}"`;
           } else {
             return `"${key}": ${Number(val)}`;
