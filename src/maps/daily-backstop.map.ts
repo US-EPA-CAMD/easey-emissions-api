@@ -27,8 +27,8 @@ export class DailyBackstopMap extends BaseMap<
             dailyNoxEmissions: entity.dailyNoxEmissions,
             dailyHeatInput: entity.dailyHeatInput,
             dailyAverageNoxRate: entity.dailyAverageNoxRate,
-            dailyNoxExceedence: entity.dailyNoxExceedence,
-            cumulativeOsNoxExceedence: entity.cumulativeOsNoxExceedence,
+            dailyNoxExceedance: entity.dailyNoxExceedance,
+            cumulativeOsNoxExceedance: entity.cumulativeOsNoxExceedance,
         };
     }
 }

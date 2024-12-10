@@ -1,4 +1,4 @@
-import { Logger } from '@us-epa-camd/easey-common/logger';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -58,7 +58,7 @@ import { EaseyContentModule } from '../emissions-easey-content/easey-content.mod
     ]),
     EaseyContentModule,
     ComponentModule,
-    Logger,
+    LoggerModule,
     HttpModule,
     DailyEmissionWorkspaceModule,
     DailyFuelWorkspaceModule,
