@@ -42,7 +42,7 @@
     "class-transformer": "0.4.0",
     "class-validator": "0.14.0",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "express": "^4.20.0",
     "moment": "^2.29.4",
     "pg": "^8.7.3",
     "pg-copy-streams": "^6.0.5",
