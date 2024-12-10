@@ -11,8 +11,8 @@ export const genDailyBackstopImportDto = (amount = 1) => {
             dailyNoxEmissions: faker.datatype.number(),
             dailyHeatInput: faker.datatype.number(),
             dailyAverageNoxRate: faker.datatype.number(),
-            dailyNoxExceedence: faker.datatype.number(),
-            cumulativeOsNoxExceedence: faker.datatype.number(),
+            dailyNoxExceedance: faker.datatype.number(),
+            cumulativeOsNoxExceedance: faker.datatype.number(),
         });
     }
 

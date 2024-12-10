@@ -1,7 +1,12 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
-import { RouterModule } from 'nest-router';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { dbConfig } from '@us-epa-camd/easey-common/config';
@@ -10,6 +15,7 @@ import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options';
 import { CheckCatalogModule } from '@us-epa-camd/easey-common/check-catalog';
 import { ConnectionModule } from '@us-epa-camd/easey-common/connection';
 import { DbLookupValidator } from '@us-epa-camd/easey-common/validators';
+import { MaintenanceMiddleware } from '@us-epa-camd/easey-common/middleware/maintenance.middleware';
 
 import routes from './routes';
 import appConfig from './config/app.config';
@@ -42,7 +48,7 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
 
 @Module({
   imports: [
-    RouterModule.forRoutes(routes),
+    RouterModule.register(routes),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [dbConfig, appConfig],
@@ -85,4 +91,10 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
   ],
   providers: [DbLookupValidator],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(MaintenanceMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

@@ -65,9 +65,9 @@ export class DailyBackstopWorkspaceService {
             dailyNoxEmissions,
             dailyHeatInput,
             dailyAverageNoxRate,
-            dailyNoxExceedence,
-            cumulativeOsNoxExceedence,
-          } = dailyBackstopDatum;
+            dailyNoxExceedance,
+            cumulativeOsNoxExceedance,
+          } = dailyBackstopDatum;    
     
           bulkLoadStream.writeObject({
             unitId: monitoringLocation?.unit?.id ?? null,
@@ -75,8 +75,8 @@ export class DailyBackstopWorkspaceService {
             dailyNoxEmissions,
             dailyHeatInput,
             dailyAverageNoxRate,
-            dailyNoxExceedence,
-            cumulativeOsNoxExceedence,
+            dailyNoxExceedance,
+            cumulativeOsNoxExceedance,
             monitoringLocationId: monitoringLocation?.id ?? null,
             reportingPeriodId,
             userId: identifiers?.userId,

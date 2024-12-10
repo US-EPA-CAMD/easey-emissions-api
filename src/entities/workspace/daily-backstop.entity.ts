@@ -59,7 +59,7 @@ export class DailyBackstop extends BaseEntity {
         precision: 10,
         scale: 1,
     })
-    dailyNoxExceedence: number;
+    dailyNoxExceedance: number;
 
     @Column({
         nullable: true,
@@ -68,7 +68,7 @@ export class DailyBackstop extends BaseEntity {
         precision: 13,
         scale: 1,
     })
-    cumulativeOsNoxExceedence: number;
+    cumulativeOsNoxExceedance: number;
 
     @Column({
         nullable: false,
