@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { EntityManager } from 'typeorm';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceController } from './emissions-view.controller';
@@ -15,7 +16,7 @@ describe('EmissionsViewWorkspaceController', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [LoggerModule, HttpModule],
       providers: [
         EmissionsViewWorkspaceRepository,
         EmissionsViewWorkspaceController,
