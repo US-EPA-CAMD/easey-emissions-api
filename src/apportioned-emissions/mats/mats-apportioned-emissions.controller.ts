@@ -10,11 +10,7 @@ import {
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
-
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../../utils/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')

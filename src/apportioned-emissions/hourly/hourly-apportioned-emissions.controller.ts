@@ -11,8 +11,6 @@ import {
 } from '@nestjs/swagger';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ApiLocationNameQuery,
@@ -28,6 +26,7 @@ import { PaginatedHourlyApportionedEmissionsParamsDTO } from '../../dto/hourly-a
 import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hourly-apportioned-emissions-facility-aggregation.dto';
 import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
 import { HourlyApportionedEmissionsNationalAggregationDTO } from '../../dto/hourly-apportioned-emissions-national-aggregation.dto';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')

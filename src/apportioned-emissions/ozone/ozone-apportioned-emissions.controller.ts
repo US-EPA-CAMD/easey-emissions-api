@@ -13,8 +13,6 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ApiQueryAnnually,
@@ -28,6 +26,7 @@ import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-app
 import { OzoneApportionedEmissionsFacilityAggregationDTO } from './../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
 import { OzoneApportionedEmissionsStateAggregationDTO } from './../../dto/ozone-apportioned-emissions-state-aggregation.dto';
 import { OzoneApportionedEmissionsNationalAggregationDTO } from './../../dto/ozone-apportioned-emissions-national-aggregation.dto';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')
