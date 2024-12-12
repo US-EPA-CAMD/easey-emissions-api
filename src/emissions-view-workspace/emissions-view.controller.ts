@@ -7,7 +7,7 @@ import {
   UseInterceptors,
   Req,
 } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
 
@@ -21,11 +21,11 @@ import { LookupType } from '@us-epa-camd/easey-common/enums';
 @Controller()
 @ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
+@ApiExcludeController()
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
 
   @Get()
-  @ApiExcludeEndpoint()
   @ApiOkResponse({
     isArray: true,
     description:
@@ -36,7 +36,6 @@ export class EmissionsViewWorkspaceController {
   }
 
   @Get(':viewCode')
-  @ApiExcludeEndpoint()
   @ApiOkResponse({
     description:
       'Retrieves the specified view of workspace Emissions data for the provided Monitor Plan & Reporting Period',

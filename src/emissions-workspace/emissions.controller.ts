@@ -16,7 +16,7 @@ import {
   ApiSecurity,
   ApiQuery,
   ApiOperation,
-  refs, ApiExcludeEndpoint,
+  refs, ApiExcludeController,
 } from '@nestjs/swagger';
 
 import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -34,6 +34,7 @@ import { LookupType } from '@us-epa-camd/easey-common/enums';
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
+@ApiExcludeController()
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
@@ -42,7 +43,6 @@ export class EmissionsWorkspaceController {
   ) {}
 
   @Get('export')
-  @ApiExcludeEndpoint()
   @ApiOperation({
     summary:
       'Exports emissions data for the specified Monitor Plan & Reporting Period',
@@ -93,7 +93,6 @@ export class EmissionsWorkspaceController {
   }
 
   @Post('import')
-  @ApiExcludeEndpoint()
   @ApiBearerAuth('Token')
   @ApiOkResponse({
     type: EmissionsDTO,
@@ -122,7 +121,6 @@ export class EmissionsWorkspaceController {
   }
 
   @Get()
-  @ApiExcludeEndpoint()
   @ApiOkResponse({
     isArray: true,
     type: EmissionsReviewSubmitDTO,
