@@ -19,7 +19,7 @@ import {
   refs, ApiExcludeController,
 } from '@nestjs/swagger';
 
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -40,7 +40,7 @@ export class EmissionsWorkspaceController {
     private readonly service: EmissionsWorkspaceService,
     private readonly submissionService: ReviewSubmitService,
     private readonly checksService: EmissionsChecksService,
-  ) {}
+  ) { }
 
   @Get('export')
   @ApiOperation({
@@ -79,6 +79,10 @@ export class EmissionsWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Exported emissions data for the specified Monitor Plan & Reporting Period',
+    requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   async export(
     @Query() params: EmissionsParamsDTO,
@@ -115,6 +119,10 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Location,
   )
+  @AuditLog({
+    label: 'Imported emissions data',
+    requestBodyOutFields: ['orisCode', 'year', 'quarter']
+  })
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
@@ -153,6 +161,10 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Facility,
   )
+  @AuditLog({
+    label: 'Retrieved workspace emissions review and submit records',
+    requestQueryOutFields: ['orisCodes', 'monPlanIds', 'quarters']
+  })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
   ): Promise<EmissionsReviewSubmitDTO[]> {

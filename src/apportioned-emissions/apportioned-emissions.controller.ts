@@ -11,7 +11,7 @@ import {
 import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-apportioned-emissions-attributes.dto';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
-import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 
 @Controller()
 @ApiSecurity('APIKey')

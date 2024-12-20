@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiExcludeController, ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -30,6 +30,9 @@ export class EmissionsViewWorkspaceController {
     isArray: true,
     description:
       'Retrieves a list of workspace Emissions data views that are available',
+  })
+  @AuditLog({
+    label: 'Retrieved list of available workspace Emissions views'
   })
   getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return this.service.getAvailableViews();
@@ -72,6 +75,11 @@ export class EmissionsViewWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Retrieved workspace emissions view',
+    requestParamsOutFields: ['viewCode'],
+    requestQueryOutFields: ['monitorPlanId', 'unitIds', 'stackPipeIds', 'reportingPeriod']
+  })
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

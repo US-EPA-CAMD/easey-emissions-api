@@ -1238,10 +1238,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@us-epa-camd/easey-common@18.1.5":
-  version "18.1.5"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/18.1.5/7e49725ee0fb070ae3183803806a3cc61c5ecf4b#7e49725ee0fb070ae3183803806a3cc61c5ecf4b"
-  integrity sha512-3PpmBk8UXrhUbwn9Ab+Ydi2xeqs1yzdU1e0C2Y0CPRZ59OmTrGYTg1jBvkxcfM5/NRgBg/ZLxcl7ufRxB1MLLg==
+"@us-epa-camd/easey-common@19.0.3":
+  version "19.0.3"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/19.0.3/7926bcee516ee671d7339698cc05d9ee30359e19#7926bcee516ee671d7339698cc05d9ee30359e19"
+  integrity sha512-Qhv1pbs1bxgJQ9Ypq1jUnqRW+Bf+zXWXAqyQW/vpAI6bCTdHS6x3mBuxmZlxp5INGPVRm7d04rYyMbxvS20XQg==
   dependencies:
     "@golevelup/ts-jest" "^0.3.4"
     "@nestjs/axios" "3.1.1"
@@ -1256,7 +1256,7 @@
     helmet "^4.6.0"
     json2csv "^5.0.6"
     pg "^8.11.5"
-    pg-copy-streams "^6.0.5"
+    pg-copy-streams "^6.0.6"
     pg-pool "^3.6.2"
     pg-query-stream "^4.5.5"
     reflect-metadata "^0.1.13"
@@ -5021,9 +5021,9 @@ pg-connection-string@^2.6.4:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.6.4.tgz#f543862adfa49fa4e14bc8a8892d2a84d754246d"
   integrity sha512-v+Z7W/0EO707aNMaAEfiGnGL9sxxumwLl2fJvCQtMn9Fxsg+lPpPkdcyBSv/KFgpGdYkMfn+EI1Or2EHjpgLCA==
 
-pg-copy-streams@^6.0.5:
+pg-copy-streams@^6.0.5, pg-copy-streams@^6.0.6:
   version "6.0.6"
-  resolved "https://registry.yarnpkg.com/pg-copy-streams/-/pg-copy-streams-6.0.6.tgz#a24dbcbd2999f4ecd4ab919f92a1b256656e4f3c"
+  resolved "https://registry.npmjs.org/pg-copy-streams/-/pg-copy-streams-6.0.6.tgz#a24dbcbd2999f4ecd4ab919f92a1b256656e4f3c"
   integrity sha512-Z+Dd2C2NIDTsjyFKmc6a9QLlpM8tjpERx+43RSx0WmL7j3uNChERi3xSvZUL0hWJ1oRUn4S3fhyt3apdSrTyKQ==
   dependencies:
     obuf "^1.1.2"

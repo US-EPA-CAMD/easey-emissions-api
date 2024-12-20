@@ -26,7 +26,7 @@ import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly
 import { MonthlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/monthly-apportioned-emissions-facility-aggregation.dto';
 import { MonthlyApportionedEmissionsStateAggregationDTO } from '../../dto/monthly-apportioned-emissions-state-aggregation.dto';
 import { MonthlyApportionedEmissionsNationalAggregationDTO } from '../../dto/monthly-apportioned-emissions-national-aggregation.dto';
-import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 
 @Controller()
 @ApiSecurity('APIKey')
