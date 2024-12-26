@@ -12,7 +12,7 @@ export class WeeklyTestSummaryCheckService {
   }
 
   runChecks(payload: EmissionsImportDTO): string[] {
-    this.logger.log('Running Weekly Test Summary Checks');
+    this.logger.debug('Running Weekly Test Summary Checks');
 
     const errorList: string[] = [];
 
@@ -23,7 +23,7 @@ export class WeeklyTestSummaryCheckService {
       errorList.push(error);
     });
 
-    this.logger.log('Completed Weekly Test Summary Checks');
+    this.logger.debug('Completed Weekly Test Summary Checks');
 
     return errorList.filter(e => e !== null);
   }

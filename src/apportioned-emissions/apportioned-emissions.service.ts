@@ -21,13 +21,13 @@ export class ApportionedEmissionsService {
   ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
     let query;
     try {
-      this.logger.log(
+      this.logger.debug(
         'Getting all applicable apportioned emissions attributes',
       );
       query = await this.unitFactRepository.getApplicableApportionedEmissionsAttributes(
         applicableApportionedEmissionsParamsDTO.year,
       );
-      this.logger.log('Got all applicable apportioned emissions attributes');
+      this.logger.debug('Got all applicable apportioned emissions attributes');
     } catch (e) {
       throw new EaseyException(
         new Error(e.message),

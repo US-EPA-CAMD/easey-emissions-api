@@ -21,14 +21,14 @@ export class MatsApportionedEmissionsService {
   ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
     let query;
     try {
-      this.logger.log(
+      this.logger.debug(
         'Getting all applicable apportioned emissions attributes',
       );
       query = await this.unitFactRepository.getApplicableApportionedEmissionsAttributes(
         applicableApportionedEmissionsParamsDTO.year,
         true,
       );
-      this.logger.log('Got all applicable apportioned emissions attributes');
+      this.logger.debug('Got all applicable apportioned emissions attributes');
     } catch (e) {
       throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }

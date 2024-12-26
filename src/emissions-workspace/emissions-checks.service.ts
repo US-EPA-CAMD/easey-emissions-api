@@ -40,7 +40,7 @@ export class EmissionsChecksService {
   }
 
   async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
-    this.logger.log('Running Emissions Import Checks');
+    this.logger.debug('Running Emissions Import Checks');
 
     const errorList: string[] = [];
 
@@ -99,7 +99,7 @@ export class EmissionsChecksService {
     );
 
     this.throwIfErrors(errorList);
-    this.logger.log('Completed Emissions Import Checks');
+    this.logger.debug('Completed Emissions Import Checks');
 
     return errorList;
   }
