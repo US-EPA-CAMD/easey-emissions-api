@@ -9,7 +9,7 @@ export class SummaryValueDataCheckService {
   }
 
   runChecks(payload: EmissionsImportDTO): string[] {
-    this.logger.debug('Running Summary Value Data Checks');
+    this.logger.log('Running Summary Value Data Checks');
 
     const errorList: string[] = [];
     const seen = new Set<string>();
@@ -25,7 +25,7 @@ export class SummaryValueDataCheckService {
       }
     });
 
-    this.logger.debug('Completed Summary Value Data Checks');
+    this.logger.log('Completed Summary Value Data Checks');
 
     if (duplicates.size > 0) {
         const firstDuplicate = Array.from(duplicates)[0];

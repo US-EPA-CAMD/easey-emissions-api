@@ -29,7 +29,7 @@ export class CodeChecksService {
   }
 
   async runChecks(payload: EmissionsImportDTO): Promise<string[]> {
-    this.logger.debug('Running Code Checks');
+    this.logger.log('Running Code Checks');
 
     // NOTE: codesMap is not a class variable because providers are set to singleton scope so declaring codesMap as a class variable  will cause it to hold values for every request
     const codesMap = new Map<string, Set<string>>();
