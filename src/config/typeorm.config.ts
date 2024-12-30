@@ -4,19 +4,18 @@ import { readFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Logger } from '@us-epa-camd/easey-common/logger';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   private tlsOptions: TlsOptions = { requestCert: true };
 
-  constructor(private readonly configService: ConfigService, private readonly logger: Logger) {
+  constructor(private readonly configService: ConfigService) {
     const host = configService.get<string>('database.host');
     this.tlsOptions.rejectUnauthorized = (host !== 'localhost');
     this.tlsOptions.ca = (host !== 'localhost')
       ? readFileSync("./us-gov-west-1-bundle.pem").toString()
       : null;
-    this.logger.debug('TLS/SSL Config:', {
+    console.log('TLS/SSL Config:', {
       ...this.tlsOptions,
       ca: (this.tlsOptions.ca !== null)
         ? `${this.tlsOptions.ca.slice(0, 30)}...(truncated for display only)`
