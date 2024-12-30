@@ -16,7 +16,7 @@ import {
   ApiSecurity,
   ApiQuery,
   ApiOperation,
-  refs, ApiExcludeController,
+  refs,
 } from '@nestjs/swagger';
 
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -30,11 +30,12 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
