@@ -20,7 +20,6 @@ export class DailyBackstopMap extends BaseMap<
             unitId,
             monitoringLocationId: entity.monitoringLocationId,
             userId: entity.userId,
-            addDate: entity.addDate?.toISOString() ?? null,
             updateDate: entity.updateDate?.toISOString() ?? null,
             reportingPeriodId: entity.reportingPeriodId,
             date: entity.date,
