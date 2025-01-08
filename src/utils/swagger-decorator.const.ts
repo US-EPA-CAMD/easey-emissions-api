@@ -1,20 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 
 import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-
-export const BadRequestResponse = () =>
-  ApiBadRequestResponse({
-    description: 'Invalid Request',
-  });
-
-export const NotFoundResponse = () =>
-  ApiNotFoundResponse({
-    description: 'Resource Not Found',
-  });
 
 export function ApiQueryMultiSelect() {
   return applyDecorators(

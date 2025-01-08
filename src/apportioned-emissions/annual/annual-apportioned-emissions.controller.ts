@@ -11,8 +11,6 @@ import {
 } from '@nestjs/swagger';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
   ApiQueryAnnually,
@@ -28,6 +26,7 @@ import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-a
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
 import { AnnualApportionedEmissionsAggregationDTO } from '../../dto/annual-apportioned-emissions-aggregation.dto';
 import { AnnualApportionedEmissionsStateAggregationDTO } from '../../dto/annual-apportioned-emissions-state-aggregation.dto';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 
 @Controller()
 @ApiSecurity('APIKey')

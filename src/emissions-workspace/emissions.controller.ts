@@ -30,10 +30,12 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
+@ApiExcludeControllerByEnv()
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,

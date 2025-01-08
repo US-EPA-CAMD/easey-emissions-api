@@ -17,10 +17,12 @@ import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
+@ApiExcludeControllerByEnv()
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
 

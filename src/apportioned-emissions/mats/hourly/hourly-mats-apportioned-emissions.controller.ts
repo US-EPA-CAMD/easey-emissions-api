@@ -13,8 +13,6 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
 } from '../../../utils/swagger-decorator.const';
 
@@ -23,6 +21,7 @@ import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-appo
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 
 @Controller()
 @ApiSecurity('APIKey')
