@@ -19,7 +19,6 @@ describe('Daily Backstop Map Test', () => {
         unitId: mock.monitorLocation?.unit?.name ?? null,
         monitoringLocationId: mock.monitoringLocationId,
         userId: mock.userId,
-        addDate: mock.addDate?.toISOString() ?? null,
         updateDate: mock.updateDate?.toISOString() ?? null,
         reportingPeriodId: mock.reportingPeriodId,
         date: mock.date,
