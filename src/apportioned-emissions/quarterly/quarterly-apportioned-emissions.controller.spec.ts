@@ -51,10 +51,13 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
-      const expectedResult = genQuarterUnitData<QuarterUnitDataView>();
+      const quarterlyList = genQuarterUnitData<QuarterUnitDataView>();
+      const expectedResult = {
+        items: quarterlyList
+      }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(quarterlyList);
+      expect(await controller.getEmissions(req, paramsDto)).toEqual(
         expectedResult,
       );
     });
@@ -62,40 +65,49 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
 
   describe('* getEmissionsFacilityAggregation', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
-      const expectedResult = genQuarterlyApportionedEmissionsFacilityDto();
+      const byFacilityList = genQuarterlyApportionedEmissionsFacilityDto();
+      const expectedResult ={
+        items: byFacilityList
+      }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(byFacilityList);
       expect(
         await controller.getEmissionsFacilityAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 
   describe('* getEmissionsStateAggregation', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
-      const expectedResult = genQuarterlyApportionedEmissionsStateDto();
+      const byStateList = genQuarterlyApportionedEmissionsStateDto();
+      const expectedResult = {
+        items: byStateList
+      }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(byStateList);
       expect(
         await controller.getEmissionsStateAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 
   describe('* getEmissionsNationalAggregation', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
-      const expectedResult = genQuarterlyApportionedEmissionsNationalDto();
+      const nationlityList = genQuarterlyApportionedEmissionsNationalDto();
+      const expectedResult ={
+        items: nationlityList
+      }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(nationlityList);
       expect(
         await controller.getEmissionsNationalAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 });

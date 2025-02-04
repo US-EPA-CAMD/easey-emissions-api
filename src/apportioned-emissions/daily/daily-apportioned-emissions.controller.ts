@@ -1,6 +1,7 @@
 import { Request } from 'express';
 
 import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 import {
   ApiTags,
@@ -64,8 +65,11 @@ export class DailyApportionedEmissionsController {
   async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DayUnitDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<DayUnitDataView>> {
+    const dailyList = await this.service.getEmissions(req, params);
+    return{
+      items: dailyList
+    }
   }
 
   @Get('by-facility')
@@ -93,11 +97,14 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsFacilityAggregation(
+  async getEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsFacilityAggregationDTO[]> {
-    return this.service.getEmissionsFacilityAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsFacilityAggregationDTO>> {
+    const byFacilityList = await this.service.getEmissionsFacilityAggregation(req, params);
+    return{
+      items: byFacilityList
+    }
   }
 
   @Get('by-state')
@@ -125,11 +132,14 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsStateAggregation(
+  async getEmissionsStateAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsStateAggregationDTO[]> {
-    return this.service.getEmissionsStateAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsStateAggregationDTO>> {
+    const byStateList = await this.service.getEmissionsStateAggregation(req, params);
+    return{
+      items: byStateList
+    }
   }
 
   @Get('nationally')
@@ -157,10 +167,13 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsNationalAggregation(
+  async getEmissionsNationalAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsNationalAggregationDTO[]> {
-    return this.service.getEmissionsNationalAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsNationalAggregationDTO>> {
+    const nationlityList = await this.service.getEmissionsNationalAggregation(req, params);
+    return{
+      items: nationlityList
+    }
   }
 }
