@@ -45,7 +45,13 @@ export class OzoneApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(OzoneApportionedEmissionsDTO),
+          type: 'object',
+             properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(OzoneApportionedEmissionsDTO)},
+             }
+          },
         },
       },
       'text/csv': {
@@ -81,7 +87,13 @@ export class OzoneApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(OzoneApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+           items: {
+             type: 'array',
+             items: {  $ref: getSchemaPath(OzoneApportionedEmissionsFacilityAggregationDTO)},
+            }
+          },
         },
       },
       'text/csv': {
@@ -117,7 +129,13 @@ export class OzoneApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(OzoneApportionedEmissionsStateAggregationDTO),
+        type: 'object',
+          properties: {
+           items: {
+             type: 'array',
+             items: {  $ref: getSchemaPath(OzoneApportionedEmissionsStateAggregationDTO)},
+            }
+          },
         },
       },
       'text/csv': {
@@ -153,7 +171,13 @@ export class OzoneApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(OzoneApportionedEmissionsNationalAggregationDTO),
+          type: 'object',
+          properties: {
+           items: {
+             type: 'array',
+             items: { $ref: getSchemaPath(OzoneApportionedEmissionsNationalAggregationDTO)},
+            }
+          },
         },
       },
       'text/csv': {

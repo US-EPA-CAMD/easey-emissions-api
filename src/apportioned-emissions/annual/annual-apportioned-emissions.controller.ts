@@ -45,7 +45,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -81,7 +87,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -117,7 +129,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsStateAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -153,7 +171,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {

@@ -40,7 +40,14 @@ export class HourlyMatsApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO),
+          type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO)
+              },
+            }
+          },
         },
       },
       'text/csv': {

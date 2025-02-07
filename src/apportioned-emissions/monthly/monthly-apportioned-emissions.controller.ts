@@ -45,7 +45,14 @@ export class MonthlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(MonthlyApportionedEmissionsDTO),
+            type: 'object',
+                 properties: {
+                 items: {
+                 type: 'array',
+                 items: { $ref: getSchemaPath(MonthlyApportionedEmissionsDTO)
+              },
+            }
+          },
         },
       },
       'text/csv': {
@@ -81,9 +88,16 @@ export class MonthlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            MonthlyApportionedEmissionsFacilityAggregationDTO,
-          ),
+          type: 'object',
+                 properties: {
+                 items: {
+                 type: 'array',
+                 items: { $ref: getSchemaPath(
+                  MonthlyApportionedEmissionsFacilityAggregationDTO
+                )
+              },
+            }
+          },
         },
       },
       'text/csv': {
@@ -119,7 +133,13 @@ export class MonthlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(MonthlyApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+          items: {
+          type: 'array',
+          items: { $ref: getSchemaPath(MonthlyApportionedEmissionsStateAggregationDTO)},
+            }
+          },
         },
       },
       'text/csv': {
@@ -155,9 +175,15 @@ export class MonthlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(
-            MonthlyApportionedEmissionsNationalAggregationDTO,
-          ),
+          type: 'object',
+          properties: {
+          items: {
+          type: 'array',
+          items: { $ref: getSchemaPath(
+            MonthlyApportionedEmissionsNationalAggregationDTO
+              )},
+            }
+          },
         },
       },
       'text/csv': {

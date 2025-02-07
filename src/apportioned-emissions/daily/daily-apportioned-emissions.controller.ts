@@ -44,7 +44,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsDTO),
+         type: 'object',
+            properties: {
+              items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(DailyApportionedEmissionsDTO)},
+            }
+          },
         },
       },
       'text/csv': {
@@ -79,7 +85,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsFacilityAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {
@@ -114,7 +126,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {
@@ -149,7 +167,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {

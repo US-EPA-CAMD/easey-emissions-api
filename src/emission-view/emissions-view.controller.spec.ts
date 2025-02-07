@@ -30,7 +30,7 @@ describe('EmissionsViewController', () => {
       .mockResolvedValue(undefined);
 
     await expect(emissionsViewController.getAvailableViews()).resolves.toEqual(
-      undefined,
+      {"items": undefined},
     );
   });
 
