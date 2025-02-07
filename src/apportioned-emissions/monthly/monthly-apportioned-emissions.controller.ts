@@ -27,6 +27,7 @@ import { MonthlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/mon
 import { MonthlyApportionedEmissionsStateAggregationDTO } from '../../dto/monthly-apportioned-emissions-state-aggregation.dto';
 import { MonthlyApportionedEmissionsNationalAggregationDTO } from '../../dto/monthly-apportioned-emissions-national-aggregation.dto';
 import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -66,8 +67,11 @@ export class MonthlyApportionedEmissionsController {
   async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<MonthUnitDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<MonthUnitDataView>> {
+    const monthlyList = await this.service.getEmissions(req, params);
+    return{
+      items: monthlyList
+    }
   }
 
   @Get('by-facility')
@@ -98,11 +102,14 @@ export class MonthlyApportionedEmissionsController {
   @ApiQueryMonthly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsFacilityAggregation(
+  async getEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<MonthlyApportionedEmissionsFacilityAggregationDTO[]> {
-    return this.service.getEmissionsFacilityAggregation(req, params);
+  ): Promise<ArrayResponse<MonthlyApportionedEmissionsFacilityAggregationDTO>> {
+    const byFacilityList = await this.service.getEmissionsFacilityAggregation(req, params);
+    return {
+      items : byFacilityList
+    }
   }
 
   @Get('by-state')
@@ -131,11 +138,14 @@ export class MonthlyApportionedEmissionsController {
   @ApiQueryMonthly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsStateAggregation(
+  async getEmissionsStateAggregation(
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<MonthlyApportionedEmissionsStateAggregationDTO[]> {
-    return this.service.getEmissionsStateAggregation(req, params);
+  ): Promise<ArrayResponse<MonthlyApportionedEmissionsStateAggregationDTO>> {
+    const byStateList = await this.service.getEmissionsStateAggregation(req, params);
+    return{
+      items: byStateList
+    }
   }
 
   @Get('nationally')
@@ -166,10 +176,13 @@ export class MonthlyApportionedEmissionsController {
   @ApiQueryMonthly()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsNationalAggregation(
+  async getEmissionsNationalAggregation(
     @Req() req: Request,
     @Query() params: PaginatedMonthlyApportionedEmissionsParamsDTO,
-  ): Promise<MonthlyApportionedEmissionsNationalAggregationDTO[]> {
-    return this.service.getEmissionsNationalAggregation(req, params);
+  ): Promise<ArrayResponse<MonthlyApportionedEmissionsNationalAggregationDTO>> {
+    const nationallyList = await this.service.getEmissionsNationalAggregation(req, params);
+    return {
+      items: nationallyList
+    }
   }
 }

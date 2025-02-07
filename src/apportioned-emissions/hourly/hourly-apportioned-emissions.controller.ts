@@ -27,6 +27,7 @@ import { HourlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/hour
 import { HourlyApportionedEmissionsStateAggregationDTO } from '../../dto/hourly-apportioned-emissions-state-aggregation.dto';
 import { HourlyApportionedEmissionsNationalAggregationDTO } from '../../dto/hourly-apportioned-emissions-national-aggregation.dto';
 import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -66,8 +67,11 @@ export class HourlyApportionedEmissionsController {
   async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourUnitDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<HourUnitDataView>> {
+    const hourlyList = await this.service.getEmissions(req, params);
+    return {
+      items: hourlyList
+    }
   }
 
   @Get('by-facility')
@@ -96,11 +100,14 @@ export class HourlyApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsFacilityAggregation(
+  async getEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourlyApportionedEmissionsFacilityAggregationDTO[]> {
-    return this.service.getEmissionsFacilityAggregation(req, params);
+  ): Promise<ArrayResponse<HourlyApportionedEmissionsFacilityAggregationDTO>> {
+    const byFacilityList = await this.service.getEmissionsFacilityAggregation(req, params);
+    return{
+      items: byFacilityList
+    }
   }
 
   @Get('by-state')
@@ -129,11 +136,14 @@ export class HourlyApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsStateAggregation(
+  async getEmissionsStateAggregation(
     @Req() req: Request,
     @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourlyApportionedEmissionsStateAggregationDTO[]> {
-    return this.service.getEmissionsStateAggregation(req, params);
+  ): Promise<ArrayResponse<HourlyApportionedEmissionsStateAggregationDTO>> {
+    const byStateList = await this.service.getEmissionsStateAggregation(req, params);
+    return{
+      items: byStateList
+    }
   }
 
   @Get('nationally')
@@ -162,10 +172,13 @@ export class HourlyApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiLocationNameQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsNationalAggregation(
+  async getEmissionsNationalAggregation(
     @Req() req: Request,
     @Query() params: PaginatedHourlyApportionedEmissionsParamsDTO,
-  ): Promise<HourlyApportionedEmissionsNationalAggregationDTO[]> {
-    return this.service.getEmissionsNationalAggregation(req, params);
+  ): Promise<ArrayResponse<HourlyApportionedEmissionsNationalAggregationDTO>> {
+    const nationallyList = await this.service.getEmissionsNationalAggregation(req, params);
+    return{
+      items: nationallyList
+    }
   }
 }

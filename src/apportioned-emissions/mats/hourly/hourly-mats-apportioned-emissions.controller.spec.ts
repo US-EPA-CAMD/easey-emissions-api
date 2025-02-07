@@ -46,10 +46,13 @@ describe('-- Hourly MATS Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('calls HourlyMatsApportionedEmissionsService.getEmissions() and gets all emissions data', async () => {
-      const expectedResult = genHourUnitMatsDataView<HourUnitMatsDataView>();
+      const hourlyList = genHourUnitMatsDataView<HourUnitMatsDataView>();
+      const expectedResult = {
+        items: hourlyList
+      }
       const paramsDto = new PaginatedHourlyMatsApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(hourlyList);
+      expect(await controller.getEmissions(req, paramsDto)).toEqual(
         expectedResult,
       );
     });

@@ -51,55 +51,67 @@ describe('-- Hourly Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('calls HourlyApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
-      const mockedValues = genHourUnitData<HourUnitDataView>();
+      const hourlyList = genHourUnitData<HourUnitDataView>();
+      const mockedValues = {
+        items: hourlyList
+      }
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(mockedValues);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(mockedValues);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(hourlyList);
+      expect(await controller.getEmissions(req, paramsDto)).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsFacilityAggregation', () => {
     it('calls HourlyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
-      const mockedValues = genHourlyApportionedEmissionsFacilityDto();
+      const byFacilityList = genHourlyApportionedEmissionsFacilityDto();
+      const mockedValues = {
+        items: byFacilityList
+      }
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(byFacilityList);
       const results = await controller.getEmissionsFacilityAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsStateAggregation', () => {
     it('calls HourlyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
-      const mockedValues = genHourlyApportionedEmissionsStateDto();
+      const byStateList = genHourlyApportionedEmissionsStateDto();
+      const mockedValues = {
+        items : byStateList
+      }
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(byStateList);
       const results = await controller.getEmissionsStateAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsNationalAggregation', () => {
     it('calls HourlyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
-      const mockedValues = genHourlyApportionedEmissionsNationalDto();
+      const nationallyList = genHourlyApportionedEmissionsNationalDto();
+      const mockedValues = {
+        items: nationallyList
+      }
       const paramsDto = new PaginatedHourlyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(nationallyList);
       const results = await controller.getEmissionsNationalAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 });

@@ -19,6 +19,7 @@ import {
   refs,
 } from '@nestjs/swagger';
 
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 
@@ -168,11 +169,15 @@ export class EmissionsWorkspaceController {
   })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
-  ): Promise<EmissionsReviewSubmitDTO[]> {
-    return this.submissionService.getEmissionsRecords(
+  ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
+    const emissionList = await this.submissionService.getEmissionsRecords(
       dto.orisCodes,
       dto.monPlanIds,
       dto.quarters,
     );
+
+    return {
+      items: emissionList
+    }
   }
 }
