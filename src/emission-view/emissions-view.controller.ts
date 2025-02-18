@@ -16,6 +16,7 @@ import { EmissionsViewService } from './emissions-view.service';
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiTags('Emissions Views')
@@ -29,8 +30,11 @@ export class EmissionsViewController {
     description:
       'Retrieves a list of official Emissions data views that are available',
   })
-  getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    return this.service.getAvailableViews();
+  async getAvailableViews(): Promise<ArrayResponse<EmissionsViewDTO>> {
+    const viewsList = await this.service.getAvailableViews();
+    return{
+      items: viewsList
+    }
   }
 
   @Get(':viewCode')

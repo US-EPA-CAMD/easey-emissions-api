@@ -253,6 +253,9 @@ describe('-- Emissions Controller --', () => {
   describe('getEmissions', () => {
     it('should call the review and submit test summary controller function and return a list of dtos', async () => {
       const dto = new EmissionsReviewSubmitDTO();
+      const expected = {
+        items: [dto]
+      }
       submissionService.getEmissionsRecords = jest
         .fn()
         .mockResolvedValue([dto]);
@@ -261,7 +264,7 @@ describe('-- Emissions Controller --', () => {
         new ReviewAndSubmitMultipleParamsDTO(),
       );
 
-      expect(result).toEqual([dto]);
+      expect(result).toEqual(expected);
     });
   });
 });

@@ -18,6 +18,7 @@ import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-vi
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiTags('Emissions Views')
@@ -35,8 +36,11 @@ export class EmissionsViewWorkspaceController {
   @AuditLog({
     label: 'Retrieved list of available workspace Emissions views'
   })
-  getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    return this.service.getAvailableViews();
+  async getAvailableViews(): Promise<ArrayResponse<EmissionsViewDTO>> {
+    const veiwsList = await this.service.getAvailableViews();
+    return{
+      items: veiwsList
+    }
   }
 
   @Get(':viewCode')

@@ -12,6 +12,7 @@ import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-a
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApportionedEmissionsService } from './apportioned-emissions.service';
 import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -33,12 +34,15 @@ export class ApportionedEmissionsController {
     explode: false,
   })
   @ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)
-  getApplicableApportionedEmissionsAttributes(
+  async getApplicableApportionedEmissionsAttributes(
     @Query()
     applicableApportionedEmissionsAttributesParamsDTO: ApplicableApportionedEmissionsAttributesParamsDTO,
-  ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
-    return this.service.getApplicableApportionedEmissionsAttributes(
+  ): Promise<ArrayResponse<ApplicableApportionedEmissionsAttributesDTO>> {
+     const applicableEmissionAttributes = await this.service.getApplicableApportionedEmissionsAttributes(
       applicableApportionedEmissionsAttributesParamsDTO,
     );
+    return {
+      items: applicableEmissionAttributes
+    }
   }
 }

@@ -51,10 +51,13 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('calls OzoneApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
-      const expectedResult = genAnnualUnitData<OzoneUnitDataView>();
+      const ozoneList = genAnnualUnitData<OzoneUnitDataView>();
+      const expectedResult = {
+        items: ozoneList
+      }
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(expectedResult);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(ozoneList);
+      expect(await controller.getEmissions(req, paramsDto)).toEqual(
         expectedResult,
       );
     });
@@ -62,40 +65,49 @@ describe('-- Ozone Apportioned Emissions Controller --', () => {
 
   describe('* getEmissionsFacilityAggregation', () => {
     it('calls OzoneApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
-      const expectedResult = genAnnualApportionedEmissionsFacilityDto();
+      const byFacilityList = genAnnualApportionedEmissionsFacilityDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
+      const expectedResult = {
+        items: byFacilityList
+      }
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(byFacilityList);
       expect(
         await controller.getEmissionsFacilityAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 
   describe('* getEmissionsStateAggregation', () => {
     it('calls OzoneApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
-      const expectedResult = genAnnualApportionedEmissionsStateDto();
+      const byStateList = genAnnualApportionedEmissionsStateDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
+      const expectedResult = {
+        items: byStateList
+      }
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(byStateList);
       expect(
         await controller.getEmissionsStateAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 
   describe('* getEmissionsNationalAggregation', () => {
     it('calls OzoneApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
-      const expectedResult = genAnnualApportionedEmissionsNationalDto();
+      const nationlityList = genAnnualApportionedEmissionsNationalDto();
       const paramsDto = new PaginatedOzoneApportionedEmissionsParamsDTO();
+      const expectedResult = {
+        items: nationlityList
+      }
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(nationlityList);
       expect(
         await controller.getEmissionsNationalAggregation(req, paramsDto),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 });

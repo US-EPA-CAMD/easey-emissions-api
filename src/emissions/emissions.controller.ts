@@ -25,6 +25,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from '../emissions-workspace/ReviewSubmit.service';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiTags('Emissions')
@@ -117,12 +118,15 @@ export class EmissionsController {
   })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
-  ): Promise<EmissionsReviewSubmitDTO[]> {
-    return this.submissionService.getEmissionsRecords(
+  ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
+    const submissionList = await this.submissionService.getEmissionsRecords(
       dto.orisCodes,
       dto.monPlanIds,
       dto.quarters,
       false,
     );
+    return {
+      items: submissionList
+    }
   }
 }

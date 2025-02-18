@@ -1,6 +1,7 @@
 import { Request } from 'express';
 
 import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 import {
   ApiTags,
@@ -44,7 +45,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -66,8 +73,11 @@ export class AnnualApportionedEmissionsController {
   async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualUnitDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<AnnualUnitDataView>> {
+    const annualList = await this.service.getEmissions(req, params);
+    return{
+      items: annualList
+    }
   }
 
   @Get('by-facility')
@@ -77,7 +87,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsFacilityAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -96,11 +112,14 @@ export class AnnualApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiQueryAnnually()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsFacilityAggregation(
+  async getEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsFacilityAggregationDTO[]> {
-    return this.service.getEmissionsFacilityAggregation(req, params);
+  ): Promise<ArrayResponse<AnnualApportionedEmissionsFacilityAggregationDTO>> {
+    const byFacilityList = await this.service.getEmissionsFacilityAggregation(req, params);
+    return{
+      items: byFacilityList
+    }
   }
 
   @Get('by-state')
@@ -110,7 +129,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsStateAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -129,11 +154,14 @@ export class AnnualApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiQueryAnnually()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsStateAggregation(
+  async getEmissionsStateAggregation(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
-    return this.service.getEmissionsStateAggregation(req, params);
+  ): Promise<ArrayResponse<AnnualApportionedEmissionsStateAggregationDTO>> {
+    const byStateList = await this.service.getEmissionsStateAggregation(req, params);
+    return{
+      items: byStateList
+    }
   }
 
   @Get('nationally')
@@ -143,7 +171,13 @@ export class AnnualApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(AnnualApportionedEmissionsAggregationDTO)},
+            }
+           },
         },
       },
       'text/csv': {
@@ -162,10 +196,13 @@ export class AnnualApportionedEmissionsController {
   @ApiProgramQuery()
   @ApiQueryAnnually()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsNationalAggregation(
+  async getEmissionsNationalAggregation(
     @Req() req: Request,
     @Query() params: PaginatedAnnualApportionedEmissionsParamsDTO,
-  ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
-    return this.service.getEmissionsNationalAggregation(req, params);
+  ): Promise<ArrayResponse<AnnualApportionedEmissionsAggregationDTO>> {
+    const nationlityList = await this.service.getEmissionsNationalAggregation(req, params);
+    return{
+      items: nationlityList
+    }
   }
 }
