@@ -37,7 +37,7 @@
     "@nestjs/platform-express": "^10.4.7",
     "@nestjs/swagger": "^8.0.2",
     "@nestjs/typeorm": "^10.0.2",
-    "@us-epa-camd/easey-common": "19.0.7",
+    "@us-epa-camd/easey-common": "19.0.8",
     "axios": "^1.7.7",
     "class-transformer": "0.4.0",
     "class-validator": "0.14.0",
