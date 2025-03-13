@@ -2,3 +2,12 @@ instances: 2
 environment: staging
 host: api-easey-stg.app.cloud.gov
 apiHost: api.epa.gov/easey/staging
+maxConnectionPool: 5
+idleTimeout: 5000
+connectionTimeout: 5000
+acquireConnectionFromPoolTimeout: 3000
+statementTimeout: 200000
+idleInTransactionSessionTimeout: 60000
+maxUsesBeforeRecreatingConnection: 500
+sqlLogging: ['error']
+maxQueryExecutionTime: 5000
