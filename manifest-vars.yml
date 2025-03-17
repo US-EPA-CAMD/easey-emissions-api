@@ -18,5 +18,5 @@ acquireConnectionFromPoolTimeout: 15000
 statementTimeout: 300000
 idleInTransactionSessionTimeout: 300000
 maxUsesBeforeRecreatingConnection: 500
-sqlLogging: ['error']
+sqlLogging: "error"
 maxQueryExecutionTime: 30000
