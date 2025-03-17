@@ -26,6 +26,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   }
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    // Values are: true | false | 'all' | 'query', 'error', 'schema', 'warn', 'info', 'log'
+    const rawLogging = this.configService.get<string>('app.sqlLogging');
+    const sqlLogging: LoggerOptions = rawLogging === 'false'
+      ? false
+      : rawLogging.split(',').map(level => level.trim()) as LoggerOptions;
+
     return {
       type: 'postgres',
       applicationName: this.configService.get<string>('app.name'),
@@ -48,8 +54,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         idle_in_transaction_session_timeout: this.configService.get<number>('app.idleInTransactionSessionTimeout'), // Terminates idle transactions after the specified time (in ms).
         maxUses: this.configService.get<number>('app.maxUsesBeforeRecreatingConnection'), //Recreate connections after 'n' uses
       },
-      // Enable SQL Logging. Values are: true | false | 'all' | ['query', 'error', 'schema', 'warn', 'info', 'log']
-      logging: this.configService.get<LoggerOptions>('app.sqlLogging', ),
+      logging: sqlLogging,
       // Logs queries exceeding this limit (does not terminate, 'statement_timeout' terminates them).
       maxQueryExecutionTime: this.configService.get<number>('app.maxQueryExecutionTime'),
 
