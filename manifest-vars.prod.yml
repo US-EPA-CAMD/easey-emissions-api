@@ -2,3 +2,12 @@ instances: 2
 environment: production
 host: api-easey.app.cloud.gov
 apiHost: api.epa.gov/easey
+maxConnectionPool: 15
+idleTimeout: 30000
+connectionTimeout: 10000
+acquireConnectionFromPoolTimeout: 15000
+statementTimeout: 300000
+idleInTransactionSessionTimeout: 300000
+maxUsesBeforeRecreatingConnection: 500
+sqlLogging: "error"
+maxQueryExecutionTime: 30000
