@@ -2,9 +2,9 @@ instances: 2
 environment: beta
 host: api-easey-beta.app.cloud.gov
 apiHost: api.epa.gov/easey/beta
-maxConnectionPool: 15
+maxConnectionPool: 60
 idleTimeout: 30000
-connectionTimeout: 10000
+connectionTimeout: 60000
 acquireConnectionFromPoolTimeout: 15000
 statementTimeout: 300000
 idleInTransactionSessionTimeout: 300000
