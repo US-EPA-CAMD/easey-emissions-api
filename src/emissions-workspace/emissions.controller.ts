@@ -44,6 +44,43 @@ export class EmissionsWorkspaceController {
     private readonly checksService: EmissionsChecksService,
   ) { }
 
+  @Post('import-historical')
+  @ApiBearerAuth('Token')
+  @ApiOperation({
+    summary: 'Imports historical emissions data directly into the workspace.',
+  })
+  @ApiOkResponse({
+    type: EmissionsDTO,
+    description: 'Successfully imported historical emissions data.',
+  })
+  @RoleGuard(
+    {
+      importLocationSources: [
+        'dailyEmissionData',
+        'weeklyTestSummaryData',
+        'summaryValueData',
+        'dailyTestSummaryData',
+        'hourlyOperatingData',
+        'longTermFuelFlowData',
+        'sorbentTrapData',
+        'nsps4tSummaryData',
+      ],
+      permissionsForFacility: ['DSEM'],
+      requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
+    },
+    LookupType.Location,
+  )
+  @AuditLog({
+    label: 'Imported historical emissions data',
+    requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
+  })
+  async importFromHistorical(
+    @Query() params: EmissionsParamsDTO,
+    @User() user: CurrentUser,
+  ) { 
+    return this.service.importFromHistoricalData(params, user);
+  }
+
   @Get('export')
   @ApiOperation({
     summary:
@@ -98,6 +135,7 @@ export class EmissionsWorkspaceController {
     return data;
   }
 
+  // import function
   @Post('import')
   @ApiBearerAuth('Token')
   @ApiOkResponse({
@@ -129,6 +167,14 @@ export class EmissionsWorkspaceController {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
   }
+
+
+
+
+
+
+
+
 
   @Get()
   @ApiOkResponse({
