@@ -61,8 +61,11 @@ export const objectValuesByKey = <ValueType>(
   return values;
 };
 
-export const splitArrayInChunks = (inputArray, perChunk = 1000) => {
-  const result = inputArray.reduce((resultArray, item, index) => {
+export const splitArrayInChunks = <T extends unknown>(
+  inputArray: T[],
+  perChunk = 1000,
+): T[][] => {
+  const result = inputArray.reduce<T[][]>((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / perChunk);
 
     if (!resultArray[chunkIndex]) {

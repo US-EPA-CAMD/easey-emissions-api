@@ -9,7 +9,6 @@ import {
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MonitorHourlyValueWorkspaceService {
@@ -19,8 +18,8 @@ export class MonitorHourlyValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(hourIds: string[]): Promise<MonitorHourlyValueDTO[]> {
-    const results = await this.repository.export(hourIds);
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<MonitorHourlyValueDTO[]> {
+    const results = await this.repository.export(rptPeriodId, monLocIds);
     return this.map.many(results);
   }
 

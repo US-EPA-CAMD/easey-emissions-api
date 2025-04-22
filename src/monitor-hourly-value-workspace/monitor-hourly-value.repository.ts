@@ -11,13 +11,12 @@ export class MonitorHourlyValueWorkspaceRepository extends Repository<
     super(MonitorHrlyValue, entityManager);
   }
 
-  async export(hourIds: string[]) {
+  async export(rptPeriodId: number, monLocIds: string[]) {
     const query = this.createQueryBuilder('mhv')
       .leftJoinAndSelect('mhv.monitorSystem', 'ms')
       .leftJoinAndSelect('mhv.component', 'c')
-      .where(`mhv.hourId IN (:...hourIds)`, {
-        hourIds: hourIds,
-      });
+      .where('mhv.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('mhv.monitoringLocationId IN (:...monLocIds)', { monLocIds })
     return query.getMany();
   }
 }
