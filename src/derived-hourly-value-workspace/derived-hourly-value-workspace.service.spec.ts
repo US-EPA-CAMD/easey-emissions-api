@@ -61,11 +61,7 @@ describe('DerivedHourlyValueWorkspaceService', () => {
     jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
 
     await expect(
-      service.export(
-        mockedValues.map(value => {
-          return value.hourId;
-        }),
-      ),
+      service.export(123, ['123']),
     ).resolves.toEqual(mappedValues);
   });
   /*
