@@ -61,7 +61,7 @@ export const objectValuesByKey = <ValueType>(
   return values;
 };
 
-export const splitArrayInChunks = <T extends unknown>(
+export const splitArrayInChunks = <T>(
   inputArray: T[],
   perChunk = 1000,
 ): T[][] => {
