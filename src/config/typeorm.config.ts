@@ -49,7 +49,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         max: this.configService.get<number>('app.maxConnectionPool'),                                 // Max connections in pool
         idleTimeoutMillis: this.configService.get<number>('app.idleTimeout'),                         // Close idle connections
         connectionTimeoutMillis: this.configService.get<number>('app.connectionTimeout'),             // Maximum time (ms) to wait for a new connection before timing out.
-        acquireTimeoutMillis: this.configService.get<number>('app.acquireConnectionFromPoolTimeout'), // Fail if a connection is not acquired from the pool within timeframe
         statement_timeout: this.configService.get<number>('app.statementTimeout'),                    // Terminates queries that exceed the timeout (in ms).
         idle_in_transaction_session_timeout: this.configService.get<number>('app.idleInTransactionSessionTimeout'), // Terminates idle transactions after the specified time (in ms).
         maxUses: this.configService.get<number>('app.maxUsesBeforeRecreatingConnection'), //Recreate connections after 'n' uses

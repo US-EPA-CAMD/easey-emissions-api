@@ -104,7 +104,6 @@ export default registerAs('app', () => ({
   maxConnectionPool: getConfigValueNumber('EASEY_DB_MAX_CONNECTION_POOL',15),
   idleTimeout: getConfigValueNumber( 'EASEY_DB_IDLE_TIMEOUT', 30000, ),
   connectionTimeout: getConfigValueNumber('EASEY_DB_CONNECTION_TIMEOUT',10000),
-  acquireConnectionFromPoolTimeout: getConfigValueNumber('EASEY_DB_IDLE_CONNECTION_TIMEOUT',15000),
   statementTimeout: getConfigValueNumber('EASEY_DB_STATEMENT_TIMEOUT',300000),
   idleInTransactionSessionTimeout: getConfigValueNumber('EASEY_DB_IDLE_TRANS_SESSION_TIMEOUT',300000),
   sqlLogging: getConfigValue('EASEY_DB_SQL_LOGGING', "error"),

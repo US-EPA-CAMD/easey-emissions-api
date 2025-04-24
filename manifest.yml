@@ -30,7 +30,6 @@ applications:
       EASEY_DB_MAX_CONNECTION_POOL: ((maxConnectionPool))
       EASEY_DB_IDLE_TIMEOUT: ((idleTimeout))
       EASEY_DB_CONNECTION_TIMEOUT: ((connectionTimeout))
-      EASEY_DB_IDLE_CONNECTION_TIMEOUT: ((acquireConnectionFromPoolTimeout))
       EASEY_DB_STATEMENT_TIMEOUT: ((statementTimeout))
       EASEY_DB_IDLE_TRANS_SESSION_TIMEOUT: ((idleInTransactionSessionTimeout))
       EASEY_DB_MAX_USES_BEFORE_CONN_RECREATE: ((maxUsesBeforeRecreatingConnection))
