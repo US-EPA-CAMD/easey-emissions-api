@@ -135,7 +135,6 @@ export class EmissionsWorkspaceController {
     return data;
   }
 
-  // import function
   @Post('import')
   @ApiBearerAuth('Token')
   @ApiOkResponse({
@@ -167,14 +166,6 @@ export class EmissionsWorkspaceController {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
   }
-
-
-
-
-
-
-
-
 
   @Get()
   @ApiOkResponse({
