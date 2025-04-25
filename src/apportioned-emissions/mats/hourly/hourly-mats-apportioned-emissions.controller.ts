@@ -13,8 +13,6 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
 } from '../../../utils/swagger-decorator.const';
 
@@ -23,6 +21,8 @@ import { HourlyMatsApportionedEmissionsDTO } from '../../../dto/hourly-mats-appo
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -40,7 +40,14 @@ export class HourlyMatsApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO),
+          type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(HourlyMatsApportionedEmissionsDTO)
+              },
+            }
+          },
         },
       },
       'text/csv': {
@@ -57,11 +64,14 @@ export class HourlyMatsApportionedEmissionsController {
   @NotFoundResponse()
   @ApiQueryMultiSelect()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissions(
+  async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
-  ): Promise<HourUnitMatsDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<HourUnitMatsDataView>> {
+    const hourlyList = await this.service.getEmissions(req, params);
+    return{
+      items: hourlyList
+    }
   }
 
   // @Get()

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -17,10 +17,13 @@ import { EmissionsViewWorkspaceService } from './emissions-view.service';
 import { SetEmissionViewHeaderInterceptor } from '../inteceptors/set-emission-view-header.interceptor';
 import { IsViewCode } from '../pipes/is-view-code.pipe';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
+@ApiExcludeControllerByEnv()
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
 
@@ -30,8 +33,14 @@ export class EmissionsViewWorkspaceController {
     description:
       'Retrieves a list of workspace Emissions data views that are available',
   })
-  getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    return this.service.getAvailableViews();
+  @AuditLog({
+    label: 'Retrieved list of available workspace Emissions views'
+  })
+  async getAvailableViews(): Promise<ArrayResponse<EmissionsViewDTO>> {
+    const veiwsList = await this.service.getAvailableViews();
+    return{
+      items: veiwsList
+    }
   }
 
   @Get(':viewCode')
@@ -71,6 +80,11 @@ export class EmissionsViewWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Retrieved workspace emissions view',
+    requestParamsOutFields: ['viewCode'],
+    requestQueryOutFields: ['monitorPlanId', 'unitIds', 'stackPipeIds', 'reportingPeriod']
+  })
   getView(
     @Param('viewCode', IsViewCode) viewCode: string,
     @Req() req: Request,

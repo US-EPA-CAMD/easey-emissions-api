@@ -73,6 +73,8 @@ import { EmissionsController } from './emissions.controller';
 import { EmissionsRepository } from './emissions.repository';
 import { EmissionsService } from './emissions.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
+import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 
 jest.mock('../emissions-workspace/ReviewSubmit.service');
 
@@ -164,6 +166,7 @@ describe('-- Emissions Controller --', () => {
 
     controller = module.get(EmissionsController);
     service = module.get(EmissionsService);
+    submissionService = module.get(ReviewSubmitService)
   });
 
   afterEach(() => {
@@ -179,4 +182,19 @@ describe('-- Emissions Controller --', () => {
       expect(await controller.export(params)).toBe(mockedValues[0]);
     });
   });
+
+    describe('* Retrieves emissions review and submit records', () => {
+      it('should return a list of emissions review and submit records', async () => {
+        const submissionList: EmissionsReviewSubmitDTO[]=[];
+        const expectedResult = {
+          items: submissionList
+        }
+        jest
+          .spyOn(submissionService, 'getEmissionsRecords')
+          .mockResolvedValue(submissionList);
+        expect(
+          await controller.getEmissions(new ReviewAndSubmitMultipleParamsDTO()),
+        ).toEqual(expectedResult);
+      });
+    });
 });

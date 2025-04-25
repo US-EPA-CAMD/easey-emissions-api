@@ -10,11 +10,8 @@ import {
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
 import { ApplicableApportionedEmissionsAttributesDTO } from '../../dto/applicable-apportioned-emissions-attributes.dto';
-
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../../utils/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -31,10 +28,13 @@ export class MatsApportionedEmissionsController {
   })
   @BadRequestResponse()
   @NotFoundResponse()
-  getApplicableEmissions(
+  async getApplicableEmissions(
     @Query()
     params: ApplicableApportionedEmissionsAttributesParamsDTO,
-  ): Promise<ApplicableApportionedEmissionsAttributesDTO[]> {
-    return this.service.getApplicableApportionedEmissionsAttributes(params);
+  ): Promise<ArrayResponse<ApplicableApportionedEmissionsAttributesDTO>> {
+    const matsList = await this.service.getApplicableApportionedEmissionsAttributes(params);
+    return{
+      items: matsList
+    }
   }
 }

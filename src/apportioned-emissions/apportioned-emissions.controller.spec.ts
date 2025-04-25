@@ -44,13 +44,16 @@ describe('-- Apportioned Emissions Controller --', () => {
 
   describe('* getApplicableApportionedEmissionsAttributes', () => {
     it('should return a list of Applicable Apportioned Emissions Attributes', async () => {
-      const expectedResult = genApplicableApportionedEmissionsAttributesDto();
+      const applicableApportionedEmissionsAttributes = genApplicableApportionedEmissionsAttributesDto();
+      const expectedResult = {
+        items: applicableApportionedEmissionsAttributes
+      }
       jest
         .spyOn(service, 'getApplicableApportionedEmissionsAttributes')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(applicableApportionedEmissionsAttributes);
       expect(
         await controller.getApplicableApportionedEmissionsAttributes(null),
-      ).toBe(expectedResult);
+      ).toEqual(expectedResult);
     });
   });
 });

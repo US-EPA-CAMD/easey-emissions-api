@@ -19,7 +19,8 @@ import {
   refs,
 } from '@nestjs/swagger';
 
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
+import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -30,16 +31,18 @@ import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
+@ApiExcludeControllerByEnv()
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
     private readonly submissionService: ReviewSubmitService,
     private readonly checksService: EmissionsChecksService,
-  ) {}
+  ) { }
 
   @Get('export')
   @ApiOperation({
@@ -78,6 +81,10 @@ export class EmissionsWorkspaceController {
     },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Exported emissions data for the specified Monitor Plan & Reporting Period',
+    requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   async export(
     @Query() params: EmissionsParamsDTO,
@@ -114,6 +121,10 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Location,
   )
+  @AuditLog({
+    label: 'Imported emissions data',
+    requestBodyOutFields: ['orisCode', 'year', 'quarter']
+  })
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
@@ -152,13 +163,21 @@ export class EmissionsWorkspaceController {
     },
     LookupType.Facility,
   )
+  @AuditLog({
+    label: 'Retrieved workspace emissions review and submit records',
+    requestQueryOutFields: ['orisCodes', 'monPlanIds', 'quarters']
+  })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
-  ): Promise<EmissionsReviewSubmitDTO[]> {
-    return this.submissionService.getEmissionsRecords(
+  ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
+    const emissionList = await this.submissionService.getEmissionsRecords(
       dto.orisCodes,
       dto.monPlanIds,
       dto.quarters,
     );
+
+    return {
+      items: emissionList
+    }
   }
 }

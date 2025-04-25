@@ -49,12 +49,15 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
 
   describe('* getApplicableEmissions', () => {
     it('calls MatsApportionedEmissionsService.getApplicableApportionedEmissionsAttributes() and gets all emissions data', async () => {
-      const expectedResult = genApplicableApportionedEmissionsAttributesDto();
+      const matsList = genApplicableApportionedEmissionsAttributesDto();
+      const expectedResult = {
+        items: matsList
+      }
       const paramsDto = new ApplicableApportionedEmissionsAttributesParamsDTO();
       jest
         .spyOn(service, 'getApplicableApportionedEmissionsAttributes')
-        .mockResolvedValue(expectedResult);
-      expect(await controller.getApplicableEmissions(paramsDto)).toBe(
+        .mockResolvedValue(matsList);
+      expect(await controller.getApplicableEmissions(paramsDto)).toEqual(
         expectedResult,
       );
     });

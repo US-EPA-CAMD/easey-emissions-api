@@ -51,55 +51,67 @@ describe('-- Daily Apportioned Emissions Controller --', () => {
 
   describe('* getEmissions', () => {
     it('calls DailyApportionedEmissionsService.getEmissions() and returns all emissions data', async () => {
-      const mockedValues = genDayUnitData<DayUnitDataView>();
+      const dailyList = genDayUnitData<DayUnitDataView>();
+      const mockedValues = {
+        items: dailyList
+      }
       const paramsDto = new PaginatedDailyApportionedEmissionsParamsDTO();
-      jest.spyOn(service, 'getEmissions').mockResolvedValue(mockedValues);
-      expect(await controller.getEmissions(req, paramsDto)).toBe(mockedValues);
+      jest.spyOn(service, 'getEmissions').mockResolvedValue(dailyList);
+      expect(await controller.getEmissions(req, paramsDto)).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsFacilityAggregation', () => {
     it('calls DailyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
-      const mockedValues = genDailyApportionedEmissionsFacilityDto();
+      const byFacilityList = genDailyApportionedEmissionsFacilityDto();
+      const mockedValues = {
+        items: byFacilityList
+      }
       const paramsDto = new PaginatedDailyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsFacilityAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(byFacilityList);
       const results = await controller.getEmissionsFacilityAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsStateAggregation', () => {
     it('calls DailyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
-      const mockedValues = genDailyApportionedEmissionsStateDto();
+      const byStateList = genDailyApportionedEmissionsStateDto();
+      const mockedValues ={
+        items: byStateList
+      }
       const paramsDto = new PaginatedDailyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsStateAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(byStateList);
       const results = await controller.getEmissionsStateAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 
   describe('* getEmissionsNationalAggregation', () => {
     it('calls DailyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
-      const mockedValues = genDailyApportionedEmissionsNationalDto();
+      const nationlityList = genDailyApportionedEmissionsNationalDto();
+      const mockedValues = {
+        items: nationlityList
+      }
       const paramsDto = new PaginatedDailyApportionedEmissionsParamsDTO();
       jest
         .spyOn(service, 'getEmissionsNationalAggregation')
-        .mockResolvedValue(mockedValues);
+        .mockResolvedValue(nationlityList);
       const results = await controller.getEmissionsNationalAggregation(
         req,
         paramsDto,
       );
-      expect(results).toBe(mockedValues);
+      expect(results).toEqual(mockedValues);
     });
   });
 });

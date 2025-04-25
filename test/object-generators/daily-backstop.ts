@@ -24,7 +24,6 @@ export const genDailyBackstop = <RepoType>(
             dailyNoxExceedance: faker.datatype.number(),
             cumulativeOsNoxExceedance: faker.datatype.number(),
             userId: faker.datatype.string(),
-            addDate: faker.datatype.datetime(),
             updateDate: faker.datatype.datetime(),
             monitorLocation: config?.include?.includes('monitorLocation')
                 ? genMonitorLocation()[0]

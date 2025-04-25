@@ -1,6 +1,7 @@
 import { Request } from 'express';
 
 import { Get, Req, Query, Controller, UseInterceptors } from '@nestjs/common';
+import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 import {
   ApiTags,
@@ -11,8 +12,6 @@ import {
 } from '@nestjs/swagger';
 
 import {
-  BadRequestResponse,
-  NotFoundResponse,
   ApiQueryMultiSelect,
   ApiProgramQuery,
 } from '../../utils/swagger-decorator.const';
@@ -27,6 +26,7 @@ import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-app
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
 import { DailyApportionedEmissionsStateAggregationDTO } from '../../dto/daily-apportioned-emissions-state-aggregation.dto';
 import { DailyApportionedEmissionsNationalAggregationDTO } from '../../dto/daily-apportioned-emissions-national-aggregation.dto';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -44,7 +44,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsDTO),
+         type: 'object',
+            properties: {
+              items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(DailyApportionedEmissionsDTO)},
+            }
+          },
         },
       },
       'text/csv': {
@@ -65,8 +71,11 @@ export class DailyApportionedEmissionsController {
   async getEmissions(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DayUnitDataView[]> {
-    return this.service.getEmissions(req, params);
+  ): Promise<ArrayResponse<DayUnitDataView>> {
+    const dailyList = await this.service.getEmissions(req, params);
+    return{
+      items: dailyList
+    }
   }
 
   @Get('by-facility')
@@ -76,7 +85,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsFacilityAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {
@@ -94,11 +109,14 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsFacilityAggregation(
+  async getEmissionsFacilityAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsFacilityAggregationDTO[]> {
-    return this.service.getEmissionsFacilityAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsFacilityAggregationDTO>> {
+    const byFacilityList = await this.service.getEmissionsFacilityAggregation(req, params);
+    return{
+      items: byFacilityList
+    }
   }
 
   @Get('by-state')
@@ -108,7 +126,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsStateAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {
@@ -126,11 +150,14 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsStateAggregation(
+  async getEmissionsStateAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsStateAggregationDTO[]> {
-    return this.service.getEmissionsStateAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsStateAggregationDTO>> {
+    const byStateList = await this.service.getEmissionsStateAggregation(req, params);
+    return{
+      items: byStateList
+    }
   }
 
   @Get('nationally')
@@ -140,7 +167,13 @@ export class DailyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+            type: 'array',
+            items: { $ref: getSchemaPath(DailyApportionedEmissionsNationalAggregationDTO)},
+          }
+        },
         },
       },
       'text/csv': {
@@ -158,10 +191,13 @@ export class DailyApportionedEmissionsController {
   @ApiQueryMultiSelect()
   @ApiProgramQuery()
   @UseInterceptors(Json2CsvInterceptor)
-  getEmissionsNationalAggregation(
+  async getEmissionsNationalAggregation(
     @Req() req: Request,
     @Query() params: PaginatedDailyApportionedEmissionsParamsDTO,
-  ): Promise<DailyApportionedEmissionsNationalAggregationDTO[]> {
-    return this.service.getEmissionsNationalAggregation(req, params);
+  ): Promise<ArrayResponse<DailyApportionedEmissionsNationalAggregationDTO>> {
+    const nationlityList = await this.service.getEmissionsNationalAggregation(req, params);
+    return{
+      items: nationlityList
+    }
   }
 }
