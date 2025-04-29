@@ -14,8 +14,13 @@ import { HourlyMatsApportionedEmissionsModule } from './apportioned-emissions/ma
 import { EmissionsViewWorkspaceModule } from './emissions-view-workspace/emissions-view.module';
 import { EmissionsViewModule } from './emission-view/emissions-view.module';
 import { WhatHasDataModule } from './what-has-data/what-has-data.module';
+import { HealthModule } from '@us-epa-camd/easey-common/health/health.module';
 
 const routes = [
+  {
+    path: '/health',
+    module: HealthModule,
+  },
   {
     path: '/what-has-data',
     module: WhatHasDataModule,

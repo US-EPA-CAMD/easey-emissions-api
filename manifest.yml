@@ -5,6 +5,9 @@ applications:
     instances: ((instances))
     buildpacks:
       - nodejs_buildpack
+    health-check-type: http
+    health-check-http-endpoint: /health
+    health-check-interval: 30
     env:
       OPTIMIZE_MEMORY: true
       EASEY_DB_SERVICE: ((dbSvc))
