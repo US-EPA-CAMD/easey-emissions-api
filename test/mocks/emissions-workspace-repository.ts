@@ -5,4 +5,5 @@ export const mockEmissionsWorkspaceRepository = {
   updateAllViews: () => jest,
   findOne: () => undefined,
   save: jest.fn().mockResolvedValue(undefined),
+  query: jest.fn().mockResolvedValue(['']),
 };

@@ -320,6 +320,9 @@ describe('Emissions Workspace Service', () => {
     jest
       .spyOn(plantRepository, 'getImportPlant')
       .mockResolvedValue(plantMock[0]);
+    jest
+      .spyOn(emissionsRepository, 'query')
+      .mockResolvedValue(['']);
 
     await expect(emissionsService.import(emissionsDtoMock[0])).resolves.toEqual(
       {

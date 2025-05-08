@@ -300,6 +300,11 @@ export class EmissionsWorkspaceService {
         params.quarter,
         params.year,
       );
+
+      //Finally, perform the updates (reset needs eval flag, etc) for those records
+      // that may have been collaterally affected by this change.
+      await this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId);
+
     } catch (e) {
       throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -307,6 +312,18 @@ export class EmissionsWorkspaceService {
     return {
       message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
     };
+  }
+
+  async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number): Promise<void> {
+    //1. Update affected EM Records
+    const emResult = await this.repository.query(
+      'SELECT * FROM camdecmpswks.update_collateral_em_data_for_em_updates($1, $2)',
+      [monitorPlanId, reportingPeriodId],
+    );
+
+    if (emResult[0].result === 'F') {
+      throw new Error(`EM Deletion Failed: ${emResult[0].error_msg}`);
+    }
   }
 
   async importDailyEmissions(
@@ -567,18 +584,5 @@ export class EmissionsWorkspaceService {
     }
 
     return identifiers;
-  }
-
-  async getMonitoringLocationId(
-    monitoringLocations: MonitorLocation[],
-    dataType,
-  ) {
-    const filteredLocations = monitoringLocations.filter(location => {
-      return (
-        location.unit?.name === dataType.unitId ||
-        location.stackPipe?.name === dataType.stackPipeId
-      );
-    });
-    return filteredLocations[0].id;
   }
 }
