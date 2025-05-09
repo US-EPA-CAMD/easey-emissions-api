@@ -317,7 +317,7 @@ export class EmissionsWorkspaceService {
   async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number): Promise<void> {
     //1. Update affected EM Records
     const emResult = await this.repository.query(
-      'SELECT * FROM camdecmpswks.update_collateral_em_data_for_em_updates($1, $2)',
+      'SELECT * FROM camdecmpswks.update_collateral_em_data_for_em_changes($1, $2)',
       [monitorPlanId, reportingPeriodId],
     );
 
