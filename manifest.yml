@@ -38,6 +38,7 @@ applications:
       EASEY_DB_MAX_USES_BEFORE_CONN_RECREATE: ((maxUsesBeforeRecreatingConnection))
       EASEY_DB_SQL_LOGGING: ((sqlLogging))
       EASEY_DB_MAX_QUERY_EXECUTION_TIMEOUT: ((maxQueryExecutionTime))
+      EASEY_EMISSIONS_API_ENABLE_AUDIT_LOG: ((enableAuditLog))
     routes:
       - route: ((host))/((path))
     services:
