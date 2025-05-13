@@ -21,9 +21,6 @@ export class ReviewSubmitService {
     quarters: string[],
     isWorkspace: boolean = true,
   ): Promise<EmissionsReviewSubmitDTO[]> {
-    if (!quarters || quarters.length === 0) {
-      return [];
-    }
 
     let repository;
     if (isWorkspace) {
@@ -32,20 +29,30 @@ export class ReviewSubmitService {
       repository = this.globalRepository;
     }
 
+    const cleanedQuarters = quarters?.filter(q => q && q.trim() !== '') ?? [];
+
+    const periodFilter = 
+    cleanedQuarters.length > 0
+        ? { periodAbbreviation: In(cleanedQuarters) }
+        : {};
+
     try {
       if (monPlanIds && monPlanIds.length > 0) {
         return this.map.many(
           await repository.find({
             where: {
               monPlanId: In(monPlanIds),
-              periodAbbreviation: In(quarters),
+              ...periodFilter,
             },
           }),
         );
       }
       return this.map.many(
         await repository.find({
-          where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
+          where: { 
+            orisCode: In(orisCodes), 
+            ...periodFilter,
+          },
         }),
       );
     } catch (e) {
