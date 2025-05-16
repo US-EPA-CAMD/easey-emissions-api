@@ -21,7 +21,6 @@ import {
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { QuarterUnitDataView } from './../../entities/vw-quarter-unit-data.entity';
-import { QuarterlyApportionedEmissionsDTO } from '../../dto/quarterly-apportioned-emissions.dto';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
@@ -32,10 +31,10 @@ import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Quarterly Emissions')
-@ApiExtraModels(QuarterlyApportionedEmissionsDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(QuarterlyApportionedEmissionsNationalAggregationDTO)
+@ApiExtraModels(QuarterUnitDataView)
 export class QuarterlyApportionedEmissionsController {
   constructor(private readonly service: QuarterlyApportionedEmissionsService) {}
 
@@ -50,7 +49,7 @@ export class QuarterlyApportionedEmissionsController {
               properties: {
                 items: {
                type: 'array',
-              items: {   $ref: getSchemaPath(QuarterlyApportionedEmissionsDTO)},
+              items: {   $ref: getSchemaPath(QuarterUnitDataView)},
             }
           },
         },

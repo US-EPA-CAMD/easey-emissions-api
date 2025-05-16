@@ -16,8 +16,7 @@ import {
   ApiSecurity,
   ApiQuery,
   ApiOperation,
-  refs,
-} from '@nestjs/swagger';
+  refs, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 
 import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -37,6 +36,7 @@ import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 @ApiExcludeControllerByEnv()
+@ApiExtraModels(EmissionsReviewSubmitDTO)
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
@@ -132,9 +132,20 @@ export class EmissionsWorkspaceController {
 
   @Get()
   @ApiOkResponse({
-    isArray: true,
-    type: EmissionsReviewSubmitDTO,
     description: 'Retrieves emissions review and submit records',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(EmissionsReviewSubmitDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   @ApiQuery({
     style: 'pipeDelimited',

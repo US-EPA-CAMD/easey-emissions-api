@@ -20,7 +20,6 @@ import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { DayUnitDataView } from './../../entities/vw-day-unit-data.entity';
-import { DailyApportionedEmissionsDTO } from '../../dto/daily-apportioned-emissions.dto';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
 import { DailyApportionedEmissionsFacilityAggregationDTO } from '../../dto/daily-apportioned-emissions-facility-aggregation.dto';
@@ -31,10 +30,10 @@ import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Daily Emissions')
-@ApiExtraModels(DailyApportionedEmissionsDTO)
 @ApiExtraModels(DailyApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(DailyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(DailyApportionedEmissionsNationalAggregationDTO)
+@ApiExtraModels(DayUnitDataView)
 export class DailyApportionedEmissionsController {
   constructor(private readonly service: DailyApportionedEmissionsService) {}
 
@@ -48,7 +47,7 @@ export class DailyApportionedEmissionsController {
             properties: {
               items: {
               type: 'array',
-              items: { $ref: getSchemaPath(DailyApportionedEmissionsDTO)},
+              items: { $ref: getSchemaPath(DayUnitDataView)},
             }
           },
         },
