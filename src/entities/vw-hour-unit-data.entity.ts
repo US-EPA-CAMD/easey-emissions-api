@@ -26,9 +26,6 @@ export class HourUnitDataView {
   @Column({ name: 'assoc_stacks' })
   associatedStacks: string;
 
-  @Column({ name: 'op_year' })
-  year: number;
-
   @Column({
     name: 'op_date',
     type: 'date',
