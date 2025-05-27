@@ -79,7 +79,7 @@ export class EmissionsService {
 
       const promiseResult = await Promise.all(promises);
       const version = this.easeyContentService.emissionsSchema?.version;
-      const results = {version, ...await this.map.one(emissions)};
+      const results = {version, ...(await this.map.one(emissions))};
       results.dailyTestSummaryData = promiseResult[DAILY_TEST_SUMMARIES] ?? [];
       results.hourlyOperatingData = promiseResult[HOURLY_OPERATING] ?? [];
       results.dailyEmissionData = promiseResult[DAILY_EMISSION] ?? [];
