@@ -45,6 +45,7 @@ import { Nsps4tSummaryModule } from './nsps4t-summary/nsps4t-summary.module';
 import { Nsps4tCompliancePeriodModule } from './nsps4t-compliance-period/nsps4t-compliance-period.module';
 import { Nsps4tAnnualModule } from './nsps4t-annual/nsps4t-annual.module';
 import { WhatHasDataModule } from './what-has-data/what-has-data.module';
+import { HealthModule } from '@us-epa-camd/easey-common/health/health.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { WhatHasDataModule } from './what-has-data/what-has-data.module';
       'camdecmpsmd.vw_emissions_api_check_catalog_results',
     ),
     ConnectionModule,
+    HealthModule,
     LoggerModule,
     CorsOptionsModule,
     EmissionsModule,
