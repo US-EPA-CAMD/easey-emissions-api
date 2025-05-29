@@ -102,8 +102,12 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
+import { EmissionsService } from '../emissions/emissions.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
+import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
+import { CurrentUser }      from '@us-epa-camd/easey-common/interfaces';
+import { NotFoundException } from '@nestjs/common';
 
 describe('Emissions Workspace Service', () => {
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -258,7 +262,20 @@ describe('Emissions Workspace Service', () => {
               version : '1.0.0'
             }),
           })
-        }
+        },
+        {
+          provide: EmissionsService,
+          useValue: {
+            export: jest.fn(),
+          },
+        },
+        {
+          provide: EmissionsChecksService,
+          useValue: { 
+            runChecks: jest.fn(), 
+            invalidFormulasCheck: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -280,6 +297,76 @@ describe('Emissions Workspace Service', () => {
     await expect(
       emissionsService.delete({ monitorPlanId: '123', reportingPeriodId: 2 }),
     ).resolves.toEqual(undefined);
+  });
+
+  it('should successfully import from historical', async () => {
+    const workspace = emissionsService as any;
+    const params = {
+      monitorPlanId: 'MP1',
+      year: 2020,
+      quarter: 2,
+      reportedValuesOnly: false,
+    } as EmissionsParamsDTO;
+    const user: CurrentUser = { userId: 'user1' } as any;
+    const stubbedData = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
+
+    workspace.emissionsService.export.mockResolvedValueOnce(stubbedData);
+    workspace.checksService.runChecks.mockResolvedValueOnce([]);
+    const importSpy = jest.spyOn(workspace, 'import').mockResolvedValueOnce({ message: 'Imported Historical' });
+
+    const result = await emissionsService.importFromHistoricalData(params, user);
+
+    expect(workspace.emissionsService.export).toHaveBeenCalledWith(
+      params,
+      params.reportedValuesOnly,
+    );
+    expect(workspace.checksService.runChecks).toHaveBeenCalledWith(stubbedData);
+    expect(importSpy).toHaveBeenCalledWith(stubbedData, user.userId);
+    expect(result).toEqual({ message: 'Imported Historical' });
+  });
+
+  it('should propagate export errors', async () => {
+    const workspace = emissionsService as any;
+    const params = {
+      monitorPlanId: 'MP1',
+      year: 2020,
+      quarter: 2,
+      reportedValuesOnly: true,
+    } as EmissionsParamsDTO;
+    const user: CurrentUser = { userId: 'user1' } as any;
+
+    workspace.emissionsService.export.mockRejectedValue(
+      new Error('export failed'),
+    );
+
+    await expect(
+      emissionsService.importFromHistoricalData(params, user),
+    ).rejects.toThrow('export failed');
+  });
+
+  it('should propagate runChecks errors', async () => {
+    const workspace = emissionsService as any;
+    const params = {
+      monitorPlanId: 'MP1',
+      year: 2020,
+      quarter: 2,
+      reportedValuesOnly: false,
+    } as EmissionsParamsDTO;
+    const user: CurrentUser = { userId: 'user1' } as any;
+    const stubbedData = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
+
+    workspace.emissionsService.export.mockResolvedValue(stubbedData);
+    workspace.checksService.runChecks.mockRejectedValue(
+      new NotFoundException('no data'),
+    );
+
+    await expect(
+      emissionsService.importFromHistoricalData(params, user),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('should successfully export emissions data', async function() {
