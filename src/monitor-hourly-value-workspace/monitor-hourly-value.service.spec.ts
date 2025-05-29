@@ -4,7 +4,6 @@ import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueWorkspaceService } from './monitor-hourly-value.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { MonitorHourlyValueImportDTO } from '../dto/monitor-hourly-value.dto';
 
 const mockRepository = {
   export: () => null,
@@ -57,7 +56,7 @@ describe('MonitorHourlyValueWorkspaceService', () => {
     });
 
     it('should export a record', async () => {
-      const result = await service.export(['123']);
+      const result = await service.export(123, ['123']);
       expect(result).toEqual(null);
     });
   });
