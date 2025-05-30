@@ -93,6 +93,8 @@ import { HealthModule } from '@us-epa-camd/easey-common/health/health.module';
   ],
   providers: [DbLookupValidator],
 })
+
+//Exclude /health so that Maintenance check is not performed.
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
