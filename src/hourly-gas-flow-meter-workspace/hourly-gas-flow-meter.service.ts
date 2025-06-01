@@ -18,8 +18,8 @@ export class HourlyGasFlowMeterWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(hourIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
-    const results = await this.repository.export(hourIds);
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
+    const results = await this.repository.export(rptPeriodId, monLocIds);
     return this.map.many(results);
   }
 

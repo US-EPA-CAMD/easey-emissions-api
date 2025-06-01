@@ -45,7 +45,7 @@ describe('HourlyFuelFlowService', () => {
 
   describe('export', () => {
     it('should return null given no fuel flows were found', async function() {
-      await expect(service.export([])).resolves.toEqual([]);
+      await expect(service.export(123, [])).resolves.toEqual([]);
     });
 
     it('returns export record for hourly fuel flow', async () => {
@@ -56,13 +56,9 @@ describe('HourlyFuelFlowService', () => {
       });
       const mapppedValues = await Promise.all(promises);
       jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
-      await expect(
-        service.export(
-          mockedValues.map(value => {
-            return value.hourId;
-          }),
-        ),
-      ).resolves.toEqual(mapppedValues);
+      await expect(service.export(123, ['123'])).resolves.toEqual(
+        mapppedValues,
+      );
     });
   });
 });

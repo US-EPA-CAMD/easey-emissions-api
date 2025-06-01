@@ -11,12 +11,13 @@ export class HourlyParameterFuelFlowWorkspaceRepository extends Repository<
     super(HrlyParamFuelFlow, entityManager);
   }
 
-  async export(hourlyFuelFlowIds: string[]) {
+  async export(rptPeriodId: number, monLocIds: string[]) {
     return this.createQueryBuilder('hrlyParam')
       .leftJoinAndSelect('hrlyParam.monitorFormula', 'monitorFormula')
       .leftJoinAndSelect('hrlyParam.monitorSystem', 'ms')
-      .where('hrlyParam.hrly_fuel_flow_id IN (:...hourlyFuelFlowIds)', {
-        hourlyFuelFlowIds,
+      .where('hrlyParam.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('hrlyParam.monitoringLocationId IN(:...monLocIds)', {
+        monLocIds,
       })
       .getMany();
   }
