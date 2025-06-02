@@ -7,11 +7,12 @@ import { MonitorHourlyValueRepository } from './monitor-hourly-value.repository'
 const mockQueryBuilder = () => ({
   leftJoinAndSelect: jest.fn(),
   where: jest.fn(),
+  andWhere: jest.fn(),
   getMany: jest.fn(),
 });
 
 describe('-- MonitorHourlyValueRepository --', () => {
-  let repository;
+  let repository: MonitorHourlyValueRepository;
   let queryBuilder;
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -31,12 +32,13 @@ describe('-- MonitorHourlyValueRepository --', () => {
 
     queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.where.mockReturnValue(queryBuilder);
+    queryBuilder.andWhere.mockReturnValue(queryBuilder);
     queryBuilder.getMany.mockReturnValue('mockMonitorHourlyValue');
   });
 
   describe('export', () => {
     it('returns export record for monitor hourly value  data', async () => {
-      let result = await repository.export(['123']);
+      let result = await repository.export(123, ['123']);
 
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockMonitorHourlyValue');

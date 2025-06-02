@@ -43,7 +43,7 @@ describe('MonitorHourlyValueService', () => {
     });
 
     it('should export a record', async () => {
-      const result = await service.export(['123']);
+      const result = await service.export(123, ['123']);
       expect(result).toEqual(null);
     });
   });

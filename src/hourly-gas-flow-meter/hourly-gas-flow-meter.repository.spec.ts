@@ -28,12 +28,13 @@ describe('--HourlyGasFlowMeterRepository--', () => {
 
     queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.where.mockReturnValue(queryBuilder);
+    queryBuilder.andWhere.mockReturnValue(queryBuilder);
     queryBuilder.getMany.mockReturnValue('mockHourlyGasFlowMeter');
   });
 
   describe('export', () => {
     it('returns export record for hourly gas flow meter data', async () => {
-      let result = await repository.export(['123']);
+      let result = await repository.export(123, ['123']);
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockHourlyGasFlowMeter');
     });

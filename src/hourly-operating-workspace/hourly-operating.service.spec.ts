@@ -50,6 +50,10 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   ],
 });
 
+const mockEntityManager = {
+  findOneBy: () => Promise.resolve({ id: 123, year: 2023, quarter: 1 }),
+};
+
 const mockRepository = {
   export: () => Promise.resolve(generatedHrlyOpValues),
   create: () => jest,
@@ -104,7 +108,6 @@ describe('HourlyOperatingWorskpaceService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EntityManager,
         DerivedHourlyValueMap,
         HourlyOperatingWorkspaceService,
         HourlyOperatingMap,
@@ -125,6 +128,10 @@ describe('HourlyOperatingWorskpaceService', () => {
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyOperatingWorkspaceRepository,
         DerivedHourlyValueWorkspaceRepository,
+        {
+          provide: EntityManager,
+          useFactory: () => mockEntityManager,
+        },
         {
           provide: BulkLoadService,
           useFactory: () => ({
