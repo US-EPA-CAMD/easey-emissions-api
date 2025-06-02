@@ -55,20 +55,13 @@ export class EmissionsWorkspaceController {
   })
   @RoleGuard(
     {
-      importLocationSources: [
-        'dailyEmissionData',
-        'weeklyTestSummaryData',
-        'summaryValueData',
-        'dailyTestSummaryData',
-        'hourlyOperatingData',
-        'longTermFuelFlowData',
-        'sorbentTrapData',
-        'nsps4tSummaryData',
-      ],
+      enforceCheckout: false,
+      queryParam: 'monitorPlanId',
+      enforceEvalSubmitCheck: false,
       permissionsForFacility: ['DSEM'],
       requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
     },
-    LookupType.Location,
+    LookupType.MonitorPlan,
   )
   @AuditLog({
     label: 'Imported historical emissions data',
@@ -77,8 +70,16 @@ export class EmissionsWorkspaceController {
   async importFromHistorical(
     @Query() params: EmissionsParamsDTO,
     @User() user: CurrentUser,
-  ) { 
-    return this.service.importFromHistoricalData(params, user);
+  ) {
+    const exportData = await this.service.export(params, params.reportedValuesOnly);
+    if (!exportData || Object.keys(exportData).length === 0) {
+      throw new NotFoundException(
+        'Import unsuccessful: no historical data found for this reporting period.',
+      );
+    }
+    const emissionsImportDTOData = exportData as EmissionsImportDTO;
+    await this.checksService.runChecks(emissionsImportDTOData);
+    return this.service.import(emissionsImportDTOData, user.userId);
   }
 
   @Get('export')
