@@ -77,18 +77,6 @@ export class EmissionsWorkspaceService {
     return this.repository.delete(criteria);
   }
 
-  async importFromHistoricalData(
-    params: EmissionsParamsDTO,
-    user: CurrentUser,
-  ) {
-    
-    const historicalData = await this.emissionsService.export(params, params.reportedValuesOnly);
-    const emissionsImportDTOData = historicalData as EmissionsImportDTO;
-    
-    await this.checksService.runChecks(emissionsImportDTOData);
-    return await this.import(emissionsImportDTOData, user.userId);
-  }
-
   async export(
     params: EmissionsParamsDTO,
     rptValuesOnly: boolean = false,
