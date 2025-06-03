@@ -29,31 +29,25 @@ export class ReviewSubmitService {
       repository = this.globalRepository;
     }
 
-    const cleanedQuarters = quarters?.filter(q => q && q.trim() !== '') ?? [];
-
-    const periodFilter = 
-    cleanedQuarters.length > 0
-        ? { periodAbbreviation: In(cleanedQuarters) }
-        : {};
+    const hasMonPlanIds = monPlanIds && monPlanIds.length > 0;
+    const hasQuarters = quarters && quarters.length > 0;
 
     try {
-      if (monPlanIds && monPlanIds.length > 0) {
+      if (hasMonPlanIds && hasQuarters) {
         return this.map.many(
-          await repository.find({
-            where: {
-              monPlanId: In(monPlanIds),
-              ...periodFilter,
-            },
-          }),
+          await repository.find({ where: { monPlanId: In(monPlanIds), periodAbbreviation: In(quarters), }, }),
+        );
+      } else if (hasMonPlanIds) {
+        return this.map.many(
+          await repository.find({ where: { monPlanId: In(monPlanIds), }, }),
+        );
+      } else if (hasQuarters) {
+        return this.map.many(
+          await repository.find({ where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters), }, }),
         );
       }
       return this.map.many(
-        await repository.find({
-          where: { 
-            orisCode: In(orisCodes), 
-            ...periodFilter,
-          },
-        }),
+        await repository.find({ where: { orisCode: In(orisCodes), }}),
       );
     } catch (e) {
       throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);

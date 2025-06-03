@@ -15,17 +15,14 @@ const mockRepo = () => ({
 
     if (hasMonPlanId) {
       if (hasPeriodAbbreviation) {
-        return Promise.resolve([new EmissionsReviewSubmitDTO()]); // monPlanId with quarters -> 1 DTO
+        return Promise.resolve([]);
       } else {
-        return Promise.resolve([]); // monPlanId without quarters -> 0 DTOs
+        return Promise.resolve([new EmissionsReviewSubmitDTO()]);
       }
-    } else {
-      if (hasPeriodAbbreviation) {
-        return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]); // orisCode with quarters -> 2 DTOs
-      } else {
-        return Promise.resolve([new EmissionsReviewSubmitDTO()]); // orisCode without quarters -> 1 DTO
-      }
+    } else if (hasPeriodAbbreviation) {
+      return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
     }
+    return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
   }),
 });
 
@@ -66,44 +63,35 @@ describe('ReviewSubmitService', () => {
 
   describe('getEmissionsRecords', () => {
     it('should call the service function given list of orisCodes', async () => {
-      const result = await service.getEmissionsRecords([3], [], ['2022 Q2']);
-      expect(result.length).toBe(2);
+      const result = await service.getEmissionsRecords([3], [], []);
+      expect(result.length).toBe(3);
     });
 
-    it('should call the service function given list of monPlanIds', async () => {
+    it('should call the service function given list of monPlanIds, no quarters', async () => {
       const result = await service.getEmissionsRecords(
-        [],
+        [3],
         ['MOCK'],
-        ['2022 Q2'],
+        [],
       );
       expect(result.length).toBe(1);
     });
 
-    it('should handle orisCodes path correctly when quarters is null (no periodAbbreviation)', async () => {
+    it('should call the service function given list of quarters, no monPlanIds', async () => {
       const result = await service.getEmissionsRecords(
         [3], 
         [],  
-        null,
+        ["Q3"],
       );
-      expect(result.length).toBe(1);
+      expect(result.length).toBe(2);
     });
 
-    it('should handle monPlanIds path correctly when quarters is an array with an empty string (no periodAbbreviation)', async () => {
+    it('sshould call the service function given list of quarters and monPlanIds', async () => {
       const result = await service.getEmissionsRecords(
-        [],      
+        [3],      
         ['MOCK'],
-        [""],    
+        ["Q3"],    
       );
       expect(result.length).toBe(0);
-    });
-    
-    it('should handle orisCodes path correctly when quarters is an empty array (no periodAbbreviation)', async () => {
-      const result = await service.getEmissionsRecords(
-        [3],
-        [], 
-        [], 
-      );
-      expect(result.length).toBe(1);
     });
   });
 });
