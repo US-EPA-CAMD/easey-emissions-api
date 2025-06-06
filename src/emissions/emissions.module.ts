@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DailyBackstopModule } from '../daily-backstop/daily-backstop.module';
@@ -44,12 +44,12 @@ import { EaseyContentModule } from '../emissions-easey-content/easey-content.mod
     SummaryValueModule,
     LongTermFuelFlowModule,
     DailyBackstopModule,
+    EmissionsWorkspaceModule,
     Nsps4tAnnualModule,
     Nsps4tCompliancePeriodModule,
     Nsps4tSummaryModule,
     SamplingTrainModule,
     SorbentTrapModule,
-    forwardRef(() => EmissionsWorkspaceModule),
   ],
   controllers: [EmissionsController],
   providers: [
