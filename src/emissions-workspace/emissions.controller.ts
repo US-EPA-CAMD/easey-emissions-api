@@ -44,6 +44,44 @@ export class EmissionsWorkspaceController {
     private readonly checksService: EmissionsChecksService,
   ) { }
 
+  @Post('import-historical')
+  @ApiBearerAuth('Token')
+  @ApiOperation({
+    summary: 'Imports historical emissions data directly into the workspace.',
+  })
+  @ApiOkResponse({
+    type: EmissionsDTO,
+    description: 'Successfully imported historical emissions data.',
+  })
+  @RoleGuard(
+    {
+      enforceCheckout: false,
+      queryParam: 'monitorPlanId',
+      enforceEvalSubmitCheck: false,
+      permissionsForFacility: ['DSEM'],
+      requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
+    },
+    LookupType.MonitorPlan,
+  )
+  @AuditLog({
+    label: 'Imported historical emissions data',
+    requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
+  })
+  async importFromHistorical(
+    @Query() params: EmissionsParamsDTO,
+    @User() user: CurrentUser,
+  ) { 
+    const exportData = await this.service.export(params, params.reportedValuesOnly);
+    if (!exportData || Object.keys(exportData).length === 0) {
+      throw new NotFoundException(
+        'Import unsuccessful: no historical data found for this reporting period.',
+      );
+    }
+    const emissionsImportDTOData = exportData as EmissionsImportDTO;
+    await this.checksService.runChecks(emissionsImportDTOData);
+    return this.service.import(emissionsImportDTOData, user.userId);
+  }
+
   @Get('export')
   @ApiOperation({
     summary:
