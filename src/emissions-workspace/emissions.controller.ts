@@ -55,9 +55,8 @@ export class EmissionsWorkspaceController {
   })
   @RoleGuard(
     {
-      enforceCheckout: false,
       queryParam: 'monitorPlanId',
-      enforceEvalSubmitCheck: false,
+      enforceCheckout: true,
       permissionsForFacility: ['DSEM'],
       requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
     },
@@ -67,19 +66,12 @@ export class EmissionsWorkspaceController {
     label: 'Imported historical emissions data',
     requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   async importFromHistorical(
     @Query() params: EmissionsParamsDTO,
     @User() user: CurrentUser,
   ) { 
-    const exportData = await this.service.export(params, params.reportedValuesOnly);
-    if (!exportData || Object.keys(exportData).length === 0) {
-      throw new NotFoundException(
-        'Import unsuccessful: no historical data found for this reporting period.',
-      );
-    }
-    const emissionsImportDTOData = exportData as EmissionsImportDTO;
-    await this.checksService.runChecks(emissionsImportDTOData);
-    return this.service.import(emissionsImportDTOData, user.userId);
+    return this.service.importFromHistoricalData(params, user);
   }
 
   @Get('export')
