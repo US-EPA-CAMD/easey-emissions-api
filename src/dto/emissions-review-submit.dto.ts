@@ -11,6 +11,8 @@ export class EmissionsReviewSubmitDTO {
 
   evalStatusCodeDescription: string;
 
+  severityDescription: string;
+
   submissionAvailabilityCode: string;
 
   submissionAvailabilityCodeDescription: string;
