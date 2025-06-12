@@ -6,6 +6,7 @@ import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { EntityManager } from 'typeorm';
 
 const mockRepo = () => ({
   find: jest.fn().mockImplementation(args => {
@@ -24,12 +25,21 @@ const mockMap = () => ({
 });
 
 describe('ReviewSubmitService', () => {
+  let manager: jest.Mock;
   let service: ReviewSubmitService;
+
+  manager = jest.fn().mockResolvedValue([{}]);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule],
       providers: [
+        {
+          provide: EntityManager,
+          useValue: {
+            query: manager,
+          },
+        },
         ReviewSubmitService,
         ConfigService,
         { provide: EmissionsReviewSubmitMap, useFactory: mockMap },

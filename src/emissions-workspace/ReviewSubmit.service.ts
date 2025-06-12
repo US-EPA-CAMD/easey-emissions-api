@@ -47,13 +47,16 @@ export class ReviewSubmitService {
           }),
         );
       }
-      data = await this.map.many(
-        await repository.find({
-          where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
-        }),
-      );
+      else
+      {
+        data = await this.map.many(
+          await repository.find({
+            where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
+          }),
+        );
+      }
 
-            for (const d of data) {
+      for (const d of data) {
             const severity = await this.entityManager.query(
              `select sc.severity_cd_description from camdecmpswks.EMISSION_EVALUATION em
               JOIN camdecmpsmd.reporting_period prd ON prd.rpt_period_id = em.rpt_period_id 
@@ -65,7 +68,7 @@ export class ReviewSubmitService {
             );
 
             d.severityDescription = severity?.[0]?.severity_cd_description;
-          }
+      }
       return data;
     } catch (e) {
       throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
