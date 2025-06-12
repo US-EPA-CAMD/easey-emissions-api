@@ -21,7 +21,7 @@ import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspac
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
@@ -238,31 +238,31 @@ describe('-- Emissions Controller --', () => {
       const user: CurrentUser = { userId: 'user1' } as any;
 
       const expected = { message: 'Imported historical data' };
-  
+
       jest
         .spyOn(service, 'importFromHistoricalData')
         .mockResolvedValue(expected);
-  
+
       const result = await controller.importFromHistorical(params, user);
-  
+
       expect(service.importFromHistoricalData).toHaveBeenCalledWith(params, user);
       expect(result).toBe(expected);
     });
-  
+
     it('should bubble up NotFoundException from service', async () => {
       const params = new EmissionsParamsDTO();
       const user: CurrentUser = { userId: 'user1' } as any;
-  
+
       jest
         .spyOn(service, 'importFromHistoricalData')
         .mockRejectedValue(new NotFoundException('no data'));
-  
+
       await expect(
         controller.importFromHistorical(params, user),
       ).rejects.toThrow(NotFoundException);
     });
   });
-  
+
   describe('* export', () => {
     it('should export a record', async () => {
       const params = new EmissionsParamsDTO();
