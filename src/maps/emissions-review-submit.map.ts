@@ -25,6 +25,10 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       userid: entity.userid,
       updateDate: entity.updateDate?.toISOString() ?? null,
       windowStatus: entity.windowStatus,
+      windowExpiredDate:
+      'windowExpiredDate' in entity
+        ? entity.windowExpiredDate?.toISOString() ?? null
+        : null,
       periodAbbreviation: entity.periodAbbreviation,
     };
   }
