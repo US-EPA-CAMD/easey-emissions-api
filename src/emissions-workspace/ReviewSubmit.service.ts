@@ -56,18 +56,25 @@ export class ReviewSubmitService {
         );
       }
 
-      for (const d of data) {
-            const severity = await this.entityManager.query(
-             `select sc.severity_cd_description from camdecmpswks.EMISSION_EVALUATION em
-              JOIN camdecmpsmd.reporting_period prd ON prd.rpt_period_id = em.rpt_period_id 
-              JOIN camdecmpswks.monitor_plan pln ON pln.mon_plan_id = em.mon_plan_id 
-              JOIN camdecmpswks.check_session cs on cs.chk_session_id = em.chk_session_id
-              JOIN camdecmpsmd.severity_code sc on sc.severity_cd = cs.severity_cd
-              where  em.mon_plan_id = $1;`,
-              [d.monPlanId],
-            );
+        if (data.length > 0) {
+        const monPlanIds = data.map(d => d.monPlanId);
+        const severities = await this.entityManager.query(
+        `select em.mon_plan_id, sc.severity_cd_description 
+        from camdecmpswks.EMISSION_EVALUATION em 
+        JOIN camdecmpsmd.reporting_period prd ON prd.rpt_period_id = em.rpt_period_id  
+        JOIN camdecmpswks.monitor_plan pln ON pln.mon_plan_id = em.mon_plan_id  
+        JOIN camdecmpswks.check_session cs on cs.chk_session_id = em.chk_session_id 
+        JOIN camdecmpsmd.severity_code sc on sc.severity_cd = cs.severity_cd 
+        where em.mon_plan_id = ANY($1);`,
+        [monPlanIds]);
+        
+        const severityMap = new Map(
+          severities.map((s: any) => [s.mon_plan_id, s.severity_cd_description])
+        );
 
-            d.severityDescription = severity?.[0]?.severity_cd_description;
+        for (const d of data) {
+          d.severityDescription = (severityMap.get(d.monPlanId) as string) || null;
+        }
       }
       return data;
     } catch (e) {
