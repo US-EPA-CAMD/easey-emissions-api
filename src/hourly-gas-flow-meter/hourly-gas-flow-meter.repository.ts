@@ -9,12 +9,11 @@ export class HourlyGasFlowMeterRepository extends Repository<HrlyGasFlowMeter> {
     super(HrlyGasFlowMeter, entityManager);
   }
 
-  async export(hourIds: string[]) {
+  async export(rptPeriodId: number, monLocIds: string[]) {
     const query = this.createQueryBuilder('hgfm')
       .leftJoinAndSelect('hgfm.component', 'c')
-      .where(`hgfm.hourId IN (:...hourIds)`, {
-        hourIds: hourIds,
-      });
+      .where('hgfm.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('hgfm.monitoringLocationId IN (:...monLocIds)', { monLocIds })
     return query.getMany();
   }
 }

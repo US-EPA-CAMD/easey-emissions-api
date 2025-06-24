@@ -13,12 +13,16 @@ export class HourlyFuelFlowService {
     private readonly hourlyParameterFuelFlowService: HourlyParameterFuelFlowService,
   ) {}
 
-  async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
-    if (!Array.isArray(hourlyOperatingIds) || hourlyOperatingIds.length < 1) {
+  async export(
+    rptPeriodId: number,
+    monLocIds: string[],
+  ): Promise<HourlyFuelFlowDTO[]> {
+    if (!rptPeriodId) return [];
+    if (!Array.isArray(monLocIds) || monLocIds.length < 1) {
       return [];
     }
 
-    const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
+    const hourlyFuelFlow = await this.repository.export(rptPeriodId, monLocIds);
 
     if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
@@ -26,16 +30,14 @@ export class HourlyFuelFlowService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    const mappedIds = mapped.map(el => el.id);
-
-    if (mappedIds.length > 0) {
+    if (mapped.length > 0) {
       const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
-        mappedIds,
+        rptPeriodId,
+        monLocIds,
       );
 
       this.organizeData(mapped, hourlyParamFuelFlowData);
     }
-
     return mapped;
   }
 

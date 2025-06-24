@@ -11,15 +11,14 @@ export class MatsDerivedHourlyValueRepository extends Repository<
     super(MatsDerivedHrlyValue, entityManager);
   }
 
-  async export(hourIds: string[]): Promise<MatsDerivedHrlyValue[]> {
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<MatsDerivedHrlyValue[]> {
     return this.createQueryBuilder('MatsDerivedHrlyValue')
       .leftJoinAndSelect(
         'MatsDerivedHrlyValue.monitorFormula',
         'monitorFormula',
       )
-      .where('MatsDerivedHrlyValue.hour_id IN(:...hourIds)', {
-        hourIds,
-      })
+      .where('MatsDerivedHrlyValue.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('MatsDerivedHrlyValue.monitoringLocationId IN(:...monLocIds)', { monLocIds })
       .getMany();
   }
 }

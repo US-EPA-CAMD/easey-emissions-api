@@ -10,13 +10,9 @@ export class DerivedHourlyValueService {
     private readonly map: DerivedHourlyValueMap,
   ) {}
 
-  async export(hourIds: string[]) {
-    const derivedHourlyValueData = await this.repository.export(hourIds);
+  async export(rptPeriodId: number, monLocIds: string[]) {
+    const derivedHourlyValueData = await this.repository.export(rptPeriodId, monLocIds);
 
-    const promises = derivedHourlyValueData?.map(data => {
-      return this.map.one(data);
-    });
-
-    return Promise.all(promises);
+    return this.map.many(derivedHourlyValueData);
   }
 }

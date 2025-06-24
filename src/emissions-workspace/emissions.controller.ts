@@ -44,6 +44,36 @@ export class EmissionsWorkspaceController {
     private readonly checksService: EmissionsChecksService,
   ) { }
 
+  @Post('import-historical')
+  @ApiBearerAuth('Token')
+  @ApiOperation({
+    summary: 'Imports historical emissions data directly into the workspace.',
+  })
+  @ApiOkResponse({
+    type: EmissionsDTO,
+    description: 'Successfully imported historical emissions data.',
+  })
+  @RoleGuard(
+    {
+      queryParam: 'monitorPlanId',
+      enforceCheckout: true,
+      permissionsForFacility: ['DSEM'],
+      requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
+    },
+    LookupType.MonitorPlan,
+  )
+  @AuditLog({
+    label: 'Imported historical emissions data',
+    requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async importFromHistorical(
+    @Query() params: EmissionsParamsDTO,
+    @User() user: CurrentUser,
+  ) { 
+    return this.service.importFromHistoricalData(params, user);
+  }
+
   @Get('export')
   @ApiOperation({
     summary:

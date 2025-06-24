@@ -9,7 +9,6 @@ import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fue
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
@@ -21,12 +20,16 @@ export class HourlyFuelFlowWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
-    if (!Array.isArray(hourlyOperatingIds) || hourlyOperatingIds.length < 1) {
+  async export(
+    rptPeriodId: number,
+    monLocIds: string[],
+  ): Promise<HourlyFuelFlowDTO[]> {
+    if (!rptPeriodId) return [];
+    if (!Array.isArray(monLocIds) || monLocIds.length < 1) {
       return [];
     }
 
-    const hourlyFuelFlow = await this.repository.export(hourlyOperatingIds);
+    const hourlyFuelFlow = await this.repository.export(rptPeriodId, monLocIds);
 
     if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
@@ -34,14 +37,13 @@ export class HourlyFuelFlowWorkspaceService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    const mappedIds = mapped.map(el => el.id);
-
-    if (mappedIds.length > 0) {
+    if (mapped.length > 0) {
       const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlow.export(
-        mappedIds,
+        rptPeriodId,
+        monLocIds,
       );
 
-      this.organizeData(mapped, hourlyParamFuelFlowData); 
+      this.organizeData(mapped, hourlyParamFuelFlowData);
     }
     return mapped;
   }
@@ -87,7 +89,9 @@ export class HourlyFuelFlowWorkspaceService {
         id: uid,
         hourId,
         monitoringSystemId:
-          identifiers?.locations[monitorLocationId]?.monitoringSystems?.[dataChunk.monitoringSystemId] || null,
+          identifiers?.locations[monitorLocationId]?.monitoringSystems?.[
+            dataChunk.monitoringSystemId
+          ] || null,
         fuelCode: dataChunk.fuelCode,
         fuelUsageTime: dataChunk.fuelUsageTime,
         volumetricFlowRate: dataChunk.volumetricFlowRate,
