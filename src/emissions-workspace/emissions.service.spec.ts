@@ -102,9 +102,9 @@ import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-sum
 import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
-import { EmissionsService } from '../emissions/emissions.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
+import { EmissionsService } from '../emissions/emissions.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { CurrentUser }      from '@us-epa-camd/easey-common/interfaces';
 import { NotFoundException } from '@nestjs/common';

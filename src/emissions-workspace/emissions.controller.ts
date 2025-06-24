@@ -55,25 +55,18 @@ export class EmissionsWorkspaceController {
   })
   @RoleGuard(
     {
-      importLocationSources: [
-        'dailyEmissionData',
-        'weeklyTestSummaryData',
-        'summaryValueData',
-        'dailyTestSummaryData',
-        'hourlyOperatingData',
-        'longTermFuelFlowData',
-        'sorbentTrapData',
-        'nsps4tSummaryData',
-      ],
+      queryParam: 'monitorPlanId',
+      enforceCheckout: true,
       permissionsForFacility: ['DSEM'],
       requiredRoles: ['Preparer', 'Submitter', 'Sponsor', 'Initial Authorizer'],
     },
-    LookupType.Location,
+    LookupType.MonitorPlan,
   )
   @AuditLog({
     label: 'Imported historical emissions data',
     requestQueryOutFields: ['monitorPlanId', 'year', 'quarter']
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   async importFromHistorical(
     @Query() params: EmissionsParamsDTO,
     @User() user: CurrentUser,
