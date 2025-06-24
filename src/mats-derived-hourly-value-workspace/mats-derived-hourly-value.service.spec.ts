@@ -3,7 +3,6 @@ import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map
 import { MatsDerivedHourlyValueWorkspaceService } from './mats-derived-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { MatsDerivedHourlyValueImportDTO } from '../dto/mats-derived-hourly-value.dto';
 
 const mockRepository = {
   export: () => null,
@@ -58,7 +57,7 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
     });
 
     it('should export a mats derived hourly value record', async () => {
-      const result = await service.export(['123']);
+      const result = await service.export(123, ['123']);
       expect(result).toEqual(null);
     });
   });

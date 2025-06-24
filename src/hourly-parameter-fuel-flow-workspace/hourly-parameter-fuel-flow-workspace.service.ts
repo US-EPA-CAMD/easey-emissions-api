@@ -18,8 +18,11 @@ export class HourlyParameterFuelFlowWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(hourlyFuelFlowIds: string[]): Promise<HourlyParamFuelFlowDTO[]> {
-    const hrlyParams = await this.repository.export(hourlyFuelFlowIds);
+  async export(
+    rptPeriodId: number,
+    monLocIds: string[],
+  ): Promise<HourlyParamFuelFlowDTO[]> {
+    const hrlyParams = await this.repository.export(rptPeriodId, monLocIds);
 
     return this.map.many(hrlyParams);
   }

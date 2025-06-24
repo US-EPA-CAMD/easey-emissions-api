@@ -7,11 +7,12 @@ import { MatsMonitorHourlyValueWorkspaceRepository } from './mats-monitor-hourly
 const mockQueryBuilder = () => ({
   leftJoinAndSelect: jest.fn(),
   where: jest.fn(),
+  andWhere: jest.fn(),
   getMany: jest.fn(),
 });
 
 describe('-- MatsMonitorHourlyValueWorkspaceRepository --', () => {
-  let repository;
+  let repository: MatsMonitorHourlyValueWorkspaceRepository;
   let queryBuilder;
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -31,12 +32,13 @@ describe('-- MatsMonitorHourlyValueWorkspaceRepository --', () => {
 
     queryBuilder.leftJoinAndSelect.mockReturnValue(queryBuilder);
     queryBuilder.where.mockReturnValue(queryBuilder);
+    queryBuilder.andWhere.mockReturnValue(queryBuilder);
     queryBuilder.getMany.mockReturnValue('mockMatsMonitorHourlyValue');
   });
 
   describe('export', () => {
     it('returns export record for mats monitor hourly value data', async () => {
-      let result = await repository.export(['123']);
+      let result = await repository.export(123, ['123']);
 
       expect(queryBuilder.getMany).toHaveBeenCalled();
       expect(result).toEqual('mockMatsMonitorHourlyValue');

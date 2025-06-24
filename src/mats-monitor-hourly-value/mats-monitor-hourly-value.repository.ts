@@ -11,13 +11,12 @@ export class MatsMonitorHourlyValueRepository extends Repository<
     super(MatsMonitorHrlyValue, entityManager);
   }
 
-  async export(hourIds: string[]) {
+  async export(rptPeriodId: number, monLocIds: string[]) {
     const query = this.createQueryBuilder('mmhv')
       .leftJoinAndSelect('mmhv.monitorSystem', 'ms')
       .leftJoinAndSelect('mmhv.component', 'c')
-      .where(`mmhv.hourId IN (:...hourIds)`, {
-        hourIds: hourIds,
-      });
+      .where('mmhv.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('mmhv.monitoringLocationId IN (:...monLocIds)', { monLocIds });
     return query.getMany();
   }
 }
