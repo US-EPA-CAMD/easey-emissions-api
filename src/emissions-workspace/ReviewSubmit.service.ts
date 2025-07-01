@@ -23,9 +23,6 @@ export class ReviewSubmitService {
     quarters: string[],
     isWorkspace: boolean = true,
   ): Promise<EmissionsReviewSubmitDTO[]> {
-    if (!quarters || quarters.length === 0) {
-      return [];
-    }
 
     let repository;
     if (isWorkspace) {
@@ -36,27 +33,30 @@ export class ReviewSubmitService {
 
     let data: EmissionsReviewSubmitDTO[];
 
+    const hasMonPlanIds = monPlanIds && monPlanIds.length > 0;
+    const hasQuarters = quarters && quarters.length > 0;
+
     try {
-      if (monPlanIds && monPlanIds.length > 0) {
+      if (hasMonPlanIds && hasQuarters) {
         data = await this.map.many(
-          await repository.find({
-            where: {
-              monPlanId: In(monPlanIds),
-              periodAbbreviation: In(quarters),
-            },
-          }),
+          await repository.find({ where: { monPlanId: In(monPlanIds), periodAbbreviation: In(quarters), }, }),
+        );
+      } else if (hasMonPlanIds) {
+         data = await this.map.many(
+          await repository.find({ where: { monPlanId: In(monPlanIds), }, }),
+        );
+      } else if (hasQuarters) {
+         data = await this.map.many(
+          await repository.find({ where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters), }, }),
         );
       }
-      else
-      {
+      else{
         data = await this.map.many(
-          await repository.find({
-            where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
-          }),
-        );
+          await repository.find({ where: { orisCode: In(orisCodes), }}),
+      );
       }
 
-        if (data.length > 0) {
+      if (data.length > 0) {
         const monPlanIds = data.map(d => d.monPlanId);
         const severities = await this.entityManager.query(
         `select em.mon_plan_id, sc.severity_cd_description 

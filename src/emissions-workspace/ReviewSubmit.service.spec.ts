@@ -10,11 +10,20 @@ import { EntityManager } from 'typeorm';
 
 const mockRepo = () => ({
   find: jest.fn().mockImplementation(args => {
-    if (args.where['monPlanId']) {
-      return [new EmissionsReviewSubmitDTO()];
-    } else {
-      return [new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()];
+
+    const hasMonPlanId = !!args.where.monPlanId;
+    const hasPeriodAbbreviation = args.where.hasOwnProperty('periodAbbreviation');
+
+    if (hasMonPlanId) {
+      if (hasPeriodAbbreviation) {
+        return Promise.resolve([]);
+      } else {
+        return Promise.resolve([new EmissionsReviewSubmitDTO()]);
+      }
+    } else if (hasPeriodAbbreviation) {
+      return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
     }
+    return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
   }),
 });
 
@@ -64,17 +73,35 @@ describe('ReviewSubmitService', () => {
 
   describe('getEmissionsRecords', () => {
     it('should call the service function given list of orisCodes', async () => {
-      const result = await service.getEmissionsRecords([3], [], ['2022 Q2']);
+      const result = await service.getEmissionsRecords([3], [], []);
+      expect(result.length).toBe(3);
+    });
+
+    it('should call the service function given list of monPlanIds, no quarters', async () => {
+      const result = await service.getEmissionsRecords(
+        [3],
+        ['MOCK'],
+        [],
+      );
+      expect(result.length).toBe(1);
+    });
+
+    it('should call the service function given list of quarters, no monPlanIds', async () => {
+      const result = await service.getEmissionsRecords(
+        [3], 
+        [],  
+        ["Q3"],
+      );
       expect(result.length).toBe(2);
     });
 
-    it('should call the service function given list of monPlanIds', async () => {
+    it('sshould call the service function given list of quarters and monPlanIds', async () => {
       const result = await service.getEmissionsRecords(
-        [],
+        [3],      
         ['MOCK'],
-        ['2022 Q2'],
+        ["Q3"],    
       );
-      expect(result.length).toBe(1);
+      expect(result.length).toBe(0);
     });
   });
 });

@@ -5,8 +5,7 @@ import {
   ApiOkResponse,
   ApiSecurity,
   ApiExtraModels,
-  ApiQuery,
-} from '@nestjs/swagger';
+  ApiQuery, getSchemaPath } from '@nestjs/swagger';
 
 import { ApplicableApportionedEmissionsAttributesDTO } from '../dto/applicable-apportioned-emissions-attributes.dto';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../dto/applicable-apportioned-emissions-attributes.params.dto';
@@ -18,12 +17,26 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Emissions')
 @ApiExtraModels()
+@ApiExtraModels(ApplicableApportionedEmissionsAttributesDTO)
 export class ApportionedEmissionsController {
   constructor(private readonly service: ApportionedEmissionsService) {}
 
   @Get('/attributes/applicable')
   @ApiOkResponse({
     description: 'Retrieves Applicable Emissions Attributes',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(ApplicableApportionedEmissionsAttributesDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   @BadRequestResponse()
   @NotFoundResponse()
