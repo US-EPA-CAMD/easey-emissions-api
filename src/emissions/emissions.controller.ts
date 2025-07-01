@@ -14,8 +14,7 @@ import {
   ApiQuery,
   ApiSecurity,
   ApiTags,
-  refs,
-} from '@nestjs/swagger';
+  refs, getSchemaPath } from '@nestjs/swagger';
 
 import { EmissionsSubmissionsProgressDTO } from '../dto/emissions-submissions-progress.dto';
 import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.params.dto';
@@ -30,6 +29,7 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
+@ApiExtraModels(EmissionsReviewSubmitDTO)
 export class EmissionsController {
   constructor(
     private readonly service: EmissionsService,
@@ -94,9 +94,20 @@ export class EmissionsController {
 
   @Get()
   @ApiOkResponse({
-    isArray: true,
-    type: EmissionsReviewSubmitDTO,
     description: 'Retrieves emissions review and submit records',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(EmissionsReviewSubmitDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   @ApiQuery({
     style: 'pipeDelimited',
