@@ -20,8 +20,7 @@ import {
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { fieldMappings } from '../../constants/field-mappings';
-import { AnnualUnitDataView } from './../../entities/vw-annual-unit-data.entity';
-import { AnnualApportionedEmissionsDTO } from '../../dto/annual-apportioned-emissions.dto';
+import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
 import { AnnualApportionedEmissionsFacilityAggregationDTO } from '../../dto/annual-apportioned-emissions-facility-aggregation.dto';
@@ -32,10 +31,10 @@ import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Annual Emissions')
-@ApiExtraModels(AnnualApportionedEmissionsDTO)
 @ApiExtraModels(AnnualApportionedEmissionsAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(AnnualApportionedEmissionsStateAggregationDTO)
+@ApiExtraModels(AnnualUnitDataView)
 export class AnnualApportionedEmissionsController {
   constructor(private readonly service: AnnualApportionedEmissionsService) {}
 
@@ -49,7 +48,7 @@ export class AnnualApportionedEmissionsController {
           properties: {
             items: {
               type: 'array',
-              items: { $ref: getSchemaPath(AnnualApportionedEmissionsDTO)},
+              items: { $ref: getSchemaPath(AnnualUnitDataView)},
             }
            },
         },

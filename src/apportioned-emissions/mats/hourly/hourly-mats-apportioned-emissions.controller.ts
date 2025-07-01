@@ -28,6 +28,7 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Hourly MATS Emissions')
 @ApiExtraModels(HourlyMatsApportionedEmissionsDTO)
+@ApiExtraModels(HourUnitMatsDataView)
 export class HourlyMatsApportionedEmissionsController {
   constructor(
     private readonly service: HourlyMatsApportionedEmissionsService,

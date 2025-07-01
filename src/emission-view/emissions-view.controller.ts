@@ -8,7 +8,7 @@ import {
   Req,
 } from '@nestjs/common';
 
-import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -21,14 +21,27 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @Controller()
 @ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
+@ApiExtraModels(EmissionsViewDTO)
 export class EmissionsViewController {
   constructor(private readonly service: EmissionsViewService) {}
 
   @Get()
   @ApiOkResponse({
-    isArray: true,
     description:
       'Retrieves a list of official Emissions data views that are available',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(EmissionsViewDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   async getAvailableViews(): Promise<ArrayResponse<EmissionsViewDTO>> {
     const viewsList = await this.service.getAvailableViews();

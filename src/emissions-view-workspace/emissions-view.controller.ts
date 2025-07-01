@@ -7,7 +7,7 @@ import {
   UseInterceptors,
   Req,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 
@@ -24,14 +24,27 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @ApiTags('Emissions Views')
 @ApiSecurity('APIKey')
 @ApiExcludeControllerByEnv()
+@ApiExtraModels(EmissionsViewDTO)
 export class EmissionsViewWorkspaceController {
   constructor(private readonly service: EmissionsViewWorkspaceService) {}
 
   @Get()
   @ApiOkResponse({
-    isArray: true,
     description:
       'Retrieves a list of workspace Emissions data views that are available',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(EmissionsViewDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   @AuditLog({
     label: 'Retrieved list of available workspace Emissions views'
