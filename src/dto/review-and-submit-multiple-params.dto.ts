@@ -27,5 +27,6 @@ export class ReviewAndSubmitMultipleParamsDTO {
   })
   @ApiPropertyOptional()
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
+  @IsOptional()
   quarters: string[];
 }

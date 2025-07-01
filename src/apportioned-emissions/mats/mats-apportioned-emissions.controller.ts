@@ -4,8 +4,7 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiSecurity,
-  ApiExtraModels,
-} from '@nestjs/swagger';
+  ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
 import { ApplicableApportionedEmissionsAttributesParamsDTO } from '../../dto/applicable-apportioned-emissions-attributes.params.dto';
@@ -25,6 +24,19 @@ export class MatsApportionedEmissionsController {
   @ApiOkResponse({
     description:
       'Retrieved All Applicable MATS Apportioned Emissions Attributes',
+    content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: getSchemaPath(ApplicableApportionedEmissionsAttributesDTO) },
+              },
+            },
+          },
+        },
+      }
   })
   @BadRequestResponse()
   @NotFoundResponse()
