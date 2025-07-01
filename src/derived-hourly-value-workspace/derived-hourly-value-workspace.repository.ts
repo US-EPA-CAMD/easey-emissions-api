@@ -11,13 +11,12 @@ export class DerivedHourlyValueWorkspaceRepository extends Repository<
     super(DerivedHrlyValue, entityManager);
   }
 
-  async export(hourIds: string[]): Promise<DerivedHrlyValue[]> {
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<DerivedHrlyValue[]> {
     return this.createQueryBuilder('DerivedHrlyValue')
-      .where('DerivedHrlyValue.hour_id IN(:...hourIds)', {
-        hourIds,
-      })
       .leftJoinAndSelect('DerivedHrlyValue.monitorSystem', 'monitorSystem')
       .leftJoinAndSelect('DerivedHrlyValue.monitorFormula', 'monitorFormula')
+      .where('DerivedHrlyValue.rptPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('DerivedHrlyValue.monitorLocationId IN(:...monLocIds)', { monLocIds })
       .getMany();
   }
 }

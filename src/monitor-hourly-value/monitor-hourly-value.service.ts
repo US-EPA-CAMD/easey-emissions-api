@@ -12,8 +12,8 @@ export class MonitorHourlyValueService {
     private readonly repository: MonitorHourlyValueRepository,
   ) {}
 
-  async export(hourIds: string[]): Promise<MonitorHourlyValueDTO[]> {
-    const results = await this.repository.export(hourIds);
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<MonitorHourlyValueDTO[]> {
+    const results = await this.repository.export(rptPeriodId, monLocIds);
     return this.map.many(results);
   }
 }

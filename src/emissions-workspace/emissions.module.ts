@@ -1,5 +1,5 @@
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -48,6 +48,7 @@ import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repo
 import { CodeChecksModule } from '../code-checks/code-checks.module';
 import { CodeChecksService } from '../code-checks/code-checks.service';
 import { EaseyContentModule } from '../emissions-easey-content/easey-content.module';
+import { EmissionsModule } from '../emissions/emissions.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { EaseyContentModule } from '../emissions-easey-content/easey-content.mod
     Nsps4tSummaryWorkspaceModule,
     Nsps4tAnnualWorkspaceModule,
     Nsps4tCompliancePeriodWorkspaceModule,
+    forwardRef(() => EmissionsModule),
   ],
   controllers: [EmissionsWorkspaceController],
   providers: [

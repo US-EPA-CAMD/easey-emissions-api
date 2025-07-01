@@ -21,7 +21,7 @@ import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspac
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
@@ -93,6 +93,9 @@ import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repo
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
+import { CurrentUser }          from '@us-epa-camd/easey-common/interfaces';
+import { NotFoundException }    from '@nestjs/common';
+import { EmissionsService } from '../emissions/emissions.service';
 
 describe('-- Emissions Controller --', () => {
   let controller: EmissionsWorkspaceController;
@@ -207,6 +210,12 @@ describe('-- Emissions Controller --', () => {
             '../daily-backstop-workspace/daily-backstop.service',
           ),
         },
+        {
+          provide: EmissionsService,
+          useValue: {
+            export: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -218,6 +227,40 @@ describe('-- Emissions Controller --', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe('importFromHistorical', () => {
+    it('should call service.importFromHistoricalData and return a message', async () => {
+      const params = new EmissionsParamsDTO();
+      params.monitorPlanId = 'MP1';
+      params.year          = 2020;
+      params.quarter       = 2;
+      const user: CurrentUser = { userId: 'user1' } as any;
+
+      const expected = { message: 'Imported historical data' };
+
+      jest
+        .spyOn(service, 'importFromHistoricalData')
+        .mockResolvedValue(expected);
+
+      const result = await controller.importFromHistorical(params, user);
+
+      expect(service.importFromHistoricalData).toHaveBeenCalledWith(params, user);
+      expect(result).toBe(expected);
+    });
+
+    it('should bubble up NotFoundException from service', async () => {
+      const params = new EmissionsParamsDTO();
+      const user: CurrentUser = { userId: 'user1' } as any;
+
+      jest
+        .spyOn(service, 'importFromHistoricalData')
+        .mockRejectedValue(new NotFoundException('no data'));
+
+      await expect(
+        controller.importFromHistorical(params, user),
+      ).rejects.toThrow(NotFoundException);
+    });
   });
 
   describe('* export', () => {
