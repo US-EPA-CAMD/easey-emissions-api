@@ -13,6 +13,7 @@ export class EmissionsReviewSubmitMap extends BaseMap<
     entity: EmissionsReviewSubmit | EmissionsReviewSubmitGlobal,
   ): Promise<EmissionsReviewSubmitDTO> {
     let severityDescription = null;
+    let severityCode = null;
     return {
       orisCode: entity.orisCode,
       facilityName: entity.facilityName,
@@ -20,6 +21,7 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       configuration: entity.configuration,
       evalStatusCode: entity.evalStatusCode,
       evalStatusCodeDescription: entity.evalStatusCodeDescription,
+      severityCode,
       severityDescription,
       submissionAvailabilityCode: entity.submissionAvailabilityCode,
       submissionAvailabilityCodeDescription:

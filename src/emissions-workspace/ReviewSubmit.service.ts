@@ -59,7 +59,7 @@ export class ReviewSubmitService {
         if (data.length > 0) {
         const monPlanIds = data.map(d => d.monPlanId);
         const severities = await this.entityManager.query(
-        `select em.mon_plan_id, sc.severity_cd_description 
+        `select em.mon_plan_id, sc.severity_cd_description, sc.severity_cd
         from camdecmpswks.EMISSION_EVALUATION em 
         JOIN camdecmpsmd.reporting_period prd ON prd.rpt_period_id = em.rpt_period_id  
         JOIN camdecmpswks.monitor_plan pln ON pln.mon_plan_id = em.mon_plan_id  
@@ -68,12 +68,14 @@ export class ReviewSubmitService {
         where em.mon_plan_id = ANY($1);`,
         [monPlanIds]);
         
-        const severityMap = new Map(
-          severities.map((s: any) => [s.mon_plan_id, s.severity_cd_description])
+        const severityMap:Map<string, {description:string,severityCode:string}> = new Map(
+          severities.map((s: any) => [s.qa_cert_event_id, { description: s.severity_cd_description, severityCode: s.severity_cd }])
         );
 
         for (const d of data) {
-          d.severityDescription = (severityMap.get(d.monPlanId) as string) || null;
+          let {description, severityCode} = severityMap.get(d.monPlanId) ?? {};
+          d.severityDescription = description
+          d.severityCode = severityCode
         }
       }
       return data;
