@@ -20,7 +20,6 @@ import {
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { MonthUnitDataView } from './../../entities/vw-month-unit-data.entity';
-import { MonthlyApportionedEmissionsDTO } from '../../dto/monthly-apportioned-emissions.dto';
 import { MonthlyApportionedEmissionsService } from './monthly-apportioned-emissions.service';
 import { PaginatedMonthlyApportionedEmissionsParamsDTO } from '../../dto/monthly-apportioned-emissions.params.dto';
 import { MonthlyApportionedEmissionsFacilityAggregationDTO } from '../../dto/monthly-apportioned-emissions-facility-aggregation.dto';
@@ -32,10 +31,10 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Monthly Emissions')
-@ApiExtraModels(MonthlyApportionedEmissionsDTO)
 @ApiExtraModels(MonthlyApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(MonthlyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(MonthlyApportionedEmissionsNationalAggregationDTO)
+@ApiExtraModels(MonthUnitDataView)
 export class MonthlyApportionedEmissionsController {
   constructor(private readonly service: MonthlyApportionedEmissionsService) {}
 
@@ -49,7 +48,7 @@ export class MonthlyApportionedEmissionsController {
                  properties: {
                  items: {
                  type: 'array',
-                 items: { $ref: getSchemaPath(MonthlyApportionedEmissionsDTO)
+                 items: { $ref: getSchemaPath(MonthUnitDataView)
               },
             }
           },

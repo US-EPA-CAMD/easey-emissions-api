@@ -36,6 +36,7 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @ApiExtraModels(HourlyApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(HourlyApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(HourlyApportionedEmissionsNationalAggregationDTO)
+@ApiExtraModels(HourUnitDataView)
 export class HourlyApportionedEmissionsController {
   constructor(private readonly service: HourlyApportionedEmissionsService) {}
 
@@ -45,7 +46,7 @@ export class HourlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsDTO),
+          $ref: getSchemaPath(HourUnitDataView),
         },
       },
       'text/csv': {
@@ -117,7 +118,13 @@ export class HourlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsStateAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(HourlyApportionedEmissionsStateAggregationDTO) },
+            },
+          },
         },
       },
       'text/csv': {
@@ -153,7 +160,13 @@ export class HourlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsNationalAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(HourlyApportionedEmissionsNationalAggregationDTO) },
+            },
+          },
         },
       },
       'text/csv': {
