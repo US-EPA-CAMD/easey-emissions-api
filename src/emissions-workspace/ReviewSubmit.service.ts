@@ -21,9 +21,6 @@ export class ReviewSubmitService {
     quarters: string[],
     isWorkspace: boolean = true,
   ): Promise<EmissionsReviewSubmitDTO[]> {
-    if (!quarters || quarters.length === 0) {
-      return [];
-    }
 
     let repository;
     if (isWorkspace) {
@@ -32,21 +29,25 @@ export class ReviewSubmitService {
       repository = this.globalRepository;
     }
 
+    const hasMonPlanIds = monPlanIds && monPlanIds.length > 0;
+    const hasQuarters = quarters && quarters.length > 0;
+
     try {
-      if (monPlanIds && monPlanIds.length > 0) {
+      if (hasMonPlanIds && hasQuarters) {
         return this.map.many(
-          await repository.find({
-            where: {
-              monPlanId: In(monPlanIds),
-              periodAbbreviation: In(quarters),
-            },
-          }),
+          await repository.find({ where: { monPlanId: In(monPlanIds), periodAbbreviation: In(quarters), }, }),
+        );
+      } else if (hasMonPlanIds) {
+        return this.map.many(
+          await repository.find({ where: { monPlanId: In(monPlanIds), }, }),
+        );
+      } else if (hasQuarters) {
+        return this.map.many(
+          await repository.find({ where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters), }, }),
         );
       }
       return this.map.many(
-        await repository.find({
-          where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters) },
-        }),
+        await repository.find({ where: { orisCode: In(orisCodes), }}),
       );
     } catch (e) {
       throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
