@@ -2,6 +2,8 @@ import { SorbentTrapWorkspaceRepository } from '../sorbent-trap-workspace/sorben
 import { randomUUID } from 'crypto';
 import { SorbentTrapImportDTO } from '../dto/sorbent-trap.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { EntityManager } from 'typeorm';
+import { withTransaction } from '../utils/utils';
 
 export type SorbentTrapWorkspaceCreate = SorbentTrapImportDTO & {
   reportingPeriodId: number;
@@ -12,13 +14,16 @@ export type SorbentTrapWorkspaceCreate = SorbentTrapImportDTO & {
 type ImportSorbentTrapDataProperties = {
   data: SorbentTrapWorkspaceCreate;
   repository: SorbentTrapWorkspaceRepository;
+  trx?: EntityManager;
 };
 
 export const importSorbentTrapData = async ({
   data,
   repository,
+  trx,
 }: ImportSorbentTrapDataProperties) => {
-  const sorbentTrap = repository.create({
+  const transactionalRepository = withTransaction(repository, trx);
+  const sorbentTrap = transactionalRepository.create({
     id: randomUUID(),
     monitoringLocationId: data.monitoringLocationId,
     reportingPeriodId: data.reportingPeriodId,
@@ -39,5 +44,5 @@ export const importSorbentTrapData = async ({
     updateDate: new Date(),
   });
 
-  return repository.save(sorbentTrap);
+  return transactionalRepository.save(sorbentTrap);
 };

@@ -7,6 +7,7 @@ import { DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
 import { DailyBackstopMap} from "../maps/daily-backstop.map";
 import {DailyBackstopDTO} from "../dto/daily-backstop.dto";
 import {EmissionsParamsDTO} from "../dto/emissions.params.dto";
+import { EntityManager } from 'typeorm';
 
 export type DailyBackstopCreate = & {
     reportingPeriodId: number;
@@ -29,6 +30,7 @@ export class DailyBackstopWorkspaceService {
         reportingPeriodId,
         identifiers: ImportIdentifiers,
         currentTime: string,
+        trx?: EntityManager,
       ): Promise<void> {
         if (
           !Array.isArray(emissionsImport?.dailyBackstopData) ||
@@ -53,6 +55,8 @@ export class DailyBackstopWorkspaceService {
             'add_date',
             'update_date',
           ],
+          ',',
+          trx?.queryRunner,
         );
     
         for (const dailyBackstopDatum of emissionsImport.dailyBackstopData) {

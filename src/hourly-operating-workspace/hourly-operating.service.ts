@@ -112,6 +112,7 @@ export class HourlyOperatingWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.hourlyOperatingData) ||
@@ -122,6 +123,9 @@ export class HourlyOperatingWorkspaceService {
 
     const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
       'camdecmpswks.hrly_op_data',
+      undefined,
+      ',',
+      trx?.queryRunner,
     ); // Instantiate our stream object with the correct schema.tableName we want to load to
     for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
       const monitoringLocationId = monitoringLocations.filter(location => {
@@ -264,35 +268,41 @@ export class HourlyOperatingWorkspaceService {
       await Promise.all(buildPromises);
 
       //Write logic to insert the children records into the database in proper order
+      // Pass transaction to all child imports for atomicity
       const insertPromises = [];
       insertPromises.push(
-        this.derivedHourlyValueService.import(derivedHourlyValueObjects),
+        this.derivedHourlyValueService.import(derivedHourlyValueObjects, trx),
       );
       insertPromises.push(
         this.matsMonitorHourlyValueService.import(
           matsMonitorHourlyValueObjects,
+          trx,
         ),
       );
       insertPromises.push(
-        this.monitorHourlyValueService.import(monitorHourlyValueObjects),
+        this.monitorHourlyValueService.import(monitorHourlyValueObjects, trx),
       );
       insertPromises.push(
         this.matsDerivedHourlyValueService.import(
           matsDerivedHourlyValueObjects,
+          trx,
         ),
       );
       insertPromises.push(
         this.hourlyFuelFlowService.import(
           hourlyFuelFlowObjects,
           hourlyParameterFuelFlowObjects,
+          trx,
         ),
       );
       insertPromises.push(
-        this.hourlyGasFlowMeterService.import(hourlyGasFlowMeterObjects),
+        this.hourlyGasFlowMeterService.import(hourlyGasFlowMeterObjects, trx),
       );
 
+      // Keep existing Promise.allSettled behavior for debugging and complete operation visibility
       const settled = await Promise.allSettled(insertPromises);
 
+      // Any failure will trigger transaction rollback in parent method
       for (const settledElement of settled) {
         if (settledElement.status === 'rejected') {
           throw new EaseyException(

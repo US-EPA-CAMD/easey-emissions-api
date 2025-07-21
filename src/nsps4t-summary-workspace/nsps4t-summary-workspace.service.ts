@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -66,6 +66,7 @@ export class Nsps4tSummaryWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.nsps4tSummaryData) ||
@@ -90,6 +91,8 @@ export class Nsps4tSummaryWorkspaceService {
         'add_date',
         'update_date',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const nsps4tSummaryDatum of emissionsImport.nsps4tSummaryData) {
@@ -163,11 +166,13 @@ export class Nsps4tSummaryWorkspaceService {
 
       await Promise.all(buildPromises);
 
+      // Pass transaction to child services for atomicity  
       const insertPromises = [];
-      insertPromises.push(this.nsps4tAnnualService.import(nsps4tAnnualObjects));
+      insertPromises.push(this.nsps4tAnnualService.import(nsps4tAnnualObjects, trx));
       insertPromises.push(
         this.nsps4tCompliancePeriodService.import(
           nsps4tCompliancePeriodObjects,
+          trx,
         ),
       );
 

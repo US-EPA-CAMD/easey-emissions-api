@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DerivedHourlyValueWorkspaceRepository } from './derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { randomUUID } from 'crypto';
+import { EntityManager } from 'typeorm';
 import { DerivedHourlyValueImportDTO } from '../dto/derived-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
@@ -58,7 +59,7 @@ export class DerivedHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.derived_hrly_value',
@@ -81,6 +82,8 @@ export class DerivedHourlyValueWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
 import {
@@ -52,7 +53,7 @@ export class MatsDerivedHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.mats_derived_hrly_value',
@@ -69,6 +70,8 @@ export class MatsDerivedHourlyValueWorkspaceService {
           'add_date',
           'update_date',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
