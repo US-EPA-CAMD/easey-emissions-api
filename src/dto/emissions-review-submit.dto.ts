@@ -25,5 +25,7 @@ export class EmissionsReviewSubmitDTO {
 
   windowStatus: string;
 
+  windowExpiredDate: string;
+
   periodAbbreviation: string;
 }
