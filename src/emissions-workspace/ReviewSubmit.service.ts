@@ -69,7 +69,7 @@ export class ReviewSubmitService {
         [monPlanIds]);
         
         const severityMap:Map<string, {description:string,severityCode:string}> = new Map(
-          severities.map((s: any) => [s.qa_cert_event_id, { description: s.severity_cd_description, severityCode: s.severity_cd }])
+          severities.map((s: any) => [s.mon_plan_id, { description: s.severity_cd_description, severityCode: s.severity_cd }])
         );
 
         for (const d of data) {
