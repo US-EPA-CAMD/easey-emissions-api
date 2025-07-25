@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, QueryRunner } from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -37,10 +37,12 @@ export class LongTermFuelFlowWorkspaceService {
 
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocations,
-    reportingPeriodId,
+    monitoringLocations: any[],
+    reportingPeriodId: string | number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    _trx?: any,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.longTermFuelFlowData) ||
@@ -66,10 +68,12 @@ export class LongTermFuelFlowWorkspaceService {
         'add_date',
         'update_date',
       ],
+        ',',
+        queryRunner,
     );
 
     for (const longTermFuelFlowDatum of emissionsImport.longTermFuelFlowData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
+      const monitoringLocationId = monitoringLocations.filter((location: { unit: { name: string; }; stackPipe: { name: string; }; }) => {
         return (
           location.unit?.name === longTermFuelFlowDatum.unitId ||
           location.stackPipe?.name === longTermFuelFlowDatum.stackPipeId

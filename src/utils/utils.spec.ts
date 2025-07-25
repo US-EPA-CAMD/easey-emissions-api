@@ -4,8 +4,10 @@ import {
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
+  withTransaction,
 } from './utils';
 import { faker } from '@faker-js/faker';
+import { EntityManager, Repository } from 'typeorm';
 
 describe('Utils', () => {
   describe('arrayFilterUndefinedNull', () => {
@@ -108,6 +110,63 @@ describe('Utils', () => {
       expect(results).toEqual(['123', '123', '235']);
       expect(uniqueResults.length).toEqual(2);
       expect(uniqueResults).toEqual(['123', '235']);
+
+    });
+  });
+
+  describe('withTransaction', () => {
+    let mockRepository: jest.Mocked<Repository<any>>;
+    let mockEntityManager: jest.Mocked<EntityManager>;
+
+    beforeEach(() => {
+      mockEntityManager = {
+        query: jest.fn(),
+        findOne: jest.fn(),
+        save: jest.fn(),
+      } as any;
+
+      mockRepository = {
+        constructor: jest.fn(),
+        target: {},
+        manager: {} as EntityManager,
+        queryRunner: null,
+        create: jest.fn(),
+        save: jest.fn(),
+        findOne: jest.fn(),
+      } as any;
+
+      // Mock the repository constructor
+      mockRepository.constructor = jest.fn().mockImplementation((manager: EntityManager) => ({
+        id: 'test-repo-id',
+        create: jest.fn(),
+        save: jest.fn(),
+        findOne: jest.fn(),
+      }));
+    });
+
+    it('should return the original repository when no transaction is provided', () => {
+      const result = withTransaction(mockRepository);
+      expect(result).toBe(mockRepository);
+    });
+
+    it('should return the original repository when transaction is undefined', () => {
+      const result = withTransaction(mockRepository, undefined);
+      expect(result).toBe(mockRepository);
+    });
+
+    it('should create a new repository instance with transaction when trx is provided', () => {
+      const result = withTransaction(mockRepository, mockEntityManager);
+
+      expect(mockRepository.constructor).toHaveBeenCalledWith(mockEntityManager);
+      expect(result).toHaveProperty('id');
+      expect(result).not.toBe(mockRepository);
+    });
+
+    it('should preserve repository properties when creating transactional instance', () => {
+      (mockRepository as any).customProperty = 'test-value';
+      const result = withTransaction(mockRepository, mockEntityManager);
+
+      expect(result).toHaveProperty('customProperty', 'test-value');
     });
   });
 });

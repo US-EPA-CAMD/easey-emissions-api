@@ -1104,7 +1104,7 @@
     webpack "5.99.6"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^11.1.3", "@nestjs/common@^11.1.5":
+"@nestjs/common@^11.1.0", "@nestjs/common@^11.1.5":
   version "11.1.5"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.5.tgz#bc491d049e21f91216189b06e56f801730a8a3d1"
   integrity sha512-DQpWdr3ShO0BHWkHl3I4W/jR6R3pDtxyBlmrpTuZF+PXxQyBXNvsUne0Wyo6QHPEDi+pAz9XchBFoKbqOhcdTg==
@@ -1124,7 +1124,7 @@
     dotenv-expand "12.0.1"
     lodash "4.17.21"
 
-"@nestjs/core@^11.1.3", "@nestjs/core@^11.1.5":
+"@nestjs/core@^11.1.0", "@nestjs/core@^11.1.5":
   version "11.1.5"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.1.5.tgz#98fff1a0b47b36a1939f6d9f6c899c085e470e25"
   integrity sha512-Qr25MEY9t8VsMETy7eXQ0cNXqu0lzuFrrTr+f+1G57ABCtV5Pogm7n9bF71OU2bnkDD32Bi4hQLeFR90cku3Tw==
@@ -1673,16 +1673,16 @@
     "@typescript-eslint/types" "8.38.0"
     eslint-visitor-keys "^4.2.1"
 
-"@us-epa-camd/easey-common@21.1.16":
-  version "21.1.16"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.1.16/82478f783b4299e1cdd8c797985fbd5627e1544d#82478f783b4299e1cdd8c797985fbd5627e1544d"
-  integrity sha512-4WYasR7b6u39UjREP20Ecz/HpPdsueZINLXXqAr+xD9UZHamHmhdSRTmJQm9aoxrPgYgRCLcpWVjz+S6XNholA==
+"@us-epa-camd/easey-common@21.1.14":
+  version "21.1.14"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.1.14/3619e6f2cf9cade2587ad68c416c24a23c4e60af#3619e6f2cf9cade2587ad68c416c24a23c4e60af"
+  integrity sha512-oVEIpZUABx4QIUzLsD9g39T6wVqSNN0lhJuzzPwveiii+18qU2Jx/37bm5JsMc+1j0dsrQpiPAuagsdGKtsT7A==
   dependencies:
     "@golevelup/ts-jest" "^0.6.2"
     "@nestjs/axios" "4.0.0"
-    "@nestjs/common" "^11.1.3"
+    "@nestjs/common" "^11.1.0"
     "@nestjs/config" "^4.0.2"
-    "@nestjs/core" "^11.1.3"
+    "@nestjs/core" "^11.1.0"
     "@nestjs/swagger" "^11.1.5"
     "@nestjs/terminus" "^11.0.0"
     axios "^1.9.0"

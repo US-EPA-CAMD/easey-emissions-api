@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto';
 import { DerivedHourlyValueImportDTO } from '../dto/derived-hourly-value.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
@@ -15,10 +16,14 @@ export class DerivedHourlyValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(rptPeriodId: number, monLocIds: string[]) {
-    const derivedHourlyValueData = await this.repository.export(rptPeriodId, monLocIds);
+  async export(hourIds: string[], params?: any) {
+    const derivedHourlyValueData = await this.repository.export(params, hourIds);
 
-    return this.map.many(derivedHourlyValueData);
+      const promises = derivedHourlyValueData?.map(data => {
+          return this.map.one(data);
+      });
+
+      return Promise.all(promises);
   }
 
   async buildObjectList(
@@ -58,7 +63,12 @@ export class DerivedHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, p0?: string, p1?: number, p2?: {
+      components: {};
+      userId: string;
+      monitorFormulas: {};
+      monitoringSystems: {};
+  }, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.derived_hrly_value',
@@ -81,6 +91,8 @@ export class DerivedHourlyValueWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {

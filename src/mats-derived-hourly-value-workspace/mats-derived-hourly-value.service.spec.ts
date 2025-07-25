@@ -3,6 +3,8 @@ import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map
 import { MatsDerivedHourlyValueWorkspaceService } from './mats-derived-hourly-value.service';
 import { MatsDerivedHourlyValueWorkspaceRepository } from './mats-derived-hourly-value.repository';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { MatsDerivedHourlyValueImportDTO } from '../dto/mats-derived-hourly-value.dto';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 const mockRepository = {
   export: () => null,
@@ -16,15 +18,50 @@ const mockMap = {
 
 const writeObjectMock = jest.fn();
 
+const mockQueryRunner = {
+  connect: jest.fn(),
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    findOne: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
+    update: jest.fn(),
+    query: jest.fn(),
+  },
+};
+
+const mockEntityManager = {
+  connection: {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  },
+  transaction: jest.fn().mockImplementation(async (fn) => {
+    return await fn(mockQueryRunner.manager);
+  }),
+  findOne: jest.fn(),
+  save: jest.fn(),
+  create: jest.fn(),
+  delete: jest.fn(),
+  update: jest.fn(),
+  query: jest.fn(),
+};
+
 describe('MatsDerivedHourlyValueWorkspaceService', () => {
   let service: MatsDerivedHourlyValueWorkspaceService;
   let repository: any;
-  let map;
+  let map: any;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         MatsDerivedHourlyValueWorkspaceService,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         {
           provide: MatsDerivedHourlyValueMap,
           useValue: mockMap,
@@ -36,11 +73,16 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -57,7 +99,7 @@ describe('MatsDerivedHourlyValueWorkspaceService', () => {
     });
 
     it('should export a mats derived hourly value record', async () => {
-      const result = await service.export(123, ['123']);
+      const result = await service.export(['123']);
       expect(result).toEqual(null);
     });
   });

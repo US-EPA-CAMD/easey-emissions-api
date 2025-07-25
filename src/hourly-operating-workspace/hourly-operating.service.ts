@@ -20,7 +20,7 @@ import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-v
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { DeleteCriteria } from '../types';
-import { isUndefinedOrNull } from '../utils/utils';
+import { isUndefinedOrNull, splitArrayInChunks } from '../utils/utils';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
@@ -32,74 +32,88 @@ export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
 @Injectable()
 export class HourlyOperatingWorkspaceService {
   constructor(
-    private readonly entityManager: EntityManager,
-    private readonly map: HourlyOperatingMap,
-    private readonly repository: HourlyOperatingWorkspaceRepository,
-    private readonly monitorHourlyValueService: MonitorHourlyValueWorkspaceService,
-    private readonly derivedHourlyValueService: DerivedHourlyValueWorkspaceService,
-    private readonly matsMonitorHourlyValueService: MatsMonitorHourlyValueWorkspaceService,
-    private readonly matsDerivedHourlyValueService: MatsDerivedHourlyValueWorkspaceService,
-    private readonly hourlyGasFlowMeterService: HourlyGasFlowMeterWorkspaceService,
-    private readonly hourlyFuelFlowService: HourlyFuelFlowWorkspaceService,
-    private readonly bulkLoadService: BulkLoadService,
-  ) {}
+      private readonly entityManager: EntityManager,
+      private readonly map: HourlyOperatingMap,
+      private readonly repository: HourlyOperatingWorkspaceRepository,
+      private readonly monitorHourlyValueService: MonitorHourlyValueWorkspaceService,
+      private readonly derivedHourlyValueService: DerivedHourlyValueWorkspaceService,
+      private readonly matsMonitorHourlyValueService: MatsMonitorHourlyValueWorkspaceService,
+      private readonly matsDerivedHourlyValueService: MatsDerivedHourlyValueWorkspaceService,
+      private readonly hourlyGasFlowMeterService: HourlyGasFlowMeterWorkspaceService,
+      private readonly hourlyFuelFlowService: HourlyFuelFlowWorkspaceService,
+      private readonly bulkLoadService: BulkLoadService,
+  ) {
+  }
+
   async getHourlyOpDataByLocationIds(
-    monitoringLocationIds: string[],
-    params: EmissionsParamsDTO,
+      monitoringLocationIds: string[],
+      params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
     const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
     );
 
     return this.map.many(results);
   }
 
   async export(
-    monitoringLocationIds: string[],
-    params: EmissionsParamsDTO,
+      monitoringLocationIds: string[],
+      params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
     if (isUndefinedOrNull(monitoringLocationIds)) {
       return null;
     }
 
     const hourlyOperating = await this.getHourlyOpDataByLocationIds(
-      monitoringLocationIds,
-      params,
+        monitoringLocationIds,
+        params,
     );
-    const reportingPeriod = await this.entityManager.findOneBy(ReportingPeriod, {
-      year: params.year,
-      quarter: params.quarter,
-    });
 
-    if (!hourlyOperating.length) return [];
+    let resultPromises = [];
 
-    const values = await Promise.all([
-      this.monitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.derivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.matsMonitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.matsDerivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.hourlyGasFlowMeterService.export(reportingPeriod.id, monitoringLocationIds),
-      this.hourlyFuelFlowService.export(reportingPeriod.id, monitoringLocationIds),
+    if (hourlyOperating) {
+      const hourlyOperatingDataChunks = splitArrayInChunks(hourlyOperating);
+
+      const getChildrenData = async (hourlyOperatingChunk: any[]) => {
+        const hourlyOperatingIds = hourlyOperatingChunk.map(i => i.id);
+
+    if (hourlyOperating?.length > 0) {
+      const values = await Promise.all([
+      this.monitorHourlyValueService.export(hourlyOperatingIds),
+      this.derivedHourlyValueService.export(hourlyOperatingIds),
+      this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
+      this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
+      this.hourlyGasFlowMeterService.export(hourlyOperatingIds),
+      this.hourlyFuelFlowService.export(hourlyOperatingIds),
     ]);
 
-    hourlyOperating.forEach(hourlyOp => {
+    hourlyOperatingChunk?.forEach(hourlyOp => {
       hourlyOp.monitorHourlyValueData =
-        values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
       hourlyOp.derivedHourlyValueData =
-        values?.[1]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          values?.[1]?.filter(derivedHourlyDatum => {return derivedHourlyDatum.hourId === hourlyOp.id;}) ?? [];
       hourlyOp.matsMonitorHourlyValueData =
-        values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
       hourlyOp.matsDerivedHourlyValueData =
-        values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
       hourlyOp.hourlyGFMData =
-        values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+          values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
       hourlyOp.hourlyFuelFlowData =
-        values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-    });
+          values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      });
+      }
+      return hourlyOperatingChunk;
+    };
 
-    return hourlyOperating;
+    for (const chunk of hourlyOperatingDataChunks) {
+      resultPromises.push(getChildrenData(chunk));
+    }
+  }
+  let results = await Promise.all(resultPromises);
+
+    return results.flat(1);
   }
 
   async delete(criteria: DeleteCriteria): Promise<void> {
@@ -108,10 +122,12 @@ export class HourlyOperatingWorkspaceService {
 
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocations,
-    reportingPeriodId,
+    monitoringLocations: any[],
+    reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: any,
+    queryRunner?: any,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.hourlyOperatingData) ||
@@ -122,6 +138,9 @@ export class HourlyOperatingWorkspaceService {
 
     const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
       'camdecmpswks.hrly_op_data',
+        null,
+        ',',
+        queryRunner
     ); // Instantiate our stream object with the correct schema.tableName we want to load to
     for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
       const monitoringLocationId = monitoringLocations.filter(location => {
@@ -132,7 +151,7 @@ export class HourlyOperatingWorkspaceService {
       })[0].id;
       //We must load the parent first because the children records require the parents uid
       const uid = randomUUID();
-      hourlyOperatingDatum['id'] = uid; //Set the id on our dto object so we can access it again when loading the children
+      hourlyOperatingDatum['id'] = uid; //Set the id on our dto object, so we can access it again when loading the children
 
       bulkLoadStream.writeObject({
         //Write objects in the exact order they appear in the database, or add a column list to the startBulkLoader method and add them in that exact order
@@ -266,41 +285,49 @@ export class HourlyOperatingWorkspaceService {
       //Write logic to insert the children records into the database in proper order
       const insertPromises = [];
       insertPromises.push(
-        this.derivedHourlyValueService.import(derivedHourlyValueObjects),
+        this.derivedHourlyValueService.import(derivedHourlyValueObjects, trx, queryRunner),
       );
       insertPromises.push(
         this.matsMonitorHourlyValueService.import(
           matsMonitorHourlyValueObjects,
+            trx,
+            queryRunner,
         ),
       );
       insertPromises.push(
-        this.monitorHourlyValueService.import(monitorHourlyValueObjects),
+        this.monitorHourlyValueService.import(monitorHourlyValueObjects, trx, queryRunner),
       );
       insertPromises.push(
         this.matsDerivedHourlyValueService.import(
           matsDerivedHourlyValueObjects,
+          trx,
+          queryRunner
         ),
       );
       insertPromises.push(
-        this.hourlyFuelFlowService.import(
-          hourlyFuelFlowObjects,
-          hourlyParameterFuelFlowObjects,
-        ),
+          this.hourlyFuelFlowService.import(
+              hourlyFuelFlowObjects,
+              '', // hourId parameter
+              '', // monitorLocationId parameter
+              reportingPeriodId,
+              {
+                components: {},
+                userId: identifiers?.userId || '',
+                monitorFormulas: {},
+                monitoringSystems: {},
+              }, // identifiers parameter
+              hourlyParameterFuelFlowObjects,
+              trx,
+              queryRunner,
+          ),
       );
+
       insertPromises.push(
-        this.hourlyGasFlowMeterService.import(hourlyGasFlowMeterObjects),
+        this.hourlyGasFlowMeterService.import(hourlyGasFlowMeterObjects, trx, queryRunner),
       );
 
-      const settled = await Promise.allSettled(insertPromises);
-
-      for (const settledElement of settled) {
-        if (settledElement.status === 'rejected') {
-          throw new EaseyException(
-            new Error(settledElement.reason),
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
-      }
+      // Use Promise.all instead of Promise.allSettled for immediate failure
+      await Promise.all(insertPromises);
     }
   }
 }

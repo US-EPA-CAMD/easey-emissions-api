@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import {DeleteResult, QueryRunner} from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -66,6 +66,8 @@ export class Nsps4tSummaryWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: any,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.nsps4tSummaryData) ||
@@ -90,6 +92,8 @@ export class Nsps4tSummaryWorkspaceService {
         'add_date',
         'update_date',
       ],
+        ',',
+        queryRunner,
     );
 
     for (const nsps4tSummaryDatum of emissionsImport.nsps4tSummaryData) {
@@ -164,23 +168,17 @@ export class Nsps4tSummaryWorkspaceService {
       await Promise.all(buildPromises);
 
       const insertPromises = [];
-      insertPromises.push(this.nsps4tAnnualService.import(nsps4tAnnualObjects));
+      insertPromises.push(this.nsps4tAnnualService.import(nsps4tAnnualObjects, trx, queryRunner));
       insertPromises.push(
         this.nsps4tCompliancePeriodService.import(
           nsps4tCompliancePeriodObjects,
+          trx,
+          queryRunner,
         ),
       );
 
-      const settled = await Promise.allSettled(insertPromises);
-
-      for (const settledElement of settled) {
-        if (settledElement.status === 'rejected') {
-          throw new EaseyException(
-            new Error(settledElement.reason),
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
-      }
+      // Use Promise.all instead of Promise.allSettled for immediate failure
+      await Promise.all(insertPromises);
     }
   }
 }

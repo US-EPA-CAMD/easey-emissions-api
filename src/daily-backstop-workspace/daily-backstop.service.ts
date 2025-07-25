@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ImportIdentifiers } from "../emissions-workspace/emissions.service";
 import { BulkLoadService } from "@us-epa-camd/easey-common/bulk-load";
+import { QueryRunner } from "typeorm";
 import { EmissionsImportDTO } from "../dto/emissions.dto";
 import { MonitorLocation } from "../entities/workspace/monitor-location.entity";
 import { DailyBackstopWorkspaceRepository} from "./daily-backstop.repository";
@@ -25,10 +26,12 @@ export class DailyBackstopWorkspaceService {
 
     async import(
         emissionsImport: EmissionsImportDTO,
-        monitoringLocations,
-        reportingPeriodId,
+        monitoringLocations: any[],
+        reportingPeriodId: string | number,
         identifiers: ImportIdentifiers,
         currentTime: string,
+        _trx?: any,
+        queryRunner?: QueryRunner,
       ): Promise<void> {
         if (
           !Array.isArray(emissionsImport?.dailyBackstopData) ||
@@ -53,10 +56,12 @@ export class DailyBackstopWorkspaceService {
             'add_date',
             'update_date',
           ],
+            ',',
+            queryRunner,
         );
     
         for (const dailyBackstopDatum of emissionsImport.dailyBackstopData) {
-          const monitoringLocation: MonitorLocation = monitoringLocations.filter(location => 
+          const monitoringLocation: MonitorLocation = monitoringLocations.filter((location: { unit: { name: string; }; }) =>
               location.unit?.name === dailyBackstopDatum.unitId 
           )[0];
         

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import {DeleteResult, QueryRunner} from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -49,10 +49,12 @@ export class SorbentTrapWorkspaceService {
 
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocations,
-    reportingPeriodId,
+    monitoringLocations: any[],
+    reportingPeriodId: string | number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: any,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.sorbentTrapData) ||
@@ -82,6 +84,8 @@ export class SorbentTrapWorkspaceService {
         'sorbent_trap_aps_cd',
         'rata_ind',
       ],
+        ',',
+        queryRunner,
     );
 
     for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
@@ -138,7 +142,7 @@ export class SorbentTrapWorkspaceService {
           this.samplingTrainService.buildObjectList(
             sorbentTrapDatum.samplingTrainData,
             sorbentTrapDatum['id'],
-            reportingPeriodId,
+              typeof reportingPeriodId === 'string' ? parseInt(reportingPeriodId) : reportingPeriodId,
             monitoringLocationId,
             identifiers,
             samplingTrainObjects,
@@ -148,7 +152,7 @@ export class SorbentTrapWorkspaceService {
       }
       await Promise.all(buildPromises);
 
-      await this.samplingTrainService.import(samplingTrainObjects);
+      await this.samplingTrainService.import(samplingTrainObjects, trx, queryRunner);
     }
   }
 }

@@ -9,6 +9,7 @@ import { WeeklySystemIntegrity } from '../entities/workspace/weekly-system-integ
 import { genWeeklySystemIntegrityDto } from '../../test/object-generators/weekly-system-integrity.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { ConfigService } from '@nestjs/config';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 describe('--WeeklySystemIntegrityWorkspaceService--', () => {
   let map: WeeklySystemIntegrityMap;
@@ -64,12 +65,17 @@ describe('--WeeklySystemIntegrityWorkspaceService--', () => {
     it('should successfully import a weekly test summary record', async () => {
       const generatedData = genWeeklySystemIntegrityDto(1);
 
-      // @ts-expect-error use as mock
-      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject: jest.fn(),
-        complete: jest.fn(),
-        finished: Promise.resolve(true),
-      });
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+          (_tableLocation: string, _columns?: string[], _delimiter?: string) => {
+            // @ts-ignore
+            return Promise.resolve({
+              writeObject: jest.fn(),
+              complete: jest.fn(),
+              finished: Promise.resolve(true),
+              status: 'Complete',
+            });
+          }
+      );
 
       await expect(service.import(generatedData)).resolves;
     });

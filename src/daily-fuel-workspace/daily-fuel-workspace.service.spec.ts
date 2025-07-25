@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genDailyFuel } from '../../test/object-generators/daily-fuel';
 import { DailyFuel } from '../entities/workspace/daily-fuel.entity';
@@ -20,7 +20,28 @@ describe('DailyFuelWorkspaceService', () => {
         DailyFuelMap,
         DailyFuelWorkspaceService,
         DailyFuelWorkspaceRepository,
-        EntityManager,
+        {
+          provide: EntityManager,
+          useFactory: () => ({
+            findOne: jest.fn(),
+            query: jest.fn(),
+            save: jest.fn(),
+            connection: {
+              createQueryRunner: jest.fn().mockReturnValue({
+                connect: jest.fn(),
+                startTransaction: jest.fn(),
+                commitTransaction: jest.fn(),
+                rollbackTransaction: jest.fn(),
+                release: jest.fn(),
+                manager: {
+                  findOne: jest.fn(),
+                  query: jest.fn(),
+                  save: jest.fn(),
+                },
+              }),
+            },
+          }),
+        },
         BulkLoadService,
         ConfigService,
       ],
@@ -39,12 +60,17 @@ describe('DailyFuelWorkspaceService', () => {
     it('should import a record', async function() {
       const dailyFuel = genDailyFuel<DailyFuel>();
 
-      // @ts-expect-error use as mock
-      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject: jest.fn(),
-        complete: jest.fn(),
-        finished: Promise.resolve(true),
-      });
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+          (_tableLocation: string, _columns?: string[], _delimiter?: string) => {
+            // @ts-ignore
+            return Promise.resolve({
+              writeObject: jest.fn(),
+              complete: jest.fn(),
+              finished: Promise.resolve(true),
+              status: 'Complete',
+            });
+          }
+      );
 
       await expect(service.import(dailyFuel)).resolves;
     });

@@ -1,9 +1,12 @@
 import { Test } from '@nestjs/testing';
+import { EntityManager, QueryRunner } from 'typeorm';
+
 
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
 import { MonitorHourlyValueWorkspaceService } from './monitor-hourly-value.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import {MonitorHourlyValueImportDTO} from "../dto/monitor-hourly-value.dto";
 
 const mockRepository = {
   export: () => null,
@@ -15,15 +18,50 @@ const mockMap = {
 
 const writeObjectMock = jest.fn();
 
+const mockQueryRunner = {
+  connect: jest.fn(),
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    findOne: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
+    update: jest.fn(),
+    query: jest.fn(),
+  },
+};
+
+const mockEntityManager = {
+  connection: {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  },
+  transaction: jest.fn().mockImplementation(async (fn) => {
+    return await fn(mockQueryRunner.manager);
+  }),
+  findOne: jest.fn(),
+  save: jest.fn(),
+  create: jest.fn(),
+  delete: jest.fn(),
+  update: jest.fn(),
+  query: jest.fn(),
+};
+
 describe('MonitorHourlyValueWorkspaceService', () => {
   let service: MonitorHourlyValueWorkspaceService;
   let repository: MonitorHourlyValueWorkspaceRepository;
-  let map;
+  let map: any;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         MonitorHourlyValueWorkspaceService,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         {
           provide: MonitorHourlyValueMap,
           useValue: mockMap,
@@ -35,11 +73,16 @@ describe('MonitorHourlyValueWorkspaceService', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -56,11 +99,11 @@ describe('MonitorHourlyValueWorkspaceService', () => {
     });
 
     it('should export a record', async () => {
-      const result = await service.export(123, ['123']);
+      const result = await service.export(['123']);
       expect(result).toEqual(null);
     });
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -78,5 +121,4 @@ describe('MonitorHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
 });

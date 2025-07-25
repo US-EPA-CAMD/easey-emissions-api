@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -28,7 +28,25 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EntityManager,
+        {
+          provide: EntityManager,
+          useFactory: () => ({
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              manager: {
+                save: jest.fn(),
+                find: jest.fn(),
+                findOne: jest.fn(),
+                remove: jest.fn(),
+                query: jest.fn(),
+              },
+            }),
+          }),
+        },
         Nsps4tAnnualWorkspaceRepository,
         Nsps4tAnnualWorkspaceService,
         Nsps4tCompliancePeriodWorkspaceRepository,
@@ -82,12 +100,22 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     });
     const nsps4tSummaryData = await map.many(entityMocks);
 
-    //@ts-expect-error as mock
-    jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-      writeObject: jest.fn(),
-      complete: jest.fn(),
-      finished: Promise.resolve(true),
-    });
+    jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+        (tableLocation: string, columns?: string[], delimiter?: string, queryRunner?: QueryRunner) => {
+          return Promise.resolve({
+            writeObject: jest.fn(),
+            complete: jest.fn(),
+            finished: Promise.resolve(true),
+            status: 'Complete',
+            resolver: jest.fn(),
+            client: jest.fn(),
+            delimiter: ',',
+            hasWritten: false,
+            tableLocation: tableLocation,
+            columns: columns || []
+          } as any);
+        }
+    );
 
     const emissionsDto = new EmissionsImportDTO();
     emissionsDto.nsps4tSummaryData = nsps4tSummaryData;

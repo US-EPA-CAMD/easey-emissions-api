@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { mockHourlyFuelFlowWorkspaceRepository } from '../../test/mocks/mock-hourly-fuel-flow-workspace-repository';
 import { genHourlyFuelFlow } from '../../test/object-generators/hourly-fuel-flow';
@@ -11,6 +11,7 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
 import { HourlyFuelFlowWorkspaceService } from './hourly-fuel-flow-workspace.service';
+import {HourlyFuelFlowImportDTO} from "../dto/hourly-fuel-flow.dto";
 
 const writeObjectMock = jest.fn();
 
@@ -21,13 +22,24 @@ describe('HourlyFuelFlowService Workspace', () => {
   let parameterFuelFlowWorkspaceRepository: HourlyParameterFuelFlowWorkspaceRepository;
 
   const mockHourlyParamFuelFlowWorkspaceService = {
-    export: () => Promise.resolve([]),
+    export: jest.fn().mockResolvedValue([]),
+  };
+
+  const mockQueryRunner = {
+    manager: {},
+  } as QueryRunner;
+
+  const mockEntityManager = {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EntityManager,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         HourlyFuelFlowWorkspaceService,
         {
           provide: HourlyFuelFlowWorkspaceRepository,
@@ -41,11 +53,16 @@ describe('HourlyFuelFlowService Workspace', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
         HourlyParameterFuelFlowWorkspaceRepository,
@@ -66,7 +83,7 @@ describe('HourlyFuelFlowService Workspace', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -74,21 +91,29 @@ describe('HourlyFuelFlowService Workspace', () => {
         new HourlyFuelFlowImportDTO(),
       ];
 
-      await service.import(params, '', '', 1, {
-        components: {},
-        userId: '',
-        monitorFormulas: {},
-        monitoringSystems: {},
-      });
+      await service.import(
+          params,
+          'hourId',
+          'monitorLocationId',
+          1,
+          {
+            components: {},
+            userId: '',
+            monitorFormulas: {},
+            monitoringSystems: {},
+          },
+          [],
+          new Date().toISOString(),
+          mockQueryRunner
+      );
 
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
 
   describe('export', () => {
     it('should return null given no fuel flows were found', async function() {
-      await expect(service.export(123, [])).resolves.toEqual([]);
+      await expect(service.export([])).resolves.toEqual([]);
     });
 
     it('returns export record for hourly fuel flow', async () => {
@@ -99,7 +124,13 @@ describe('HourlyFuelFlowService Workspace', () => {
       });
       const mapppedValues = await Promise.all(promises);
       jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
-      expect(await service.export(123, ['123'])).toEqual(mapppedValues);
+      await expect(
+          await service.export(
+              mockedValues.map(value => {
+                return value.hourId;
+              }),
+          ),
+      ).toEqual(mapppedValues);
     });
   });
 });

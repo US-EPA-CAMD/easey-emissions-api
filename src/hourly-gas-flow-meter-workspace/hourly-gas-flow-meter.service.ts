@@ -9,6 +9,7 @@ import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
 
 @Injectable()
 export class HourlyGasFlowMeterWorkspaceService {
@@ -18,8 +19,8 @@ export class HourlyGasFlowMeterWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(rptPeriodId: number, monLocIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
-    const results = await this.repository.export(rptPeriodId, monLocIds);
+  async export(hourIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
+    const results = await this.repository.export(0, hourIds);
     return this.map.many(results);
   }
 
@@ -54,7 +55,12 @@ export class HourlyGasFlowMeterWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, _p0?: string, _p1?: number, _p2?: {
+      components: {};
+      userId: string;
+      monitorFormulas: {};
+      monitoringSystems: {};
+  }, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_gas_flow_meter',
@@ -73,6 +79,8 @@ export class HourlyGasFlowMeterWorkspaceService {
           'add_date',
           'update_date',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {

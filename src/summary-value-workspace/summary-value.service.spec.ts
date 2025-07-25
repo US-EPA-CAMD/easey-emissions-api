@@ -10,6 +10,7 @@ import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { SummaryValue } from '../entities/workspace/summary-value.entity';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager, QueryRunner } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
@@ -23,11 +24,23 @@ describe('Summary Value Workspace Service Test', () => {
   let service: SummaryValueWorkspaceService;
   let bulkLoadService: BulkLoadService;
   let repository: any;
-  let map;
+  let map: any;
+
+  const mockQueryRunner = {
+    manager: {},
+  } as QueryRunner;
+
+  const mockEntityManager = {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  };
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         SummaryValueWorkspaceService,
         SummaryValueMap,
         BulkLoadService,
@@ -52,12 +65,22 @@ describe('Summary Value Workspace Service Test', () => {
     it('should successfully import a summary value record', async () => {
       const generatedData = genSummaryValueImportDto(1);
 
-      // @ts-expect-error use as mock
-      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject: jest.fn(),
-        complete: jest.fn(),
-        finished: Promise.resolve(true),
-      });
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+          (tableLocation: string, columns?: string[], _delimiter?: string, _queryRunner?: QueryRunner) => {
+            return Promise.resolve({
+              writeObject: jest.fn(),
+              complete: jest.fn(),
+              finished: Promise.resolve(true),
+              status: 'Complete',
+              resolver: jest.fn(),
+              client: jest.fn(),
+              delimiter: ',',
+              hasWritten: false,
+              tableLocation: tableLocation,
+              columns: columns || []
+            } as any);
+          }
+      );
 
       const emissionsDto = new EmissionsImportDTO();
       emissionsDto.summaryValueData = generatedData;

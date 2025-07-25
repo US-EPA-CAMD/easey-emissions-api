@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import {DeleteResult, QueryRunner} from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -76,6 +76,8 @@ export class WeeklyTestSummaryWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: any,
+    queryRunner?: any,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.weeklyTestSummaryData) ||
@@ -101,10 +103,12 @@ export class WeeklyTestSummaryWorkspaceService {
         'add_date',
         'update_date',
       ],
+        ',',
+        queryRunner,
     );
 
     for (const weeklyTestSummaryDatum of emissionsImport.weeklyTestSummaryData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
+      const monitoringLocationId = monitoringLocations.filter((location: { unit: { name: string; }; stackPipe: { name: string; }; }) => {
         return (
           location.unit?.name === weeklyTestSummaryDatum.unitId ||
           location.stackPipe?.name === weeklyTestSummaryDatum.stackPipeId
@@ -166,7 +170,7 @@ export class WeeklyTestSummaryWorkspaceService {
 
       await Promise.all(buildPromises);
 
-      await this.weeklySystemIntegrityService.import(systemIntegrityObjects);
+      await this.weeklySystemIntegrityService.import(systemIntegrityObjects, trx, queryRunner);
     }
   }
 }

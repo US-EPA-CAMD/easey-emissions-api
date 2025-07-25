@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
 import { ComponentRepository } from '../component/component.repository';
@@ -77,12 +77,24 @@ describe('SorbentTrapWorkspaceService', () => {
     });
     const sorbentTrapData = await map.many(mockedValues);
 
-    //@ts-expect-error as mock
-    jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-      writeObject: jest.fn(),
-      complete: jest.fn(),
-      finished: Promise.resolve(true),
-    });
+
+    jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+        (tableLocation: string, columns?: string[], _delimiter?: string, _queryRunner?: QueryRunner) => {
+          return Promise.resolve({
+            writeObject: jest.fn(),
+            complete: jest.fn(),
+            finished: Promise.resolve(true),
+            status: 'Complete',
+            resolver: jest.fn(),
+            client: jest.fn(),
+            delimiter: ',',
+            hasWritten: false,
+            tableLocation: tableLocation,
+            columns: columns || []
+          } as any);
+        }
+    );
+
     const emissionsDto = new EmissionsImportDTO();
     emissionsDto.sorbentTrapData = sorbentTrapData;
 

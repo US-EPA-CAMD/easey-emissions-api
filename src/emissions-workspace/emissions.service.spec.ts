@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner} from 'typeorm';
 
 import { mockEmissionsWorkspaceRepository } from '../../test/mocks/emissions-workspace-repository';
 import { mockHourlyOperatingWorkspaceRepository } from '../../test/mocks/hourly-operating-workspace-repository';
@@ -123,7 +123,27 @@ describe('Emissions Workspace Service', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [BulkLoadModule],
       providers: [
-        EntityManager,
+        {
+          provide: EntityManager,
+          useFactory: () => ({
+            findOne: jest.fn(),
+            query: jest.fn(),
+            connection: {
+              createQueryRunner: jest.fn().mockReturnValue({
+                connect: jest.fn(),
+                startTransaction: jest.fn(),
+                commitTransaction: jest.fn(),
+                rollbackTransaction: jest.fn(),
+                release: jest.fn(),
+                manager: {
+                  findOne: jest.fn(),
+                  query: jest.fn(),
+                  save: jest.fn(),
+                },
+              }),
+            },
+          }),
+        },
         ConfigService,
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
@@ -384,6 +404,22 @@ describe('Emissions Workspace Service', () => {
 
   it('should successfully import', async function() {
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
+
+    // Mock the query runner and transaction methods
+    const mockQueryRunner = {
+      connect: jest.fn(),
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: {
+        findOne: jest.fn().mockResolvedValue(new ReportingPeriod()),
+        query: jest.fn(),
+        save: jest.fn(),
+      },
+    } as unknown as QueryRunner;
+
+    jest.spyOn(manager.connection, 'createQueryRunner').mockReturnValue(mockQueryRunner);
     jest.spyOn(manager, 'findOne').mockResolvedValue(new ReportingPeriod());
     jest.spyOn(manager, 'query').mockImplementation();
 

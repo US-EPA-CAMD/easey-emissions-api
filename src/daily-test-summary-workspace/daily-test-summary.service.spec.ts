@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryWorkspaceService } from './daily-test-summary.service';
@@ -18,6 +19,12 @@ import { MonitorLocation } from '../entities/monitor-location.entity';
 
 const writeObjectMock = jest.fn();
 
+const mockDailyCalibrationWorkspaceService = {
+  export: jest.fn().mockResolvedValue([]),
+  import: jest.fn().mockResolvedValue(undefined),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
+};
+
 describe('Daily Summary Workspace Service', () => {
   let dailyCalibrationWorkspaceRepository: DailyCalibrationWorkspaceRepository;
   let dailyTestSummaryService: DailyTestSummaryWorkspaceService;
@@ -32,6 +39,32 @@ describe('Daily Summary Workspace Service', () => {
         DailyTestSummaryMap,
         DailyCalibrationMap,
         {
+          provide: DailyCalibrationWorkspaceService,
+          useValue: mockDailyCalibrationWorkspaceService,
+        },
+        {
+          provide: EntityManager,
+          useFactory: () => ({
+            findOne: jest.fn(),
+            query: jest.fn(),
+            save: jest.fn(),
+            connection: {
+              createQueryRunner: jest.fn().mockReturnValue({
+                connect: jest.fn(),
+                startTransaction: jest.fn(),
+                commitTransaction: jest.fn(),
+                rollbackTransaction: jest.fn(),
+                release: jest.fn(),
+                manager: {
+                  findOne: jest.fn(),
+                  query: jest.fn(),
+                  save: jest.fn(),
+                },
+              }),
+            },
+          }),
+        },
+        {
           provide: DailyTestSummaryWorkspaceRepository,
           useValue: mockDailyTestSummaryWorkspaceRepository,
         },
@@ -42,11 +75,16 @@ describe('Daily Summary Workspace Service', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                () => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -117,6 +155,10 @@ describe('Daily Summary Workspace Service', () => {
       new DailyTestSummaryImportDTO(),
       new DailyTestSummaryImportDTO(),
     ];
+
+    emissionsDto.dailyTestSummaryData.forEach(summary => {
+      summary.dailyCalibrationData = [];
+    });
 
     const identifiers = { locations: {}, userId: '' };
     const monitoringLocationId = faker.datatype.string();

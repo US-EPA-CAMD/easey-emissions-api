@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genNsps4tCompliancePeriod } from '../../test/object-generators/nsps4t-compliance-period';
 import { Nsps4tCompliancePeriod } from '../entities/workspace/nsps4t-compliance-period.entity';
@@ -11,7 +11,7 @@ import { Nsps4tCompliancePeriodWorkspaceService } from './nsps4t-compliance-peri
 
 describe('Nsps4tCompliancePeriodWorkspaceService', () => {
   let service: Nsps4tCompliancePeriodWorkspaceService;
-  let map;
+  let map: any;
   let bulkLoadService: BulkLoadService;
 
   beforeEach(async () => {
@@ -42,12 +42,17 @@ describe('Nsps4tCompliancePeriodWorkspaceService', () => {
       Nsps4tCompliancePeriod
     >(1);
 
-    //@ts-expect-error as mock
-    jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-      writeObject: jest.fn(),
-      complete: jest.fn(),
-      finished: Promise.resolve(true),
-    });
+    jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+        (_tableLocation: string, _columns?: string[], _delimiter?: string, _queryRunner?: QueryRunner) => {
+          // @ts-ignore
+          return Promise.resolve({
+            writeObject: jest.fn(),
+            complete: jest.fn(),
+            finished: Promise.resolve(true),
+            status: 'Complete',
+          });
+        }
+    );
 
     await expect(service.import(nsps4tCompliancePeriod)).resolves;
   });

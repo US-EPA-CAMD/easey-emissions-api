@@ -9,6 +9,8 @@ import { HourlyParameterFuelFlowWorkspaceService } from '../hourly-parameter-fue
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 
 @Injectable()
@@ -20,16 +22,12 @@ export class HourlyFuelFlowWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(
-    rptPeriodId: number,
-    monLocIds: string[],
-  ): Promise<HourlyFuelFlowDTO[]> {
-    if (!rptPeriodId) return [];
-    if (!Array.isArray(monLocIds) || monLocIds.length < 1) {
+  async export(hourlyOperatingIds: string[]): Promise<HourlyFuelFlowDTO[]> {
+    if (!Array.isArray(hourlyOperatingIds) || hourlyOperatingIds.length < 1) {
       return [];
     }
 
-    const hourlyFuelFlow = await this.repository.export(rptPeriodId, monLocIds);
+    const hourlyFuelFlow = await this.repository.export(0, hourlyOperatingIds);
 
     if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
       return [];
@@ -37,10 +35,11 @@ export class HourlyFuelFlowWorkspaceService {
 
     const mapped = await this.map.many(hourlyFuelFlow);
 
-    if (mapped.length > 0) {
+    const mappedIds = mapped.map(el => el.id);
+
+    if (mappedIds.length > 0) {
       const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlow.export(
-        rptPeriodId,
-        monLocIds,
+          mappedIds,
       );
 
       this.organizeData(mapped, hourlyParamFuelFlowData);
@@ -127,8 +126,12 @@ export class HourlyFuelFlowWorkspaceService {
   }
 
   async import(
-    objectList: Array<object>,
-    childObjectList: Array<object>,
+      objectList: Array<object>, p0: string, p1: string, p2: number, p3: {
+        components: {};
+        userId: string;
+        monitorFormulas: {};
+        monitoringSystems: {};
+      }, childObjectList: Array<object>, trx?: any, queryRunner?: QueryRunner,
   ): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
@@ -150,6 +153,8 @@ export class HourlyFuelFlowWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {
@@ -160,7 +165,7 @@ export class HourlyFuelFlowWorkspaceService {
       await bulkLoadStream.finished;
 
       if (childObjectList && childObjectList.length > 0) {
-        await this.hourlyParameterFuelFlow.import(childObjectList); //Load children records after parent records
+        await this.hourlyParameterFuelFlow.import(childObjectList, queryRunner, trx); //Load children records after parent records
       }
     }
   }

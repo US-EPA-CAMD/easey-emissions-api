@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceService } from './daily-calibration.service';
@@ -17,7 +18,38 @@ const dailyCalibrationRepositoryMock = {
 
 const writeObjectMock = jest.fn();
 
-describe('Daily Calibration Workspace Spervice', () => {
+const mockQueryRunner = {
+  connect: jest.fn(),
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    findOne: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
+    update: jest.fn(),
+    query: jest.fn(),
+  },
+};
+
+const mockEntityManager = {
+  connection: {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  },
+  transaction: jest.fn().mockImplementation(async (fn) => {
+    return await fn(mockQueryRunner.manager);
+  }),
+  findOne: jest.fn(),
+  save: jest.fn(),
+  create: jest.fn(),
+  delete: jest.fn(),
+  update: jest.fn(),
+  query: jest.fn(),
+};
+
+describe('Daily Calibration Workspace Service', () => {
   let dailyCalibrationService: DailyCalibrationWorkspaceService;
 
   beforeEach(async () => {
@@ -26,17 +58,26 @@ describe('Daily Calibration Workspace Spervice', () => {
         DailyCalibrationWorkspaceService,
         DailyCalibrationMap,
         {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
+        {
           provide: DailyCalibrationWorkspaceRepository,
           useValue: dailyCalibrationRepositoryMock,
         },
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -55,7 +96,6 @@ describe('Daily Calibration Workspace Spervice', () => {
     );
   });
 
-  /*
   it('should mock import of 3 new records', async function() {
     const params = [
       new DailyCalibrationImportDTO(),
@@ -72,5 +112,4 @@ describe('Daily Calibration Workspace Spervice', () => {
 
     expect(writeObjectMock).toHaveBeenCalledTimes(3);
   });
-  */
 });

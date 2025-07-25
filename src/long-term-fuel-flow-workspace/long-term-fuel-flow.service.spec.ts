@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
+import { QueryRunner, EntityManager } from 'typeorm';
 
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { LongTermFuelFlowWorkspaceRepository } from './long-term-fuel-flow.repository';
@@ -17,7 +18,30 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
   let repository: LongTermFuelFlowWorkspaceRepository;
   let service: LongTermFuelFlowWorkspaceService;
   let bulkLoadService: BulkLoadService;
-  let map;
+  let map: { many: (arg0: LongTermFuelFlow[]) => any; one: (arg0: LongTermFuelFlow) => any; };
+
+  const mockEntityManager = {
+    transaction: jest.fn().mockImplementation(async (callback) => {
+      const mockQueryRunner = {
+        connect: jest.fn(),
+        startTransaction: jest.fn(),
+        commitTransaction: jest.fn(),
+        rollbackTransaction: jest.fn(),
+        release: jest.fn(),
+        manager: {
+          save: jest.fn(),
+          delete: jest.fn(),
+          findOne: jest.fn(),
+          find: jest.fn(),
+        },
+      };
+      return callback(mockQueryRunner);
+    }),
+    save: jest.fn(),
+    delete: jest.fn(),
+    findOne: jest.fn(),
+    find: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -26,6 +50,10 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
         LongTermFuelFlowMap,
         BulkLoadService,
         ConfigService,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         {
           provide: LongTermFuelFlowWorkspaceRepository,
           useValue: mockLongTermFuelFlowWorkspaceRepository,
@@ -46,12 +74,17 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
     const mockedData = genLongTermFuelFlow<LongTermFuelFlow>(1);
     const longTermFuelFlow = await map.many(mockedData);
 
-    //@ts-expect-error as mock
-    jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-      writeObject: jest.fn(),
-      complete: jest.fn(),
-      finished: Promise.resolve(true),
-    });
+    jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+        (_tableLocation: string, _columns?: string[], _delimiter?: string) => {
+          // @ts-ignore
+          return Promise.resolve({
+            writeObject: jest.fn(),
+            complete: jest.fn(),
+            finished: Promise.resolve(true),
+            status: 'Complete',
+          });
+        }
+    );
 
     const emissionsDto = new EmissionsImportDTO();
     emissionsDto.longTermFuelFlowData = longTermFuelFlow;

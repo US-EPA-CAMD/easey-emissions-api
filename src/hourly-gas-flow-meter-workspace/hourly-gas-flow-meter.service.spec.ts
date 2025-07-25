@@ -6,6 +6,9 @@ import { HourlyGasFlowMeterWorkspaceRepository } from './hourly-gas-flow-meter.r
 import { HourlyGasFlowMeterWorkspaceService } from './hourly-gas-flow-meter.service';
 import { mockHourlyGasFlowMeterWorkspaceRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-workspace-repository';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager, QueryRunner } from 'typeorm';
+import {HourlyGasFlowMeterImportDTO} from "../dto/hourly-gas-flow-meter.dto";
+
 
 const writeObjectMock = jest.fn();
 
@@ -14,9 +17,21 @@ describe('--HourlyGasFlowMeterService--', () => {
   let repository: HourlyGasFlowMeterWorkspaceRepository;
   let service: HourlyGasFlowMeterWorkspaceService;
 
+  const mockQueryRunner = {
+    manager: {},
+  } as QueryRunner;
+
+  const mockEntityManager = {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  };
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         HourlyGasFlowMeterMap,
         HourlyGasFlowMeterWorkspaceService,
         {
@@ -26,11 +41,16 @@ describe('--HourlyGasFlowMeterService--', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -56,10 +76,14 @@ describe('--HourlyGasFlowMeterService--', () => {
       const mappedValues = await Promise.all(promises);
       jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
 
-      await expect(service.export(123, ['123'])).resolves.toEqual(mappedValues);
+      await expect(service.export(mockedValues.map(value => {
+                return value.hourId;
+              }),
+          ),
+      ).resolves.toEqual(mappedValues);
     });
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -77,5 +101,4 @@ describe('--HourlyGasFlowMeterService--', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
 });

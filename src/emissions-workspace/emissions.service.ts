@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
-import { DeleteResult, EntityManager } from 'typeorm';
+import {DeleteResult, EntityManager, QueryRunner} from 'typeorm';
 
 import { ComponentRepository } from '../component/component.repository';
 import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
@@ -27,6 +27,7 @@ import {
   hasArrayValues,
   isUndefinedOrNull,
   objectValuesByKey,
+  withTransaction,
 } from '../utils/utils';
 import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-workspace/weekly-test-summary.service';
 import { EmissionsChecksService } from './emissions-checks.service';
@@ -164,167 +165,192 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
-    const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
-    const unitIds = objectValuesByKey<string>('unitId', params, true);
+    // Create a query runner to manage the transaction
 
-    const plant = await this.plantRepository.getImportPlant({
-      orisCode: params.orisCode,
-      stackIds: stackPipeIds,
-      unitIds: unitIds,
-    });
-
-    if (isUndefinedOrNull(plant)) {
-      throw new NotFoundException('Plant not found.');
-    }
-
-    const monitorPlans = plant.monitorPlans;
-
-    if (monitorPlans.length === 0) {
-      throw new NotFoundException('Monitor plan not found.');
-    }
-
-    if (monitorPlans.length > 1) {
-      throw new NotFoundException('Multiple active monitor plans found.');
-    }
-
-    const reportingPeriod = await this.entityManager.findOne(ReportingPeriod, {
-      where: {
-        year: params.year,
-        quarter: params.quarter,
-      },
-    });
-
-    if (!reportingPeriod) {
-      throw new NotFoundException('Reporting period not found.');
-    }
-
-    const monitorPlanId = monitorPlans[0].id;
-    const monitoringLocations = monitorPlans[0].locations;
-
-    const reportingPeriodId = reportingPeriod.id;
-
-    const identifiers = await this.getUnifiedIdentifiers(
-      params,
-      monitoringLocations,
-      userId,
-    );
-
-    // Import-28 Valid formulaIdentifiers for location
-    await this.checksService.invalidFormulasCheck(params, monitoringLocations);
-
-    for (const monitorPlan of monitorPlans) {
-      await this.entityManager.query(
-        'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
-        [monitorPlan.id, reportingPeriodId],
-      );
-    }
-
-    const currentTime = currentDateTime().toISOString();
-
-    const importPromises = [
-      this.importDailyEmissions(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-
-      this.importDailyTestSummaries(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-
-      this.importHourlyOperating(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-
-      this.importSummaryValue(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-      this.importSorbentTrap(
-        params,
-        reportingPeriodId,
-        monitoringLocations,
-        identifiers,
-        currentTime,
-      ),
-      this.importNsps4tSummaries(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-      this.importWeeklyTestSummary(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-      this.importLongTermFuelFlow(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-      this.importDailyBackstop(
-        params,
-        monitoringLocations,
-        reportingPeriodId,
-        identifiers,
-        currentTime,
-      ),
-    ];
-
-    const importResults = await Promise.allSettled(importPromises);
-
-    for (const importResult of importResults) {
-      if (importResult.status === 'rejected') {
-        throw new EaseyException(
-          new Error(importResult.reason.toString()),
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-    }
+    const queryRunner = this.entityManager.connection.createQueryRunner();
+    await queryRunner.startTransaction();
 
     try {
-      await this.repository.save(
-        this.repository.create({
+      // Use the transaction entity manager
+      const trx = queryRunner.manager;
+
+      const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
+      const unitIds = objectValuesByKey<string>('unitId', params, true);
+
+      const plant = await this.plantRepository.getImportPlant({
+        orisCode: params.orisCode,
+        stackIds: stackPipeIds,
+        unitIds: unitIds,
+      });
+
+      if (isUndefinedOrNull(plant)) {
+        throw new NotFoundException('Plant not found.');
+      }
+
+      const monitorPlans = plant.monitorPlans;
+
+      if (monitorPlans.length === 0) {
+        throw new NotFoundException('Monitor plan not found.');
+      }
+
+      if (monitorPlans.length > 1) {
+        throw new NotFoundException('Multiple active monitor plans found.');
+      }
+
+      const reportingPeriod = await trx.findOne(ReportingPeriod, {
+        where: {
+          year: params.year,
+          quarter: params.quarter,
+        },
+      });
+
+      if (!reportingPeriod) {
+        throw new NotFoundException('Reporting period not found.');
+      }
+
+      const monitorPlanId = monitorPlans[0].id;
+      const monitoringLocations = monitorPlans[0].locations;
+
+      const reportingPeriodId = reportingPeriod.id;
+
+      const identifiers = await this.getUnifiedIdentifiers(
+          params,
+          monitoringLocations,
+          userId,
+      );
+
+      // Import-28 Valid formulaIdentifiers for location
+      await this.checksService.invalidFormulasCheck(params, monitoringLocations);
+
+      for (const monitorPlan of monitorPlans) {
+        await trx.query(
+            'CALL camdecmpswks.delete_monitor_plan_emissions_data_from_workspace($1, $2)',
+            [monitorPlan.id, reportingPeriodId],
+        );
+      }
+
+      const currentTime = currentDateTime().toISOString();
+
+      const importPromises = [
+        this.importDailyEmissions(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+
+        this.importDailyTestSummaries(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+
+        this.importHourlyOperating(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+
+        this.importSummaryValue(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+        this.importSorbentTrap(
+            params,
+            reportingPeriodId,
+            monitoringLocations,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+        this.importNsps4tSummaries(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+        this.importWeeklyTestSummary(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+        this.importLongTermFuelFlow(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+        this.importDailyBackstop(
+            params,
+            monitoringLocations,
+            reportingPeriodId,
+            identifiers,
+            currentTime,
+            trx,
+            queryRunner,
+        ),
+      ];
+
+      // Use Promise.all instead of Promise.allSettled for immediate failure
+      await Promise.all(importPromises);
+
+      // Use withTransaction to create a repository instance that operates within the transaction
+      const repository = withTransaction(this.repository, trx);
+
+      await repository.save(
+          repository.create({
+            monitorPlanId,
+            reportingPeriodId,
+            evalStatusCd: 'EVAL',
+            needsEvalFlag: 'Y',
+            submissionAvailabilityCd: 'GRANTED',
+            lastUpdated: new Date(),
+          }),
+      );
+
+      await repository.updateAllViews(
           monitorPlanId,
-          reportingPeriodId,
-          evalStatusCd: 'EVAL',
-          needsEvalFlag: 'Y',
-          submissionAvailabilityCd: 'GRANTED',
-          lastUpdated: new Date(),
-        }),
+          params.quarter,
+          params.year,
       );
 
-      await this.repository.updateAllViews(
-        monitorPlanId,
-        params.quarter,
-        params.year,
-      );
+      // Commit the transaction if everything succeeded
+      await queryRunner.commitTransaction();
+
+      return {
+        message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
+      };
     } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      // Rollback the transaction if any error occurred
+      await queryRunner.rollbackTransaction();
     }
-
-    return {
-      message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
-    };
   }
 
   async importDailyEmissions(
@@ -333,6 +359,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ) {
     await this.dailyEmissionService.import(
       emissionsImport,
@@ -340,6 +368,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -349,6 +379,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.dailyTestSummaryService.import(
       emissionsImport,
@@ -356,6 +388,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -365,6 +399,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.hourlyOperatingService.import(
       emissionsImport,
@@ -372,15 +408,19 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
   async importSummaryValue(
     emissionsImport: EmissionsImportDTO,
     monitoringLocations: MonitorLocation[],
-    reportingPeriodId,
+    reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.summaryValueService.import(
       emissionsImport,
@@ -388,6 +428,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -397,6 +439,8 @@ export class EmissionsWorkspaceService {
     monitoringLocations: MonitorLocation[],
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.sorbentTrapService.import(
       emissionsImport,
@@ -404,6 +448,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -413,6 +459,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.nsps4tSummaryWorkspaceService.import(
       emissionsImport,
@@ -420,6 +468,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -429,6 +479,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ) {
     await this.weeklyTestSummaryService.import(
       emissionsImport,
@@ -436,6 +488,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -445,6 +499,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.longTermFuelFlowWorkspaceService.import(
       emissionsImport,
@@ -452,6 +508,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -461,6 +519,8 @@ export class EmissionsWorkspaceService {
     reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.dailyBackstopWorkspaceService.import(
       emissionsImport,
@@ -468,6 +528,8 @@ export class EmissionsWorkspaceService {
       reportingPeriodId,
       identifiers,
       currentTime,
+      trx,
+      queryRunner,
     );
   }
 
@@ -589,7 +651,7 @@ export class EmissionsWorkspaceService {
 
   async getMonitoringLocationId(
     monitoringLocations: MonitorLocation[],
-    dataType,
+    dataType: { unitId: string; stackPipeId: string; },
   ) {
     const filteredLocations = monitoringLocations.filter(location => {
       return (

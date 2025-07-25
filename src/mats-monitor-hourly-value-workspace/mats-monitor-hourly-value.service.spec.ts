@@ -1,10 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
 import { MatsMonitorHourlyValueWorkspaceRepository } from './mats-monitor-hourly-value.repository';
 import { MatsMonitorHourlyValueWorkspaceService } from './mats-monitor-hourly-value.service';
+import {MatsMonitorHourlyValueImportDTO} from "../dto/mats-monitor-hourly-value.dto";
 
 const mockMap = {
   many: () => null,
@@ -53,11 +54,11 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
     it('should export a record', async () => {
       jest.spyOn(repository, 'export').mockResolvedValue(null);
 
-      const result = await service.export(123, ['123']);
+      const result = await service.export(['123']);
       expect(result).toEqual(null);
     });
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -75,5 +76,5 @@ describe('MatsMonitorHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
+
 });

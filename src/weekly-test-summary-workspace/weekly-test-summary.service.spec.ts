@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { mockWeeklyTestSummaryWorkspaceRepository } from '../../test/mocks/mock-weekly-test-summary-workspace-repository';
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
@@ -88,12 +88,17 @@ describe('--WeeklyTestSummaryWorkspaceService--', () => {
       });
       const importData = await map.many(generatedData);
 
-      // @ts-expect-error use as mock
-      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject: jest.fn(),
-        complete: jest.fn(),
-        finished: Promise.resolve(true),
-      });
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+      (_tableLocation: string, columns?: string[], _delimiter?: string) => {
+        // @ts-ignore
+        return Promise.resolve({
+          writeObject: jest.fn(),
+          complete: jest.fn(),
+          finished: Promise.resolve(true),
+          status: 'Complete',
+        });
+      }
+    );
 
       jest
         .spyOn(weeklySystemIntegrityService, 'import')

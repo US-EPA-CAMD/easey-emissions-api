@@ -8,6 +8,8 @@ import {
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MatsDerivedHourlyValueWorkspaceService {
@@ -17,8 +19,8 @@ export class MatsDerivedHourlyValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(rptPeriodId: number, monLocIds: string[]): Promise<MatsDerivedHourlyValueDTO[]> {
-    const matsDerivedHourlyValueData = await this.repository.export(rptPeriodId, monLocIds);
+  async export(hourIds: string[]): Promise<MatsDerivedHourlyValueDTO[]> {
+    const matsDerivedHourlyValueData = await this.repository.export(0, hourIds);
     return this.map.many(matsDerivedHourlyValueData);
   }
 
@@ -52,7 +54,7 @@ export class MatsDerivedHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.mats_derived_hrly_value',
@@ -69,6 +71,8 @@ export class MatsDerivedHourlyValueWorkspaceService {
           'add_date',
           'update_date',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {

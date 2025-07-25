@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
@@ -64,11 +64,13 @@ const mockRepository = {
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockDerivedHourlyValueService = () => {
@@ -79,17 +81,32 @@ const mockDerivedHourlyValueService = () => {
   return {
     export: () => Promise.resolve(generatedDerivedHrlyValues),
     import: jest.fn().mockResolvedValue(true),
+    buildObjectList: jest.fn().mockResolvedValue(undefined),
   };
 };
 
 const mockMatsMonitorHourlyValueService = {
   export: () => Promise.resolve([new MatsMonitorHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockMatsDerivedHourlyValueService = {
   export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
+};
+
+const mockHourlyFuelFlowWorkspaceService = {
+  export: () => Promise.resolve([]),
+  import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
+};
+
+const mockHourlyParameterFuelFlowWorkspaceService = {
+  export: () => Promise.resolve([]),
+  import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue(undefined),
 };
 
 const writeObjectMock = jest.fn();
@@ -104,6 +121,10 @@ describe('HourlyOperatingWorskpaceService', () => {
   let matsMonitorHourlyValueWorkspaceRepository: MatsMonitorHourlyValueWorkspaceRepository;
   let hourlyGasFlowMeterWorkspaceRepository: HourlyGasFlowMeterWorkspaceRepository;
   let hourlyFuelFlowWorkspaceRepository: HourlyFuelFlowWorkspaceRepository;
+
+  const mockQueryRunner = {
+    manager: {},
+  } as QueryRunner;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -135,14 +156,18 @@ describe('HourlyOperatingWorskpaceService', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (tableLocation, columns, delimiter, queryRunner?) =>{
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                            status: 'Complete',
+            };
           }),
-        },
-        {
+        }),
+      },
+      {
           provide: MonitorHourlyValueWorkspaceService,
           useValue: mockMonitorHourlyValueService,
         },
@@ -161,6 +186,14 @@ describe('HourlyOperatingWorskpaceService', () => {
         {
           provide: HourlyGasFlowMeterWorkspaceService,
           useValue: mockHourlyGasFlowMeterService,
+        },
+        {
+          provide: HourlyFuelFlowWorkspaceService,
+          useValue: mockHourlyFuelFlowWorkspaceService,
+        },
+        {
+          provide: HourlyParameterFuelFlowWorkspaceService,
+          useValue: mockHourlyParameterFuelFlowWorkspaceService,
         },
         {
           provide: HourlyOperatingWorkspaceRepository,
@@ -236,12 +269,18 @@ describe('HourlyOperatingWorskpaceService', () => {
         monitoringSystems: {},
       };
 
+      const mockQueryRunner = {
+        manager: {},
+      } as QueryRunner;
+
       await service.import(
-        dto,
-        [MonitorLocation],
-        1,
-        identifiers,
-        new Date().toISOString(),
+          dto,
+          [MonitorLocation],
+          1,
+          identifiers,
+          new Date().toISOString(),
+          null, // trx parameter (EntityManager)
+          mockQueryRunner // queryRunner parameter
       );
 
       expect(writeObjectMock).toHaveBeenCalledTimes(2);

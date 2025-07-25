@@ -9,6 +9,7 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
+import { QueryRunner } from 'typeorm';
 
 @Injectable()
 export class HourlyParameterFuelFlowWorkspaceService {
@@ -19,10 +20,8 @@ export class HourlyParameterFuelFlowWorkspaceService {
   ) {}
 
   async export(
-    rptPeriodId: number,
-    monLocIds: string[],
-  ): Promise<HourlyParamFuelFlowDTO[]> {
-    const hrlyParams = await this.repository.export(rptPeriodId, monLocIds);
+      hourlyFuelFlowIds: string[],): Promise<HourlyParamFuelFlowDTO[]> {
+    const hrlyParams = await this.repository.export(0, hourlyFuelFlowIds);
 
     return this.map.many(hrlyParams);
   }
@@ -59,7 +58,12 @@ export class HourlyParameterFuelFlowWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, _p0?: string, _p1?: number, _p2?: {
+      components: {};
+      userId: string;
+      monitorFormulas: {};
+      monitoringSystems: {};
+  }, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_param_fuel_flow',
@@ -80,6 +84,8 @@ export class HourlyParameterFuelFlowWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {

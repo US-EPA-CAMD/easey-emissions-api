@@ -7,8 +7,40 @@ import { mockDerivedHourlyValueWorkspaceRepository } from '../../test/mocks/mock
 import { DerivedHrlyValue } from '../entities/workspace/derived-hrly-value.entity';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { DerivedHourlyValueImportDTO } from '../dto/derived-hourly-value.dto';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 const writeObjectMock = jest.fn();
+
+const mockQueryRunner = {
+  connect: jest.fn(),
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    findOne: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
+    update: jest.fn(),
+    query: jest.fn(),
+  },
+};
+
+const mockEntityManager = {
+  connection: {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  },
+  transaction: jest.fn().mockImplementation(async (fn) => {
+    return await fn(mockQueryRunner.manager);
+  }),
+  findOne: jest.fn(),
+  save: jest.fn(),
+  create: jest.fn(),
+  delete: jest.fn(),
+  update: jest.fn(),
+  query: jest.fn(),
+};
 
 describe('DerivedHourlyValueWorkspaceService', () => {
   let map: DerivedHourlyValueMap;
@@ -25,13 +57,22 @@ describe('DerivedHourlyValueWorkspaceService', () => {
           useValue: mockDerivedHourlyValueWorkspaceRepository,
         },
         {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
+        {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -61,10 +102,13 @@ describe('DerivedHourlyValueWorkspaceService', () => {
     jest.spyOn(repository, 'export').mockResolvedValue(mockedValues);
 
     await expect(
-      service.export(123, ['123']),
+      service.export(mockedValues.map(value => {
+            return value.hourId;
+          }),
+      ),
     ).resolves.toEqual(mappedValues);
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -82,5 +126,4 @@ describe('DerivedHourlyValueWorkspaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
 });

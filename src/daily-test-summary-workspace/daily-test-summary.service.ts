@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
+import {EntityManager, QueryRunner} from "typeorm";
 
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import {
@@ -74,10 +75,12 @@ export class DailyTestSummaryWorkspaceService {
 
   async import(
     emissionsImport: EmissionsImportDTO,
-    monitoringLocations,
-    reportingPeriodId,
+    monitoringLocations: any,
+    reportingPeriodId: number,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.dailyTestSummaryData) ||
@@ -104,10 +107,12 @@ export class DailyTestSummaryWorkspaceService {
         'span_scale_cd',
         'mon_sys_id',
       ],
+        ',',
+        queryRunner,
     );
 
     for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
+      const monitoringLocationId = monitoringLocations.filter((location: { unit: { name: string; }; stackPipe: { name: string; }; }) => {
         return (
           location.unit?.name === dailyTestSummaryDatum.unitId ||
           location.stackPipe?.name === dailyTestSummaryDatum.stackPipeId
@@ -163,7 +168,7 @@ export class DailyTestSummaryWorkspaceService {
       }
       await Promise.all(buildPromises);
 
-      await this.dailyCalibrationService.import(dailyCalibrationObjects);
+      await this.dailyCalibrationService.import(dailyCalibrationObjects, trx);
     }
   }
 }

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genDailyBackstopImportDto } from '../../test/object-generators/daily-backstop-dto';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -18,12 +18,39 @@ describe('Daily Backstop Workspace Service Test', () => {
   let map: DailyBackstopMap;
   let bulkLoadService: BulkLoadService;
 
+  const mockEntityManager = {
+    transaction: jest.fn().mockImplementation(async (callback) => {
+      const mockQueryRunner = {
+        connect: jest.fn(),
+        startTransaction: jest.fn(),
+        commitTransaction: jest.fn(),
+        rollbackTransaction: jest.fn(),
+        release: jest.fn(),
+        manager: {
+          save: jest.fn(),
+          delete: jest.fn(),
+          findOne: jest.fn(),
+          find: jest.fn(),
+        },
+      };
+      return callback(mockQueryRunner);
+    }),
+    save: jest.fn(),
+    delete: jest.fn(),
+    findOne: jest.fn(),
+    find: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         DailyBackstopWorkspaceService,
         DailyBackstopWorkspaceRepository,
         DailyBackstopMap,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         EntityManager,
         BulkLoadService,
         ConfigService,
@@ -67,12 +94,17 @@ describe('Daily Backstop Workspace Service Test', () => {
     it('should successfully import a daily record', async () => {
       const generatedData = genDailyBackstopImportDto(1);
 
-      // @ts-expect-error use as mock
-      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
-        writeObject: jest.fn(),
-        complete: jest.fn(),
-        finished: Promise.resolve(true),
-      });
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockImplementation(
+          (_tableLocation: string, _columns?: string[], _delimiter?: string) => {
+            // @ts-ignore
+            return Promise.resolve({
+              writeObject: jest.fn(),
+              complete: jest.fn(),
+              finished: Promise.resolve(true),
+              status: 'Complete',
+            });
+          }
+      );
 
       const emissionsDto = new EmissionsImportDTO();
       emissionsDto.dailyBackstopData = generatedData;

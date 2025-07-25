@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
-import { EntityManager } from 'typeorm';
+import { EntityManager, QueryRunner } from 'typeorm';
 
 import { genHourlyParamFuelFlow } from '../../test/object-generators/hourly-param-fuel-flow';
 import { HrlyParamFuelFlow } from '../entities/workspace/hrly-param-fuel-flow.entity';
@@ -10,17 +10,29 @@ import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 import { HourlyParameterFuelFlowWorkspaceRepository } from './hourly-parameter-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowWorkspaceService } from './hourly-parameter-fuel-flow-workspace.service';
+import {HourlyParamFuelFlowImportDTO} from "../dto/hourly-param-fuel-flow.dto";
 
 const writeObjectMock = jest.fn();
 
-describe('HourlyParameterFuelFlowWoskpaceService', () => {
+describe('HourlyParameterFuelFlowWorkspaceService', () => {
   let service: HourlyParameterFuelFlowWorkspaceService;
   let repository: HourlyParameterFuelFlowWorkspaceRepository;
+
+  const mockQueryRunner = {
+    manager: {},
+  } as QueryRunner;
+
+  const mockEntityManager = {
+    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+  };
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EntityManager,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
         HourlyParameterFuelFlowWorkspaceService,
         HourlyParameterFuelFlowWorkspaceRepository,
         HourlyParameterFuelFlowMap,
@@ -30,11 +42,16 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
         {
           provide: BulkLoadService,
           useFactory: () => ({
-            startBulkLoader: jest.fn().mockResolvedValue({
-              writeObject: writeObjectMock,
-              complete: jest.fn(),
-              finished: true,
-            }),
+            startBulkLoader: jest.fn().mockImplementation(
+                (_tableLocation, _columns, _delimiter, _queryRunner) => {
+                  return {
+                    writeObject: writeObjectMock,
+                    complete: jest.fn(),
+                    finished: Promise.resolve(true),
+                    status: 'Complete',
+                  };
+                }
+            ),
           }),
         },
       ],
@@ -50,7 +67,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
 
       jest.spyOn(repository, 'export').mockResolvedValue(hourlyParams);
 
-      await expect(service.export(123, ['123'])).resolves.toEqual(
+      await expect(service.export(['123'])).resolves.toEqual(
         hourlyParams.map(param => {
           return {
             id: param.id,
@@ -76,7 +93,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
       );
     });
   });
-  /*
+
   describe('import', () => {
     it('should simulate the import of 2 new records', async () => {
       const params = [
@@ -94,5 +111,4 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
     });
   });
-  */
 });

@@ -9,6 +9,8 @@ import {
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
+import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 
 @Injectable()
 export class MonitorHourlyValueWorkspaceService {
@@ -18,8 +20,8 @@ export class MonitorHourlyValueWorkspaceService {
     private readonly bulkLoadService: BulkLoadService,
   ) {}
 
-  async export(rptPeriodId: number, monLocIds: string[]): Promise<MonitorHourlyValueDTO[]> {
-    const results = await this.repository.export(rptPeriodId, monLocIds);
+  async export(hourIds: string[]): Promise<MonitorHourlyValueDTO[]>{
+      const results = await this.repository.export(0,hourIds);
     return this.map.many(results);
   }
 
@@ -58,7 +60,12 @@ export class MonitorHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, _p0?: string, _p1?: number, _p2?: {
+      components: {};
+      userId: string;
+      monitorFormulas: {};
+      monitoringSystems: {};
+  }, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.monitor_hrly_value',
@@ -79,6 +86,8 @@ export class MonitorHourlyValueWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+          ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {

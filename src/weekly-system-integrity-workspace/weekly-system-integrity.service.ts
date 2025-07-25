@@ -10,6 +10,7 @@ import {
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { QueryRunner } from 'typeorm';
 
 @Injectable()
 export class WeeklySystemIntegrityWorkspaceService {
@@ -66,7 +67,7 @@ export class WeeklySystemIntegrityWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, _trx?: any, queryRunner?: QueryRunner): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.weekly_system_integrity',
@@ -84,7 +85,8 @@ export class WeeklySystemIntegrityWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
-        '|',
+        ',',
+          queryRunner,
       );
 
       for (const slice of objectList) {
