@@ -56,18 +56,26 @@ export class ReviewSubmitService {
       );
       }
 
-      if (data.length > 0) {
-        const monPlanIds = data.map(d => d.monPlanId);
-        const severities = await this.entityManager.query(
-        `select em.mon_plan_id, sc.severity_cd_description, sc.severity_cd
-        from camdecmpswks.EMISSION_EVALUATION em 
+      if (data.length > 0 && isWorkspace) {
+        const monPlanIds = data.map(d => d?.monPlanId);
+        const periodAbbreviation =  [...new Set(data.map(d => d?.periodAbbreviation))];
+        const parameters = [monPlanIds]
+         let query =`select em.mon_plan_id, sc.severity_cd_description, sc.severity_cd
+        from camdecmpswks.EMISSION_EVALUATION em
         JOIN camdecmpsmd.reporting_period prd ON prd.rpt_period_id = em.rpt_period_id  
         JOIN camdecmpswks.monitor_plan pln ON pln.mon_plan_id = em.mon_plan_id  
         JOIN camdecmpswks.check_session cs on cs.chk_session_id = em.chk_session_id 
-        JOIN camdecmpsmd.severity_code sc on sc.severity_cd = cs.severity_cd 
-        where em.mon_plan_id = ANY($1);`,
-        [monPlanIds]);
+        JOIN camdecmpsmd.severity_code sc on sc.severity_cd = cs.severity_cd`;
         
+        if(hasQuarters && monPlanIds){
+          query += ' where em.mon_plan_id = ANY($1) AND prd.period_abbreviation = ANY($2);'
+          parameters.push(periodAbbreviation)
+        }
+        else
+        {
+          query += ' where em.mon_plan_id = ANY($1);'
+        }
+        let severities = await this.entityManager.query(query,parameters)
         const severityMap:Map<string, {description:string,severityCode:string}> = new Map(
           severities.map((s: any) => [s.mon_plan_id, { description: s.severity_cd_description, severityCode: s.severity_cd }])
         );
