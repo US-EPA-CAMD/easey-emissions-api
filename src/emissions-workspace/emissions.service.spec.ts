@@ -126,7 +126,7 @@ describe('Emissions Workspace Service', () => {
   };
 
   const mockEntityManager = {
-  connection: {
+    connection: {
       createQueryRunner: jest.fn(() => mockQueryRunner),
     },
     createQueryRunner: jest.fn(() => mockQueryRunner),
@@ -426,6 +426,7 @@ describe('Emissions Workspace Service', () => {
     mockReportingPeriod.id = 1;
     mockReportingPeriod.year = emissionsDtoMock[0].year;
     mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
+
     mockQueryRunner.manager.findOne.mockResolvedValue(mockReportingPeriod);
     mockQueryRunner.manager.query.mockResolvedValue([]);
     const plantMock = genPlant<Plant>(1, {

@@ -1,8 +1,11 @@
-import { HttpModule } from '@nestjs/axios';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { APP_GUARD, Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { RolesGuard } from '@us-epa-camd/easey-common/guards';
+import { LoggingInterceptor } from '@us-epa-camd/easey-common/interceptors';
+import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 import { DataSource, EntityManager } from 'typeorm';
 
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
@@ -105,10 +108,16 @@ describe('-- Emissions Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [LoggerModule, HttpModule, BulkLoadModule],
+      imports: [],
       controllers: [EmissionsWorkspaceController],
       providers: [
-        EaseyContentService,
+        {
+          provide: EaseyContentService,
+          useValue: {
+            emissionsSchema: {},
+            getEmissionsSchema: jest.fn(),
+          },
+        },
         EntityManager,
         DailyEmissionWorkspaceService,
         DailyEmissionMap,
@@ -216,8 +225,53 @@ describe('-- Emissions Controller --', () => {
             export: jest.fn(),
           },
         },
+        {
+          provide: Reflector,
+          useValue: {
+            get: jest.fn(),
+            getAll: jest.fn(),
+            getAllAndMerge: jest.fn(),
+            getAllAndOverride: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            error: jest.fn(),
+            warn: jest.fn(),
+            log: jest.fn(),
+            debug: jest.fn(),
+            verbose: jest.fn(),
+            setContext: jest.fn(),
+          },
+        },
+        {
+          provide: HttpService,
+          useValue: {
+            get: jest.fn(),
+            post: jest.fn(),
+            put: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+        {
+          provide: BulkLoadService,
+          useValue: {
+            startBulkLoad: jest.fn(),
+            writeBulkLoadFile: jest.fn(),
+            complete: jest.fn(),
+          },
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(RolesGuard)
+      .useValue({
+        canActivate: jest.fn(() => true),
+      })
+      .overrideInterceptor(LoggingInterceptor)
+      .useValue({
+        intercept: jest.fn((context, next) => next.handle()),
+      }).compile();
 
     controller = module.get(EmissionsWorkspaceController);
     service = module.get(EmissionsWorkspaceService);

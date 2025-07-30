@@ -1122,6 +1122,17 @@
     load-esm "1.0.2"
     tslib "2.8.1"
 
+"@nestjs/common@^11.1.3":
+  version "11.1.5"
+  resolved "https://registry.npmmirror.com/@nestjs/common/-/common-11.1.5.tgz#bc491d049e21f91216189b06e56f801730a8a3d1"
+  integrity sha512-DQpWdr3ShO0BHWkHl3I4W/jR6R3pDtxyBlmrpTuZF+PXxQyBXNvsUne0Wyo6QHPEDi+pAz9XchBFoKbqOhcdTg==
+  dependencies:
+    uid "2.0.2"
+    file-type "21.0.0"
+    iterare "1.2.1"
+    load-esm "1.0.2"
+    tslib "2.8.1"
+
 "@nestjs/config@^4.0.2":
   version "4.0.2"
   resolved "https://registry.npmjs.org/@nestjs/config/-/config-4.0.2.tgz#a2777a1fd2d0d594bab3953f50fbca95c14cce52"
@@ -1135,6 +1146,18 @@
   version "11.1.0"
   resolved "https://registry.npmjs.org/@nestjs/core/-/core-11.1.0.tgz#d587cc5d83cd31dca989641e85d547d916491873"
   integrity sha512-IeXbTRPrr6xAVbETlDE+miSkNmYf/cPhCa9GU9gFtPO6pVNuAeG/dNrjLVc23mJtUlT/ibdsoW35TlSyHLkzEA==
+  dependencies:
+    uid "2.0.2"
+    "@nuxt/opencollective" "0.4.1"
+    fast-safe-stringify "2.1.1"
+    iterare "1.2.1"
+    path-to-regexp "8.2.0"
+    tslib "2.8.1"
+
+"@nestjs/core@^11.1.3":
+  version "11.1.5"
+  resolved "https://registry.npmmirror.com/@nestjs/core/-/core-11.1.5.tgz#98fff1a0b47b36a1939f6d9f6c899c085e470e25"
+  integrity sha512-Qr25MEY9t8VsMETy7eXQ0cNXqu0lzuFrrTr+f+1G57ABCtV5Pogm7n9bF71OU2bnkDD32Bi4hQLeFR90cku3Tw==
   dependencies:
     uid "2.0.2"
     "@nuxt/opencollective" "0.4.1"
@@ -1311,7 +1334,7 @@
   resolved "https://registry.npmjs.org/@sqltools/formatter/-/formatter-1.2.5.tgz#3abc203c79b8c3e90fd6c156a0c62d5403520e12"
   integrity sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==
 
-"@tokenizer/inflate@^0.2.6":
+"@tokenizer/inflate@^0.2.6", "@tokenizer/inflate@^0.2.7":
   version "0.2.7"
   resolved "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.2.7.tgz#32dd9dfc9abe457c89b3d9b760fc0690c85a103b"
   integrity sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==
@@ -1668,16 +1691,16 @@
     "@typescript-eslint/types" "8.31.0"
     eslint-visitor-keys "^4.2.0"
 
-"@us-epa-camd/easey-common@21.1.10":
-  version "21.1.10"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.1.10/9cff70079bf4b2130d650ba42d203c80987d8029#9cff70079bf4b2130d650ba42d203c80987d8029"
-  integrity sha512-/yVfr7xJJd1NfFWZXlyxHd5bAGeXnZcndqInDdebsrdb2RPEN2920NJBFUZk0PVvOwsfR+LO92MwB+FJ8BpVTw==
+"@us-epa-camd/easey-common@21.1.16":
+  version "21.1.16"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.1.16/82478f783b4299e1cdd8c797985fbd5627e1544d#82478f783b4299e1cdd8c797985fbd5627e1544d"
+  integrity sha512-4WYasR7b6u39UjREP20Ecz/HpPdsueZINLXXqAr+xD9UZHamHmhdSRTmJQm9aoxrPgYgRCLcpWVjz+S6XNholA==
   dependencies:
     "@golevelup/ts-jest" "^0.6.2"
     "@nestjs/axios" "4.0.0"
-    "@nestjs/common" "^11.1.0"
+    "@nestjs/common" "^11.1.3"
     "@nestjs/config" "^4.0.2"
-    "@nestjs/core" "^11.1.0"
+    "@nestjs/core" "^11.1.3"
     "@nestjs/swagger" "^11.1.5"
     "@nestjs/terminus" "^11.0.0"
     axios "^1.9.0"
@@ -3548,6 +3571,16 @@ file-type@20.4.1:
   dependencies:
     "@tokenizer/inflate" "^0.2.6"
     strtok3 "^10.2.0"
+    token-types "^6.0.0"
+    uint8array-extras "^1.4.0"
+
+file-type@21.0.0:
+  version "21.0.0"
+  resolved "https://registry.npmmirror.com/file-type/-/file-type-21.0.0.tgz#b6c5990064bc4b704f8e5c9b6010c59064d268bc"
+  integrity sha512-ek5xNX2YBYlXhiUXui3D/BXa3LdqPmoLJ7rqEx2bKJ7EAUEfmXgW0Das7Dc6Nr9MvqaOnIqiPV0mZk/r/UpNAg==
+  dependencies:
+    "@tokenizer/inflate" "^0.2.7"
+    strtok3 "^10.2.2"
     token-types "^6.0.0"
     uint8array-extras "^1.4.0"
 
@@ -6666,6 +6699,13 @@ strtok3@^10.2.0:
   dependencies:
     "@tokenizer/token" "^0.3.0"
     peek-readable "^7.0.0"
+
+strtok3@^10.2.2:
+  version "10.3.4"
+  resolved "https://registry.npmmirror.com/strtok3/-/strtok3-10.3.4.tgz#793ebd0d59df276a085586134b73a406e60be9c1"
+  integrity sha512-KIy5nylvC5le1OdaaoCJ07L+8iQzJHGH6pWDuzS+d07Cu7n1MZ2x26P8ZKIWfbK02+XIL8Mp4RkWeqdUCrDMfg==
+  dependencies:
+    "@tokenizer/token" "^0.3.0"
 
 superagent@^9.0.1:
   version "9.0.2"
