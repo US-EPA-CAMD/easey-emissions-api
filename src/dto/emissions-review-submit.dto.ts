@@ -11,6 +11,10 @@ export class EmissionsReviewSubmitDTO {
 
   evalStatusCodeDescription: string;
 
+  severityCode:string;
+
+  severityDescription: string;
+
   submissionAvailabilityCode: string;
 
   submissionAvailabilityCodeDescription: string;
@@ -20,6 +24,8 @@ export class EmissionsReviewSubmitDTO {
   updateDate: string;
 
   windowStatus: string;
+
+  windowExpiredDate: string;
 
   periodAbbreviation: string;
 }
