@@ -130,6 +130,7 @@ describe('Emissions Workspace Service', () => {
       createQueryRunner: jest.fn(() => mockQueryRunner),
     },
     createQueryRunner: jest.fn(() => mockQueryRunner),
+    findOne: jest.fn(),
   } as unknown as EntityManager;
 
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
@@ -427,8 +428,12 @@ describe('Emissions Workspace Service', () => {
     mockReportingPeriod.year = emissionsDtoMock[0].year;
     mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
 
-    mockQueryRunner.manager.findOne.mockResolvedValue(mockReportingPeriod);
+    // Mock the pre-transaction EntityManager.findOne call for ReportingPeriod
+    (mockEntityManager.findOne as jest.Mock).mockResolvedValue(mockReportingPeriod);
+
+    // Mock the transaction manager calls
     mockQueryRunner.manager.query.mockResolvedValue([]);
+
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
       monitorPlanAmount: 1,
@@ -452,6 +457,60 @@ describe('Emissions Workspace Service', () => {
         message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${emissionsDtoMock[0].orisCode}]`,
       },
     );
+
+    // Verify that the pre-transaction EntityManager.findOne was called for ReportingPeriod
+    expect(mockEntityManager.findOne).toHaveBeenCalledWith(ReportingPeriod, {
+      where: {
+        year: emissionsDtoMock[0].year,
+        quarter: emissionsDtoMock[0].quarter,
+      },
+    });
+
+    // Verify transaction was started after validation
+    expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
+  });
+
+  it('should handle transaction rollback on error', async function() {
+    const emissionsDtoMock = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
+
+    const mockReportingPeriod = new ReportingPeriod();
+    mockReportingPeriod.id = 1;
+    mockReportingPeriod.year = emissionsDtoMock[0].year;
+    mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
+
+    // Mock successful pre-transaction setup
+    (mockEntityManager.findOne as jest.Mock).mockResolvedValue(mockReportingPeriod);
+
+    const plantMock = genPlant<Plant>(1, {
+      include: ['monitorPlans'],
+      monitorPlanAmount: 1,
+      monitorPlanConfig: {
+        include: ['beginRptPeriod', 'endRptPeriod'],
+      },
+    });
+
+    plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
+    plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
+      emissionsDtoMock[0].quarter;
+    plantMock[0].monitorPlans[0].endRptPeriod = null;
+    plantMock[0].monitorPlans[0].locations = [new MonitorLocation()];
+
+    jest
+      .spyOn(plantRepository, 'getImportPlant')
+      .mockResolvedValue(plantMock[0]);
+
+    // Mock transaction failure
+    mockQueryRunner.manager.query.mockRejectedValue(new Error('Database error'));
+
+    await expect(emissionsService.import(emissionsDtoMock[0], 'test-user-id')).rejects.toThrow('Database error');
+
+    // Verify transaction was started and rolled back
+    expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.release).toHaveBeenCalled();
   });
 
   it('should import daily test summaries', async function() {

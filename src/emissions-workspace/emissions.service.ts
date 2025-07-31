@@ -165,59 +165,62 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
+    // Pre-transaction validation phase - all read-only operations
+    const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
+    const unitIds = objectValuesByKey<string>('unitId', params, true);
+
+    const plant = await this.plantRepository.getImportPlant({
+      orisCode: params.orisCode,
+      stackIds: stackPipeIds,
+      unitIds: unitIds,
+    });
+
+    if (isUndefinedOrNull(plant)) {
+      throw new NotFoundException('Plant not found.');
+    }
+
+    const monitorPlans = plant.monitorPlans;
+
+    if (monitorPlans.length === 0) {
+      throw new NotFoundException('Monitor plan not found.');
+    }
+
+    if (monitorPlans.length > 1) {
+      throw new NotFoundException('Multiple active monitor plans found.');
+    }
+
+    const reportingPeriod = await this.entityManager.findOne(ReportingPeriod, {
+      where: {
+        year: params.year,
+        quarter: params.quarter,
+      },
+    });
+
+    if (!reportingPeriod) {
+      throw new NotFoundException('Reporting period not found.');
+    }
+
+    const monitorPlanId = monitorPlans[0].id;
+    const monitoringLocations = monitorPlans[0].locations;
+
+    const reportingPeriodId = reportingPeriod.id;
+
+    const identifiers = await this.getUnifiedIdentifiers(
+      params,
+      monitoringLocations,
+      userId,
+    );
+
+    // Import-28 Valid formulaIdentifiers for location
+    await this.checksService.invalidFormulasCheck(params, monitoringLocations);
+
+    // Transaction phase - only data modification operations
+    // Since all previous queries target unmodified data, it may be more clear to start the transaction here
     const queryRunner = this.entityManager.connection.createQueryRunner();
     await queryRunner.startTransaction();
 
     try {
       const trx = queryRunner.manager;
-
-      const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
-      const unitIds = objectValuesByKey<string>('unitId', params, true);
-
-      const plant = await this.plantRepository.getImportPlant({
-        orisCode: params.orisCode,
-        stackIds: stackPipeIds,
-        unitIds: unitIds,
-      });
-
-      if (isUndefinedOrNull(plant)) {
-        throw new NotFoundException('Plant not found.');
-      }
-
-      const monitorPlans = plant.monitorPlans;
-
-      if (monitorPlans.length === 0) {
-        throw new NotFoundException('Monitor plan not found.');
-      }
-
-      if (monitorPlans.length > 1) {
-        throw new NotFoundException('Multiple active monitor plans found.');
-      }
-
-      const reportingPeriod = await trx.findOne(ReportingPeriod, {
-        where: {
-          year: params.year,
-          quarter: params.quarter,
-        },
-      });
-
-      if (!reportingPeriod) {
-        throw new NotFoundException('Reporting period not found.');
-      }
-
-      const monitorPlanId = monitorPlans[0].id;
-      const monitoringLocations = monitorPlans[0].locations;
-
-      const reportingPeriodId = reportingPeriod.id;
-
-      const identifiers = await this.getUnifiedIdentifiers(
-        params,
-        monitoringLocations,
-        userId,
-      );
-
-      // Import-28 Valid formulaIdentifiers for location
-      await this.checksService.invalidFormulasCheck(params, monitoringLocations);
 
       for (const monitorPlan of monitorPlans) {
         await trx.query(
