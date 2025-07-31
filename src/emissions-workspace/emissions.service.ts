@@ -165,7 +165,7 @@ export class EmissionsWorkspaceService {
     params: EmissionsImportDTO,
     userId?: string,
   ): Promise<{ message: string }> {
-    // Pre-transaction validation phase - all read-only operations
+    // Pre-transaction validation phase - which is only read operations
     const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
     const unitIds = objectValuesByKey<string>('unitId', params, true);
 

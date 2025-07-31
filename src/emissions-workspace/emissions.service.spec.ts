@@ -428,7 +428,7 @@ describe('Emissions Workspace Service', () => {
     mockReportingPeriod.year = emissionsDtoMock[0].year;
     mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
 
-    // Mock the pre-transaction EntityManager.findOne call for ReportingPeriod
+    // Mock the pre-transaction EntityManager.findOne call for the ReportingPeriod
     (mockEntityManager.findOne as jest.Mock).mockResolvedValue(mockReportingPeriod);
 
     // Mock the transaction manager calls
