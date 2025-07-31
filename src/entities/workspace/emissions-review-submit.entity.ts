@@ -39,6 +39,9 @@ export class EmissionsReviewSubmit extends BaseEntity {
   @ViewColumn({ name: 'window_status' })
   windowStatus: string;
 
+  @ViewColumn({ name: 'window_expired_date' })
+  windowExpiredDate: Date;
+
   @ViewColumn({ name: 'period_abbreviation' })
   periodAbbreviation: string;
 }
