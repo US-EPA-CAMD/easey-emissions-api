@@ -46,7 +46,13 @@ export class HourlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourUnitDataView),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(HourUnitDataView) },
+            },
+          },
         },
       },
       'text/csv': {
@@ -82,7 +88,13 @@ export class HourlyApportionedEmissionsController {
     content: {
       'application/json': {
         schema: {
-          $ref: getSchemaPath(HourlyApportionedEmissionsFacilityAggregationDTO),
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(HourlyApportionedEmissionsFacilityAggregationDTO) },
+            },
+          },
         },
       },
       'text/csv': {
