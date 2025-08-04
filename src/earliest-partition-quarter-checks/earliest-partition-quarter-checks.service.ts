@@ -32,220 +32,239 @@ export class EarliestPartitionQuarterChecksService {
     const containsData = d => !isUndefinedOrNull(d) && d.length !== 0;
 
     // IMPORT-39-A / IMPORT-39-B / IMPORT-39-C
-    if (containsData(payload.hourlyOperatingData)) {
+    const earliestPartitionQuarterRecordForHourlyGFM = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'HRLY_GAS_FLOW_METER',
+    });
+    const earliestPartitionQuarterRecordForMatsDerivedHourly = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'MATS_DERIVED_HRLY_VALUE',
+    });
+    const earliestPartitionQuarterRecordForMatsMonitorHourly = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'MATS_MONITOR_HRLY_VALUE',
+    });
 
-        let import39A_found = false;
-        let import39B_found = false;
-        let import39C_found = false;
-
-        const earliestPartitionQuarterRecordForHourlyGFM = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'HRLY_GAS_FLOW_METER',
-        });
-        const earliestPartitionQuarterRecordForMatsDerivedHourly = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'MATS_DERIVED_HRLY_VALUE',
-        });
-        const earliestPartitionQuarterRecordForMatsMonitorHourly = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'MATS_MONITOR_HRLY_VALUE',
-        });
-
-      
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForHourlyGFM?.reportingPeriodId) {
+      if (containsData(payload.hourlyOperatingData)) {
         for (const data of payload.hourlyOperatingData) {
-
-          if (
-            !import39A_found &&
-            containsData(data.hourlyGFMData) &&
-            importedReportingPeriod.id < earliestPartitionQuarterRecordForHourlyGFM?.reportingPeriodId
-          ) {
-            import39A_found = true;
+          if (containsData(data.hourlyGFMData)) {
+            errorList.push(
+              CheckCatalogService.formatResultMessage('IMPORT-39-A', {
+                reportedQuarter: importedReportingPeriod.periodAbbreviation,
+                earliestQuarter: earliestPartitionQuarterRecordForHourlyGFM?.reportingPeriod?.periodAbbreviation,
+              }),
+            );
+            break;
           }
+        }
+      }
+    }
 
-          if (
-            !import39B_found &&
-            containsData(data.matsDerivedHourlyValueData) &&
-            importedReportingPeriod.id <
-            earliestPartitionQuarterRecordForMatsDerivedHourly?.reportingPeriodId
-          ) {
-            import39B_found = true;
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForMatsDerivedHourly?.reportingPeriodId) {
+      if (containsData(payload.hourlyOperatingData)) {
+        for (const data of payload.hourlyOperatingData) {
+          if (containsData(data.matsDerivedHourlyValueData)) {
+            errorList.push(
+              CheckCatalogService.formatResultMessage('IMPORT-39-B', {
+                reportedQuarter: importedReportingPeriod.periodAbbreviation,
+                earliestQuarter: earliestPartitionQuarterRecordForMatsDerivedHourly?.reportingPeriod?.periodAbbreviation,
+              }),
+            );
+            break;
           }
+        }
+      }
+    }
 
-          if (
-            !import39C_found &&
-            containsData(data.matsMonitorHourlyValueData) &&
-            importedReportingPeriod.id <
-            earliestPartitionQuarterRecordForMatsMonitorHourly?.reportingPeriodId
-          ) {
-            import39C_found = true;
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForMatsMonitorHourly?.reportingPeriodId) {
+      if (containsData(payload.hourlyOperatingData)) {
+        for (const data of payload.hourlyOperatingData) {
+          if (containsData(data.matsMonitorHourlyValueData)) {
+            errorList.push(
+              CheckCatalogService.formatResultMessage('IMPORT-39-C', {
+                reportedQuarter: importedReportingPeriod.periodAbbreviation,
+                earliestQuarter: earliestPartitionQuarterRecordForMatsMonitorHourly?.reportingPeriod?.periodAbbreviation,
+              }),
+            );
+            break;
           }
+        }
+      }
+    }
 
-          if (import39A_found && import39B_found && import39C_found) {
+    // IMPORT-39-D / IMPORT-39-E
+
+    const earliestPartitionQuarterRecordForSorbentTrap = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'SORBENT_TRAP',
+    });
+    const earliestPartitionQuarterRecordForSamplingTrain = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'SAMPLING_TRAIN',
+    });
+
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForSorbentTrap?.reportingPeriodId) { 
+      if (containsData(payload.sorbentTrapData)) {
+        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-E', {
+          reportedQuarter: importedReportingPeriod.periodAbbreviation,
+          earliestQuarter: earliestPartitionQuarterRecordForSorbentTrap?.reportingPeriod?.periodAbbreviation,
+        }));
+
+        // SAMPLING_TRAIN is child of SORBENT_TRAP, so if any samplingTrainData exist for a failed IMPORT-39-E check record, then it also failed the IMPORT-39-D check.
+        for (const data of payload.sorbentTrapData) {
+          if (containsData(data.samplingTrainData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-D', {
+              reportedQuarter: importedReportingPeriod.periodAbbreviation,
+              earliestQuarter: earliestPartitionQuarterRecordForSamplingTrain?.reportingPeriod?.periodAbbreviation,
+            }));
             break;
           }
         }
 
-        if (import39A_found) {
-          errorList.push(
-            CheckCatalogService.formatResultMessage('IMPORT-39-A', {
+      }
+
+    } else if (importedReportingPeriod.id < earliestPartitionQuarterRecordForSamplingTrain?.reportingPeriodId) {
+      if (containsData(payload.sorbentTrapData)) {
+        for (const data of payload.sorbentTrapData) {
+          if (containsData(data.samplingTrainData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-D', {
               reportedQuarter: importedReportingPeriod.periodAbbreviation,
-              earliestQuarter: earliestPartitionQuarterRecordForHourlyGFM?.reportingPeriod?.periodAbbreviation,
-            }),
-          );
+              earliestQuarter: earliestPartitionQuarterRecordForSamplingTrain?.reportingPeriod?.periodAbbreviation,
+            }));
+            break;
+          }
         }
+      }
+    }
 
-        if (import39B_found) {
-          errorList.push(
-            CheckCatalogService.formatResultMessage('IMPORT-39-B', {
+    // IMPORT-39-F / IMPORT-39-G
+
+    const earliestPartitionQuarterRecordForWeeklyTestSummary = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'WEEKLY_TEST_SUMMARY',
+    });
+    const earliestPartitionQuarterRecordForWeeklySystemIntergrity = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'WEEKLY_SYSTEM_INTEGRITY',
+    });
+
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForWeeklyTestSummary?.reportingPeriodId) {
+      if (containsData(payload.weeklyTestSummaryData)) {
+        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-G', {
+          reportedQuarter: importedReportingPeriod.periodAbbreviation,
+          earliestQuarter: earliestPartitionQuarterRecordForWeeklyTestSummary?.reportingPeriod?.periodAbbreviation,
+        }));
+
+        // WEEKLY_SYSTEM_INTEGRITY is child of WEEKLY_TEST_SUMMARY, so if any weeklySystemIntegrityData exist for a failed IMPORT-39-G check record, then it also failed the IMPORT-39-F check.
+        for (const data of payload.weeklyTestSummaryData) {
+          if (containsData(data.weeklySystemIntegrityData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-F', {
               reportedQuarter: importedReportingPeriod.periodAbbreviation,
-              earliestQuarter: earliestPartitionQuarterRecordForMatsDerivedHourly?.reportingPeriod?.periodAbbreviation,
-            }),
-          );
+              earliestQuarter: earliestPartitionQuarterRecordForWeeklySystemIntergrity?.reportingPeriod?.periodAbbreviation,
+            }));
+            break;
+          }
         }
-      
-        if (import39C_found) {
-          errorList.push(
-            CheckCatalogService.formatResultMessage('IMPORT-39-C', {
+      }
+    } else if (importedReportingPeriod.id < earliestPartitionQuarterRecordForWeeklySystemIntergrity?.reportingPeriodId) {
+      if (containsData(payload.weeklyTestSummaryData)) {
+        for (const data of payload.weeklyTestSummaryData) {
+          if (containsData(data.weeklySystemIntegrityData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-F', {
               reportedQuarter: importedReportingPeriod.periodAbbreviation,
-              earliestQuarter: earliestPartitionQuarterRecordForMatsMonitorHourly?.reportingPeriod?.periodAbbreviation,
-            }),
-          );
+              earliestQuarter: earliestPartitionQuarterRecordForWeeklySystemIntergrity?.reportingPeriod?.periodAbbreviation,
+            }));
+            break;
+          }
         }
+      }
     }
 
-    if (containsData(payload.sorbentTrapData)) {
+    // IMPORT-39-H / IMPORT-39-I / IMPORT-39-J
+    const earliestPartitionQuarterRecordForNsps4tSummary = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'NSPS4T_SUMMARY',
+    });
 
-        let earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'SORBENT_TRAP',
-        });
+    const earliestPartitionQuarterRecordForNsps4tFourthQuarter = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'NSPS4T_ANNUAL',
+    });
 
-        if ( importedReportingPeriod.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
-            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-E', {
+    const earliestPartitionQuarterRecordForNsps4tCompliancePeriod = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'NSPS4T_COMPLIANCE_PERIOD',
+    });
+
+    if (importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tSummary?.reportingPeriodId) {
+
+      if (containsData(payload.nsps4tSummaryData)) {
+        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-J', {
+          reportedQuarter: importedReportingPeriod.periodAbbreviation,
+          earliestQuarter: earliestPartitionQuarterRecordForNsps4tSummary?.reportingPeriod?.periodAbbreviation,
+        }));
+
+        // NSPS4T_ANNUAL and NSPS4T_COMPLIANCE_PERIOD are the children of NSPS4T_SUMMARY
+        // If any nsps4tFourthQuarterData and/or nsps4tCompliancePeriodData exist for a failed IMPORT-39-J check record, then it also failed the IMPORT-39- H and/or I check.
+        for (const data of payload.nsps4tSummaryData) {
+          if (containsData(data.nsps4tFourthQuarterData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-H', {
+              reportedQuarter: importedReportingPeriod.periodAbbreviation,
+              earliestQuarter: earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriod?.periodAbbreviation,
+            }));
+            break;
+          }
+        }
+
+        for (const data of payload.nsps4tSummaryData) {
+          if (containsData(data.nsps4tCompliancePeriodData)) {
+            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-I', {
+              reportedQuarter: importedReportingPeriod.periodAbbreviation,
+              earliestQuarter: earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriod?.periodAbbreviation,
+            }));
+            break;
+          }
+        }
+
+      }
+
+    } else {
+
+      // IMPORT-39-H
+      if (importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriodId) {
+        if (containsData(payload.nsps4tSummaryData)) {
+          for (const data of payload.nsps4tSummaryData) {
+            if (containsData(data.nsps4tFourthQuarterData)) {
+              errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-H', {
                 reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
-            }));
-            for (const data of payload.sorbentTrapData) {
-                if (containsData(data.samplingTrainData)) {
-                    earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-                        tableName: 'SAMPLING_TRAIN',
-                    });
-                    if (importedReportingPeriod.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
-                        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-D', {
-                            reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                            earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
-                        }));
-                        break;
-                    }
-                }
+                earliestQuarter: earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriod?.periodAbbreviation,
+              }));
+              break;
             }
+          }
         }
-        
-    }
 
-    if (containsData(payload.weeklyTestSummaryData)) {
+      }
 
-        let earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'WEEKLY_TEST_SUMMARY',
-        });
-
-        if ( importedReportingPeriod.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
-            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-G', {
+      // IMPORT-39-I
+      if (importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriodId) {
+        if (containsData(payload.nsps4tSummaryData)) {
+          for (const data of payload.nsps4tSummaryData) {
+            if (containsData(data.nsps4tCompliancePeriodData)) {
+              errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-I', {
                 reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
-            }));
-            for (const data of payload.weeklyTestSummaryData) {
-
-                if (containsData(data.weeklySystemIntegrityData)) {
-
-                    earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-                        tableName: 'WEEKLY_SYSTEM_INTEGRITY',
-                    });
-
-                    if (importedReportingPeriod.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
-                        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-F', {
-                            reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                            earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
-                        }));
-                        break;
-                    }
-                }
+                earliestQuarter: earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriod?.periodAbbreviation,
+              }));
+              break;
             }
+          }
         }
+      }
     }
 
-    if (containsData(payload.nsps4tSummaryData)) {
-        const earliestPartitionQuarterRecordForNsps4tSummary = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'NSPS4T_SUMMARY',
-        });
+    // IMPORT-39-K
+    const earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
+      tableName: 'DAILY_BACKSTOP',
+    });
 
-        if ( importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tSummary?.reportingPeriodId) {
-            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-J', {
-                reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                earliestQuarter: earliestPartitionQuarterRecordForNsps4tSummary?.reportingPeriod?.periodAbbreviation,
-            }));
-            let import39H_found = false;
-            let import39I_found = false;
-
-            const earliestPartitionQuarterRecordForNsps4tFourthQuarter = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-                tableName: 'NSPS4T_ANNUAL',
-            });
-
-            const earliestPartitionQuarterRecordForNsps4tCompliancePeriod = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-                tableName: 'NSPS4T_COMPLIANCE_PERIOD',
-            });
-
-            for (const data of payload.nsps4tSummaryData) {
-              if (
-                !import39H_found &&
-                containsData(data.nsps4tFourthQuarterData) &&
-                importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriodId
-              ) {
-                import39H_found = true;
-              }
-
-              if (
-                !import39I_found &&
-                containsData(data.nsps4tCompliancePeriodData) &&
-                importedReportingPeriod.id <
-                earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriodId
-              ) {
-                import39I_found = true;
-              }
-
-              if (import39H_found && import39I_found) {
-                break;
-              }
-            }
-
-            if (import39H_found) {
-              errorList.push(
-                CheckCatalogService.formatResultMessage('IMPORT-39-H', {
-                  reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                  earliestQuarter: earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriod?.periodAbbreviation, // TODO: Replace with actual value
-                }),
-              );
-            }
-        
-            if (import39I_found) {
-              errorList.push(
-                CheckCatalogService.formatResultMessage('IMPORT-39-I', {
-                  reportedQuarter: importedReportingPeriod.periodAbbreviation,
-                  earliestQuarter: earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriod?.periodAbbreviation, // TODO: Replace with actual value
-                }),
-              );
-            }
-        }
-    }
-    
-    if (containsData(payload.dailyBackstopData)) {
-
-        const earliestPartitionQuarterRecord = await this.entityManager.findOneBy(EarliestPartitionQuarter, {
-            tableName: 'DAILY_BACKSTOP',
-        });
-
-        if (importedReportingPeriod?.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
-            errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-K', {
-                reportedQuarter: importedReportingPeriod?.periodAbbreviation,
-                earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
-            }));
-        }
+    if (importedReportingPeriod?.id < earliestPartitionQuarterRecord?.reportingPeriodId) {
+      if (containsData(payload.dailyBackstopData)) {
+        errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-K', {
+          reportedQuarter: importedReportingPeriod?.periodAbbreviation,
+          earliestQuarter: earliestPartitionQuarterRecord?.reportingPeriod?.periodAbbreviation,
+        }));
+      }
     }
 
     return errorList;
