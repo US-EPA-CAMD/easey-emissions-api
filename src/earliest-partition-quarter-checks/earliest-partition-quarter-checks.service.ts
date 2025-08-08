@@ -63,6 +63,8 @@ export class EarliestPartitionQuarterChecksService {
             if (importedReportingPeriod.id < earliestPartitionQuarterRecordForMatsMonitorHourly?.reportingPeriodId && containsData(data.matsMonitorHourlyValueData)) {
               IMPORT39C_Found = true;
             }
+
+            if (IMPORT39A_Found && IMPORT39B_Found && IMPORT39C_Found) break;
           }
   
           if (IMPORT39A_Found) {
@@ -186,14 +188,16 @@ export class EarliestPartitionQuarterChecksService {
             || importedReportingPeriod.id < earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriodId
           ) {
             let IMPORT39H_Found = false;
-            let IMPORT39I_FOUND = false;
+            let IMPORT39I_Found = false;
             for (const data of payload.nsps4tSummaryData)  {
               if (containsData(data.nsps4tFourthQuarterData)) {
                 IMPORT39H_Found = true;
               }
               if (containsData(data.nsps4tCompliancePeriodData)) {
-                IMPORT39I_FOUND = true;
+                IMPORT39I_Found = true;
               }
+              
+              if (IMPORT39H_Found && IMPORT39I_Found) break;
             }
             if (IMPORT39H_Found) {
               errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-H', {
@@ -201,7 +205,7 @@ export class EarliestPartitionQuarterChecksService {
                 earliestQuarter: earliestPartitionQuarterRecordForNsps4tFourthQuarter?.reportingPeriod?.periodAbbreviation,
               }));
             }
-            if (IMPORT39I_FOUND) {
+            if (IMPORT39I_Found) {
               errorList.push(CheckCatalogService.formatResultMessage('IMPORT-39-I', {
                 reportedQuarter: importedReportingPeriod.periodAbbreviation,
                 earliestQuarter: earliestPartitionQuarterRecordForNsps4tCompliancePeriod?.reportingPeriod?.periodAbbreviation,
