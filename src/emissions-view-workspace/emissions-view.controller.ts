@@ -26,32 +26,38 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @ApiExcludeControllerByEnv()
 @ApiExtraModels(EmissionsViewDTO)
 export class EmissionsViewWorkspaceController {
-  constructor(private readonly service: EmissionsViewWorkspaceService) {}
+  constructor(private readonly service: EmissionsViewWorkspaceService) { }
 
   @Get()
   @ApiOkResponse({
     description:
       'Retrieves a list of workspace Emissions data views that are available',
     content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              items: {
-                type: 'array',
-                items: { $ref: getSchemaPath(EmissionsViewDTO) },
-              },
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(EmissionsViewDTO) },
             },
           },
         },
-      }
+      },
+    }
   })
+  @RoleGuard(
+    {
+      enforceCheckout: false,
+    },
+    LookupType.MonitorPlan,
+  )
   @AuditLog({
     label: 'Retrieved list of available workspace Emissions views'
   })
   async getAvailableViews(): Promise<ArrayResponse<EmissionsViewDTO>> {
     const veiwsList = await this.service.getAvailableViews();
-    return{
+    return {
       items: veiwsList
     }
   }
