@@ -2,10 +2,11 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { ReviewSubmitService } from './ReviewSubmit.service';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
+import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
+import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
 import { EntityManager } from 'typeorm';
 
 const mockRepo = () => ({
@@ -53,11 +54,15 @@ describe('ReviewSubmitService', () => {
         ConfigService,
         { provide: EmissionsReviewSubmitMap, useFactory: mockMap },
         {
-          provide: EmissionsReviewSubmitRepository,
+          provide: EmissionsReviewSubmitAllRepository,
           useFactory: mockRepo,
         },
         {
-          provide: EmissionsReviewSubmitGlobalRepository,
+          provide: EmissionsReviewSubmitAllGlobalRepository,
+          useFactory: mockRepo,
+        },
+        {
+          provide: EmissionsReviewSubmitEarliestRepository,
           useFactory: mockRepo,
         },
         EmissionsReviewSubmitMap,
@@ -73,34 +78,38 @@ describe('ReviewSubmitService', () => {
 
   describe('getEmissionsRecords', () => {
     it('should call the service function given list of orisCodes', async () => {
-      const result = await service.getEmissionsRecords([3], [], []);
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: [],
+        quarters: []
+      });
       expect(result.length).toBe(3);
     });
 
     it('should call the service function given list of monPlanIds, no quarters', async () => {
-      const result = await service.getEmissionsRecords(
-        [3],
-        ['MOCK'],
-        [],
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: ['MOCK'],
+        quarters: [],
+      });
       expect(result.length).toBe(1);
     });
 
     it('should call the service function given list of quarters, no monPlanIds', async () => {
-      const result = await service.getEmissionsRecords(
-        [3], 
-        [],  
-        ["Q3"],
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3], 
+        monPlanIds: [],  
+        quarters: ["Q3"],
+      });
       expect(result.length).toBe(2);
     });
 
     it('sshould call the service function given list of quarters and monPlanIds', async () => {
-      const result = await service.getEmissionsRecords(
-        [3],      
-        ['MOCK'],
-        ["Q3"],    
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: ['MOCK'],
+        quarters: ["Q3"],    
+      });
       expect(result.length).toBe(0);
     });
   });

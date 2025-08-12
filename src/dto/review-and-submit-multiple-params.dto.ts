@@ -29,4 +29,12 @@ export class ReviewAndSubmitMultipleParamsDTO {
   @Transform(({ value }) => value.split('|').map((item: string) => item.trim()))
   @IsOptional()
   quarters: string[];
+
+  @ApiProperty({
+    description: 'Flag to indicate if only the earliest records should be returned',
+  })
+  @ApiPropertyOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsOptional()
+  earliest?: boolean;
 }

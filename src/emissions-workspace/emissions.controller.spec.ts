@@ -87,9 +87,10 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceController } from './emissions.controller';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
+import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
 import { ReviewSubmitService } from './ReviewSubmit.service';
-import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
+import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
@@ -194,12 +195,13 @@ describe('-- Emissions Controller --', () => {
         MatsDerivedHourlyValueWorkspaceRepository,
         ConfigService,
         ReviewSubmitService,
-        EmissionsReviewSubmitRepository,
+        EmissionsReviewSubmitAllRepository,
+        EmissionsReviewSubmitEarliestRepository,
         EmissionsReviewSubmitMap,
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
-        EmissionsReviewSubmitGlobalRepository,
+        EmissionsReviewSubmitAllGlobalRepository,
         {
           provide: DataSource,
           useValue: {},

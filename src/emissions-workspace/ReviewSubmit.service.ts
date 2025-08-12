@@ -4,31 +4,47 @@ import { In } from 'typeorm';
 
 import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
 import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
-import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
+import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
+import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
 import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class ReviewSubmitService {
   constructor(
     private readonly entityManager: EntityManager,
-    private readonly workspaceRepository: EmissionsReviewSubmitRepository,
-    private readonly globalRepository: EmissionsReviewSubmitGlobalRepository,
+    private readonly allWorkspaceRepository: EmissionsReviewSubmitAllRepository,
+    private readonly allGlobalRepository: EmissionsReviewSubmitAllGlobalRepository,
+    private readonly earliestWorkspaceRepository: EmissionsReviewSubmitEarliestRepository,
     private readonly map: EmissionsReviewSubmitMap,
   ) {}
 
-  async getEmissionsRecords(
+  async getEmissionsRecords({
+    orisCodes,
+    monPlanIds,
+    quarters,
+    isWorkspace = false,
+    earliestOnly = false, // Flag to indicate if only the earliest record per monitor plan is needed
+  }: {
     orisCodes: number[],
     monPlanIds: string[],
     quarters: string[],
-    isWorkspace: boolean = true,
-  ): Promise<EmissionsReviewSubmitDTO[]> {
+    isWorkspace?: boolean,
+    earliestOnly?: boolean,
+  }): Promise<EmissionsReviewSubmitDTO[]> {
 
     let repository;
     if (isWorkspace) {
-      repository = this.workspaceRepository;
+      if (earliestOnly) repository = this.earliestWorkspaceRepository;
+      else repository = this.allWorkspaceRepository;
     } else {
-      repository = this.globalRepository;
+      if (earliestOnly) {
+        throw new EaseyException(
+          new Error('"earliest" flag only applicable for workspace.'),
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      else repository = this.allGlobalRepository;
     }
 
     let data: EmissionsReviewSubmitDTO[];

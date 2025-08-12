@@ -211,11 +211,13 @@ export class EmissionsWorkspaceController {
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
   ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
-    const emissionList = await this.submissionService.getEmissionsRecords(
-      dto.orisCodes,
-      dto.monPlanIds,
-      dto.quarters,
-    );
+    const emissionList = await this.submissionService.getEmissionsRecords({
+      orisCodes: dto.orisCodes,
+      monPlanIds: dto.monPlanIds,
+      quarters: dto.quarters,
+      isWorkspace: true,
+      earliestOnly: dto.earliest,
+    });
 
     return {
       items: emissionList

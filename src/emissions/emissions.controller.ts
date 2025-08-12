@@ -130,12 +130,13 @@ export class EmissionsController {
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
   ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
-    const submissionList = await this.submissionService.getEmissionsRecords(
-      dto.orisCodes,
-      dto.monPlanIds,
-      dto.quarters,
-      false,
-    );
+    const submissionList = await this.submissionService.getEmissionsRecords({
+      orisCodes: dto.orisCodes,
+      monPlanIds: dto.monPlanIds,
+      quarters: dto.quarters,
+      isWorkspace: false,
+      earliestOnly: false, // This is not applicable in the global context
+    });
     return {
       items: submissionList
     }

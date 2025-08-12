@@ -1,8 +1,7 @@
-import { BaseEntity, ViewColumn, ViewEntity } from 'typeorm';
+import { BaseEntity, ViewColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
-@ViewEntity({ name: 'camdecmpswks.vw_em_eval_and_submit' })
-export class EmissionsReviewSubmit extends BaseEntity {
+export abstract class EmissionsReviewSubmit extends BaseEntity {
   @ViewColumn({
     name: 'oris_code',
     transformer: new NumericColumnTransformer(),
