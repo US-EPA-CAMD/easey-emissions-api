@@ -34,17 +34,17 @@ export class ReviewSubmitService {
   }): Promise<EmissionsReviewSubmitDTO[]> {
 
     let repository;
-    if (isWorkspace) {
-      if (earliestOnly) repository = this.earliestWorkspaceRepository;
-      else repository = this.allWorkspaceRepository;
-    } else {
-      if (earliestOnly) {
+    if (isWorkspace && earliestOnly) {
+      repository = this.earliestWorkspaceRepository;
+    } else if (isWorkspace && !earliestOnly) {
+      repository = this.allWorkspaceRepository;
+    } else if (!isWorkspace && earliestOnly) {
         throw new EaseyException(
           new Error('"earliest" flag only applicable for workspace.'),
           HttpStatus.BAD_REQUEST,
         );
-      }
-      else repository = this.allGlobalRepository;
+    } else {
+      repository = this.allGlobalRepository;
     }
 
     let data: EmissionsReviewSubmitDTO[];
