@@ -6,10 +6,12 @@ import {
   Param,
   UseInterceptors,
   Req,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags, ApiExtraModels, getSchemaPath, ApiBearerAuth } from '@nestjs/swagger';
 import { Json2CsvInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuthGuard } from '@us-epa-camd/easey-common/guards';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -46,12 +48,8 @@ export class EmissionsViewWorkspaceController {
       },
     }
   })
-  @RoleGuard(
-    {
-      enforceCheckout: false,
-    },
-    LookupType.MonitorPlan,
-  )
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('Token')
   @AuditLog({
     label: 'Retrieved list of available workspace Emissions views'
   })
