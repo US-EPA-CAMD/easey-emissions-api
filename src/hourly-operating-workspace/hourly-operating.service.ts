@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
+import { EntityManager } from 'typeorm';
 
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
 import { EmissionsImportDTO } from '../dto/emissions.dto';
@@ -11,6 +12,7 @@ import {
   HourlyOperatingImportDTO,
 } from '../dto/hourly-operating.dto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
+import { ReportingPeriod } from '../entities/reporting-period.entity';
 import { HourlyFuelFlowWorkspaceService } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.service';
 import { HourlyGasFlowMeterWorkspaceService } from '../hourly-gas-flow-meter-workspace/hourly-gas-flow-meter.service';
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
@@ -18,7 +20,7 @@ import { MatsDerivedHourlyValueWorkspaceService } from '../mats-derived-hourly-v
 import { MatsMonitorHourlyValueWorkspaceService } from '../mats-monitor-hourly-value-workspace/mats-monitor-hourly-value.service';
 import { MonitorHourlyValueWorkspaceService } from '../monitor-hourly-value-workspace/monitor-hourly-value.service';
 import { DeleteCriteria } from '../types';
-import { isUndefinedOrNull, splitArrayInChunks } from '../utils/utils';
+import { isUndefinedOrNull } from '../utils/utils';
 import { HourlyOperatingWorkspaceRepository } from './hourly-operating.repository';
 
 export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
@@ -30,6 +32,7 @@ export type HourlyOperatingCreate = HourlyOperatingImportDTO & {
 @Injectable()
 export class HourlyOperatingWorkspaceService {
   constructor(
+    private readonly entityManager: EntityManager,
     private readonly map: HourlyOperatingMap,
     private readonly repository: HourlyOperatingWorkspaceRepository,
     private readonly monitorHourlyValueService: MonitorHourlyValueWorkspaceService,
@@ -65,52 +68,38 @@ export class HourlyOperatingWorkspaceService {
       monitoringLocationIds,
       params,
     );
+    const reportingPeriod = await this.entityManager.findOneBy(ReportingPeriod, {
+      year: params.year,
+      quarter: params.quarter,
+    });
 
-    let resultPromises = [];
+    if (!hourlyOperating.length) return [];
 
-    if (hourlyOperating) {
-      const hourlyOperatingDataChunks = splitArrayInChunks(hourlyOperating);
+    const values = await Promise.all([
+      this.monitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+      this.derivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+      this.matsMonitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+      this.matsDerivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+      this.hourlyGasFlowMeterService.export(reportingPeriod.id, monitoringLocationIds),
+      this.hourlyFuelFlowService.export(reportingPeriod.id, monitoringLocationIds),
+    ]);
 
-      const getChildrenData = async hourlyOperatingChunk => {
-        const hourlyOperatingIds = hourlyOperatingChunk.map(i => i.id);
+    hourlyOperating.forEach(hourlyOp => {
+      hourlyOp.monitorHourlyValueData =
+        values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      hourlyOp.derivedHourlyValueData =
+        values?.[1]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      hourlyOp.matsMonitorHourlyValueData =
+        values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      hourlyOp.matsDerivedHourlyValueData =
+        values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      hourlyOp.hourlyGFMData =
+        values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      hourlyOp.hourlyFuelFlowData =
+        values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+    });
 
-        if (hourlyOperatingIds?.length > 0) {
-          const values = await Promise.all([
-            this.monitorHourlyValueService.export(hourlyOperatingIds),
-            this.derivedHourlyValueService.export(hourlyOperatingIds),
-            this.matsMonitorHourlyValueService.export(hourlyOperatingIds),
-            this.matsDerivedHourlyValueService.export(hourlyOperatingIds),
-            this.hourlyGasFlowMeterService.export(hourlyOperatingIds),
-            this.hourlyFuelFlowService.export(hourlyOperatingIds),
-          ]);
-
-          hourlyOperatingChunk?.forEach(hourlyOp => {
-            hourlyOp.monitorHourlyValueData =
-              values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-            hourlyOp.derivedHourlyValueData =
-              values?.[1]?.filter(derivedHourlyDatum => {
-                return derivedHourlyDatum.hourId === hourlyOp.id;
-              }) ?? [];
-            hourlyOp.matsMonitorHourlyValueData =
-              values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-            hourlyOp.matsDerivedHourlyValueData =
-              values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-            hourlyOp.hourlyGFMData =
-              values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-            hourlyOp.hourlyFuelFlowData =
-              values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-          });
-        }
-        return hourlyOperatingChunk;
-      };
-
-      for (const chunk of hourlyOperatingDataChunks) {
-        resultPromises.push(getChildrenData(chunk));
-      }
-    }
-    let results = await Promise.all(resultPromises);
-
-    return results.flat(1);
+    return hourlyOperating;
   }
 
   async delete(criteria: DeleteCriteria): Promise<void> {

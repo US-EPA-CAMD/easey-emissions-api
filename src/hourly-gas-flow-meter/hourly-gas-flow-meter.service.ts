@@ -12,8 +12,8 @@ export class HourlyGasFlowMeterService {
     private readonly repository: HourlyGasFlowMeterRepository,
   ) {}
 
-  async export(hourIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
-    const results = await this.repository.export(hourIds);
+  async export(rptPeriodId: number, monLocIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
+    const results = await this.repository.export(rptPeriodId, monLocIds);
     return this.map.many(results);
   }
 }

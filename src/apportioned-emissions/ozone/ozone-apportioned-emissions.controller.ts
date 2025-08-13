@@ -20,7 +20,6 @@ import {
 
 import { fieldMappings } from '../../constants/field-mappings';
 import { OzoneUnitDataView } from './../../entities/vw-ozone-unit-data.entity';
-import { OzoneApportionedEmissionsDTO } from '../../dto/ozone-apportioned-emissions.dto';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 import { OzoneApportionedEmissionsFacilityAggregationDTO } from './../../dto/ozone-apportioned-emissions-facility-aggregation.dto';
@@ -32,10 +31,10 @@ import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.inter
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Apportioned Ozone Emissions')
-@ApiExtraModels(OzoneApportionedEmissionsDTO)
 @ApiExtraModels(OzoneApportionedEmissionsFacilityAggregationDTO)
 @ApiExtraModels(OzoneApportionedEmissionsStateAggregationDTO)
 @ApiExtraModels(OzoneApportionedEmissionsNationalAggregationDTO)
+@ApiExtraModels(OzoneUnitDataView)
 export class OzoneApportionedEmissionsController {
   constructor(private readonly service: OzoneApportionedEmissionsService) {}
 
@@ -49,7 +48,7 @@ export class OzoneApportionedEmissionsController {
              properties: {
               items: {
                 type: 'array',
-                items: { $ref: getSchemaPath(OzoneApportionedEmissionsDTO)},
+                items: { $ref: getSchemaPath(OzoneUnitDataView)},
              }
           },
         },

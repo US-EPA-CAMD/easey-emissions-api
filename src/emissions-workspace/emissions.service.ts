@@ -32,6 +32,8 @@ import { WeeklyTestSummaryWorkspaceService } from '../weekly-test-summary-worksp
 import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EaseyContentService} from '../emissions-easey-content/easey-content.service';
+import { EmissionsService } from '../emissions/emissions.service';
+import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 
 type Dictionary = { [index: string]: string }
 
@@ -49,6 +51,7 @@ export type ImportIdentifiers = {
 @Injectable()
 export class EmissionsWorkspaceService {
   constructor(
+    private readonly emissionsService: EmissionsService,
     private readonly entityManager: EntityManager,
     private readonly map: EmissionsMap,
     private readonly checksService: EmissionsChecksService,
@@ -72,6 +75,21 @@ export class EmissionsWorkspaceService {
 
   async delete(criteria: DeleteCriteria): Promise<DeleteResult> {
     return this.repository.delete(criteria);
+  }
+
+  async importFromHistoricalData(
+    params: EmissionsParamsDTO,
+    user: CurrentUser,
+  ) {
+    const historicalData = await this.emissionsService.export(params, params.reportedValuesOnly);
+    if (!historicalData || Object.keys(historicalData).length === 0) {
+      throw new NotFoundException(
+        'Import unsuccessful: no historical data found for this reporting period.',
+      );
+    }
+    const emissionsImportDTOData = historicalData as EmissionsImportDTO;
+    await this.checksService.runChecks(emissionsImportDTOData);
+    return await this.import(emissionsImportDTOData, user.userId);
   }
 
   async export(

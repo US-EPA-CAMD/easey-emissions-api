@@ -11,12 +11,13 @@ export class HourlyFuelFlowWorkspaceRepository extends Repository<
     super(HrlyFuelFlow, entityManager);
   }
 
-  async export(hourlyOperatingIds: string[]) {
+  async export(rptPeriodId: number, monLocIds: string[]) {
     return this.createQueryBuilder('hourlyFuelFlow')
-      .where('hourlyFuelFlow.hour_id IN (:...hourlyOperatingIds)', {
-        hourlyOperatingIds,
-      })
       .leftJoinAndSelect('hourlyFuelFlow.monitorSystem', 'ms')
+      .where('hourlyFuelFlow.reportingPeriodId = :rptPeriodId', { rptPeriodId })
+      .andWhere('hourlyFuelFlow.monitoringLocationId IN (:...monLocIds)', {
+        monLocIds,
+      })
       .getMany();
   }
 }

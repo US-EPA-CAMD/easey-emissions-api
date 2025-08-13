@@ -44,6 +44,10 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
   ],
 });
 
+const mockEntityManager = {
+  findOneBy: () => Promise.resolve({ id: 123, year: 2023, quarter: 1 }),
+};
+
 const mockRepository = {
   export: () => Promise.resolve(generatedHrlyOpValues),
 };
@@ -88,7 +92,6 @@ describe('HourlyOperatingService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EntityManager,
         HourlyOperatingService,
         MonitorHourlyValueRepository,
         MonitorHourlyValueMap,
@@ -111,6 +114,10 @@ describe('HourlyOperatingService', () => {
         HourlyParameterFuelFlowMap,
         DerivedHourlyValueRepository,
         HourlyOperatingRepository,
+        {
+          provide: EntityManager,
+          useFactory: () => mockEntityManager,
+        },
         {
           provide: MonitorHourlyValueService,
           useValue: mockMonitorHourlyValueService,
