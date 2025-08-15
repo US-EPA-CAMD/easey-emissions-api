@@ -1,4 +1,4 @@
-export class EmissionsReviewSubmitDTO {
+export class EmissionsReviewDTO {
   orisCode: number;
 
   facilityName: string;
@@ -11,7 +11,7 @@ export class EmissionsReviewSubmitDTO {
 
   evalStatusCodeDescription: string;
 
-  severityCode:string;
+  severityCode: string;
 
   severityDescription: string;
 

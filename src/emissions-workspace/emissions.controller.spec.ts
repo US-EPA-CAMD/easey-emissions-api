@@ -20,8 +20,8 @@ import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-works
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
+import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { HourlyFuelFlowWorkspaceRepository } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.repository';
@@ -39,7 +39,7 @@ import { DailyEmissionMap } from '../maps/daily-emission.map';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { EmissionsReviewMap } from '../maps/emissions-review.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsMap } from '../maps/emissions.map';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -87,13 +87,9 @@ import { EmissionsChecksService } from './emissions-checks.service';
 import { EmissionsWorkspaceController } from './emissions.controller';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
-import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
 import { ReviewSubmitService } from './ReviewSubmit.service';
-import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
-import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
-import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
 import { CurrentUser }          from '@us-epa-camd/easey-common/interfaces';
 import { NotFoundException }    from '@nestjs/common';
 import { EmissionsService } from '../emissions/emissions.service';
@@ -195,13 +191,10 @@ describe('-- Emissions Controller --', () => {
         MatsDerivedHourlyValueWorkspaceRepository,
         ConfigService,
         ReviewSubmitService,
-        EmissionsReviewSubmitAllRepository,
-        EmissionsReviewSubmitEarliestRepository,
-        EmissionsReviewSubmitMap,
+        EmissionsReviewMap,
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
-        EmissionsReviewSubmitAllGlobalRepository,
         {
           provide: DataSource,
           useValue: {},
@@ -297,7 +290,7 @@ describe('-- Emissions Controller --', () => {
 
   describe('getEmissions', () => {
     it('should call the review and submit test summary controller function and return a list of dtos', async () => {
-      const dto = new EmissionsReviewSubmitDTO();
+      const dto = new EmissionsReviewDTO();
       const expected = {
         items: [dto]
       }

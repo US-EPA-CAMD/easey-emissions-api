@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsInEnum } from '@us-epa-camd/easey-common/pipes';
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+
+import { EmissionsRetrievalMode } from '../enums/emissions-retrieval-mode.enum';
 
 export class ReviewAndSubmitMultipleParamsDTO {
   @ApiProperty({
@@ -31,10 +34,12 @@ export class ReviewAndSubmitMultipleParamsDTO {
   quarters: string[];
 
   @ApiProperty({
-    description: 'Flag to indicate if only the earliest records should be returned',
+    description: 'Flag to indicate the mode of operation',
   })
   @ApiPropertyOptional()
-  @Transform(({ value }) => value === 'true')
+  @IsInEnum(EmissionsRetrievalMode, {
+    message: `Mode must be one of the following: ${Object.values(EmissionsRetrievalMode).join(', ')}`,
+  })
   @IsOptional()
-  earliest?: boolean;
+  mode?: EmissionsRetrievalMode;
 }

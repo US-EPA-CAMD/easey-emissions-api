@@ -14,7 +14,7 @@ import { EmissionsModule } from '../emissions/emissions.module';
 import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
 import { HourlyOperatingWorkspaceModule } from '../hourly-operating-workspace/hourly-operating.module';
 import { LongTermFuelFlowWorkspaceModule } from '../long-term-fuel-flow-workspace/long-term-fuel-flow.module';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
+import { EmissionsReviewMap } from '../maps/emissions-review.map';
 import { EmissionsSubmissionsProgressMap } from '../maps/emissions-submissions-progress.map';
 import { EmissionsMap } from '../maps/emissions.map';
 import { MonitorFormulaModule } from '../monitor-formula/monitor-formula.module';
@@ -30,9 +30,6 @@ import { SorbentTrapWorkspaceModule } from '../sorbent-trap-workspace/sorbent-tr
 import { SummaryValueWorkspaceModule } from '../summary-value-workspace/summary-value.module';
 import { WeeklyTestSummaryWorkspaceModule } from '../weekly-test-summary-workspace/weekly-test-summary.module';
 import { EmissionsChecksService } from './emissions-checks.service';
-import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
-import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
-import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
 import { EmissionsWorkspaceController } from './emissions.controller';
 import { EmissionsWorkspaceRepository } from './emissions.repository';
 import { EmissionsWorkspaceService } from './emissions.service';
@@ -42,9 +39,6 @@ import { ReviewSubmitService } from './ReviewSubmit.service';
   imports: [
     TypeOrmModule.forFeature([
       EmissionsWorkspaceRepository,
-      EmissionsReviewSubmitAllRepository,
-      EmissionsReviewSubmitAllGlobalRepository,
-      EmissionsReviewSubmitEarliestRepository,
     ]),
     EaseyContentModule,
     ComponentModule,
@@ -75,11 +69,8 @@ import { ReviewSubmitService } from './ReviewSubmit.service';
   controllers: [EmissionsWorkspaceController],
   providers: [
     EmissionsWorkspaceRepository,
-    EmissionsReviewSubmitAllRepository,
-    EmissionsReviewSubmitAllGlobalRepository,
-    EmissionsReviewSubmitEarliestRepository,
     EmissionsMap,
-    EmissionsReviewSubmitMap,
+    EmissionsReviewMap,
     EmissionsSubmissionsProgressMap,
     EmissionsWorkspaceService,
     EmissionsChecksService,
@@ -88,11 +79,8 @@ import { ReviewSubmitService } from './ReviewSubmit.service';
   exports: [
     TypeOrmModule,
     EmissionsWorkspaceRepository,
-    EmissionsReviewSubmitAllRepository,
-    EmissionsReviewSubmitAllGlobalRepository,
-    EmissionsReviewSubmitEarliestRepository,
     EmissionsMap,
-    EmissionsReviewSubmitMap,
+    EmissionsReviewMap,
     EmissionsSubmissionsProgressMap,
     EmissionsWorkspaceService,
     EmissionsChecksService,

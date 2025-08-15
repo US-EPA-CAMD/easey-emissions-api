@@ -2,29 +2,26 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { ReviewSubmitService } from './ReviewSubmit.service';
-import { EmissionsReviewSubmitAllRepository } from './emissions-review-submit-all.repository';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitAllGlobalRepository } from './emissions-review-submit-all-global.repository';
-import { EmissionsReviewSubmitEarliestRepository } from './emissions-review-submit-earliest.repository';
+import { EmissionsReviewMap } from '../maps/emissions-review.map';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
 import { EntityManager } from 'typeorm';
 
-const mockRepo = () => ({
-  find: jest.fn().mockImplementation(args => {
-
+const mockManager = () => ({
+  find: (_entity, args) => new Promise((resolve) => {
+    console.log(args);
     const hasMonPlanId = !!args.where.monPlanId;
     const hasPeriodAbbreviation = args.where.hasOwnProperty('periodAbbreviation');
 
     if (hasMonPlanId) {
       if (hasPeriodAbbreviation) {
-        return Promise.resolve([]);
+        return resolve([]);
       } else {
-        return Promise.resolve([new EmissionsReviewSubmitDTO()]);
+        return resolve([new EmissionsReviewDTO()]);
       }
     } else if (hasPeriodAbbreviation) {
-      return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
+      return resolve([new EmissionsReviewDTO(), new EmissionsReviewDTO()]);
     }
-    return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
+    return resolve([new EmissionsReviewDTO(), new EmissionsReviewDTO(), new EmissionsReviewDTO()]);
   }),
 });
 
@@ -46,26 +43,12 @@ describe('ReviewSubmitService', () => {
       providers: [
         {
           provide: EntityManager,
-          useValue: {
-            query: manager,
-          },
+          useFactory: mockManager,
         },
         ReviewSubmitService,
         ConfigService,
-        { provide: EmissionsReviewSubmitMap, useFactory: mockMap },
-        {
-          provide: EmissionsReviewSubmitAllRepository,
-          useFactory: mockRepo,
-        },
-        {
-          provide: EmissionsReviewSubmitAllGlobalRepository,
-          useFactory: mockRepo,
-        },
-        {
-          provide: EmissionsReviewSubmitEarliestRepository,
-          useFactory: mockRepo,
-        },
-        EmissionsReviewSubmitMap,
+        { provide: EmissionsReviewMap, useFactory: mockMap },
+        EmissionsReviewMap,
       ],
     }).compile();
 

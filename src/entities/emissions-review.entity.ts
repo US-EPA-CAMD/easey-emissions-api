@@ -1,7 +1,7 @@
 import { BaseEntity, ViewColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
-export abstract class EmissionsReviewSubmitGlobal extends BaseEntity {
+export abstract class EmissionsReviewGlobal extends BaseEntity {
   @ViewColumn({
     name: 'oris_code',
     transformer: new NumericColumnTransformer(),
