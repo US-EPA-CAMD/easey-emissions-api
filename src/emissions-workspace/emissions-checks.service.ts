@@ -12,6 +12,7 @@ import { MonitorPlanChecksService } from '../monitor-plan-workspace/monitor-plan
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+import { EarliestPartitionQuarterChecksService } from '../earliest-partition-quarter-checks/earliest-partition-quarter-checks.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 
 const moment = require('moment');
@@ -26,6 +27,7 @@ export class EmissionsChecksService {
     private readonly monitorLocationCheckService: MonitorLocationChecksService,
     private readonly monitorPlanCheckService: MonitorPlanChecksService,
     private readonly codeCheckService: CodeChecksService,
+    private readonly earliestPartitionQuarterChecksService: EarliestPartitionQuarterChecksService,
     private readonly monitorFormulaRepository: MonitorFormulaRepository,
   ) {
     this.logger.setContext('EmissionsChecksService');
@@ -61,6 +63,9 @@ export class EmissionsChecksService {
 
     const codeErrors = await this.codeCheckService.runChecks(payload);
 
+    // IMPORT-39: Earliest Partition Quarter Check
+    const earliestPartitionQuarterErrors = await this.earliestPartitionQuarterChecksService.runChecks(payload);
+
     // IMPORT-29: Inappropriate Children Records for Daily Test Summary
     const dailyTestSummaryCheckErrors = this.dailyTestSummaryCheckService.runChecks(
       payload,
@@ -90,6 +95,7 @@ export class EmissionsChecksService {
 
     errorList.push(
       ...codeErrors,
+      ...earliestPartitionQuarterErrors,
       ...weeklyTestSummaryCheckErrors,
       ...summaryValueDataCheckErrors,
       ...invalidDatesCheckErrors,
