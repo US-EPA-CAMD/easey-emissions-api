@@ -46,7 +46,7 @@ describe('Emisions Workspace Repository Test', () => {
   describe('updateAllViews', () => {
     it('successfully calls updateAllViews()', async () => {
       await repository.updateAllViews();
-      expect(repository.query).toBeCalled();
+      expect(repository.query).toHaveBeenCalled();
     });
   });
 });
