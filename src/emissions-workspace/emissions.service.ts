@@ -331,6 +331,9 @@ export class EmissionsWorkspaceService {
         params.year,
       );
 
+      //Finally, perform the updates (reset needs eval flag, etc) for those records
+       this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId);
+
       await queryRunner.commitTransaction();
 
       return {
@@ -341,6 +344,18 @@ export class EmissionsWorkspaceService {
       throw err;
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number): Promise<void> {
+    //1. Update affected EM Records
+    const emResult = await this.repository.query(
+      'SELECT * FROM camdecmpswks.update_collateral_em_data_for_em_changes($1, $2)',
+      [monitorPlanId, reportingPeriodId],
+    );
+
+    if (emResult[0].result === 'F') {
+      throw new Error(`EM Deletion Failed: ${emResult[0].error_msg}`);
     }
   }
 
