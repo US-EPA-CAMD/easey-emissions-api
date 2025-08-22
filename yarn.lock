@@ -640,10 +640,10 @@
   resolved "https://registry.npmjs.org/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
   integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
 
-"@golevelup/ts-jest@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.npmjs.org/@golevelup/ts-jest/-/ts-jest-0.6.2.tgz#483a482e1ab5a835cdd0f8669f76d1201c4a0f63"
-  integrity sha512-ks82vcWbnRuwHSKlrZTGCPPWXZEKlsn1VA2OiYfJ+tVMcMsI4y9ExWkf7FnmYypYJIRWKS9b9N5QVVrCOmaVlg==
+"@golevelup/ts-jest@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@golevelup/ts-jest/-/ts-jest-0.7.0.tgz#b16c6775a34fa424e5fb492bc45a20c6d8204e0b"
+  integrity sha512-b5Kf+NiEfWuMGUD5bl/Gm/RqojS4Sr/4Q0ySXN4xn3xlkhgPYG6nGLBeNjk3MiM2I3ztVVFfI7SB8ajqDy6Idw==
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"
@@ -2079,12 +2079,12 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@us-epa-camd/easey-common@21.3.1":
-  version "21.3.1"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.3.1/b29370e70a50ea8513872a2455de5a9166ff6891#b29370e70a50ea8513872a2455de5a9166ff6891"
-  integrity sha512-vSGFGy5Pgsc/1uxHVd+nbuhLX2Ob66q33QQTXCznpnpqYL8kokNowpvkQYphuvjHnUdg6eub73aTWbqtsdXIww==
+"@us-epa-camd/easey-common@21.3.2":
+  version "21.3.2"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.3.2/ff9de06428dee77c22f018f44396edd143d244fb#ff9de06428dee77c22f018f44396edd143d244fb"
+  integrity sha512-36cvf7Yi/xSrhHNx9rSSA8A+NVN52sXRIeiESTxYVE5TaqSCuNVfqn5FUSkO70lNVbroKzAdClEaWJ5ftGAlLw==
   dependencies:
-    "@golevelup/ts-jest" "^0.6.2"
+    "@golevelup/ts-jest" "^0.7.0"
     "@nestjs/axios" "4.0.0"
     "@nestjs/common" "^11.1.6"
     "@nestjs/config" "^4.0.2"
