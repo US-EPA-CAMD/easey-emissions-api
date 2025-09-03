@@ -8,6 +8,7 @@ import { EntityManager } from 'typeorm';
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+import { EarliestPartitionQuarterChecksService } from '../earliest-partition-quarter-checks/earliest-partition-quarter-checks.service';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import { DailyTestSummaryCheckService } from '../daily-test-summary-workspace/daily-test-summary-check.service';
@@ -116,6 +117,12 @@ describe('Emissions Checks Service Tests', () => {
         },
         {
           provide: MonitorPlanChecksService,
+          useFactory: () => ({
+            runChecks: jest.fn().mockResolvedValue([]),
+          }),
+        },
+        {
+          provide: EarliestPartitionQuarterChecksService,
           useFactory: () => ({
             runChecks: jest.fn().mockResolvedValue([]),
           }),
