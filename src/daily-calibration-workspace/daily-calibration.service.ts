@@ -23,7 +23,7 @@ export class DailyCalibrationWorkspaceService {
     private readonly map: DailyCalibrationMap,
     private readonly repository: DailyCalibrationWorkspaceRepository,
     private readonly bulkLoadService: BulkLoadService,
-  ) {}
+  ) { }
 
   async dailyCalibrationByTestSumId(
     dailyTestSummaryIds: string[],
@@ -57,6 +57,10 @@ export class DailyCalibrationWorkspaceService {
     objectList: Array<object>,
     currentTime: string,
   ): Promise<void> {
+    if (!data) {
+      return;
+    }
+    
     for (const dataChunk of data) {
       objectList.push({
         id: randomUUID(),
