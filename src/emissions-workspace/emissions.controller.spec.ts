@@ -7,6 +7,7 @@ import { DataSource, EntityManager } from 'typeorm';
 
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
 import { CodeChecksService } from '../code-checks/code-checks.service';
+import { EarliestPartitionQuarterChecksService } from '../earliest-partition-quarter-checks/earliest-partition-quarter-checks.service';
 import { ComponentRepository } from '../component/component.repository';
 import { DailyBackstopWorkspaceService } from '../daily-backstop-workspace/daily-backstop.service';
 import { DailyCalibrationWorkspaceRepository } from '../daily-calibration-workspace/daily-calibration.repository';
@@ -116,6 +117,7 @@ describe('-- Emissions Controller --', () => {
         DailyFuelWorkspaceService,
         DailyTestSummaryCheckService,
         CodeChecksService,
+        EarliestPartitionQuarterChecksService,
         SummaryValueDataCheckService,
         EmissionsMap,
         EmissionsWorkspaceService,
