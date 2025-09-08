@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-import { EmissionsReviewSubmit } from '../entities/workspace/emissions-review-submit.entity';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitGlobal } from '../entities/emissions-review-submit.entity';
+import { EmissionsReview } from '../entities/workspace/emissions-review.entity';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
+import { EmissionsReviewGlobal } from '../entities/emissions-review.entity';
 
 @Injectable()
-export class EmissionsReviewSubmitMap extends BaseMap<
-  EmissionsReviewSubmit,
-  EmissionsReviewSubmitDTO
+export class EmissionsReviewMap extends BaseMap<
+  EmissionsReview | EmissionsReviewGlobal,
+  EmissionsReviewDTO
 > {
   public async one(
-    entity: EmissionsReviewSubmit | EmissionsReviewSubmitGlobal,
-  ): Promise<EmissionsReviewSubmitDTO> {
+    entity: EmissionsReview | EmissionsReviewGlobal,
+  ): Promise<EmissionsReviewDTO> {
     let severityDescription = null;
     let severityCode = null;
     return {
@@ -30,9 +30,9 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       updateDate: entity.updateDate?.toISOString() ?? null,
       windowStatus: entity.windowStatus,
       windowExpiredDate:
-      'windowExpiredDate' in entity
-        ? entity.windowExpiredDate?.toISOString() ?? null
-        : null,
+        'windowExpiredDate' in entity
+          ? (entity.windowExpiredDate?.toISOString() ?? null)
+          : null,
       periodAbbreviation: entity.periodAbbreviation,
     };
   }
