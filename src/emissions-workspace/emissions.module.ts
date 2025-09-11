@@ -9,6 +9,7 @@ import { DailyBackstopWorkspaceModule } from '../daily-backstop-workspace/daily-
 import { DailyEmissionWorkspaceModule } from '../daily-emission-workspace/daily-emission-workspace.module';
 import { DailyFuelWorkspaceModule } from '../daily-fuel-workspace/daily-fuel-workspace.module';
 import { DailyTestSummaryWorkspaceModule } from '../daily-test-summary-workspace/daily-test-summary.module';
+import { EarliestPartitionQuarterChecksModule } from '../earliest-partition-quarter-checks/earliest-partition-quarter-checks.module';
 import { EaseyContentModule } from '../emissions-easey-content/easey-content.module';
 import { EmissionsModule } from '../emissions/emissions.module';
 import { HourlyFuelFlowWorkspaceModule } from '../hourly-fuel-flow-workspace/hourly-fuel-flow-workspace.module';
@@ -57,6 +58,7 @@ import { ReviewSubmitService } from './ReviewSubmit.service';
     LongTermFuelFlowWorkspaceModule,
     DailyBackstopWorkspaceModule,
     CodeChecksModule,
+    EarliestPartitionQuarterChecksModule,
     MonitorFormulaModule,
     MonitorSystemModule,
     SorbentTrapWorkspaceModule,
