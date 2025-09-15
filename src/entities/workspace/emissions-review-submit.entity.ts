@@ -1,47 +1,6 @@
-import { BaseEntity, ViewColumn, ViewEntity } from 'typeorm';
-import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { ViewEntity } from 'typeorm';
+
+import { EmissionsReview } from './emissions-review.entity';
 
 @ViewEntity({ name: 'camdecmpswks.vw_em_eval_and_submit' })
-export class EmissionsReviewSubmit extends BaseEntity {
-  @ViewColumn({
-    name: 'oris_code',
-    transformer: new NumericColumnTransformer(),
-  })
-  orisCode: number;
-
-  @ViewColumn({ name: 'facility_name' })
-  facilityName: string;
-
-  @ViewColumn({ name: 'mon_plan_id' })
-  monPlanId: string;
-
-  @ViewColumn({ name: 'configuration' })
-  configuration: string;
-
-  @ViewColumn({ name: 'eval_status_cd' })
-  evalStatusCode: string;
-
-  @ViewColumn({ name: 'eval_status_cd_description' })
-  evalStatusCodeDescription: string;
-
-  @ViewColumn({ name: 'submission_availability_cd' })
-  submissionAvailabilityCode: string;
-
-  @ViewColumn({ name: 'submission_availability_cd_description' })
-  submissionAvailabilityCodeDescription: string;
-
-  @ViewColumn({ name: 'userid' })
-  userid: string;
-
-  @ViewColumn({ name: 'update_date' })
-  updateDate: Date;
-
-  @ViewColumn({ name: 'window_status' })
-  windowStatus: string;
-
-  @ViewColumn({ name: 'window_expired_date' })
-  windowExpiredDate: Date;
-
-  @ViewColumn({ name: 'period_abbreviation' })
-  periodAbbreviation: string;
-}
+export class EmissionsReviewSubmit extends EmissionsReview {}

@@ -2,28 +2,26 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { ReviewSubmitService } from './ReviewSubmit.service';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
+import { EmissionsReviewMap } from '../maps/emissions-review.map';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
 import { EntityManager } from 'typeorm';
 
-const mockRepo = () => ({
-  find: jest.fn().mockImplementation(args => {
-
+const mockManager = () => ({
+  find: (_entity, args) => new Promise((resolve) => {
+    console.log(args);
     const hasMonPlanId = !!args.where.monPlanId;
     const hasPeriodAbbreviation = args.where.hasOwnProperty('periodAbbreviation');
 
     if (hasMonPlanId) {
       if (hasPeriodAbbreviation) {
-        return Promise.resolve([]);
+        return resolve([]);
       } else {
-        return Promise.resolve([new EmissionsReviewSubmitDTO()]);
+        return resolve([new EmissionsReviewDTO()]);
       }
     } else if (hasPeriodAbbreviation) {
-      return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
+      return resolve([new EmissionsReviewDTO(), new EmissionsReviewDTO()]);
     }
-    return Promise.resolve([new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO(), new EmissionsReviewSubmitDTO()]);
+    return resolve([new EmissionsReviewDTO(), new EmissionsReviewDTO(), new EmissionsReviewDTO()]);
   }),
 });
 
@@ -45,22 +43,12 @@ describe('ReviewSubmitService', () => {
       providers: [
         {
           provide: EntityManager,
-          useValue: {
-            query: manager,
-          },
+          useFactory: mockManager,
         },
         ReviewSubmitService,
         ConfigService,
-        { provide: EmissionsReviewSubmitMap, useFactory: mockMap },
-        {
-          provide: EmissionsReviewSubmitRepository,
-          useFactory: mockRepo,
-        },
-        {
-          provide: EmissionsReviewSubmitGlobalRepository,
-          useFactory: mockRepo,
-        },
-        EmissionsReviewSubmitMap,
+        { provide: EmissionsReviewMap, useFactory: mockMap },
+        EmissionsReviewMap,
       ],
     }).compile();
 
@@ -73,34 +61,38 @@ describe('ReviewSubmitService', () => {
 
   describe('getEmissionsRecords', () => {
     it('should call the service function given list of orisCodes', async () => {
-      const result = await service.getEmissionsRecords([3], [], []);
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: [],
+        quarters: []
+      });
       expect(result.length).toBe(3);
     });
 
     it('should call the service function given list of monPlanIds, no quarters', async () => {
-      const result = await service.getEmissionsRecords(
-        [3],
-        ['MOCK'],
-        [],
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: ['MOCK'],
+        quarters: [],
+      });
       expect(result.length).toBe(1);
     });
 
     it('should call the service function given list of quarters, no monPlanIds', async () => {
-      const result = await service.getEmissionsRecords(
-        [3], 
-        [],  
-        ["Q3"],
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3], 
+        monPlanIds: [],  
+        quarters: ["Q3"],
+      });
       expect(result.length).toBe(2);
     });
 
     it('sshould call the service function given list of quarters and monPlanIds', async () => {
-      const result = await service.getEmissionsRecords(
-        [3],      
-        ['MOCK'],
-        ["Q3"],    
-      );
+      const result = await service.getEmissionsRecords({
+        orisCodes: [3],
+        monPlanIds: ['MOCK'],
+        quarters: ["Q3"],    
+      });
       expect(result.length).toBe(0);
     });
   });

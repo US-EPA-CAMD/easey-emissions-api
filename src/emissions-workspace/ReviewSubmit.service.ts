@@ -1,37 +1,65 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitMap } from '../maps/emissions-review-submit.map';
-import { EmissionsReviewSubmitRepository } from './ReviewSubmit.repository';
-import { EmissionsReviewSubmitGlobalRepository } from './ReviewSubmitGlobal.repository';
-import { EntityManager } from 'typeorm';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
+import { EmissionsReviewEvaluate } from '../entities/workspace/emissions-review-evaluate.entity';
+import { EmissionsReviewReport } from '../entities/workspace/emissions-review-report.entity';
+import { EmissionsReviewReportGlobal } from '../entities/emissions-review-report.entity';
+import { EmissionsReviewSubmit } from '../entities/workspace/emissions-review-submit.entity';
+import { EmissionsRetrievalMode } from '../enums/emissions-retrieval-mode.enum';
+import { EmissionsReviewMap } from '../maps/emissions-review.map';
 
 @Injectable()
 export class ReviewSubmitService {
   constructor(
     private readonly entityManager: EntityManager,
-    private readonly workspaceRepository: EmissionsReviewSubmitRepository,
-    private readonly globalRepository: EmissionsReviewSubmitGlobalRepository,
-    private readonly map: EmissionsReviewSubmitMap,
+    private readonly map: EmissionsReviewMap,
   ) {}
 
-  async getEmissionsRecords(
+  async getEmissionsRecords({
+    orisCodes,
+    monPlanIds,
+    quarters,
+    isWorkspace = false,
+    mode = EmissionsRetrievalMode.REPORT, // Indicates the type of data to retrieve
+  }: {
     orisCodes: number[],
     monPlanIds: string[],
     quarters: string[],
-    isWorkspace: boolean = true,
-  ): Promise<EmissionsReviewSubmitDTO[]> {
+    isWorkspace?: boolean,
+    mode?: EmissionsRetrievalMode,
+  }): Promise<EmissionsReviewDTO[]> {
 
-    let repository;
-    if (isWorkspace) {
-      repository = this.workspaceRepository;
-    } else {
-      repository = this.globalRepository;
-    }
+    const entity = (() => {
+      switch (mode) {
+        case EmissionsRetrievalMode.REPORT:
+          return isWorkspace ? EmissionsReviewReport : EmissionsReviewReportGlobal;
+        case EmissionsRetrievalMode.EVALUATE:
+          if (!isWorkspace) {
+            throw new EaseyException(
+              new Error('Evaluate mode only applicable for workspace.'),
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          return EmissionsReviewEvaluate;
+        case EmissionsRetrievalMode.SUBMIT:
+          if (!isWorkspace) {
+            throw new EaseyException(
+              new Error('Submit mode only applicable for workspace.'),
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          return EmissionsReviewSubmit;
+        default:
+          throw new EaseyException(
+            new Error(`Mode ${mode} not implemented.`),
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+    })();
 
-    let data: EmissionsReviewSubmitDTO[];
+    let data: EmissionsReviewDTO[];
 
     const hasMonPlanIds = monPlanIds && monPlanIds.length > 0;
     const hasQuarters = quarters && quarters.length > 0;
@@ -39,20 +67,20 @@ export class ReviewSubmitService {
     try {
       if (hasMonPlanIds && hasQuarters) {
         data = await this.map.many(
-          await repository.find({ where: { monPlanId: In(monPlanIds), periodAbbreviation: In(quarters), }, }),
+          await this.entityManager.find(entity, { where: { monPlanId: In(monPlanIds), periodAbbreviation: In(quarters), }, }),
         );
       } else if (hasMonPlanIds) {
          data = await this.map.many(
-          await repository.find({ where: { monPlanId: In(monPlanIds), }, }),
+          await this.entityManager.find(entity, { where: { monPlanId: In(monPlanIds), }, }),
         );
       } else if (hasQuarters) {
          data = await this.map.many(
-          await repository.find({ where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters), }, }),
+          await this.entityManager.find(entity, { where: { orisCode: In(orisCodes), periodAbbreviation: In(quarters), }, }),
         );
       }
       else{
         data = await this.map.many(
-          await repository.find({ where: { orisCode: In(orisCodes), }}),
+          await this.entityManager.find(entity, { where: { orisCode: In(orisCodes), }}),
       );
       }
 
