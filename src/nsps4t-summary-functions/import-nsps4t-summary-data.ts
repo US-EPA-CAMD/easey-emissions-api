@@ -3,6 +3,8 @@ import { randomUUID } from 'crypto';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { Nsps4tSummary } from '../entities/workspace/nsps4t-summary.entity';
 import { Nsps4tSummaryWorkspaceRepository } from '../nsps4t-summary-workspace/nsps4t-summary-workspace.repository';
+import { EntityManager } from 'typeorm';
+import { withTransaction } from '../utils/utils';
 
 export type Nsps4tSummaryDataCreate = Nsps4tSummaryImportDTO & {
   monitoringLocationId: string;
@@ -13,14 +15,17 @@ export type Nsps4tSummaryDataCreate = Nsps4tSummaryImportDTO & {
 type ImportNsps4tSummaryDataProperties = {
   data: Nsps4tSummaryDataCreate;
   repository: Nsps4tSummaryWorkspaceRepository;
+  trx?: EntityManager;
 };
 
 export const importNsps4tSummaryData = async ({
   data,
   repository,
+  trx,
 }: ImportNsps4tSummaryDataProperties): Promise<Nsps4tSummary> => {
-  return repository.save(
-    repository.create({
+  const transactionalRepository = withTransaction(repository, trx);
+  return transactionalRepository.save(
+    transactionalRepository.create({
       id: randomUUID(),
       co2EmissionStandardCode: data.co2EmissionStandardCode,
       modusValue: data.modusValue,

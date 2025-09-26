@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
 
 import { SamplingTrainWorkspaceRepository } from './sampling-train-workspace.repository';
 import { exportSamplingTrainData } from '../sampling-train-functions/export-sampling-train-data';
@@ -58,7 +59,7 @@ export class SamplingTrainWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.sampling_train',
@@ -86,6 +87,8 @@ export class SamplingTrainWorkspaceService {
           'add_date',
           'update_date',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {

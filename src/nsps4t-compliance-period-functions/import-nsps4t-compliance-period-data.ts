@@ -3,6 +3,8 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { Nsps4tCompliancePeriodImportDTO } from '../dto/nsps4t-compliance-period.dto';
 import { randomUUID } from 'crypto';
 import { Nsps4tCompliancePeriod } from '../entities/workspace/nsps4t-compliance-period.entity';
+import { EntityManager } from 'typeorm';
+import { withTransaction } from '../utils/utils';
 
 export type Nsps4tCompliancePeriodDataCreate = Nsps4tCompliancePeriodImportDTO & {
   monitoringLocationId: string;
@@ -14,14 +16,17 @@ export type Nsps4tCompliancePeriodDataCreate = Nsps4tCompliancePeriodImportDTO &
 type ImportNsps4tCompliancePeriodDataProperties = {
   data: Nsps4tCompliancePeriodDataCreate;
   repository: Nsps4tCompliancePeriodWorkspaceRepository;
+  trx?: EntityManager;
 };
 
 export const importNsps4tCompliancePeriodData = async ({
   data,
   repository,
+  trx,
 }: ImportNsps4tCompliancePeriodDataProperties): Promise<Nsps4tCompliancePeriod> => {
-  return repository.save(
-    repository.create({
+  const transactionalRepository = withTransaction(repository, trx);
+  return transactionalRepository.save(
+    transactionalRepository.create({
       id: randomUUID(),
       nsps4tSumId: data.nsps4tSumId,
       beginYear: data.beginYear,
