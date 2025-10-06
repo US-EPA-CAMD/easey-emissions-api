@@ -5,6 +5,7 @@ import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyCalibrationWorkspaceService } from './daily-calibration.service';
 import { DailyCalibrationWorkspaceRepository } from './daily-calibration.repository';
 import { DailyCalibrationImportDTO } from '../dto/daily-calibration.dto';
+import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 
 const dailyCalibrationRepositoryMock = {
   delete: jest.fn().mockResolvedValue(undefined),
@@ -54,6 +55,23 @@ describe('Daily Calibration Workspace Spervice', () => {
       undefined,
     );
   });
+
+  it('should not modify objectList when data is null', async () => {
+      const objectList: Array<object> = [];
+      const initialObjectListLength = objectList.length;
+      
+      await dailyCalibrationService.buildObjectList(
+        null, // data is null
+        'test-daily-sum-id',
+        1,
+        { userId: 'test-user' } as ImportIdentifiers,
+        objectList,
+        '2023-01-01T00:00:00Z'
+      );
+
+      expect(objectList.length).toBe(initialObjectListLength);
+      expect(objectList).toEqual([]);
+    });
 
   /*
   it('should mock import of 3 new records', async function() {
