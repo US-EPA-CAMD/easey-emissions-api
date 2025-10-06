@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, In } from 'typeorm';
+import { DeleteResult, EntityManager, In } from 'typeorm';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 
 import {
@@ -94,7 +94,7 @@ export class DailyCalibrationWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.daily_calibration',
@@ -128,6 +128,7 @@ export class DailyCalibrationWorkspaceService {
           'injection_protocol_cd',
         ],
         '|',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {

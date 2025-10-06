@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
-import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { BulkLoadModule, BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EntityManager } from 'typeorm';
 
@@ -110,6 +110,29 @@ import { CurrentUser }      from '@us-epa-camd/easey-common/interfaces';
 import { NotFoundException } from '@nestjs/common';
 
 describe('Emissions Workspace Service', () => {
+  const mockQueryRunner = {
+    connect: jest.fn(),
+    startTransaction: jest.fn(),
+    commitTransaction: jest.fn(),
+    rollbackTransaction: jest.fn(),
+    release: jest.fn(),
+    manager: {
+      save: jest.fn(),
+      insert: jest.fn(),
+      update: jest.fn(),
+      findOne: jest.fn(),
+      query: jest.fn(),
+    },
+  };
+
+  const mockEntityManager = {
+    connection: {
+      createQueryRunner: jest.fn(() => mockQueryRunner),
+      },
+    createQueryRunner: jest.fn(() => mockQueryRunner),
+    findOne: jest.fn(),
+  } as unknown as EntityManager;
+
   let dailyTestsummaryService: DailyTestSummaryWorkspaceService;
   let longTermFuelFlowService: LongTermFuelFlowWorkspaceService;
   let dailyBackstopService: DailyBackstopWorkspaceService;
@@ -123,7 +146,18 @@ describe('Emissions Workspace Service', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [BulkLoadModule],
       providers: [
-        EntityManager,
+        {
+          provide: EntityManager,
+          useValue: mockEntityManager,
+        },
+        {
+          provide: BulkLoadService,
+          useValue: {
+            startBulkLoad: jest.fn(),
+            completeBulkLoad: jest.fn(),
+            abortBulkLoad: jest.fn(),
+          },
+        },
         ConfigService,
         DerivedHourlyValueMap,
         DerivedHourlyValueWorkspaceService,
@@ -384,12 +418,22 @@ describe('Emissions Workspace Service', () => {
 
   it('should successfully import', async function() {
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
-    jest.spyOn(manager, 'findOne').mockResolvedValue(new ReportingPeriod());
-    jest.spyOn(manager, 'query').mockImplementation();
 
     const emissionsDtoMock = genEmissionsImportDto(1, {
       include: ['longTermFuelFlowData'],
     });
+
+    const mockReportingPeriod = new ReportingPeriod();
+    mockReportingPeriod.id = 1;
+    mockReportingPeriod.year = emissionsDtoMock[0].year;
+    mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
+
+    // Mock the pre-transaction EntityManager.findOne call for the ReportingPeriod
+    (mockEntityManager.findOne as jest.Mock).mockResolvedValue(mockReportingPeriod);
+
+    // Mock the transaction manager calls
+    mockQueryRunner.manager.query.mockResolvedValue([]);
+
     const plantMock = genPlant<Plant>(1, {
       include: ['monitorPlans'],
       monitorPlanAmount: 1,
@@ -407,15 +451,66 @@ describe('Emissions Workspace Service', () => {
     jest
       .spyOn(plantRepository, 'getImportPlant')
       .mockResolvedValue(plantMock[0]);
-    jest
-      .spyOn(emissionsRepository, 'query')
-      .mockResolvedValue(['']);
 
-    await expect(emissionsService.import(emissionsDtoMock[0])).resolves.toEqual(
+    await expect(emissionsService.import(emissionsDtoMock[0], 'test-user-id')).resolves.toEqual(
       {
         message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${emissionsDtoMock[0].orisCode}]`,
       },
     );
+
+    // Verify that the pre-transaction EntityManager.findOne was called for ReportingPeriod
+    expect(mockEntityManager.findOne).toHaveBeenCalledWith(ReportingPeriod, {
+      where: {
+        year: emissionsDtoMock[0].year,
+        quarter: emissionsDtoMock[0].quarter,
+      },
+    });
+
+    // Verify transaction was started after validation
+    expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
+  });
+
+  it('should handle transaction rollback on error', async function() {
+    const emissionsDtoMock = genEmissionsImportDto(1, {
+      include: ['longTermFuelFlowData'],
+    });
+
+    const mockReportingPeriod = new ReportingPeriod();
+    mockReportingPeriod.id = 1;
+    mockReportingPeriod.year = emissionsDtoMock[0].year;
+    mockReportingPeriod.quarter = emissionsDtoMock[0].quarter;
+
+    // Mock successful pre-transaction setup
+    (mockEntityManager.findOne as jest.Mock).mockResolvedValue(mockReportingPeriod);
+
+    const plantMock = genPlant<Plant>(1, {
+      include: ['monitorPlans'],
+      monitorPlanAmount: 1,
+      monitorPlanConfig: {
+        include: ['beginRptPeriod', 'endRptPeriod'],
+      },
+    });
+
+    plantMock[0].monitorPlans[0].beginRptPeriod.year = emissionsDtoMock[0].year;
+    plantMock[0].monitorPlans[0].beginRptPeriod.quarter =
+      emissionsDtoMock[0].quarter;
+    plantMock[0].monitorPlans[0].endRptPeriod = null;
+    plantMock[0].monitorPlans[0].locations = [new MonitorLocation()];
+
+    jest
+      .spyOn(plantRepository, 'getImportPlant')
+      .mockResolvedValue(plantMock[0]);
+
+    // Mock transaction failure
+    mockQueryRunner.manager.query.mockRejectedValue(new Error('Database error'));
+
+    await expect(emissionsService.import(emissionsDtoMock[0], 'test-user-id')).rejects.toThrow('Database error');
+
+    // Verify transaction was started and rolled back
+    expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalled();
+    expect(mockQueryRunner.release).toHaveBeenCalled();
   });
 
   it('should import daily test summaries', async function() {

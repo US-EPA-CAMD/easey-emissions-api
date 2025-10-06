@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 
 import { HourlyGasFlowMeterWorkspaceRepository } from './hourly-gas-flow-meter.repository';
 import {
@@ -54,7 +55,7 @@ export class HourlyGasFlowMeterWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_gas_flow_meter',
@@ -73,6 +74,8 @@ export class HourlyGasFlowMeterWorkspaceService {
           'add_date',
           'update_date',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
