@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -53,6 +53,7 @@ export class SorbentTrapWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.sorbentTrapData) ||
@@ -82,6 +83,8 @@ export class SorbentTrapWorkspaceService {
         'sorbent_trap_aps_cd',
         'rata_ind',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
@@ -148,7 +151,8 @@ export class SorbentTrapWorkspaceService {
       }
       await Promise.all(buildPromises);
 
-      await this.samplingTrainService.import(samplingTrainObjects);
+      // Pass transaction to child service for atomicity
+      await this.samplingTrainService.import(samplingTrainObjects, trx);
     }
   }
 }

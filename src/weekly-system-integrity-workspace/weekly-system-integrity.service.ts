@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { randomUUID } from 'crypto';
 
 import { WeeklySystemIntegrityWorkspaceRepository } from './weekly-system-integrity.repository';
@@ -66,7 +66,7 @@ export class WeeklySystemIntegrityWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.weekly_system_integrity',
@@ -85,6 +85,7 @@ export class WeeklySystemIntegrityWorkspaceService {
           'mon_loc_id',
         ],
         '|',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
