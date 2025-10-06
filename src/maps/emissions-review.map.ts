@@ -12,8 +12,6 @@ export class EmissionsReviewMap extends BaseMap<
   public async one(
     entity: EmissionsReview | EmissionsReviewGlobal,
   ): Promise<EmissionsReviewDTO> {
-    let severityDescription = null;
-    let severityCode = null;
     return {
       orisCode: entity.orisCode,
       facilityName: entity.facilityName,
@@ -21,8 +19,8 @@ export class EmissionsReviewMap extends BaseMap<
       configuration: entity.configuration,
       evalStatusCode: entity.evalStatusCode,
       evalStatusCodeDescription: entity.evalStatusCodeDescription,
-      severityCode,
-      severityDescription,
+      severityCode: entity.severityCode,
+      severityDescription: entity.severityCodeDescription,
       submissionAvailabilityCode: entity.submissionAvailabilityCode,
       submissionAvailabilityCodeDescription:
         entity.submissionAvailabilityCodeDescription,
