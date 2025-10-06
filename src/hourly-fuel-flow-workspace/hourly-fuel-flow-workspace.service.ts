@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 import { HourlyFuelFlowWorkspaceRepository } from './hourly-fuel-flow-workspace.repository';
 import {
   HourlyFuelFlowDTO,
@@ -129,6 +130,7 @@ export class HourlyFuelFlowWorkspaceService {
   async import(
     objectList: Array<object>,
     childObjectList: Array<object>,
+    trx?: EntityManager,
   ): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
@@ -150,6 +152,8 @@ export class HourlyFuelFlowWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
@@ -160,7 +164,8 @@ export class HourlyFuelFlowWorkspaceService {
       await bulkLoadStream.finished;
 
       if (childObjectList && childObjectList.length > 0) {
-        await this.hourlyParameterFuelFlow.import(childObjectList); //Load children records after parent records
+        // Pass transaction to child service for atomicity
+        await this.hourlyParameterFuelFlow.import(childObjectList, trx); //Load children records after parent records
       }
     }
   }

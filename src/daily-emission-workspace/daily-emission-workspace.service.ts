@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { exportDailyEmissionData } from '../daily-emission-functions/export-daily-emission-data';
 import { DailyFuelWorkspaceService } from '../daily-fuel-workspace/daily-fuel-workspace.service';
@@ -63,6 +63,7 @@ export class DailyEmissionWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.dailyEmissionData) ||
@@ -88,6 +89,8 @@ export class DailyEmissionWorkspaceService {
         'unadjusted_daily_emission',
         'total_carbon_burned',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const dailyEmissionDatum of emissionsImport.dailyEmissionData) {
@@ -152,7 +155,8 @@ export class DailyEmissionWorkspaceService {
       }
       await Promise.all(buildPromises);
 
-      await this.dailyFuelWorkspaceService.import(dailyFuelObjects);
+      // Pass transaction to child service for atomicity
+      await this.dailyFuelWorkspaceService.import(dailyFuelObjects, trx);
     }
   }
 }

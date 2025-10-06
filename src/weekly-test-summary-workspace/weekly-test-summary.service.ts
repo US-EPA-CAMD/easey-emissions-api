@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -76,6 +76,7 @@ export class WeeklyTestSummaryWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.weeklyTestSummaryData) ||
@@ -101,6 +102,8 @@ export class WeeklyTestSummaryWorkspaceService {
         'add_date',
         'update_date',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const weeklyTestSummaryDatum of emissionsImport.weeklyTestSummaryData) {
@@ -166,7 +169,8 @@ export class WeeklyTestSummaryWorkspaceService {
 
       await Promise.all(buildPromises);
 
-      await this.weeklySystemIntegrityService.import(systemIntegrityObjects);
+      // Pass transaction to child service for atomicity
+      await this.weeklySystemIntegrityService.import(systemIntegrityObjects, trx);
     }
   }
 }

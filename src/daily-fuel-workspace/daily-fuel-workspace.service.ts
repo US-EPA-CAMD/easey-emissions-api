@@ -6,6 +6,7 @@ import { randomUUID } from 'crypto';
 import { DailyFuelMap } from '../maps/daily-fuel.map';
 import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
 
 export type DailyFuelWorkspaceCreate = DailyFuelImportDTO & {
   dailyEmissionId: string;
@@ -61,7 +62,7 @@ export class DailyFuelWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.daily_fuel',
@@ -79,6 +80,7 @@ export class DailyFuelWorkspaceService {
           'mon_loc_id',
         ],
         '|',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
