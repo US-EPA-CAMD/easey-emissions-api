@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 import { HourlyParameterFuelFlowWorkspaceRepository } from './hourly-parameter-fuel-flow-workspace.repository';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
 import {
@@ -59,7 +60,7 @@ export class HourlyParameterFuelFlowWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.hrly_param_fuel_flow',
@@ -80,6 +81,8 @@ export class HourlyParameterFuelFlowWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {

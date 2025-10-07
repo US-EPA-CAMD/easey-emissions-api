@@ -43,4 +43,10 @@ export abstract class EmissionsReview extends BaseEntity {
 
   @ViewColumn({ name: 'period_abbreviation' })
   periodAbbreviation: string;
+
+  @ViewColumn({ name: 'severity_cd' })
+  severityCode: string;
+
+  @ViewColumn({ name: 'severity_cd_description' })
+  severityCodeDescription: string;
 }

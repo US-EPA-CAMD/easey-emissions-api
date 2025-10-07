@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
 import { MonitorHourlyValueWorkspaceRepository } from './monitor-hourly-value.repository';
@@ -58,7 +59,7 @@ export class MonitorHourlyValueWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && objectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.monitor_hrly_value',
@@ -79,6 +80,8 @@ export class MonitorHourlyValueWorkspaceService {
           'rpt_period_id',
           'mon_loc_id',
         ],
+        ',',
+        trx?.queryRunner,
       );
 
       for (const slice of objectList) {
