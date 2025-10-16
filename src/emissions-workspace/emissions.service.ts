@@ -326,8 +326,8 @@ export class EmissionsWorkspaceService {
           params.year,
         );
 
-        //Finally, perform the updates (reset needs eval flag, etc) for those records
-        this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId, trx);
+        // Finally, perform the updates (reset needs eval flag, etc) for those records
+        await this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId, trx);
 
         await queryRunner.commitTransaction();
 
