@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { randomUUID } from 'crypto';
@@ -128,12 +128,30 @@ export class HourlyOperatingWorkspaceService {
       trx?.queryRunner,
     ); // Instantiate our stream object with the correct schema.tableName we want to load to
     for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
-        return (
-          location.unit?.name === hourlyOperatingDatum.unitId ||
-          location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
+      // To handle anyOf schema - either unitId OR stackPipeId (or both)
+      const matchingLocations = monitoringLocations.filter(location => {
+        if (hourlyOperatingDatum.unitId && hourlyOperatingDatum.stackPipeId) {
+          return location.unit?.name === hourlyOperatingDatum.unitId &&
+                 location.stackPipe?.name === hourlyOperatingDatum.stackPipeId;
+        } else if (hourlyOperatingDatum.unitId) {
+          return location.unit?.name === hourlyOperatingDatum.unitId;
+        } else if (hourlyOperatingDatum.stackPipeId) {
+          return location.stackPipe?.name === hourlyOperatingDatum.stackPipeId;
+        }
+        return false;
+      });
+
+      if (matchingLocations.length === 0) {
+        throw new BadRequestException(
+          `No location found for unitId: ${hourlyOperatingDatum.unitId}, stackPipeId: ${hourlyOperatingDatum.stackPipeId}`
         );
-      })[0].id;
+      }
+      if (matchingLocations.length > 1) {
+        throw new BadRequestException(
+          'Multiple locations found - unable to determine unique location'
+        );
+      }
+      const monitoringLocationId = matchingLocations[0].id;
       //We must load the parent first because the children records require the parents uid
       const uid = randomUUID();
       hourlyOperatingDatum['id'] = uid; //Set the id on our dto object so we can access it again when loading the children
@@ -183,12 +201,30 @@ export class HourlyOperatingWorkspaceService {
       const hourlyGasFlowMeterObjects = [];
 
       for (const hourlyOperatingDatum of emissionsImport.hourlyOperatingData) {
-        const monitoringLocationId = monitoringLocations.filter(location => {
-          return (
-            location.unit?.name === hourlyOperatingDatum.unitId ||
-            location.stackPipe?.name === hourlyOperatingDatum.stackPipeId
+        // To handle anyOf schema - either unitId OR stackPipeId (or both)
+        const matchingLocations = monitoringLocations.filter(location => {
+          if (hourlyOperatingDatum.unitId && hourlyOperatingDatum.stackPipeId) {
+            return location.unit?.name === hourlyOperatingDatum.unitId &&
+                   location.stackPipe?.name === hourlyOperatingDatum.stackPipeId;
+          } else if (hourlyOperatingDatum.unitId) {
+            return location.unit?.name === hourlyOperatingDatum.unitId;
+          } else if (hourlyOperatingDatum.stackPipeId) {
+            return location.stackPipe?.name === hourlyOperatingDatum.stackPipeId;
+          }
+          return false;
+        });
+
+        if (matchingLocations.length === 0) {
+          throw new BadRequestException(
+            `No location found for unitId: ${hourlyOperatingDatum.unitId}, stackPipeId: ${hourlyOperatingDatum.stackPipeId}`
           );
-        })[0].id;
+        }
+        if (matchingLocations.length > 1) {
+          throw new BadRequestException(
+            'Multiple locations found - unable to determine unique location'
+          );
+        }
+        const monitoringLocationId = matchingLocations[0].id;
 
         //Load children records in a bulk fashion as well
         buildPromises.push(
