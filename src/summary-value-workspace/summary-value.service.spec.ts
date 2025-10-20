@@ -6,7 +6,7 @@ import { SummaryValueWorkspaceService } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueWorkspaceRepository } from './summary-value.repository';
 import { genSummaryValueImportDto } from '../../test/object-generators/summary-value-dto';
-import { mockRepositoryFunctions } from '../../test/mocks/mock-repository-functions';
+//import { mockRepositoryFunctions } from '../../test/mocks/mock-repository-functions';
 import { genSummaryValue } from '../../test/object-generators/summary-value';
 import { SummaryValue } from '../entities/workspace/summary-value.entity';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -20,7 +20,13 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 const writeObjectMock = jest.fn();
 
 const mockRepository = {
-  ...mockRepositoryFunctions,
+  create: jest.fn(),
+  save: jest.fn(),
+  find: jest.fn(),
+  insert: jest.fn(),
+  upsert: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
   export: jest.fn(),
 };
 
@@ -59,8 +65,12 @@ describe('Summary Value Workspace Service Test', () => {
     bulkLoadService = module.get(BulkLoadService);
     map = module.get(SummaryValueMap);
 
+    // Reset and configure mocks for each test
+    writeObjectMock.mockClear();
     repository.save.mockResolvedValue(null);
     repository.find.mockResolvedValue(genSummaryValue<SummaryValue>(1));
+      repository.delete.mockResolvedValue({ affected: 1 });
+      repository.export.mockResolvedValue([]);
   });
 
   describe('Summary Value Import', () => {
