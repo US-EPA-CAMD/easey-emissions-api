@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { BadRequestException } from '@nestjs/common';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
@@ -254,6 +255,177 @@ describe('Emissions Checks Service Tests', () => {
       await expect(
         service.invalidFormulasCheck(payload, [moniotorLocation]),
       ).resolves.toEqual(undefined);
+    });
+  });
+
+  // Tests Location lookup with anyOf schema compliance
+  describe('Location Lookup - anyOf Schema Compliance', () => {
+    const mockLocations = [
+      {
+        id: 'LOC1',
+        unit: { name: '3' },
+        stackPipe: null
+      },
+      {
+        id: 'LOC2',
+        unit: null,
+        stackPipe: { name: 'CS1' }
+      },
+      {
+        id: 'LOC3',
+        unit: { name: '4' },
+        stackPipe: { name: 'CS2' }
+      },
+    ] as MonitorLocation[];
+
+    beforeEach(() => {
+      jest.spyOn(monitorFormulaRepository, 'find').mockResolvedValue([{ id: '1', formulaId: 'TEST-FORMULA' } as any
+      ]);
+      CheckCatalogService.formatResultMessage = jest.fn().mockImplementation((code, params) => {
+        if (code === 'IMPORT-28-A') {
+          return `Formula ${params?.formulaID} not found`;
+        }
+        return `Mock message for ${code}`;
+      });
+    });
+
+    it('should find location with unitId only', async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const quarter = Math.floor(today.getMonth() / 3 + 1);
+      // Create date within the same quarter as payload
+      const quarterStartMonth = (quarter - 1) * 3;
+      const sameQuarterDate = new Date(year, quarterStartMonth, 15); // Mid-month of quarter start
+
+      const payload = {
+        year: year,
+        quarter: quarter,
+        hourlyOperatingData: [
+          {
+            unitId: '3',
+            stackPipeId: null,
+            date: sameQuarterDate,
+            derivedHourlyValueData: [{ formulaId: 'TEST-FORMULA' }]
+          }
+        ]
+
+      } as EmissionsImportDTO;
+
+      // Should not throw error for valid unitId-only location
+      await expect(
+        service.invalidFormulasCheck(payload, mockLocations)
+      ).resolves.not.toThrow();
+    });
+
+    it('should find location with stackPipeId only', async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const quarter = Math.floor(today.getMonth() / 3 + 1);
+      // Create date within the same quarter as payload
+      const quarterStartMonth = (quarter - 1) * 3;
+      const sameQuarterDate = new Date(year, quarterStartMonth, 15); // Mid-month of quarter start
+
+      const payload = {
+        year: year,
+        quarter: quarter,
+        hourlyOperatingData: [
+          {
+            unitId: null,
+            stackPipeId: 'CS1',
+            date: sameQuarterDate,
+            derivedHourlyValueData: [{ formulaId: 'TEST-FORMULA' }]
+          }
+        ]
+      } as EmissionsImportDTO;
+
+      // Should not throw error for valid stackPipeId-only location
+      await expect(
+        service.invalidFormulasCheck(payload, mockLocations)
+      ).resolves.not.toThrow();
+    });
+
+    it('should find location with both identifiers', async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const quarter = Math.floor(today.getMonth() / 3 + 1);
+      // Create date within the same quarter as payload
+      const quarterStartMonth = (quarter - 1) * 3;
+      const sameQuarterDate = new Date(year, quarterStartMonth, 15); // Mid-month of quarter start
+
+      const payload = {
+        year: year,
+        quarter: quarter,
+        hourlyOperatingData: [
+          {
+            unitId: '4',
+            stackPipeId: 'CS2',
+            date: sameQuarterDate,
+            derivedHourlyValueData: [{ formulaId: 'TEST-FORMULA' }]
+          }
+        ]
+      } as EmissionsImportDTO;
+
+      // Should not throw error for valid both identifiers location
+      await expect(
+        service.invalidFormulasCheck(payload, mockLocations)
+      ).resolves.not.toThrow();
+    });
+
+    it('should throw error when no location found', async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const quarter = Math.floor(today.getMonth() / 3 + 1);
+      // Create date within the same quarter as payload
+      const quarterStartMonth = (quarter - 1) * 3;
+      const sameQuarterDate = new Date(year, quarterStartMonth, 15); // Mid-month of quarter start
+
+      const payload = {
+        year: year,
+        quarter: quarter,
+        hourlyOperatingData: [
+          {
+            unitId: '999',
+            stackPipeId: null,
+            date: sameQuarterDate,
+            derivedHourlyValueData: [{ formulaId: 'TEST-FORMULA' }]
+          }
+        ]
+      } as EmissionsImportDTO;
+
+      await expect(
+        service.invalidFormulasCheck(payload, mockLocations)
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw error when multiple locations found', async () => {
+      const ambiguousLocations = [
+        { id: 'LOC1', unit: { name: '3' }, stackPipe: null },
+        { id: 'LOC2', unit: { name: '3' }, stackPipe: null }, // Duplicate unit
+      ] as MonitorLocation[];
+
+      const today = new Date();
+      const year = today.getFullYear();
+      const quarter = Math.floor(today.getMonth() / 3 + 1);
+      // Create date within the same quarter as payload
+      const quarterStartMonth = (quarter - 1) * 3;
+      const sameQuarterDate = new Date(year, quarterStartMonth, 15); // Mid-month of quarter start
+
+      const payload = {
+        year: year,
+        quarter: quarter,
+        hourlyOperatingData: [
+          {
+            unitId: '3',
+            stackPipeId: null,
+            date: sameQuarterDate,
+            derivedHourlyValueData: [{ formulaId: 'TEST-FORMULA' }]
+          }
+        ]
+      } as EmissionsImportDTO;
+
+      await expect(
+        service.invalidFormulasCheck(payload, ambiguousLocations)
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

@@ -32,7 +32,7 @@ import { DailyTestSummaryWorkspaceRepository } from '../daily-test-summary-works
 import { DailyTestSummaryWorkspaceService } from '../daily-test-summary-workspace/daily-test-summary.service';
 import { DerivedHourlyValueWorkspaceRepository } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.repository';
 import { DerivedHourlyValueWorkspaceService } from '../derived-hourly-value-workspace/derived-hourly-value-workspace.service';
-import { EmissionsDTO } from '../dto/emissions.dto';
+import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { MonitorLocation } from '../entities/monitor-location.entity';
 import { Plant } from '../entities/plant.entity';
 import { EmissionEvaluation } from '../entities/workspace/emission-evaluation.entity';
@@ -107,7 +107,7 @@ import { SummaryValueDataCheckService } from '../summary-value-workspace/summary
 import { EmissionsService } from '../emissions/emissions.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { CurrentUser }      from '@us-epa-camd/easey-common/interfaces';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 describe('Emissions Workspace Service', () => {
   const mockQueryRunner = {
@@ -141,6 +141,7 @@ describe('Emissions Workspace Service', () => {
   let emissionsMap: EmissionsMap;
   let plantRepository: PlantRepository;
   let manager: EntityManager;
+  let bulkLoadService: BulkLoadService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -153,7 +154,12 @@ describe('Emissions Workspace Service', () => {
         {
           provide: BulkLoadService,
           useValue: {
-            startBulkLoad: jest.fn(),
+            startBulkLoader: jest.fn().mockResolvedValue({
+              writeObject: jest.fn(),
+              complete: jest.fn(),
+              finished: Promise.resolve(true),
+              status: 'Complete',
+            }),
             completeBulkLoad: jest.fn(),
             abortBulkLoad: jest.fn(),
           },
@@ -321,6 +327,7 @@ describe('Emissions Workspace Service', () => {
     emissionsMap = module.get(EmissionsMap);
     plantRepository = module.get(PlantRepository);
     manager = module.get(EntityManager);
+     bulkLoadService = module.get(BulkLoadService);
   });
 
   it('should have a emissions service', function() {
@@ -549,5 +556,201 @@ describe('Emissions Workspace Service', () => {
         new Date().toISOString(),
       ),
     ).resolves;
+    });
+
+  // Tests location lookup with anyOf schema compliance
+  describe('Location Lookup - anyOf Schema Compliance', () => {
+    beforeEach(() => {
+      // Mock bulkLoadService to prevent database connections
+      jest.spyOn(bulkLoadService, 'startBulkLoader').mockResolvedValue({
+        writeObject: jest.fn(),
+        complete: jest.fn().mockResolvedValue(undefined),
+      } as any);
+
+      // Reset database mocks for successful operations (override previous test failures)
+      mockQueryRunner.manager.query.mockResolvedValue([
+        { result: 'S', error_msg: null }
+      ]);
+      mockQueryRunner.manager.save.mockResolvedValue({});
+      mockQueryRunner.manager.insert.mockResolvedValue({});
+      mockQueryRunner.manager.update.mockResolvedValue({});
+
+      // Mock successful ReportingPeriod lookup
+      (mockEntityManager.findOne as jest.Mock).mockResolvedValue({
+        id: 1,
+        year: 2023,
+        quarter: 1,
+      });
+
+      // Mock successful plant lookup with all test locations
+      jest.spyOn(plantRepository, 'getImportPlant').mockResolvedValue({
+        monitorPlans: [{
+          beginRptPeriod: { year: 2023, quarter: 1 },
+          endRptPeriod: null,
+          locations: [
+            { id: 'LOC1', unit: { name: '3' }, stackPipe: null },
+            { id: 'LOC2', unit: null, stackPipe: { name: 'CS1' } },
+            { id: 'LOC3', unit: { name: '4' }, stackPipe: { name: 'CS2' } },
+          ],
+        }]
+      } as any);
+    });
+
+    const mockLocations = [
+      {
+        id: 'LOC1',
+        unit: { name: '3' },
+        stackPipe: null
+      },
+      {
+        id: 'LOC2',
+        unit: null,
+        stackPipe: { name: 'CS1' }
+      },
+      {
+        id: 'LOC3',
+        unit: { name: '4' },
+        stackPipe: { name: 'CS2' }
+      },
+    ];
+
+    it('should find location with unitId only', async () => {
+      const mockEmissionsImportDTO = new EmissionsImportDTO({
+        orisCode: 12345,
+        year: 2023,
+        quarter: 1,
+        dailyEmissionData: [
+        { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
+      ],
+        dailyTestSummaryData: [],
+        hourlyOperatingData: [],
+        weeklyTestSummaryData: [],
+        summaryValueData: [],
+        longTermFuelFlowData: [],
+        sorbentTrapData: [],
+        nsps4tSummaryData: [],
+        dailyBackstopData: [],
+      });
+
+      // Should not throw error for valid unitId-only location
+      await expect(emissionsService.import(
+        mockEmissionsImportDTO,
+        'test-user-id'
+      )).resolves.not.toThrow();
+    });
+
+    it('should find location with stackPipeId only', async () => {
+      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+        orisCode: 12345,
+        year: 2023,
+        quarter: 1,
+        dailyEmissionData: [
+          { unitId: null, stackPipeId: 'CS1', parameterCode: 'CO2', dailyFuelData: []  }
+        ],
+        dailyTestSummaryData: [],
+        hourlyOperatingData: [],
+        weeklyTestSummaryData: [],
+        summaryValueData: [],
+        longTermFuelFlowData: [],
+        sorbentTrapData: [],
+        nsps4tSummaryData: [],
+        dailyBackstopData: [],
+      });
+
+      // Should not throw error for valid stackPipeId-only location
+      await expect(emissionsService.import(
+        mockEmissionsImportDTO,
+        'test-user-id'
+      )).resolves.not.toThrow();
+    });
+
+    it('should find location with both identifiers', async () => {
+      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+        orisCode: 12345,
+        year: 2023,
+        quarter: 1,
+        dailyEmissionData: [
+          { unitId: '4', stackPipeId: 'CS2', parameterCode: 'CO2', dailyFuelData: []  }
+      ],
+        dailyTestSummaryData: [],
+        hourlyOperatingData: [],
+        weeklyTestSummaryData: [],
+        summaryValueData: [],
+        longTermFuelFlowData: [],
+        sorbentTrapData: [],
+        nsps4tSummaryData: [],
+        dailyBackstopData: [],
+      });
+
+      // Should not throw error for valid both identifiers location
+      await expect(emissionsService.import(
+        mockEmissionsImportDTO,
+       'test-user-id'
+      )).resolves.not.toThrow();
+    });
+
+    it('should throw error when no location found', async () => {
+      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+        orisCode: 12345,
+        year: 2023,
+        quarter: 1,
+        dailyEmissionData: [
+          { unitId: 'NOMATCH', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
+      ],
+        dailyTestSummaryData: [],
+        hourlyOperatingData: [],
+        weeklyTestSummaryData: [],
+        summaryValueData: [],
+        longTermFuelFlowData: [],
+        sorbentTrapData: [],
+        nsps4tSummaryData: [],
+        dailyBackstopData: [],
+      });
+
+      await expect(
+        emissionsService.import(
+          mockEmissionsImportDTO,
+          'test-user-id'
+        )
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw error when multiple locations found', async () => {
+      // Override plant mock to return ambiguous locations
+      jest.spyOn(plantRepository, 'getImportPlant').mockResolvedValue({
+        monitorPlans: [{
+          beginRptPeriod: { year: 2023, quarter: 1 },
+          endRptPeriod: null,
+          locations: [
+            { id: 'LOC1', unit: { name: '3' }, stackPipe: null },
+            { id: 'LOC2', unit: { name: '3' }, stackPipe: null },
+          ],
+        }]
+      } as any);
+
+       const mockEmissionsImportDTO = new EmissionsImportDTO( {
+        orisCode: 12345,
+        year: 2023,
+        quarter: 1,
+        dailyEmissionData: [
+        { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
+        ],
+        dailyTestSummaryData: [],
+        hourlyOperatingData: [],
+        weeklyTestSummaryData: [],
+        summaryValueData: [],
+        longTermFuelFlowData: [],
+        sorbentTrapData: [],
+        nsps4tSummaryData: [],
+        dailyBackstopData: [],
+      });
+
+      await expect(
+        emissionsService.import(
+          mockEmissionsImportDTO,
+          'test-user-id'
+        )
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 });
