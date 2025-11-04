@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
 import { DeleteResult, EntityManager } from 'typeorm';
@@ -79,12 +79,30 @@ export class SummaryValueWorkspaceService {
     );
 
     for (const summaryValueDatum of emissionsImport.summaryValueData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
-        return (
-          location.unit?.name === summaryValueDatum.unitId ||
-          location.stackPipe?.name === summaryValueDatum.stackPipeId
+      // Handle anyOf schema - either unitId OR stackPipeId (or both)
+      const matchingLocations = monitoringLocations.filter(location => {
+        if (summaryValueDatum.unitId && summaryValueDatum.stackPipeId) {
+          return location.unit?.name === summaryValueDatum.unitId &&
+                 location.stackPipe?.name === summaryValueDatum.stackPipeId;
+        } else if (summaryValueDatum.unitId) {
+          return location.unit?.name === summaryValueDatum.unitId;
+        } else if (summaryValueDatum.stackPipeId) {
+          return location.stackPipe?.name === summaryValueDatum.stackPipeId;
+        }
+        return false;
+      });
+
+      if (matchingLocations.length === 0) {
+        throw new BadRequestException(
+          `No location found for unitId: ${summaryValueDatum.unitId}, stackPipeId: ${summaryValueDatum.stackPipeId}`
         );
-      })[0].id;
+      }
+      if (matchingLocations.length > 1) {
+        throw new BadRequestException(
+          'Multiple locations found - unable to determine unique location'
+        );
+      }
+      const monitoringLocationId = matchingLocations[0].id;
 
       const uid = randomUUID();
       summaryValueDatum['id'] = uid;

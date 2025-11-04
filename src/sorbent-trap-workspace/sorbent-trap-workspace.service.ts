@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
 import { DeleteResult, EntityManager } from 'typeorm';
@@ -88,12 +88,30 @@ export class SorbentTrapWorkspaceService {
     );
 
     for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
-        return (
-          location.unit?.name === sorbentTrapDatum.unitId ||
-          location.stackPipe?.name === sorbentTrapDatum.stackPipeId
+      // Handle anyOf schema - either unitId OR stackPipeId (or both)
+      const matchingLocations = monitoringLocations.filter(location => {
+        if (sorbentTrapDatum.unitId && sorbentTrapDatum.stackPipeId) {
+          return location.unit?.name === sorbentTrapDatum.unitId &&
+                 location.stackPipe?.name === sorbentTrapDatum.stackPipeId;
+        } else if (sorbentTrapDatum.unitId) {
+          return location.unit?.name === sorbentTrapDatum.unitId;
+        } else if (sorbentTrapDatum.stackPipeId) {
+          return location.stackPipe?.name === sorbentTrapDatum.stackPipeId;
+        }
+        return false;
+      });
+
+      if (matchingLocations.length === 0) {
+        throw new BadRequestException(
+          `No location found for unitId: ${sorbentTrapDatum.unitId}, stackPipeId: ${sorbentTrapDatum.stackPipeId}`
         );
-      })[0].id;
+      }
+      if (matchingLocations.length > 1) {
+        throw new BadRequestException(
+          'Multiple locations found - unable to determine unique location'
+        );
+      }
+      const monitoringLocationId = matchingLocations[0].id;
 
       const uid = randomUUID();
       sorbentTrapDatum['id'] = uid;
@@ -131,12 +149,30 @@ export class SorbentTrapWorkspaceService {
       const samplingTrainObjects = [];
 
       for (const sorbentTrapDatum of emissionsImport.sorbentTrapData) {
-        const monitoringLocationId = monitoringLocations.filter(location => {
-          return (
-            location.unit?.name === sorbentTrapDatum.unitId ||
-            location.stackPipe?.name === sorbentTrapDatum.stackPipeId
+        // Handle anyOf schema - either unitId OR stackPipeId (or both)
+        const matchingLocations = monitoringLocations.filter(location => {
+          if (sorbentTrapDatum.unitId && sorbentTrapDatum.stackPipeId) {
+            return location.unit?.name === sorbentTrapDatum.unitId &&
+                   location.stackPipe?.name === sorbentTrapDatum.stackPipeId;
+          } else if (sorbentTrapDatum.unitId) {
+            return location.unit?.name === sorbentTrapDatum.unitId;
+          } else if (sorbentTrapDatum.stackPipeId) {
+            return location.stackPipe?.name === sorbentTrapDatum.stackPipeId;
+          }
+          return false;
+        });
+
+        if (matchingLocations.length === 0) {
+          throw new BadRequestException(
+            `No location found for unitId: ${sorbentTrapDatum.unitId}, stackPipeId: ${sorbentTrapDatum.stackPipeId}`
           );
-        })[0].id;
+        }
+        if (matchingLocations.length > 1) {
+          throw new BadRequestException(
+            'Multiple locations found - unable to determine unique location'
+          );
+        }
+        const monitoringLocationId = matchingLocations[0].id;
         buildPromises.push(
           this.samplingTrainService.buildObjectList(
             sorbentTrapDatum.samplingTrainData,
