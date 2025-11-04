@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, EntityManager } from 'typeorm';
 
 import { EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -51,6 +51,7 @@ export class SummaryValueWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.summaryValueData) ||
@@ -73,6 +74,8 @@ export class SummaryValueWorkspaceService {
         'add_date',
         'update_date',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const summaryValueDatum of emissionsImport.summaryValueData) {

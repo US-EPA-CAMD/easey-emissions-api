@@ -26,7 +26,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsWorkspaceService } from './emissions.service';
 import { EmissionsChecksService } from './emissions-checks.service';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
@@ -36,7 +36,7 @@ import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
 @ApiExcludeControllerByEnv()
-@ApiExtraModels(EmissionsReviewSubmitDTO)
+@ApiExtraModels(EmissionsReviewDTO)
 export class EmissionsWorkspaceController {
   constructor(
     private readonly service: EmissionsWorkspaceService,
@@ -170,7 +170,7 @@ export class EmissionsWorkspaceController {
             properties: {
               items: {
                 type: 'array',
-                items: { $ref: getSchemaPath(EmissionsReviewSubmitDTO) },
+                items: { $ref: getSchemaPath(EmissionsReviewDTO) },
               },
             },
           },
@@ -192,8 +192,12 @@ export class EmissionsWorkspaceController {
   @ApiQuery({
     style: 'pipeDelimited',
     name: 'quarters',
-    required: true,
+    required: false,
     explode: false,
+  })
+  @ApiQuery({
+    name: 'mode',
+    required: false,
   })
   @RoleGuard(
     {
@@ -206,16 +210,18 @@ export class EmissionsWorkspaceController {
   )
   @AuditLog({
     label: 'Retrieved workspace emissions review and submit records',
-    requestQueryOutFields: ['orisCodes', 'monPlanIds', 'quarters']
+    requestQueryOutFields: ['orisCodes', 'monPlanIds', 'quarters', 'mode']
   })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
-  ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
-    const emissionList = await this.submissionService.getEmissionsRecords(
-      dto.orisCodes,
-      dto.monPlanIds,
-      dto.quarters,
-    );
+  ): Promise<ArrayResponse<EmissionsReviewDTO>> {
+    const emissionList = await this.submissionService.getEmissionsRecords({
+      orisCodes: dto.orisCodes,
+      monPlanIds: dto.monPlanIds,
+      quarters: dto.quarters,
+      isWorkspace: true,
+      mode: dto.mode,
+    });
 
     return {
       items: emissionList

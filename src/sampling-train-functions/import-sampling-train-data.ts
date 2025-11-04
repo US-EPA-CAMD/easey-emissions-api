@@ -2,6 +2,8 @@ import { ImportIdentifiers } from '../emissions-workspace/emissions.service';
 import { SamplingTrainImportDTO } from '../dto/sampling-train.dto';
 import { randomUUID } from 'crypto';
 import { SamplingTrainWorkspaceRepository } from '../sampling-train-workspace/sampling-train-workspace.repository';
+import { EntityManager } from 'typeorm';
+import { withTransaction } from '../utils/utils';
 
 export type SamplingTrainWorkspaceCreate = SamplingTrainImportDTO & {
   sorbentTrapId: string;
@@ -13,14 +15,17 @@ export type SamplingTrainWorkspaceCreate = SamplingTrainImportDTO & {
 type ImportSamplingTrainData = {
   data: SamplingTrainWorkspaceCreate;
   repository: SamplingTrainWorkspaceRepository;
+  trx?: EntityManager;
 };
 
 export const importSamplingTrainData = async ({
   data,
   repository,
+  trx,
 }: ImportSamplingTrainData) => {
-  return repository.save(
-    repository.create({
+  const transactionalRepository = withTransaction(repository, trx);
+  return transactionalRepository.save(
+    transactionalRepository.create({
       id: randomUUID(),
       sorbentTrapId: data.sorbentTrapId,
       monitoringLocationId: data.monitoringLocationId,

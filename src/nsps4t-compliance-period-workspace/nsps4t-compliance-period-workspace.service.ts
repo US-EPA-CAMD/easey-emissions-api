@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
+import { EntityManager } from 'typeorm';
 import { Nsps4tCompliancePeriodWorkspaceRepository } from './nsps4t-compliance-period-workspace.repository';
 import {
   Nsps4tCompliancePeriodDTO,
@@ -56,7 +57,7 @@ export class Nsps4tCompliancePeriodWorkspaceService {
     }
   }
 
-  async import(objectList: Array<object>): Promise<void> {
+  async import(objectList: Array<object>, trx?: EntityManager): Promise<void> {
     if (objectList && this.buildObjectList.length > 0) {
       const bulkLoadStream = await this.bulkLoadService.startBulkLoader(
         'camdecmpswks.nsps4t_compliance_period',
@@ -78,6 +79,8 @@ export class Nsps4tCompliancePeriodWorkspaceService {
           'add_date',
           'update_date',
         ],
+        ',',
+        trx?.queryRunner,
       );
       for (const slice of objectList) {
         bulkLoadStream.writeObject(slice);

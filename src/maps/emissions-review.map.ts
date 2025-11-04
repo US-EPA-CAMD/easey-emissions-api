@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMap } from '@us-epa-camd/easey-common/maps';
-import { EmissionsReviewSubmit } from '../entities/workspace/emissions-review-submit.entity';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
-import { EmissionsReviewSubmitGlobal } from '../entities/emissions-review-submit.entity';
+import { EmissionsReview } from '../entities/workspace/emissions-review.entity';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
+import { EmissionsReviewGlobal } from '../entities/emissions-review.entity';
 
 @Injectable()
-export class EmissionsReviewSubmitMap extends BaseMap<
-  EmissionsReviewSubmit,
-  EmissionsReviewSubmitDTO
+export class EmissionsReviewMap extends BaseMap<
+  EmissionsReview | EmissionsReviewGlobal,
+  EmissionsReviewDTO
 > {
   public async one(
-    entity: EmissionsReviewSubmit | EmissionsReviewSubmitGlobal,
-  ): Promise<EmissionsReviewSubmitDTO> {
-    let severityDescription = null;
-    let severityCode = null;
+    entity: EmissionsReview | EmissionsReviewGlobal,
+  ): Promise<EmissionsReviewDTO> {
     return {
       orisCode: entity.orisCode,
       facilityName: entity.facilityName,
@@ -21,8 +19,8 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       configuration: entity.configuration,
       evalStatusCode: entity.evalStatusCode,
       evalStatusCodeDescription: entity.evalStatusCodeDescription,
-      severityCode,
-      severityDescription,
+      severityCode: entity.severityCode,
+      severityDescription: entity.severityCodeDescription,
       submissionAvailabilityCode: entity.submissionAvailabilityCode,
       submissionAvailabilityCodeDescription:
         entity.submissionAvailabilityCodeDescription,
@@ -30,9 +28,9 @@ export class EmissionsReviewSubmitMap extends BaseMap<
       updateDate: entity.updateDate?.toISOString() ?? null,
       windowStatus: entity.windowStatus,
       windowExpiredDate:
-      'windowExpiredDate' in entity
-        ? entity.windowExpiredDate?.toISOString() ?? null
-        : null,
+        'windowExpiredDate' in entity
+          ? (entity.windowExpiredDate?.toISOString() ?? null)
+          : null,
       periodAbbreviation: entity.periodAbbreviation,
     };
   }

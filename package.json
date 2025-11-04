@@ -24,7 +24,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "up": "yarn && yarn start:dev"
+    "up": "yarn && yarn start:dev",
+    "repl": "nest start --watch --entryFile repl"
   },
   "resolutions": {
     "xml2js": "^0.5.0"
@@ -38,7 +39,7 @@
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/typeorm": "^11.0.0",
     "@us-epa-camd/easey-common": "21.3.2",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "dotenv": "^16.5.0",
@@ -70,6 +71,7 @@
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.0.5",
     "jest-sonar-reporter": "^2.0.0",
     "prettier": "^3.6.2",

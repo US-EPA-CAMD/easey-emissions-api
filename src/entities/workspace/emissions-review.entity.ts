@@ -1,8 +1,7 @@
-import { BaseEntity, ViewColumn, ViewEntity } from 'typeorm';
+import { BaseEntity, ViewColumn } from 'typeorm';
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
 
-@ViewEntity({ name: 'camdecmps.vw_em_eval_and_submit' })
-export class EmissionsReviewSubmitGlobal extends BaseEntity {
+export abstract class EmissionsReview extends BaseEntity {
   @ViewColumn({
     name: 'oris_code',
     transformer: new NumericColumnTransformer(),
@@ -18,12 +17,16 @@ export class EmissionsReviewSubmitGlobal extends BaseEntity {
   @ViewColumn({ name: 'configuration' })
   configuration: string;
 
+  @ViewColumn({ name: 'eval_status_cd' })
   evalStatusCode: string;
 
+  @ViewColumn({ name: 'eval_status_cd_description' })
   evalStatusCodeDescription: string;
 
+  @ViewColumn({ name: 'submission_availability_cd' })
   submissionAvailabilityCode: string;
 
+  @ViewColumn({ name: 'submission_availability_cd_description' })
   submissionAvailabilityCodeDescription: string;
 
   @ViewColumn({ name: 'userid' })
@@ -35,6 +38,15 @@ export class EmissionsReviewSubmitGlobal extends BaseEntity {
   @ViewColumn({ name: 'window_status' })
   windowStatus: string;
 
+  @ViewColumn({ name: 'window_expired_date' })
+  windowExpiredDate: Date;
+
   @ViewColumn({ name: 'period_abbreviation' })
   periodAbbreviation: string;
+
+  @ViewColumn({ name: 'severity_cd' })
+  severityCode: string;
+
+  @ViewColumn({ name: 'severity_cd_description' })
+  severityCodeDescription: string;
 }

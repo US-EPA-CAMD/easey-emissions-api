@@ -21,15 +21,16 @@ import { EmissionsSubmissionsParamsDTO } from '../dto/emissions-submissions.para
 import { EmissionsService } from './emissions.service';
 import { EmissionsDTO, EmissionsImportDTO } from '../dto/emissions.dto';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { EmissionsReviewSubmitDTO } from '../dto/emissions-review-submit.dto';
+import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
 import { ReviewAndSubmitMultipleParamsDTO } from '../dto/review-and-submit-multiple-params.dto';
 import { ReviewSubmitService } from '../emissions-workspace/ReviewSubmit.service';
+import { EmissionsRetrievalMode } from '../enums/emissions-retrieval-mode.enum';
 import { ArrayResponse } from '@us-epa-camd/easey-common/interfaces/common.interface';
 
 @Controller()
 @ApiTags('Emissions')
 @ApiSecurity('APIKey')
-@ApiExtraModels(EmissionsReviewSubmitDTO)
+@ApiExtraModels(EmissionsReviewDTO)
 export class EmissionsController {
   constructor(
     private readonly service: EmissionsService,
@@ -102,7 +103,7 @@ export class EmissionsController {
             properties: {
               items: {
                 type: 'array',
-                items: { $ref: getSchemaPath(EmissionsReviewSubmitDTO) },
+                items: { $ref: getSchemaPath(EmissionsReviewDTO) },
               },
             },
           },
@@ -129,13 +130,14 @@ export class EmissionsController {
   })
   async getEmissions(
     @Query() dto: ReviewAndSubmitMultipleParamsDTO,
-  ): Promise<ArrayResponse<EmissionsReviewSubmitDTO>> {
-    const submissionList = await this.submissionService.getEmissionsRecords(
-      dto.orisCodes,
-      dto.monPlanIds,
-      dto.quarters,
-      false,
-    );
+  ): Promise<ArrayResponse<EmissionsReviewDTO>> {
+    const submissionList = await this.submissionService.getEmissionsRecords({
+      orisCodes: dto.orisCodes,
+      monPlanIds: dto.monPlanIds,
+      quarters: dto.quarters,
+      isWorkspace: false,
+      mode: EmissionsRetrievalMode.REPORT, // Report mode is all that is supported here
+    });
     return {
       items: submissionList
     }

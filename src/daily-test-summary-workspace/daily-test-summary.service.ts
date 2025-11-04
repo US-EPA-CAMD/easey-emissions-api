@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
+import { EntityManager } from 'typeorm';
 
 import { DailyCalibrationWorkspaceService } from '../daily-calibration-workspace/daily-calibration.service';
 import {
@@ -78,6 +79,7 @@ export class DailyTestSummaryWorkspaceService {
     reportingPeriodId,
     identifiers: ImportIdentifiers,
     currentTime: string,
+    trx?: EntityManager,
   ): Promise<void> {
     if (
       !Array.isArray(emissionsImport?.dailyTestSummaryData) ||
@@ -104,6 +106,8 @@ export class DailyTestSummaryWorkspaceService {
         'span_scale_cd',
         'mon_sys_id',
       ],
+      ',',
+      trx?.queryRunner,
     );
 
     for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
@@ -163,7 +167,8 @@ export class DailyTestSummaryWorkspaceService {
       }
       await Promise.all(buildPromises);
 
-      await this.dailyCalibrationService.import(dailyCalibrationObjects);
+      // Pass transaction to child service for atomicity
+      await this.dailyCalibrationService.import(dailyCalibrationObjects, trx);
     }
   }
 }
