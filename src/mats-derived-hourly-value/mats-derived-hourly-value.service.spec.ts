@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { MatsDerivedHourlyValueService } from './mats-derived-hourly-value.service';
 import { MatsDerivedHourlyValueRepository } from './mats-derived-hourly-value.repository';
@@ -28,6 +30,19 @@ describe('MatsDerivedHourlyValueService', () => {
           provide: MatsDerivedHourlyValueRepository,
           useValue: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

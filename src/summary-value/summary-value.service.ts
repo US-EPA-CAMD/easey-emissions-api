@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
+
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import {
   SummaryValueDTO,
@@ -16,6 +19,7 @@ export type SummaryValueCreate = SummaryValueImportDTO & {
 export class SummaryValueService {
 
   constructor(
+    private readonly dataSource: DataSource,
     private readonly map: SummaryValueMap,
     private readonly repository: SummaryValueRepository,
   ) {}
@@ -24,12 +28,13 @@ export class SummaryValueService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<SummaryValueDTO[]> {
-    const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
-    );
-
-    return this.map.many(results);
+    return withSlaveConnection(this.dataSource, async () => {
+      const results = await this.repository.export(
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
+      );
+      return this.map.many(results);
+    });
   }
 }

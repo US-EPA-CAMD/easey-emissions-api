@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { BulkLoadModule, BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { mockEmissionsWorkspaceRepository } from '../../test/mocks/emissions-workspace-repository';
 import { mockHourlyOperatingWorkspaceRepository } from '../../test/mocks/hourly-operating-workspace-repository';
@@ -106,7 +106,7 @@ import { EaseyContentService } from '../emissions-easey-content/easey-content.se
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
 import { EmissionsService } from '../emissions/emissions.service';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
-import { CurrentUser }      from '@us-epa-camd/easey-common/interfaces';
+import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 describe('Emissions Workspace Service', () => {
@@ -128,7 +128,7 @@ describe('Emissions Workspace Service', () => {
   const mockEntityManager = {
     connection: {
       createQueryRunner: jest.fn(() => mockQueryRunner),
-      },
+    },
     createQueryRunner: jest.fn(() => mockQueryRunner),
     findOne: jest.fn(),
   } as unknown as EntityManager;
@@ -297,9 +297,9 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: EaseyContentService,
-          useFactory:  () => ({
+          useFactory: () => ({
             emissionsSchema: jest.fn().mockResolvedValue({
-              version : '1.0.0'
+              version: '1.0.0'
             }),
           })
         },
@@ -311,11 +311,24 @@ describe('Emissions Workspace Service', () => {
         },
         {
           provide: EmissionsChecksService,
-          useValue: { 
-            runChecks: jest.fn(), 
+          useValue: {
+            runChecks: jest.fn(),
             invalidFormulasCheck: jest.fn(),
           },
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -327,14 +340,14 @@ describe('Emissions Workspace Service', () => {
     emissionsMap = module.get(EmissionsMap);
     plantRepository = module.get(PlantRepository);
     manager = module.get(EntityManager);
-     bulkLoadService = module.get(BulkLoadService);
+    bulkLoadService = module.get(BulkLoadService);
   });
 
-  it('should have a emissions service', function() {
+  it('should have a emissions service', function () {
     expect(emissionsService).toBeDefined();
   });
 
-  it('should delete a record', async function() {
+  it('should delete a record', async function () {
     await expect(
       emissionsService.delete({ monitorPlanId: '123', reportingPeriodId: 2 }),
     ).resolves.toEqual(undefined);
@@ -410,7 +423,7 @@ describe('Emissions Workspace Service', () => {
     ).rejects.toThrow(NotFoundException);
   });
 
-  it('should successfully export emissions data', async function() {
+  it('should successfully export emissions data', async function () {
     const emissionsMocks = genEmissionEvaluation<EmissionEvaluation>();
     const dtoMocks = genEmissionsRecordDto();
 
@@ -423,7 +436,7 @@ describe('Emissions Workspace Service', () => {
     );
   });
 
-  it('should successfully import', async function() {
+  it('should successfully import', async function () {
     jest.spyOn(longTermFuelFlowService, 'import').mockResolvedValue(undefined);
 
     const emissionsDtoMock = genEmissionsImportDto(1, {
@@ -478,7 +491,7 @@ describe('Emissions Workspace Service', () => {
     expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
   });
 
-  it('should handle transaction rollback on error', async function() {
+  it('should handle transaction rollback on error', async function () {
     const emissionsDtoMock = genEmissionsImportDto(1, {
       include: ['longTermFuelFlowData'],
     });
@@ -520,7 +533,7 @@ describe('Emissions Workspace Service', () => {
     expect(mockQueryRunner.release).toHaveBeenCalled();
   });
 
-  it('should import daily test summaries', async function() {
+  it('should import daily test summaries', async function () {
     const emissionsDtoMock = genEmissionsImportDto();
     const dtoMockWithDailyTest = genEmissionsImportDto(1, {
       include: ['dailyTestSummaryData'],
@@ -556,7 +569,7 @@ describe('Emissions Workspace Service', () => {
         new Date().toISOString(),
       ),
     ).resolves;
-    });
+  });
 
   // Tests location lookup with anyOf schema compliance
   describe('Location Lookup - anyOf Schema Compliance', () => {
@@ -620,8 +633,8 @@ describe('Emissions Workspace Service', () => {
         year: 2023,
         quarter: 1,
         dailyEmissionData: [
-        { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
-      ],
+          { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: [] }
+        ],
         dailyTestSummaryData: [],
         hourlyOperatingData: [],
         weeklyTestSummaryData: [],
@@ -640,12 +653,12 @@ describe('Emissions Workspace Service', () => {
     });
 
     it('should find location with stackPipeId only', async () => {
-      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+      const mockEmissionsImportDTO = new EmissionsImportDTO({
         orisCode: 12345,
         year: 2023,
         quarter: 1,
         dailyEmissionData: [
-          { unitId: null, stackPipeId: 'CS1', parameterCode: 'CO2', dailyFuelData: []  }
+          { unitId: null, stackPipeId: 'CS1', parameterCode: 'CO2', dailyFuelData: [] }
         ],
         dailyTestSummaryData: [],
         hourlyOperatingData: [],
@@ -665,13 +678,13 @@ describe('Emissions Workspace Service', () => {
     });
 
     it('should find location with both identifiers', async () => {
-      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+      const mockEmissionsImportDTO = new EmissionsImportDTO({
         orisCode: 12345,
         year: 2023,
         quarter: 1,
         dailyEmissionData: [
-          { unitId: '4', stackPipeId: 'CS2', parameterCode: 'CO2', dailyFuelData: []  }
-      ],
+          { unitId: '4', stackPipeId: 'CS2', parameterCode: 'CO2', dailyFuelData: [] }
+        ],
         dailyTestSummaryData: [],
         hourlyOperatingData: [],
         weeklyTestSummaryData: [],
@@ -685,18 +698,18 @@ describe('Emissions Workspace Service', () => {
       // Should not throw error for valid both identifiers location
       await expect(emissionsService.import(
         mockEmissionsImportDTO,
-       'test-user-id'
+        'test-user-id'
       )).resolves.not.toThrow();
     });
 
     it('should throw error when no location found', async () => {
-      const mockEmissionsImportDTO = new EmissionsImportDTO( {
+      const mockEmissionsImportDTO = new EmissionsImportDTO({
         orisCode: 12345,
         year: 2023,
         quarter: 1,
         dailyEmissionData: [
-          { unitId: 'NOMATCH', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
-      ],
+          { unitId: 'NOMATCH', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: [] }
+        ],
         dailyTestSummaryData: [],
         hourlyOperatingData: [],
         weeklyTestSummaryData: [],
@@ -728,12 +741,12 @@ describe('Emissions Workspace Service', () => {
         }]
       } as any);
 
-       const mockEmissionsImportDTO = new EmissionsImportDTO( {
+      const mockEmissionsImportDTO = new EmissionsImportDTO({
         orisCode: 12345,
         year: 2023,
         quarter: 1,
         dailyEmissionData: [
-        { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: []  }
+          { unitId: '3', stackPipeId: null, parameterCode: 'CO2', dailyFuelData: [] }
         ],
         dailyTestSummaryData: [],
         hourlyOperatingData: [],

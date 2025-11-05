@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
 import { HourlyOperatingRepository } from './hourly-operating.repository';
@@ -16,7 +17,7 @@ import { HourlyFuelFlowService } from '../hourly-fuel-flow/hourly-fuel-flow.serv
 @Injectable()
 export class HourlyOperatingService {
   constructor(
-    private readonly entityManager: EntityManager,
+    private readonly dataSource: DataSource,
     private readonly map: HourlyOperatingMap,
     private readonly repository: HourlyOperatingRepository,
     private readonly monitorHourlyValueService: MonitorHourlyValueService,
@@ -30,54 +31,61 @@ export class HourlyOperatingService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
-    const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
-    );
+    return withSlaveConnection(this.dataSource, async () => {
+      const results = await this.repository.export(
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
+      );
 
-    return this.map.many(results);
+      return this.map.many(results);
+    });
   }
 
   async export(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
-    const hourlyOperating = await this.getHourlyOpDataByLocationIds(
-      monitoringLocationIds,
-      params,
-    );
-    const reportingPeriod = await this.entityManager.findOneBy(ReportingPeriod, {
-      year: params.year,
-      quarter: params.quarter,
+    return withSlaveConnection(this.dataSource, async () => {
+      const hourlyOperating = await this.getHourlyOpDataByLocationIds(
+        monitoringLocationIds,
+        params,
+      );
+      
+      const reportingPeriod = await this.dataSource
+        .getRepository(ReportingPeriod)
+        .findOneBy({
+          year: params.year,
+          quarter: params.quarter,
+        });
+
+      if (!hourlyOperating.length) return [];
+
+      const values = await Promise.all([
+        this.monitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+        this.derivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+        this.matsMonitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+        this.matsDerivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
+        this.hourlyGasFlowMeterService.export(reportingPeriod.id, monitoringLocationIds),
+        this.hourlyFuelFlowService.export(reportingPeriod.id, monitoringLocationIds),
+      ]);
+
+      hourlyOperating.forEach(hourlyOp => {
+        hourlyOp.monitorHourlyValueData =
+          values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+        hourlyOp.derivedHourlyValueData =
+          values?.[1]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+        hourlyOp.matsMonitorHourlyValueData =
+          values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+        hourlyOp.matsDerivedHourlyValueData =
+          values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+        hourlyOp.hourlyGFMData =
+          values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+        hourlyOp.hourlyFuelFlowData =
+          values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
+      });
+
+      return hourlyOperating;
     });
-
-    if (!hourlyOperating.length) return [];
-
-    const values = await Promise.all([
-      this.monitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.derivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.matsMonitorHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.matsDerivedHourlyValueService.export(reportingPeriod.id, monitoringLocationIds),
-      this.hourlyGasFlowMeterService.export(reportingPeriod.id, monitoringLocationIds),
-      this.hourlyFuelFlowService.export(reportingPeriod.id, monitoringLocationIds),
-    ]);
-
-    hourlyOperating.forEach(hourlyOp => {
-      hourlyOp.monitorHourlyValueData =
-        values?.[0]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-      hourlyOp.derivedHourlyValueData =
-        values?.[1]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-      hourlyOp.matsMonitorHourlyValueData =
-        values?.[2]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-      hourlyOp.matsDerivedHourlyValueData =
-        values?.[3]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-      hourlyOp.hourlyGFMData =
-        values?.[4]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-      hourlyOp.hourlyFuelFlowData =
-        values?.[5]?.filter(i => i.hourId === hourlyOp.id) ?? [];
-    });
-
-    return hourlyOperating;
   }
 }

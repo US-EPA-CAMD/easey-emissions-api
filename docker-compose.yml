@@ -24,6 +24,7 @@ services:
       - EASEY_DB_USER=postgres
       - EASEY_DB_PWD=password
       - EASEY_DB_NAME=postgres
+      - EASEY_DB_REPLICA_HOST=database
     ports:
       - '8080:8080'
 volumes:

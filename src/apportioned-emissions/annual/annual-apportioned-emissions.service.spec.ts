@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { DataSource } from 'typeorm';
+import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 import { AnnualUnitDataRepository } from './annual-unit-data.repository';
@@ -48,6 +48,30 @@ describe('-- Annual Apportioned Emissions Service --', () => {
           provide: AnnualUnitDataRepository,
           useFactory: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+            warn: jest.fn(),
+            debug: jest.fn(),
+            verbose: jest.fn(),
+            setContext: jest.fn(),
+          },
+        }
       ],
     }).compile();
 

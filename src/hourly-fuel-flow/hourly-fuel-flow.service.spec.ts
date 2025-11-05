@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
 import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -31,6 +33,19 @@ describe('HourlyFuelFlowService', () => {
           provide: HourlyFuelFlowRepository,
           useValue: mockHourlyFuelFlowRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -44,7 +59,7 @@ describe('HourlyFuelFlowService', () => {
   });
 
   describe('export', () => {
-    it('should return null given no fuel flows were found', async function() {
+    it('should return null given no fuel flows were found', async function () {
       await expect(service.export(123, [])).resolves.toEqual([]);
     });
 

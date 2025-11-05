@@ -1,5 +1,7 @@
 import { HourlyGasFlowMeterRepository } from './hourly-gas-flow-meter.repository';
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { HourlyGasFlowMeterMap } from '../maps/hourly-gas-flow-meter.map';
 import { HourlyGasFlowMeterService } from './hourly-gas-flow-meter.service';
 import { mockHourlyGasFlowMeterRepository } from '../../test/mocks/mock-hourly-gas-flow-meter-repository';
@@ -20,6 +22,19 @@ describe('--HourlyGasFlowMeterService--', () => {
           provide: HourlyGasFlowMeterRepository,
           useValue: mockHourlyGasFlowMeterRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

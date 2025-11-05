@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { DataSource, EntityManager } from 'typeorm';
 
 import {
   genDailyApportionedEmissionsFacilityDto,
@@ -61,6 +61,30 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
           provide: QuarterUnitDataRepository,
           useFactory: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+            warn: jest.fn(),
+            debug: jest.fn(),
+            verbose: jest.fn(),
+            setContext: jest.fn(),
+          },
+        }
       ],
     }).compile();
 

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genSorbentTrap } from '../../test/object-generators/sorbent-trap';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -25,6 +25,19 @@ describe('SorbentTrapService', () => {
         SorbentTrapService,
         SorbentTrapRepository,
         SorbentTrapMap,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

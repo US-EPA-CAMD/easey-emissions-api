@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
@@ -10,6 +12,7 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 export class DailyTestSummaryService {
 
   constructor(
+    private readonly dataSource: DataSource,
     private readonly map: DailyTestSummaryMap,
     private readonly repository: DailyTestSummaryRepository,
     private readonly dailyCalibrationService: DailyCalibrationService,
@@ -19,35 +22,39 @@ export class DailyTestSummaryService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
-    const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
-    );
+    return withSlaveConnection(this.dataSource, async () => {
+      const results = await this.repository.export(
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
+      );
 
-    return this.map.many(results);
+      return this.map.many(results);
+    });
   }
 
   async export(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
-    const summaries = await this.getDailyTestSummariesByLocationIds(
-      monitoringLocationIds,
-      params,
-    );
-
-    if (summaries) {
-      const dailyCalibrations = await this.dailyCalibrationService.export(
-        summaries?.map(i => i.id),
+    return withSlaveConnection(this.dataSource, async () => {
+      const summaries = await this.getDailyTestSummariesByLocationIds(
+        monitoringLocationIds,
+        params,
       );
 
-      summaries.forEach(s => {
-        s.dailyCalibrationData =
-          dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? [];
-      });
-    }
+      if (summaries) {
+        const dailyCalibrations = await this.dailyCalibrationService.export(
+          summaries?.map(i => i.id),
+        );
 
-    return summaries;
+        summaries.forEach(s => {
+          s.dailyCalibrationData =
+            dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? [];
+        });
+      }
+
+      return summaries;
+    });
   }
 }

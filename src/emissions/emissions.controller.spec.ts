@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
 import { DailyBackstopService } from '../daily-backstop/daily-backstop.service';
@@ -161,6 +161,19 @@ describe('-- Emissions Controller --', () => {
           provide: DailyBackstopService,
           useValue: jest.mock('../daily-backstop/daily-backstop.service'),
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

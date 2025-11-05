@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { mockWeeklyTestSummaryRepository } from '../../test/mocks/mock-weekly-test-summary-repository';
 import { genWeeklyTestSumValues } from '../../test/object-generators/weekly-test-summary';
@@ -31,6 +31,19 @@ describe('--WeeklyTestSummaryService--', () => {
           provide: WeeklyTestSummaryRepository,
           useValue: mockWeeklyTestSummaryRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

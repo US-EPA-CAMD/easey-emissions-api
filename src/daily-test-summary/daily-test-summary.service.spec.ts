@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-calibration-repository';
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
@@ -36,6 +36,19 @@ describe('Daily Test Summary Service', () => {
           provide: DailyCalibrationRepository,
           useValue: mockDailyCalibrationRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -45,11 +58,11 @@ describe('Daily Test Summary Service', () => {
     dailyCalibrationRepository = module.get(DailyCalibrationRepository);
   });
 
-  it('should have a defined service', function() {
+  it('should have a defined service', function () {
     expect(service).toBeDefined();
   });
 
-  it('should get daily test summaries by location ids', async function() {
+  it('should get daily test summaries by location ids', async function () {
     const mockedValues = genDailyTestSummary<DailyTestSummary>(3, {
       include: ['monitorLocation'],
     });
@@ -73,7 +86,7 @@ describe('Daily Test Summary Service', () => {
     ).resolves.toEqual(mappedValues);
   });
 
-  it('should export mapped data', async function() {
+  it('should export mapped data', async function () {
     const dailyTestSummaryMocks = genDailyTestSummary<DailyTestSummary>(3);
     const mappedValues = await map.many(dailyTestSummaryMocks);
 

@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
 import { DailyCalibrationService } from '../daily-calibration/daily-calibration.service';
@@ -224,11 +224,24 @@ describe('Emissions Service', () => {
         },
         {
           provide: EaseyContentService,
-          useFactory:  () => ({
+          useFactory: () => ({
             emissionsSchema: jest.fn().mockResolvedValue({
-              version : '1.0.0'
+              version: '1.0.0'
             }),
           })
+        },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
         }
       ],
     }).compile();
@@ -251,7 +264,7 @@ describe('Emissions Service', () => {
     dailyBackstopService = module.get(DailyBackstopService);
   });
 
-  it('should have a emissions service', function() {
+  it('should have a emissions service', function () {
     expect(emissionsService).toBeDefined();
   });
 
@@ -290,7 +303,7 @@ describe('Emissions Service', () => {
       );
     });
 
-    it('should return an empty object if no emissions data is found', async function() {
+    it('should return an empty object if no emissions data is found', async function () {
       const dtoMock = genEmissionsParamsDto();
 
       jest.spyOn(emissionsRepository, 'export').mockResolvedValue(undefined);

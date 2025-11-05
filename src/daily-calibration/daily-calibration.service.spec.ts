@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 
 import { DailyCalibrationService } from './daily-calibration.service';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
@@ -29,6 +30,19 @@ describe('DailyCalibrationService', () => {
           provide: DailyCalibrationRepository,
           useValue: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { mockLongTermFuelFlowRepository } from '../../test/mocks/mock-long-term-fuel-flow-repository';
 import { LongTermFuelFlowRepository } from './long-term-fuel-flow.repository';
 import { LongTermFuelFlowService } from './long-term-fuel-flow.service';
@@ -21,6 +23,19 @@ describe('--LongTermFuelFlowService--', () => {
           provide: LongTermFuelFlowRepository,
           useValue: mockLongTermFuelFlowRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -32,7 +47,7 @@ describe('--LongTermFuelFlowService--', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  it('should get long term fuel flow by location ids', async function() {
+  it('should get long term fuel flow by location ids', async function () {
     const genLongTermFuelFlowValues = genLongTermFuelFlow<LongTermFuelFlow>(1);
     const promises = [];
     genLongTermFuelFlowValues.forEach(value => {

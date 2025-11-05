@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { SummaryValueService } from './summary-value.service';
 import { SummaryValueMap } from '../maps/summary-value.map';
 import { SummaryValueRepository } from './summary-value.repository';
@@ -26,6 +28,19 @@ describe('Summary Value Workspace Service Test', () => {
           provide: SummaryValueRepository,
           useValue: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

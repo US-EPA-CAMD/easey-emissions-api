@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
@@ -78,6 +78,12 @@ const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
 };
 
+jest.mock('@us-epa-camd/easey-common', () => ({
+  withSlaveConnection: jest.fn().mockImplementation((dataSource, callback) => {
+    return callback();
+  }),
+}));
+
 describe('HourlyOperatingService', () => {
   let service: HourlyOperatingService;
   let repository: any;
@@ -142,6 +148,22 @@ describe('HourlyOperatingService', () => {
           provide: HourlyOperatingRepository,
           useValue: mockRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+            getRepository: jest.fn().mockReturnValue({ // Add this method
+              findOneBy: jest.fn().mockResolvedValue({ id: 123, year: 2023, quarter: 1 }),
+            }),
+          },
+        }
       ],
     }).compile();
 

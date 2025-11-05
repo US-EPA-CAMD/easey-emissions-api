@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { DailyBackstop } from '../entities/daily-backstop.entity';
@@ -23,6 +23,19 @@ describe('Daily Backstop Service Test', () => {
         DailyBackstopMap,
         EntityManager,
         ConfigService,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 

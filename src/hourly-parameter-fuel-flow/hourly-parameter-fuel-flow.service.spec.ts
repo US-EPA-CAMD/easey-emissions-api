@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genHourlyParamFuelFlow } from '../../test/object-generators/hourly-param-fuel-flow';
 import { HrlyParamFuelFlow } from '../entities/hrly-param-fuel-flow.entity';
@@ -18,6 +18,19 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
         HourlyParameterFuelFlowService,
         HourlyParameterFuelFlowRepository,
         HourlyParameterFuelFlowMap,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -26,7 +39,7 @@ describe('HourlyParameterFuelFlowWoskpaceService', () => {
   });
 
   describe('export', () => {
-    it('should return the correct shape of data given correct inputs', async function() {
+    it('should return the correct shape of data given correct inputs', async function () {
       const hourlyParams = genHourlyParamFuelFlow<HrlyParamFuelFlow>(3);
 
       jest.spyOn(repository, 'export').mockResolvedValue(hourlyParams);

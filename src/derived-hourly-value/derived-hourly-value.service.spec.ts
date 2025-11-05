@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { DerivedHourlyValueService } from './derived-hourly-value.service';
 import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
@@ -20,6 +22,19 @@ describe('DerivedHourlyValueService', () => {
           provide: DerivedHourlyValueRepository,
           useValue: mockDerivedHourlyValueRepository,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -32,7 +47,7 @@ describe('DerivedHourlyValueService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should export derived hourly values from service', async function() {
+  it('should export derived hourly values from service', async function () {
     const mockedValues = genDerivedHrlyValues<DerivedHrlyValue>(3, {
       include: ['monitorSystem'],
     });
