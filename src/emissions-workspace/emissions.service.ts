@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 import { DeleteResult, EntityManager } from 'typeorm';
@@ -162,8 +162,7 @@ export class EmissionsWorkspaceService {
   }
 
   async import(
-    params: EmissionsImportDTO,
-    userId?: string,
+    params: EmissionsImportDTO, userId?: string, p0?: number, p1?: any, p2?: string, p3?: boolean, p4?: null,
   ): Promise<{ message: string }> {
     // Pre-transaction validation phase - which is only read operations
       const stackPipeIds = objectValuesByKey<string>('stackPipeId', params, true);
@@ -634,12 +633,29 @@ export class EmissionsWorkspaceService {
   async getMonitoringLocationId(
     monitoringLocations: MonitorLocation[], dataType,
   ) {
+    // Handle anyOf schema - either unitId OR stackPipeId (or both)
     const filteredLocations = monitoringLocations.filter(location => {
-      return (
-        location.unit?.name === dataType.unitId ||
-        location.stackPipe?.name === dataType.stackPipeId
-      );
+      if (dataType.unitId && dataType.stackPipeId) {
+        return location.unit?.name === dataType.unitId &&
+               location.stackPipe?.name === dataType.stackPipeId;
+      } else if (dataType.unitId) {
+        return location.unit?.name === dataType.unitId;
+      } else if (dataType.stackPipeId) {
+        return location.stackPipe?.name === dataType.stackPipeId;
+      }
+      return false;
     });
+
+    if (filteredLocations.length === 0) {
+      throw new BadRequestException(
+        `No location found for unitId: ${dataType.unitId}, stackPipeId: ${dataType.stackPipeId}`
+      );
+    }
+    if (filteredLocations.length > 1) {
+      throw new BadRequestException(
+        'Multiple locations found - unable to determine unique location'
+      );
+    }
     return filteredLocations[0].id;
   }
 }

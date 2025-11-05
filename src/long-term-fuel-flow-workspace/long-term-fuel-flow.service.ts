@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { randomUUID } from 'crypto';
 import { DeleteResult, EntityManager } from 'typeorm';
@@ -72,12 +72,30 @@ export class LongTermFuelFlowWorkspaceService {
     );
 
     for (const longTermFuelFlowDatum of emissionsImport.longTermFuelFlowData) {
-      const monitoringLocationId = monitoringLocations.filter(location => {
-        return (
-          location.unit?.name === longTermFuelFlowDatum.unitId ||
-          location.stackPipe?.name === longTermFuelFlowDatum.stackPipeId
+      // Fix for TT6932: Handle anyOf schema - either unitId OR stackPipeId (or both)
+      const matchingLocations = monitoringLocations.filter(location => {
+        if (longTermFuelFlowDatum.unitId && longTermFuelFlowDatum.stackPipeId) {
+          return location.unit?.name === longTermFuelFlowDatum.unitId &&
+                 location.stackPipe?.name === longTermFuelFlowDatum.stackPipeId;
+        } else if (longTermFuelFlowDatum.unitId) {
+          return location.unit?.name === longTermFuelFlowDatum.unitId;
+        } else if (longTermFuelFlowDatum.stackPipeId) {
+          return location.stackPipe?.name === longTermFuelFlowDatum.stackPipeId;
+        }
+        return false;
+      });
+
+      if (matchingLocations.length === 0) {
+        throw new BadRequestException(
+          `No location found for unitId: ${longTermFuelFlowDatum.unitId}, stackPipeId: ${longTermFuelFlowDatum.stackPipeId}`
         );
-      })[0].id;
+      }
+      if (matchingLocations.length > 1) {
+        throw new BadRequestException(
+          'Multiple locations found - unable to determine unique location'
+        );
+      }
+      const monitoringLocationId = matchingLocations[0].id;
 
       const uid = randomUUID();
       longTermFuelFlowDatum['id'] = uid;
