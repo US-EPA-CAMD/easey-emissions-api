@@ -87,15 +87,15 @@ export class ReviewSubmitService {
     }
 
     try {
-      if (!isWorkspace) {
-        data = await withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+      if (isWorkspace) {
+         data = await this.map.many(
+          await this.entityManager.find(entity, { where: conditions }),
+        );
+      } else {
+       data = await withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
           const results = await entityManager.find(entity, { where: conditions });
           return this.map.many(results);
         });
-      } else {
-        data = await this.map.many(
-          await this.entityManager.find(entity, { where: conditions }),
-        );
       }
 
       return data;

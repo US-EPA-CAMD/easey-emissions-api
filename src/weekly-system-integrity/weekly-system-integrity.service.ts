@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { In } from 'typeorm';
+import { DataSource, In } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { WeeklySystemIntegrityRepository } from './weekly-system-integrity.repository';

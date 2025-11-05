@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { In } from 'typeorm';
-import { DataSource } from 'typeorm';
+import { DataSource, In } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
