@@ -38,6 +38,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       synchronize: false,
       logging: sqlLogging,
       maxQueryExecutionTime: this.configService.get<number>('app.maxQueryExecutionTime'),
+      extra: {
+        max: this.configService.get<number>('app.maxConnectionPool'),
+        idleTimeoutMillis: this.configService.get<number>('app.idleTimeout'),
+        connectionTimeoutMillis: this.configService.get<number>('app.connectionTimeout'),
+        statement_timeout: this.configService.get<number>('app.statementTimeout'),
+        idle_in_transaction_session_timeout: this.configService.get<number>('app.idleInTransactionSessionTimeout'),
+        maxUses: this.configService.get<number>('app.maxUsesBeforeRecreatingConnection'),
+      },
     };
 
     const replicaHost = this.configService.get<string>('database.replicaHost');
@@ -54,14 +62,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         database: this.configService.get<string>('database.name'),
         ssl: this.tlsOptions,
         applicationName: this.configService.get<string>('app.name'),
-        extra: {
-          max: this.configService.get<number>('app.maxConnectionPool'),
-          idleTimeoutMillis: this.configService.get<number>('app.idleTimeout'),
-          connectionTimeoutMillis: this.configService.get<number>('app.connectionTimeout'),
-          statement_timeout: this.configService.get<number>('app.statementTimeout'),
-          idle_in_transaction_session_timeout: this.configService.get<number>('app.idleInTransactionSessionTimeout'),
-          maxUses: this.configService.get<number>('app.maxUsesBeforeRecreatingConnection'),
-        },
       };
 
       return {
@@ -77,6 +77,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
               ...commonConnectionSettings,
             },
           ],
+          defaultMode: 'master' as const,
         },
       };
     } else {
@@ -91,14 +92,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         password: this.configService.get<string>('database.pwd'),
         database: this.configService.get<string>('database.name'),
         ssl: this.tlsOptions,
-        extra: {
-          max: this.configService.get<number>('app.maxConnectionPool'),
-          idleTimeoutMillis: this.configService.get<number>('app.idleTimeout'),
-          connectionTimeoutMillis: this.configService.get<number>('app.connectionTimeout'),
-          statement_timeout: this.configService.get<number>('app.statementTimeout'),
-          idle_in_transaction_session_timeout: this.configService.get<number>('app.idleInTransactionSessionTimeout'),
-          maxUses: this.configService.get<number>('app.maxUsesBeforeRecreatingConnection'),
-        },
       };
     }
   }
