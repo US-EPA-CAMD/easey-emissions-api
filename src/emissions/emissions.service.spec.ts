@@ -20,8 +20,6 @@ import { MatsMonitorHourlyValueService } from '../mats-monitor-hourly-value/mats
 import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
 import { MonitorHourlyValueService } from '../monitor-hourly-value/monitor-hourly-value.service';
 import { PlantRepository } from '../plant/plant.repository';
-import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
-import { EmissionsRepository } from './emissions.repository';
 import { EmissionsService } from './emissions.service';
 // import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { mockEmissionsRepository } from '../../test/mocks/emissions-repository';
@@ -86,10 +84,18 @@ import { WeeklyTestSummaryRepository } from '../weekly-test-summary/weekly-test-
 import { WeeklyTestSummaryService } from '../weekly-test-summary/weekly-test-summary.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 
+jest.mock('./emissions.repository', () => ({
+  EmissionsRepository: jest.fn().mockImplementation(() => mockEmissionsRepository),
+}));
+
+jest.mock('./emissions-submissions-progress.repository', () => ({
+  EmissionsSubmissionsProgressRepository: jest.fn().mockImplementation(() => mockEmissionsSubmissionsProgressRepository),
+}));
+
 describe('Emissions Service', () => {
   let emissionsMap: EmissionsMap;
-  let emissionsRepository: EmissionsRepository;
-  let emissionsSubmissionsProgressRepository: EmissionsSubmissionsProgressRepository;
+  let emissionsRepository: any;
+  let emissionsSubmissionsProgressRepository: any;
   let emissionsService: EmissionsService;
   let dailyTestSummaryService: DailyTestSummaryService;
   let hourlyOperatingService: HourlyOperatingService;
@@ -168,25 +174,15 @@ describe('Emissions Service', () => {
         },
         {
           provide: DerivedHourlyValueRepository,
-          useValue: jest,
+          useValue: { export: jest.fn() },
         },
         {
           provide: PlantRepository,
           useValue: mockPlantRepository,
         },
         {
-          provide: EmissionsRepository,
-          useValue: mockEmissionsRepository,
-        },
-        {
-          provide: DailyTestSummaryRepository,
-          useValue: mockDailyTestSummaryRepository,
-        },
-        {
           provide: DailyCalibrationRepository,
-          useValue: jest.mock(
-            '../daily-calibration/daily-calibration.repository',
-          ),
+          useValue: { export: jest.fn() },
         },
         {
           provide: HourlyOperatingRepository,
@@ -194,40 +190,28 @@ describe('Emissions Service', () => {
         },
         {
           provide: MonitorHourlyValueRepository,
-          useValue: jest.mock(
-            '../monitor-hourly-value/monitor-hourly-value.repository',
-          ),
+          useValue: { export: jest.fn() },
         },
         {
           provide: MatsMonitorHourlyValueRepository,
-          useValue: jest.mock(
-            '../mats-monitor-hourly-value/mats-monitor-hourly-value.repository',
-          ),
+          useValue: { export: jest.fn() },
         },
         {
           provide: MatsDerivedHourlyValueRepository,
-          useValue: jest.mock(
-            '../mats-derived-hourly-value/mats-derived-hourly-value.repository',
-          ),
+          useValue: { export: jest.fn() },
         },
         {
           provide: HourlyGasFlowMeterRepository,
           useValue: mockHourlyGasFlowMeterRepository,
         },
         {
-          provide: EmissionsSubmissionsProgressRepository,
-          useValue: mockEmissionsSubmissionsProgressRepository,
-        },
-        {
           provide: DailyBackstopRepository,
-          useValue: jest.mock('../daily-backstop/daily-backstop.repository'),
+          useValue: { export: jest.fn() },
         },
         {
           provide: EaseyContentService,
           useFactory: () => ({
-            emissionsSchema: jest.fn().mockResolvedValue({
-              version: '1.0.0'
-            }),
+            emissionsSchema: { version: '1.0.0' },
           })
         },
         {
@@ -240,13 +224,17 @@ describe('Emissions Service', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {
+                connection: {},
+                queryRunner: {},
+              }
             }),
           },
         }
       ],
     }).compile();
 
-    emissionsRepository = module.get(EmissionsRepository);
+    emissionsRepository = mockEmissionsRepository;
     emissionsService = module.get(EmissionsService);
     emissionsMap = module.get(EmissionsMap);
     dailyTestSummaryService = module.get(DailyTestSummaryService);
@@ -256,9 +244,7 @@ describe('Emissions Service', () => {
     weeklyTestSummaryService = module.get(WeeklyTestSummaryService);
     nsps4tSummaryService = module.get(Nsps4tSummaryService);
     summaryValueService = module.get(SummaryValueService);
-    emissionsSubmissionsProgressRepository = module.get(
-      EmissionsSubmissionsProgressRepository,
-    );
+    emissionsSubmissionsProgressRepository = mockEmissionsSubmissionsProgressRepository;
     longTermFuelFlowService = module.get(LongTermFuelFlowService);
     configService = module.get(ConfigService);
     dailyBackstopService = module.get(DailyBackstopService);
@@ -283,6 +269,8 @@ describe('Emissions Service', () => {
       mappedEmissions.dailyTestSummaryData = [];
       mappedEmissions.hourlyOperatingData = [];
       mappedEmissions.dailyBackstopData = [];
+
+      mappedEmissions.version = '1.0.0';
 
       jest
         .spyOn(emissionsRepository, 'export')

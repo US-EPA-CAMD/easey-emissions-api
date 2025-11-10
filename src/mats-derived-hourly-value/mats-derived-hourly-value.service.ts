@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { MatsDerivedHourlyValueDTO } from '../dto/mats-derived-hourly-value.dto';
@@ -12,12 +12,12 @@ export class MatsDerivedHourlyValueService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: MatsDerivedHourlyValueMap,
-    private readonly repository: MatsDerivedHourlyValueRepository,
   ) {}
 
   async export(rptPeriodId: number, monLocIds: string[]): Promise<MatsDerivedHourlyValueDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const matsDerivedHourlyValueData = await this.repository.export(rptPeriodId, monLocIds);
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const matsDerivedHourlyValueRepository = new MatsDerivedHourlyValueRepository(replicaManager);
+      const matsDerivedHourlyValueData = await matsDerivedHourlyValueRepository.export(rptPeriodId, monLocIds);
       return this.map.many(matsDerivedHourlyValueData);
     });
   }

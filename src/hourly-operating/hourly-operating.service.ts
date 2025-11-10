@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { HourlyOperatingMap } from '../maps/hourly-operating.map';
@@ -19,7 +19,6 @@ export class HourlyOperatingService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: HourlyOperatingMap,
-    private readonly repository: HourlyOperatingRepository,
     private readonly monitorHourlyValueService: MonitorHourlyValueService,
     private readonly derivedHourlyValueService: DerivedHourlyValueService,
     private readonly matsMonitorHourlyValueService: MatsMonitorHourlyValueService,
@@ -31,8 +30,9 @@ export class HourlyOperatingService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const results = await this.repository.export(
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const hourlyOperatingRepository = new HourlyOperatingRepository(replicaManager);
+      const results = await hourlyOperatingRepository.export(
         monitoringLocationIds,
         params.year,
         params.quarter,
@@ -46,13 +46,13 @@ export class HourlyOperatingService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<HourlyOperatingDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       const hourlyOperating = await this.getHourlyOpDataByLocationIds(
         monitoringLocationIds,
         params,
       );
       
-      const reportingPeriod = await this.dataSource
+      const reportingPeriod = await replicaManager
         .getRepository(ReportingPeriod)
         .findOneBy({
           year: params.year,

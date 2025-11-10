@@ -17,15 +17,17 @@ import { HourlyParameterFuelFlowRepository } from '../../hourly-parameter-fuel-f
 import { HourlyParameterFuelFlowService } from '../../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyFuelFlowMap } from '../../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowMap } from '../../maps/hourly-parameter-fuel-flow.map';
-import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
 import { QuarterlyApportionedEmissionsService } from './quarterly-apportioned-emissions.service';
 
-const mockRepository = () => ({
+const mockRepository = {
   getEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
-});
+};
+jest.mock('./quarter-unit-data.repository', () => ({
+  QuarterUnitDataRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockRequest = () => {
   return {
@@ -58,10 +60,6 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
         HourlyParameterFuelFlowRepository,
         HourlyParameterFuelFlowMap,
         {
-          provide: QuarterUnitDataRepository,
-          useFactory: mockRepository,
-        },
-        {
           provide: DataSource,
           useValue: {
             createQueryRunner: jest.fn().mockReturnValue({
@@ -71,6 +69,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {},
             }),
           },
         },
@@ -91,7 +90,7 @@ describe('-- Quarterly Apportioned Emissions Service --', () => {
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
     service = module.get(QuarterlyApportionedEmissionsService);
-    repository = module.get(QuarterUnitDataRepository);
+    repository = mockRepository;
   });
 
   describe('getEmissions', () => {

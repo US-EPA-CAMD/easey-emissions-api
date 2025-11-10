@@ -3,7 +3,7 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
@@ -23,18 +23,18 @@ export class HourlyApportionedEmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: HourUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitDataView[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let entities: HourUnitDataView[];
 
       try {
-        entities = await this.repository.getEmissions(
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        entities = await hourUnitDataRepository.getEmissions(
           req,
           fieldMappings.emissions.hourly.data.aggregation.unit,
           params,
@@ -60,11 +60,12 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsFacilityAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsFacilityAggregation(
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsFacilityAggregation(
           req,
           params,
         );
@@ -96,11 +97,12 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsStateAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsStateAggregation(req, params);
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsStateAggregation(req, params);
       } catch (e) {
         throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -129,11 +131,12 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsNationalAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsNationalAggregation(
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsNationalAggregation(
           req,
           params,
         );

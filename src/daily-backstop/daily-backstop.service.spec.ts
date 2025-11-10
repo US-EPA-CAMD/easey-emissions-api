@@ -5,21 +5,25 @@ import { DataSource, EntityManager } from 'typeorm';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { DailyBackstop } from '../entities/daily-backstop.entity';
 import { DailyBackstopMap } from '../maps/daily-backstop.map';
-import { DailyBackstopRepository } from './daily-backstop.repository';
 import { DailyBackstopService } from './daily-backstop.service';
 
-import mock = jest.mock;
+
+const mockRepository = {
+  createQueryBuilder: jest.fn(),
+};
+
+jest.mock('./daily-backstop.repository', () => ({
+  DailyBackstopRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 describe('Daily Backstop Service Test', () => {
   let service: DailyBackstopService;
-  let repo: DailyBackstopRepository;
   let map: DailyBackstopMap;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         DailyBackstopService,
-        DailyBackstopRepository,
         DailyBackstopMap,
         EntityManager,
         ConfigService,
@@ -33,6 +37,10 @@ describe('Daily Backstop Service Test', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {
+                connection: {},
+                queryRunner: {},
+              }
             }),
           },
         }
@@ -40,7 +48,6 @@ describe('Daily Backstop Service Test', () => {
     }).compile();
 
     service = module.get(DailyBackstopService);
-    repo = module.get(DailyBackstopRepository);
     map = module.get(DailyBackstopMap);
   });
 
@@ -58,16 +65,14 @@ describe('Daily Backstop Service Test', () => {
           .mockResolvedValue([new DailyBackstop(), new DailyBackstop()]),
       };
 
-      const mockRepo = jest
-        .spyOn(repo, 'createQueryBuilder')
-        .mockImplementation(() => mockQueryBuilder);
+      mockRepository.createQueryBuilder.mockImplementation(() => mockQueryBuilder);
 
       const results = await service.export(
         ['testSumId1', 'testSumId2'],
         new EmissionsParamsDTO(),
       );
 
-      expect(mockRepo).toHaveBeenCalledTimes(1);
+      expect(mockRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
       expect(results.length).toBe(2);
     });
   });

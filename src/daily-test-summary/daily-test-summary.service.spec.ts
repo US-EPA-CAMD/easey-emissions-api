@@ -5,19 +5,25 @@ import { mockDailyCalibrationRepository } from '../../test/mocks/mock-daily-cali
 import { mockDailyTestSummaryRepository } from '../../test/mocks/mock-daily-test-summary-repository';
 import { genDailyTestSummary } from '../../test/object-generators/daily-test-summary';
 import { genEmissionsParamsDto } from '../../test/object-generators/emissions-dto';
-import { DailyCalibrationRepository } from '../daily-calibration/daily-calibration.repository';
 import { DailyCalibrationService } from '../daily-calibration/daily-calibration.service';
 import { DailyTestSummary } from '../entities/daily-test-summary.entity';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
-import { DailyTestSummaryRepository } from './daily-test-summary.repository';
 import { DailyTestSummaryService } from './daily-test-summary.service';
+
+jest.mock('./daily-test-summary.repository', () => ({
+  DailyTestSummaryRepository: jest.fn().mockImplementation(() => mockDailyTestSummaryRepository),
+}));
+
+jest.mock('../daily-calibration/daily-calibration.repository', () => ({
+  DailyCalibrationRepository: jest.fn().mockImplementation(() => mockDailyCalibrationRepository),
+}));
 
 describe('Daily Test Summary Service', () => {
   let service: DailyTestSummaryService;
-  let repository: DailyTestSummaryRepository;
+  let repository: any;
   let map: DailyTestSummaryMap;
-  let dailyCalibrationRepository: DailyCalibrationRepository;
+  let dailyCalibrationRepository: any;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -25,17 +31,9 @@ describe('Daily Test Summary Service', () => {
         DailyTestSummaryService,
         DailyTestSummaryMap,
         DailyCalibrationService,
-        DailyCalibrationRepository,
+        // DailyCalibrationRepository,
         DailyCalibrationMap,
         EntityManager,
-        {
-          provide: DailyTestSummaryRepository,
-          useValue: mockDailyTestSummaryRepository,
-        },
-        {
-          provide: DailyCalibrationRepository,
-          useValue: mockDailyCalibrationRepository,
-        },
         {
           provide: DataSource,
           useValue: {
@@ -53,9 +51,9 @@ describe('Daily Test Summary Service', () => {
     }).compile();
 
     service = module.get(DailyTestSummaryService);
-    repository = module.get(DailyTestSummaryRepository);
+    repository = mockDailyTestSummaryRepository;
     map = module.get(DailyTestSummaryMap);
-    dailyCalibrationRepository = module.get(DailyCalibrationRepository);
+    dailyCalibrationRepository = mockDailyCalibrationRepository;
   });
 
   it('should have a defined service', function () {

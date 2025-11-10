@@ -3,7 +3,7 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
@@ -23,18 +23,18 @@ export class OzoneApportionedEmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: OzoneUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneUnitDataView[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager:EntityManager) => {
       let entities: OzoneUnitDataView[];
 
       try {
-        entities = await this.repository.getEmissions(
+        const ozoneUnitDataRepository = new OzoneUnitDataRepository(replicaManager);
+        entities = await ozoneUnitDataRepository.getEmissions(
           req,
           fieldMappings.emissions.ozone.data.aggregation.unit,
           params,
@@ -60,11 +60,12 @@ export class OzoneApportionedEmissionsService {
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneApportionedEmissionsFacilityAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager:EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsFacilityAggregation(
+        const ozoneUnitDataRepository = new OzoneUnitDataRepository(replicaManager);
+        query = await ozoneUnitDataRepository.getEmissionsFacilityAggregation(
           req,
           params,
         );
@@ -93,11 +94,12 @@ export class OzoneApportionedEmissionsService {
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneApportionedEmissionsStateAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager:EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsStateAggregation(req, params);
+        const ozoneUnitDataRepository = new OzoneUnitDataRepository(replicaManager);
+        query = await ozoneUnitDataRepository.getEmissionsStateAggregation(req, params);
       } catch (e) {
         throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -119,11 +121,12 @@ export class OzoneApportionedEmissionsService {
     req: Request,
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneApportionedEmissionsNationalAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager:EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsNationalAggregation(
+        const ozoneUnitDataRepository = new OzoneUnitDataRepository(replicaManager);
+        query = await ozoneUnitDataRepository.getEmissionsNationalAggregation(
           req,
           params,
         );

@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import {
@@ -22,18 +22,18 @@ export class AnnualApportionedEmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: AnnualUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let entities: AnnualUnitDataView[];
 
       try {
-        entities = await this.repository.getEmissions(
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        entities = await annualUnitDataRepository.getEmissions(
           req,
           fieldMappings.emissions.annual.data.aggregation.unit,
           params,
@@ -59,11 +59,12 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsFacilityAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsFacilityAggregation(
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsFacilityAggregation(
           req,
           params,
         );
@@ -92,11 +93,12 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsStateAggregation(req, params);
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsStateAggregation(req, params);
       } catch (e) {
         throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -118,11 +120,12 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsNationalAggregation(
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsNationalAggregation(
           req,
           params,
         );

@@ -1,4 +1,3 @@
-import { HourlyGasFlowMeterRepository } from './hourly-gas-flow-meter.repository';
 import { Test } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 
@@ -8,9 +7,13 @@ import { mockHourlyGasFlowMeterRepository } from '../../test/mocks/mock-hourly-g
 import { genHourlyGasFlowMeter } from '../../test/object-generators/hourly-gas-flow-meter';
 import { HrlyGasFlowMeter } from '../entities/hrly-gas-flow-meter.entity';
 
+jest.mock('./hourly-gas-flow-meter.repository', () => ({
+  HourlyGasFlowMeterRepository: jest.fn().mockImplementation(() => mockHourlyGasFlowMeterRepository),
+}));
+
 describe('--HourlyGasFlowMeterService--', () => {
   let map: HourlyGasFlowMeterMap;
-  let repository: HourlyGasFlowMeterRepository;
+  let repository: any;
   let service: HourlyGasFlowMeterService;
 
   beforeEach(async () => {
@@ -18,10 +21,6 @@ describe('--HourlyGasFlowMeterService--', () => {
       providers: [
         HourlyGasFlowMeterMap,
         HourlyGasFlowMeterService,
-        {
-          provide: HourlyGasFlowMeterRepository,
-          useValue: mockHourlyGasFlowMeterRepository,
-        },
         {
           provide: DataSource,
           useValue: {
@@ -32,6 +31,7 @@ describe('--HourlyGasFlowMeterService--', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {},
             }),
           },
         }
@@ -39,7 +39,7 @@ describe('--HourlyGasFlowMeterService--', () => {
     }).compile();
 
     map = module.get(HourlyGasFlowMeterMap);
-    repository = module.get(HourlyGasFlowMeterRepository);
+    repository = mockHourlyGasFlowMeterRepository;
     service = module.get(HourlyGasFlowMeterService);
   });
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { SamplingTrainRepository } from './sampling-train.repository';
@@ -10,14 +10,14 @@ export class SamplingTrainService {
 
   constructor(
     private readonly dataSource: DataSource,
-    private readonly repository: SamplingTrainRepository,
   ) {}
 
   async export(sorbentTrapId: string) {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const samplingTrainRepository = new SamplingTrainRepository(replicaManager);
       return exportSamplingTrainData({
         sorbentTrapId,
-        repository: this.repository,
+        repository: samplingTrainRepository,
       });
     });
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { HourlyParameterFuelFlowRepository } from './hourly-parameter-fuel-flow.repository';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
@@ -11,15 +11,16 @@ export class HourlyParameterFuelFlowService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: HourlyParameterFuelFlowMap,
-    private readonly repository: HourlyParameterFuelFlowRepository,
+    // private readonly repository: HourlyParameterFuelFlowRepository,
   ) {}
 
   async export(
     rptPeriodId: number,
     monLocIds: string[],
   ): Promise<HourlyParamFuelFlowDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const hrlyParams = await this.repository.export(rptPeriodId, monLocIds);
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const hourlyParameterFuelFlowRepository = new HourlyParameterFuelFlowRepository(replicaManager);
+      const hrlyParams = await hourlyParameterFuelFlowRepository.export(rptPeriodId, monLocIds);
       return this.map.many(hrlyParams);
     });
   }

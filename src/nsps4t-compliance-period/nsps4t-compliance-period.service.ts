@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 import { Nsps4tCompliancePeriodRepository } from './nsps4t-compliance-period.repository';
 import { Nsps4tCompliancePeriodDTO } from '../dto/nsps4t-compliance-period.dto';
@@ -10,16 +10,16 @@ export class Nsps4tCompliancePeriodService {
 
   constructor(
     private readonly dataSource: DataSource,
-    private readonly repository: Nsps4tCompliancePeriodRepository,
   ) {}
 
   async export(
     nsps4tSummaryIds: string[],
   ): Promise<Nsps4tCompliancePeriodDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const nsps4tCompliancePeriodRepository = new Nsps4tCompliancePeriodRepository(replicaManager);
       return exportNps4tCompliancePeriodData({
         nsps4tSummaryIds,
-        repository: this.repository,
+        repository: nsps4tCompliancePeriodRepository,
       });
     });
   }

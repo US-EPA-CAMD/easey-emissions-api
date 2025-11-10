@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -13,17 +13,17 @@ export class SorbentTrapService {
 
   constructor(
     private readonly dataSource: DataSource,
-    private readonly repository: SorbentTrapRepository,
     private readonly samplingTrainService: SamplingTrainService,
   ) {}
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const samplingTrainRepository = new SorbentTrapRepository(replicaManager);
       const sorbentTrapData = await exportSorbentTrapData({
         monitoringLocationIds,
         year: params.year,
         quarter: params.quarter,
-        repository: this.repository,
+        repository: samplingTrainRepository,
       });
 
       if (hasArrayValues(sorbentTrapData)) {

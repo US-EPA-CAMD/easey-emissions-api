@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -13,15 +13,15 @@ export class LongTermFuelFlowService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: LongTermFuelFlowMap,
-    private readonly repository: LongTermFuelFlowRepository,
   ) {}
 
   async export(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<LongTermFuelFlowDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const result = await this.repository.export(
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const longTermFuelFlowRepository = new LongTermFuelFlowRepository(replicaManager);
+      const result = await longTermFuelFlowRepository.export(
         monitoringLocationIds,
         params.year,
         params.quarter,

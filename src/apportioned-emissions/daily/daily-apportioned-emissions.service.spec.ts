@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { DayUnitDataRepository } from './day-unit-data.repository';
 import { DailyApportionedEmissionsService } from './daily-apportioned-emissions.service';
 import { PaginatedDailyApportionedEmissionsParamsDTO } from '../../dto/daily-apportioned-emissions.params.dto';
 import {
@@ -14,12 +13,16 @@ import {
 } from '../../../test/object-generators/apportioned-emissions';
 import { DayUnitDataView } from '../../entities/vw-day-unit-data.entity';
 
-const mockRepository = () => ({
+const mockRepository = {
   getEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
-});
+};
+
+jest.mock('./day-unit-data.repository', () => ({
+  DayUnitDataRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockRequest = () => {
   return {
@@ -45,10 +48,6 @@ describe('-- Daily Apportioned Emissions Service --', () => {
         ConfigService,
         DailyApportionedEmissionsService,
         {
-          provide: DayUnitDataRepository,
-          useFactory: mockRepository,
-        },
-        {
           provide: DataSource,
           useValue: {
             createQueryRunner: jest.fn().mockReturnValue({
@@ -58,6 +57,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {}
             }),
           },
         },
@@ -78,7 +78,7 @@ describe('-- Daily Apportioned Emissions Service --', () => {
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
     service = module.get(DailyApportionedEmissionsService);
-    repository = module.get(DayUnitDataRepository);
+    repository = mockRepository
   });
 
   describe('getEmissions', () => {

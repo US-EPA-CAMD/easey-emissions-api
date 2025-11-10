@@ -46,11 +46,18 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
 
 const mockEntityManager = {
   findOneBy: () => Promise.resolve({ id: 123, year: 2023, quarter: 1 }),
+  getRepository: jest.fn().mockReturnValue({
+    findOneBy: jest.fn().mockResolvedValue({ id: 123, year: 2023, quarter: 1 }),
+  }),
 };
 
 const mockRepository = {
-  export: () => Promise.resolve(generatedHrlyOpValues),
+  export: jest.fn().mockResolvedValue(generatedHrlyOpValues),
 };
+
+jest.mock('./hourly-operating.repository', () => ({
+  HourlyOperatingRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
@@ -78,9 +85,13 @@ const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
 };
 
+const mockHourlyFuelFlowService = {
+  export: () => Promise.resolve([]),
+};
+
 jest.mock('@us-epa-camd/easey-common', () => ({
   withSlaveConnection: jest.fn().mockImplementation((dataSource, callback) => {
-    return callback();
+    return callback(mockEntityManager);
   }),
 }));
 
@@ -145,8 +156,8 @@ describe('HourlyOperatingService', () => {
           useValue: mockHourlyGasFlowMeterService,
         },
         {
-          provide: HourlyOperatingRepository,
-          useValue: mockRepository,
+          provide: HourlyFuelFlowService,
+          useValue: mockHourlyFuelFlowService,
         },
         {
           provide: DataSource,
@@ -159,7 +170,7 @@ describe('HourlyOperatingService', () => {
               release: jest.fn(),
               isReleased: false,
             }),
-            getRepository: jest.fn().mockReturnValue({ // Add this method
+            getRepository: jest.fn().mockReturnValue({
               findOneBy: jest.fn().mockResolvedValue({ id: 123, year: 2023, quarter: 1 }),
             }),
           },
@@ -168,7 +179,7 @@ describe('HourlyOperatingService', () => {
     }).compile();
 
     service = module.get(HourlyOperatingService);
-    repository = module.get(HourlyOperatingRepository);
+    repository = mockRepository;
     map = module.get(HourlyOperatingMap);
 
     monitorHourlyValueRepository = module.get(MonitorHourlyValueRepository);

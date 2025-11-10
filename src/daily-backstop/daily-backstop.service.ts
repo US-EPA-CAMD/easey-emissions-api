@@ -1,23 +1,23 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
-import {DailyBackstopDTO} from "../dto/daily-backstop.dto";
-import { DailyBackstopRepository} from "./daily-backstop.repository";
+import { DailyBackstopDTO } from "../dto/daily-backstop.dto";
+import { DailyBackstopRepository } from "./daily-backstop.repository";
 import { DailyBackstopMap } from "../maps/daily-backstop.map";
-import {EmissionsParamsDTO} from "../dto/emissions.params.dto";
+import { EmissionsParamsDTO } from "../dto/emissions.params.dto";
 
 @Injectable()
 export class DailyBackstopService {
     constructor(
         private readonly dataSource: DataSource,
-        private readonly repository: DailyBackstopRepository,
         private readonly map: DailyBackstopMap,
-    ){}
+    ) { }
 
     async export(monitoringLocationIds: string[], params: EmissionsParamsDTO): Promise<DailyBackstopDTO[]> {
-        return withSlaveConnection(this.dataSource, async () => {
-            const results = await this.repository
+        return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+            const dailyBackstopRepository = new DailyBackstopRepository(replicaManager);
+            const results = await dailyBackstopRepository
                 .createQueryBuilder('backstop')
                 .innerJoinAndSelect('backstop.monitorLocation', 'monitorLocation')
                 .leftJoinAndSelect('monitorLocation.unit', 'unit')

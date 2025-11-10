@@ -9,13 +9,15 @@ const mockRepository = {
   export: () => null,
   find: () => null,
 };
+
+jest.spyOn(DailyCalibrationRepository.prototype, 'find').mockImplementation(mockRepository.find);
+
 const mockMap = {
   many: () => null,
 };
 
 describe('DailyCalibrationService', () => {
   let service: DailyCalibrationService;
-  let repository: any;
   let map;
 
   beforeEach(async () => {
@@ -27,10 +29,6 @@ describe('DailyCalibrationService', () => {
           useValue: mockMap,
         },
         {
-          provide: DailyCalibrationRepository,
-          useValue: mockRepository,
-        },
-        {
           provide: DataSource,
           useValue: {
             createQueryRunner: jest.fn().mockReturnValue({
@@ -40,6 +38,7 @@ describe('DailyCalibrationService', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {}
             }),
           },
         }
@@ -47,7 +46,6 @@ describe('DailyCalibrationService', () => {
     }).compile();
 
     service = module.get(DailyCalibrationService);
-    repository = module.get(DailyCalibrationRepository);
     map = module.get(DailyCalibrationMap);
   });
 

@@ -3,15 +3,18 @@ import { DataSource } from 'typeorm';
 
 import { MatsDerivedHourlyValueMap } from '../maps/mats-derived-hourly-value.map';
 import { MatsDerivedHourlyValueService } from './mats-derived-hourly-value.service';
-import { MatsDerivedHourlyValueRepository } from './mats-derived-hourly-value.repository';
 
 const mockRepository = {
-  export: () => null,
-  find: () => null,
+  export: jest.fn(),
+  find: null,
 };
 const mockMap = {
   many: () => null,
 };
+
+jest.mock('./mats-derived-hourly-value.repository', () => ({
+  MatsDerivedHourlyValueRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 describe('MatsDerivedHourlyValueService', () => {
   let service: MatsDerivedHourlyValueService;
@@ -25,10 +28,6 @@ describe('MatsDerivedHourlyValueService', () => {
         {
           provide: MatsDerivedHourlyValueMap,
           useValue: mockMap,
-        },
-        {
-          provide: MatsDerivedHourlyValueRepository,
-          useValue: mockRepository,
         },
         {
           provide: DataSource,
@@ -47,7 +46,7 @@ describe('MatsDerivedHourlyValueService', () => {
     }).compile();
 
     service = module.get(MatsDerivedHourlyValueService);
-    repository = module.get(MatsDerivedHourlyValueRepository);
+    repository = mockRepository;
     map = module.get(MatsDerivedHourlyValueMap);
   });
 

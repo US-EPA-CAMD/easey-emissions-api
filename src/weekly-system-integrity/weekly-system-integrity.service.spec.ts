@@ -3,14 +3,17 @@ import { DataSource } from 'typeorm';
 
 import { WeeklySystemIntegrity } from '../entities/weekly-system-integrity.entity';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
-import { WeeklySystemIntegrityRepository } from './weekly-system-integrity.repository';
 import { WeeklySystemIntegrityService } from './weekly-system-integrity.service';
 import { mockWeeklySystemIntegrityRepository } from '../../test/mocks/mock-weekly-system-integrity-repository';
 import { genWeeklySystemIntegrity } from '../../test/object-generators/weekly-system-integrity';
 
+jest.mock('./weekly-system-integrity.repository', () => ({
+  WeeklySystemIntegrityRepository: jest.fn().mockImplementation(() => mockWeeklySystemIntegrityRepository),
+}));
+
 describe('--WeeklySystemIntegrityService--', () => {
   let map: WeeklySystemIntegrityMap;
-  let repository: WeeklySystemIntegrityRepository;
+  let repository: any;
   let service: WeeklySystemIntegrityService;
 
   beforeEach(async () => {
@@ -18,10 +21,6 @@ describe('--WeeklySystemIntegrityService--', () => {
       providers: [
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityService,
-        {
-          provide: WeeklySystemIntegrityRepository,
-          useValue: mockWeeklySystemIntegrityRepository,
-        },
         {
           provide: DataSource,
           useValue: {
@@ -39,7 +38,7 @@ describe('--WeeklySystemIntegrityService--', () => {
     }).compile();
 
     map = module.get(WeeklySystemIntegrityMap);
-    repository = module.get(WeeklySystemIntegrityRepository);
+    repository = mockWeeklySystemIntegrityRepository;
     service = module.get(WeeklySystemIntegrityService);
   });
 

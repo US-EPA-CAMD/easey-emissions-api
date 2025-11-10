@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
 
-import { OzoneUnitDataRepository } from './ozone-unit-data.repository';
 import { OzoneApportionedEmissionsService } from './ozone-apportioned-emissions.service';
 import { PaginatedOzoneApportionedEmissionsParamsDTO } from '../../dto/ozone-apportioned-emissions.params.dto';
 import {
@@ -14,12 +13,16 @@ import {
 } from '../../../test/object-generators/apportioned-emissions';
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
 
-const mockRepository = () => ({
+const mockRepository = {
   getEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
-});
+};
+
+jest.mock('./ozone-unit-data.repository', () => ({
+  OzoneUnitDataRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockRequest = () => {
   return {
@@ -45,10 +48,6 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
         ConfigService,
         OzoneApportionedEmissionsService,
         {
-          provide: OzoneUnitDataRepository,
-          useFactory: mockRepository,
-        },
-        {
           provide: DataSource,
           useValue: {
             createQueryRunner: jest.fn().mockReturnValue({
@@ -58,6 +57,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {},
             }),
           },
         },
@@ -78,7 +78,7 @@ describe('-- Ozone Apportioned Emissions Service --', () => {
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
     service = module.get(OzoneApportionedEmissionsService);
-    repository = module.get(OzoneUnitDataRepository);
+    repository = mockRepository;
   });
 
   describe('getEmissions', () => {

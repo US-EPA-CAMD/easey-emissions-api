@@ -9,12 +9,15 @@ import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
 import { WeeklySystemIntegrityRepository } from '../weekly-system-integrity/weekly-system-integrity.repository';
 import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-system-integrity.service';
-import { WeeklyTestSummaryRepository } from './weekly-test-summary.repository';
 import { WeeklyTestSummaryService } from './weekly-test-summary.service';
+
+jest.mock('./weekly-test-summary.repository', () => ({
+  WeeklyTestSummaryRepository: jest.fn().mockImplementation(() => mockWeeklyTestSummaryRepository),
+}));
 
 describe('--WeeklyTestSummaryService--', () => {
   let map: WeeklyTestSummaryMap;
-  let repository: WeeklyTestSummaryRepository;
+  let repository: any;
   let weeklySystemIntegrityService: WeeklySystemIntegrityService;
   let service: WeeklyTestSummaryService;
 
@@ -27,10 +30,6 @@ describe('--WeeklyTestSummaryService--', () => {
         WeeklySystemIntegrityService,
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityRepository,
-        {
-          provide: WeeklyTestSummaryRepository,
-          useValue: mockWeeklyTestSummaryRepository,
-        },
         {
           provide: DataSource,
           useValue: {
@@ -48,7 +47,7 @@ describe('--WeeklyTestSummaryService--', () => {
     }).compile();
 
     map = module.get(WeeklyTestSummaryMap);
-    repository = module.get(WeeklyTestSummaryRepository);
+    repository = mockWeeklyTestSummaryRepository;
     service = module.get(WeeklyTestSummaryService);
     weeklySystemIntegrityService = module.get(WeeklySystemIntegrityService);
   });

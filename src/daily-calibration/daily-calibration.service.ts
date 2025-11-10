@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, In } from 'typeorm';
+import { DataSource, EntityManager, In } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
@@ -12,14 +12,14 @@ export class DailyCalibrationService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: DailyCalibrationMap,
-    private readonly repository: DailyCalibrationRepository,
-  ) {}
+  ) { }
 
   async dailyCalibrationByTestSumId(
     dailyTestSummaryIds: string[],
   ): Promise<DailyCalibrationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const results = await this.repository.find({
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const dailyCalibrationRepository = new DailyCalibrationRepository(replicaManager);
+      const results = await dailyCalibrationRepository.find({
         where: { dailyTestSummaryId: In(dailyTestSummaryIds) },
       });
 

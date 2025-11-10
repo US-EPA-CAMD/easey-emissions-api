@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, In } from 'typeorm';
+import { DataSource, EntityManager, In } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { WeeklySystemIntegrityRepository } from './weekly-system-integrity.repository';
@@ -12,14 +12,14 @@ export class WeeklySystemIntegrityService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: WeeklySystemIntegrityMap,
-    private readonly repository: WeeklySystemIntegrityRepository,
   ) {}
 
   async export(
     weeklyTestSumIds: string[],
   ): Promise<WeeklySystemIntegrityDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const results = await this.repository.find({
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const weeklySystemIntegrityRepository = new WeeklySystemIntegrityRepository(replicaManager);
+      const results = await weeklySystemIntegrityRepository.find({
         where: { weeklyTestSumId: In(weeklyTestSumIds) },
       });
 

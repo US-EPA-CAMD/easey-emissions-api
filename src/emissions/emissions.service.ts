@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsSubmissionsProgressRepository } from './emissions-submissions-progress.repository';
@@ -30,9 +30,7 @@ export class EmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: EmissionsMap,
-    private readonly repository: EmissionsRepository,
     private readonly submissionProgressMap: EmissionsSubmissionsProgressMap,
-    private readonly submissionProgressRepo: EmissionsSubmissionsProgressRepository,
     private readonly configService: ConfigService,
     private readonly dailyTestSummaryService: DailyTestSummaryService,
     private readonly hourlyOperatingService: HourlyOperatingService,
@@ -50,7 +48,7 @@ export class EmissionsService {
     params: EmissionsParamsDTO,
     rptValuesOnly: boolean = false,
   ): Promise<EmissionsDTO | EmissionsImportDTO> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       const promises = [];
       const DAILY_TEST_SUMMARIES = 0;
       const HOURLY_OPERATING = 1;
@@ -62,7 +60,8 @@ export class EmissionsService {
       const LONG_TERM_FUEL_FLOW = 7;
       const DAILY_BACKSTOP = 8;
 
-      const emissions = await this.repository.export(
+      const emissionsRepository = new EmissionsRepository(replicaManager);
+      const emissions = await emissionsRepository.export(
         params.monitorPlanId,
         params.year,
         params.quarter,
@@ -109,8 +108,9 @@ export class EmissionsService {
   async getSubmissionProgress(
     periodDate: Date,
   ): Promise<EmissionsSubmissionsProgressDTO> {
-    return withSlaveConnection(this.dataSource, async () => {
-      let queryResult = await this.submissionProgressRepo.getSubmissionProgress(
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const emissionsSubmissionsProgressRepository = new EmissionsSubmissionsProgressRepository(replicaManager);
+      let queryResult = await emissionsSubmissionsProgressRepository.getSubmissionProgress(
         periodDate,
         this.configService.get<number>('app.submissionDays'),
       );

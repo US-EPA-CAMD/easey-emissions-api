@@ -3,15 +3,18 @@ import { DataSource } from 'typeorm';
 
 import { MonitorHourlyValueService } from '../monitor-hourly-value/monitor-hourly-value.service';
 import { MonitorHourlyValueMap } from '../maps/monitor-hourly-value.map';
-import { MonitorHourlyValueRepository } from '../monitor-hourly-value/monitor-hourly-value.repository';
 
 const mockRepository = {
-  export: () => null,
-  find: () => null,
+  export: jest.fn(),
+  find: jest.fn(),
 };
 const mockMap = {
   many: () => null,
 };
+
+jest.mock('../monitor-hourly-value/monitor-hourly-value.repository', () => ({
+  MonitorHourlyValueRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 describe('MonitorHourlyValueService', () => {
   let service: MonitorHourlyValueService;
@@ -25,10 +28,6 @@ describe('MonitorHourlyValueService', () => {
         {
           provide: MonitorHourlyValueMap,
           useValue: mockMap,
-        },
-        {
-          provide: MonitorHourlyValueRepository,
-          useValue: mockRepository,
         },
         {
           provide: DataSource,
@@ -47,7 +46,7 @@ describe('MonitorHourlyValueService', () => {
     }).compile();
 
     service = module.get(MonitorHourlyValueService);
-    repository = module.get(MonitorHourlyValueRepository);
+    repository = mockRepository;
     map = module.get(MonitorHourlyValueMap);
   });
 

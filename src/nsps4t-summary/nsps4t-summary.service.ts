@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { Nsps4tSummaryRepository } from './nsps4t-summary.repository';
@@ -14,18 +14,18 @@ export class Nsps4tSummaryService {
 
   constructor(
     private readonly dataSource: DataSource,
-    private readonly repository: Nsps4tSummaryRepository,
     private readonly nsps4tAnnualService: Nsps4tAnnualService,
     private readonly nsps4tCompliancePeriodService: Nsps4tCompliancePeriodService,
   ) {}
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const nsps4tSummaryRepository = new Nsps4tSummaryRepository(replicaManager);
       const nsps4tSummaryData = await exportNsps4tSummaryData({
         monitoringLocationIds,
         year: params.year,
         quarter: params.quarter,
-        repository: this.repository,
+        repository: nsps4tSummaryRepository,
       });
 
       if (hasArrayValues(nsps4tSummaryData)) {

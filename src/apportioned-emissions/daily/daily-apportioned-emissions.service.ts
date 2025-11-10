@@ -3,7 +3,7 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
@@ -23,18 +23,18 @@ export class DailyApportionedEmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: DayUnitDataRepository,
-  ) {}
+  ) { }
 
   async getEmissions(
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let entities: DayUnitDataView[];
 
       try {
-        entities = await this.repository.getEmissions(
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        entities = await dayUnitDataRepository.getEmissions(
           req,
           fieldMappings.emissions.daily.data.aggregation.unit,
           params,
@@ -60,11 +60,12 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsFacilityAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsFacilityAggregation(
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsFacilityAggregation(
           req,
           params,
         );
@@ -96,11 +97,12 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsStateAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsStateAggregation(req, params);
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsStateAggregation(req, params);
       } catch (e) {
         throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -129,11 +131,12 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsNationalAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsNationalAggregation(
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsNationalAggregation(
           req,
           params,
         );

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -12,17 +12,17 @@ export class DailyEmissionService {
 
   constructor(
     private readonly dataSource: DataSource,
-    private readonly repository: DailyEmissionRepository,
     private readonly dailyFuelService: DailyFuelService,
   ) {}
 
   async export(monitoringLocationIds: string[], params: EmissionsParamsDTO) {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const dailyCalibrationRepository = new DailyEmissionRepository(replicaManager);
       const dailyEmissionData = await exportDailyEmissionData({
         monitoringLocationIds,
         year: params.year,
         quarter: params.quarter,
-        repository: this.repository,
+        repository: dailyCalibrationRepository,
       });
 
       const promises = [];

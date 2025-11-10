@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { HourlyGasFlowMeterRepository } from './hourly-gas-flow-meter.repository';
@@ -12,12 +12,12 @@ export class HourlyGasFlowMeterService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: HourlyGasFlowMeterMap,
-    private readonly repository: HourlyGasFlowMeterRepository,
   ) {}
 
   async export(rptPeriodId: number, monLocIds: string[]): Promise<HourlyGasFlowMeterDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const results = await this.repository.export(rptPeriodId, monLocIds);
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const hourlyGasFlowMeterRepository = new HourlyGasFlowMeterRepository(replicaManager);
+      const results = await hourlyGasFlowMeterRepository.export(rptPeriodId, monLocIds);
       return this.map.many(results);
     });
   }

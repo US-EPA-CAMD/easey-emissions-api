@@ -11,12 +11,12 @@ export class MatsMonitorHourlyValueService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: MatsMonitorHourlyValueMap,
-    private readonly repository: MatsMonitorHourlyValueRepository,
   ) {}
 
   async export(rptPeriodId: number, monLocIds: string[]): Promise<MatsMonitorHourlyValueDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const results = await this.repository.export(rptPeriodId, monLocIds);
+    return withSlaveConnection(this.dataSource, async (replicaManager) => {
+      const matsMonitorHourlyValueRepository = new MatsMonitorHourlyValueRepository(replicaManager);
+      const results = await matsMonitorHourlyValueRepository.export(rptPeriodId, monLocIds);
       return this.map.many(results);
     });
   }

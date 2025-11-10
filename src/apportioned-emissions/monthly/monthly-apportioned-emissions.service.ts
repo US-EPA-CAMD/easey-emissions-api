@@ -3,7 +3,7 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
@@ -23,18 +23,18 @@ export class MonthlyApportionedEmissionsService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: MonthUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let entities: MonthUnitDataView[];
 
       try {
-        entities = await this.repository.getEmissions(
+        const monthUnitDataRepository = new MonthUnitDataRepository(replicaManager);
+        entities = await monthUnitDataRepository.getEmissions(
           req,
           fieldMappings.emissions.monthly.data.aggregation.unit,
           params,
@@ -60,11 +60,12 @@ export class MonthlyApportionedEmissionsService {
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthlyApportionedEmissionsFacilityAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsFacilityAggregation(
+        const monthUnitDataRepository = new MonthUnitDataRepository(replicaManager);
+        query = await monthUnitDataRepository.getEmissionsFacilityAggregation(
           req,
           params,
         );
@@ -93,11 +94,12 @@ export class MonthlyApportionedEmissionsService {
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthlyApportionedEmissionsStateAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsStateAggregation(req, params);
+        const monthUnitDataRepository = new MonthUnitDataRepository(replicaManager);
+        query = await monthUnitDataRepository.getEmissionsStateAggregation(req, params);
       } catch (e) {
         throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -123,11 +125,12 @@ export class MonthlyApportionedEmissionsService {
     req: Request,
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthlyApportionedEmissionsNationalAggregationDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
       let query;
 
       try {
-        query = await this.repository.getEmissionsNationalAggregation(
+        const monthUnitDataRepository = new MonthUnitDataRepository(replicaManager);
+        query = await monthUnitDataRepository.getEmissionsNationalAggregation(
           req,
           params,
         );

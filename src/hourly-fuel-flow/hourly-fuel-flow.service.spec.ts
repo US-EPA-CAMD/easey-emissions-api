@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 
 import { HourlyFuelFlowService } from './hourly-fuel-flow.service';
-import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
 import { HourlyParameterFuelFlowService } from '../hourly-parameter-fuel-flow/hourly-parameter-fuel-flow.service';
 import { HourlyParameterFuelFlowMap } from '../maps/hourly-parameter-fuel-flow.map';
@@ -10,10 +9,14 @@ import { genHourlyFuelFlow } from '../../test/object-generators/hourly-fuel-flow
 import { HrlyFuelFlow } from '../entities/hrly-fuel-flow.entity';
 import { mockHourlyFuelFlowRepository } from '../../test/mocks/mock-hourly-fuel-flow-repository';
 
+jest.mock('./hourly-fuel-flow.repository', () => ({
+  HourlyFuelFlowRepository: jest.fn().mockImplementation(() => mockHourlyFuelFlowRepository),
+}));
+
 describe('HourlyFuelFlowService', () => {
   let service: HourlyFuelFlowService;
   let map: HourlyFuelFlowMap;
-  let repository: HourlyFuelFlowRepository;
+  let repository: any;
 
   const mockHourlyParamFuelFlowService = {
     export: () => Promise.resolve([]),
@@ -30,10 +33,6 @@ describe('HourlyFuelFlowService', () => {
         },
         HourlyParameterFuelFlowMap,
         {
-          provide: HourlyFuelFlowRepository,
-          useValue: mockHourlyFuelFlowRepository,
-        },
-        {
           provide: DataSource,
           useValue: {
             createQueryRunner: jest.fn().mockReturnValue({
@@ -43,6 +42,7 @@ describe('HourlyFuelFlowService', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
+              manager: {},
             }),
           },
         }
@@ -50,7 +50,7 @@ describe('HourlyFuelFlowService', () => {
     }).compile();
 
     service = module.get(HourlyFuelFlowService);
-    repository = module.get(HourlyFuelFlowRepository);
+    repository = mockHourlyFuelFlowRepository;
     map = module.get(HourlyFuelFlowMap);
   });
 
