@@ -24,6 +24,7 @@ export class DailyEmission extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
@@ -40,6 +41,7 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
     name: 'total_daily_emission',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   totalDailyEmissions: number;
 
@@ -47,6 +49,7 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
     name: 'adjusted_daily_emission',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   adjustedDailyEmissions: number;
 
@@ -54,6 +57,7 @@ export class DailyEmission extends BaseEntity {
     nullable: true,
     name: 'sorbent_mass_emission',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   sorbentRelatedMassEmissions: number;
 
@@ -69,6 +73,7 @@ export class DailyEmission extends BaseEntity {
   @Column({
     name: 'unadjusted_daily_emission',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   unadjustedDailyEmissions: number;
@@ -76,6 +81,7 @@ export class DailyEmission extends BaseEntity {
   @Column({
     name: 'total_carbon_burned',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   totalCarbonBurned: number;
@@ -83,6 +89,7 @@ export class DailyEmission extends BaseEntity {
   @Column({
     name: 'calc_total_daily_emission',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcTotalDailyEmissions: number;
@@ -90,6 +97,7 @@ export class DailyEmission extends BaseEntity {
   @Column({
     name: 'calc_total_op_time',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcTotalOpTime: number;

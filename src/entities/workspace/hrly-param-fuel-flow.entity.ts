@@ -33,6 +33,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     name: 'param_val_fuel',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   parameterValueForFuel: number;
 
@@ -40,6 +41,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     name: 'calc_param_val_fuel',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   calcParamValFuel: number;
 
@@ -53,6 +55,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     name: 'segment_num',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   segmentNumber: number;
 
@@ -75,6 +78,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 

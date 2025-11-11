@@ -25,6 +25,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;
@@ -38,6 +39,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'begin_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   hour: number;
@@ -45,6 +47,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'op_time',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   operatingTime: number;
@@ -52,6 +55,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'hr_load',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   hourLoad: number;
@@ -59,6 +63,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'load_range',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   loadRange: number;
@@ -66,6 +71,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'common_stack_load_range',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   commonStackLoadRange: number;
@@ -73,6 +79,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'fc_factor',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   fcFactor: number;
@@ -80,6 +87,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'fd_factor',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   fdFactor: number;
@@ -87,6 +95,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'fw_factor',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   fwFactor: number;
@@ -118,6 +127,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'mhhi_indicator',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   mhhiIndicator: number;
@@ -125,6 +135,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'mats_load',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   matsHourLoad: number;

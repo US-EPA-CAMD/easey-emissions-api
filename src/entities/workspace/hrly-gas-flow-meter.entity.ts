@@ -27,6 +27,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
@@ -39,6 +40,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
   @Column({
     name: 'gfm_reading',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   hourlyGfmReading: number;
@@ -46,6 +48,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
   @Column({
     name: 'avg_sampling_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   avgHourlySamplingRate: number;
@@ -56,6 +59,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
   @Column({
     name: 'flow_to_sampling_ratio',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   hourlySfsrRatio: number;
@@ -63,6 +67,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
   @Column({
     name: 'calc_flow_to_sampling_ratio',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcFlowToSamplingRatio: number;
@@ -70,6 +75,7 @@ export class HrlyGasFlowMeter extends BaseEntity {
   @Column({
     name: 'calc_flow_to_sampling_mult',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcFlowToSamplingMult: number;

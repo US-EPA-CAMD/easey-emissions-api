@@ -60,6 +60,7 @@ export class MonitorSystem extends BaseEntity {
     name: 'end_hour',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   endHour: number;
 

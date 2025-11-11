@@ -28,6 +28,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
@@ -49,6 +50,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'pct_available',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   percentAvailable: number;

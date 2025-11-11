@@ -29,6 +29,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: false,
         name: 'daily_noxm',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
         precision: 10,
         scale: 1,
     })
@@ -38,6 +39,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: false,
         name: 'daily_hit',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
         precision: 10,
         scale: 1,
     })
@@ -47,6 +49,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: true,
         name: 'daily_avg_noxr',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
         precision: 7,
         scale: 3,
     })
@@ -56,6 +59,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: false,
         name: 'daily_noxm_exceed',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
         precision: 10,
         scale: 1,
     })
@@ -65,6 +69,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: true,
         name: 'cumulative_os_noxm_exceed',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
         precision: 13,
         scale: 1,
     })
@@ -80,6 +85,7 @@ export class DailyBackstop extends BaseEntity {
         nullable: false,
         name: 'rpt_period_id',
         transformer: new NumericColumnTransformer(),
+        type: 'numeric',
     })
     reportingPeriodId: number;
 

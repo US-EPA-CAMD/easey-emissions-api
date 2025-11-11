@@ -32,6 +32,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'applicable_bias_adj_factor',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   biasAdjustmentFactor: number;
@@ -39,6 +40,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   unadjustedHourlyValue: number;
@@ -46,6 +48,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   adjustedHourlyValue: number;
@@ -53,6 +56,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcAdjustedHrlyValue: number;
@@ -63,6 +67,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'pct_available',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   percentAvailable: number;
@@ -91,6 +96,7 @@ export class MonitorHrlyValue extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;
