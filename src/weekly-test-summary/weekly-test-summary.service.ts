@@ -15,7 +15,7 @@ export class WeeklyTestSummaryService {
     private readonly dataSource: DataSource,
     private readonly map: WeeklyTestSummaryMap,
     private readonly weeklySystemIntegrityService: WeeklySystemIntegrityService,
-  ) {}
+  ) { }
 
   async getWeeklyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
@@ -36,24 +36,22 @@ export class WeeklyTestSummaryService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<WeeklyTestSummaryDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const weeklyTestSummaries = await this.getWeeklyTestSummariesByLocationIds(
-        monitoringLocationIds,
-        params,
-      );
+    const weeklyTestSummaries = await this.getWeeklyTestSummariesByLocationIds(
+      monitoringLocationIds,
+      params,
+    );
 
-      if (weeklyTestSummaries) {
-        const weeklySystemIntegrityData = await this.weeklySystemIntegrityService.export(
-          weeklyTestSummaries?.map(i => i.id),
-        );
-        weeklyTestSummaries?.forEach(weeklyTestSum => {
-          weeklyTestSum.weeklySystemIntegrityData =
-            weeklySystemIntegrityData?.filter(
-              i => i.weeklyTestSumId === weeklyTestSum.id,
-            ) ?? [];
-        });
-      }
-      return weeklyTestSummaries;
-    });
+    if (weeklyTestSummaries) {
+      const weeklySystemIntegrityData = await this.weeklySystemIntegrityService.export(
+        weeklyTestSummaries?.map(i => i.id),
+      );
+      weeklyTestSummaries?.forEach(weeklyTestSum => {
+        weeklyTestSum.weeklySystemIntegrityData =
+          weeklySystemIntegrityData?.filter(
+            i => i.weeklyTestSumId === weeklyTestSum.id,
+          ) ?? [];
+      });
+    }
+    return weeklyTestSummaries;
   }
 }

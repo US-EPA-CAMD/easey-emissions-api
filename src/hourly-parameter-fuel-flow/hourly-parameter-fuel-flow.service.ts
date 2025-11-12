@@ -11,7 +11,6 @@ export class HourlyParameterFuelFlowService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly map: HourlyParameterFuelFlowMap,
-    // private readonly repository: HourlyParameterFuelFlowRepository,
   ) {}
 
   async export(

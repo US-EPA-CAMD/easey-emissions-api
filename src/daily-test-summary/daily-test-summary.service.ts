@@ -15,7 +15,7 @@ export class DailyTestSummaryService {
     private readonly dataSource: DataSource,
     private readonly map: DailyTestSummaryMap,
     private readonly dailyCalibrationService: DailyCalibrationService,
-  ) {}
+  ) { }
 
   async getDailyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
@@ -37,24 +37,22 @@ export class DailyTestSummaryService {
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
-    return withSlaveConnection(this.dataSource, async () => {
-      const summaries = await this.getDailyTestSummariesByLocationIds(
-        monitoringLocationIds,
-        params,
+    const summaries = await this.getDailyTestSummariesByLocationIds(
+      monitoringLocationIds,
+      params,
+    );
+
+    if (summaries) {
+      const dailyCalibrations = await this.dailyCalibrationService.export(
+        summaries?.map(i => i.id),
       );
 
-      if (summaries) {
-        const dailyCalibrations = await this.dailyCalibrationService.export(
-          summaries?.map(i => i.id),
-        );
+      summaries.forEach(s => {
+        s.dailyCalibrationData =
+          dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? [];
+      });
+    }
 
-        summaries.forEach(s => {
-          s.dailyCalibrationData =
-            dailyCalibrations?.filter(i => i.dailyTestSumId === s.id) ?? [];
-        });
-      }
-
-      return summaries;
-    });
+    return summaries;
   }
 }
