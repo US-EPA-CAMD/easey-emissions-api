@@ -5,8 +5,31 @@ import {
   applyMiddleware,
 } from '@us-epa-camd/easey-common/nestjs';
 import { useContainer } from 'class-validator';
+import * as http from 'http';
 
 import { AppModule } from './app.module';
+
+let server: http.Server;
+
+async function gracefulShutdown(exitCode: number) {
+  console.error('Initiating graceful shutdown...');
+
+  if (server) {
+    await new Promise<void>((resolve) => {
+      server.close(() => {
+        console.log('HTTP server closed');
+        resolve();
+      });
+    });
+  }
+
+  setTimeout(() => {
+    console.error('Forced shutdown after timeout');
+    process.exit(exitCode);
+  }, 10000).unref();
+
+  process.exit(exitCode);
+}
 
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,7 +43,7 @@ export async function bootstrap() {
   const appPort = configService.get<number>('app.port');
   const enableDebug = configService.get<boolean>('app.enableDebug');
 
-  const server = await app.listen(appPort);
+  server = await app.listen(appPort);
   server.setTimeout(1800000);
 
   if (enableDebug) {
@@ -32,3 +55,18 @@ export async function bootstrap() {
 }
 
 bootstrap();
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('unhandledRejection: Unhandled Promise Rejection');
+  console.error('Promise:', promise);
+  console.error('Reason:', reason);
+  console.error('Stack:', reason instanceof Error ? reason.stack : 'N/A');
+  gracefulShutdown(1);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('uncaughtException: Uncaught Exception');
+  console.error('Error:', error);
+  console.error('Stack:', error.stack);
+  gracefulShutdown(1);
+});
