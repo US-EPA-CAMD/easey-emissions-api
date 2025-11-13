@@ -15,6 +15,7 @@ export class HourUnitMatsDataArch {
   @PrimaryColumn({
     name: 'unit_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   id: number;
 
@@ -26,10 +27,15 @@ export class HourUnitMatsDataArch {
   @PrimaryColumn({
     name: 'op_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hour: number;
 
-  @Column({ name: 'op_year', transformer: new NumericColumnTransformer() })
+  @Column({
+    name: 'op_year',
+    transformer: new NumericColumnTransformer(),
+    type: 'numeric',
+  })
   year: number;
 
   @ManyToOne(

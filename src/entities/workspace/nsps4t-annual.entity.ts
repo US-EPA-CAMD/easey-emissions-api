@@ -23,6 +23,7 @@ export class Nsps4tAnnual extends BaseEntity {
   @Column({
     name: 'annual_energy_sold',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   annualEnergySold: number;
@@ -33,6 +34,7 @@ export class Nsps4tAnnual extends BaseEntity {
   @Column({
     name: 'annual_potential_output',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   annualPotentialElectricOutput: number;
@@ -44,6 +46,7 @@ export class Nsps4tAnnual extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 

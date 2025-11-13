@@ -20,6 +20,7 @@ export class EmissionEvaluation extends BaseEntity {
   @PrimaryColumn({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;
@@ -39,6 +40,7 @@ export class EmissionEvaluation extends BaseEntity {
   @Column({
     name: 'submission_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   submissionId: number;

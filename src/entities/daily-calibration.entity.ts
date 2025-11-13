@@ -298,10 +298,7 @@ export class DailyCalibration extends BaseEntity {
   })
   injectionProtocolCode: string;
 
-  @ManyToOne(
-    () => DailyTestSummary,
-    o => o.dailyCalibrations,
-  )
+  @ManyToOne(() => DailyTestSummary, (o) => o.dailyCalibrations)
   @JoinColumn({ name: 'daily_test_sum_id' })
   dailyTestSummary: DailyTestSummary;
 }

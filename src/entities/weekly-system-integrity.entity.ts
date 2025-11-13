@@ -27,6 +27,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'ref_value',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   referenceValue: number;
 
@@ -34,6 +35,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'measured_value',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   measuredValue: number;
 
@@ -41,6 +43,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'system_integrity_error',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   systemIntegrityError: number;
 
@@ -48,6 +51,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'aps_ind',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   apsIndicator: number;
 
@@ -55,6 +59,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'calc_system_integrity_error',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   calcSystemIntegrityError: number;
 
@@ -62,6 +67,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'calc_aps_ind',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   calcApsInd: number;
 
@@ -78,6 +84,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 

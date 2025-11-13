@@ -14,6 +14,7 @@ export class HourUnitMatsDataView {
   @Column({
     name: 'orispl_code',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   facilityId: number;
 
@@ -29,30 +30,34 @@ export class HourUnitMatsDataView {
   @Column({
     name: 'op_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hour: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'op_time',
     precision: 3,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   opTime: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'gload',
     precision: 8,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   matsGrossLoad: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'heat_input',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   matsHeatInput: number;
 
@@ -61,6 +66,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hgOutputRate: number;
 
@@ -69,6 +75,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hgInputRate: number;
 
@@ -77,6 +84,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hgMass: number;
 
@@ -88,6 +96,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hclOutputRate: number;
 
@@ -96,6 +105,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hclInputRate: number;
 
@@ -104,6 +114,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hclMass: number;
 
@@ -115,6 +126,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hfOutputRate: number;
 
@@ -123,6 +135,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hfInputRate: number;
 
@@ -131,6 +144,7 @@ export class HourUnitMatsDataView {
     precision: 22,
     scale: 10,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hfMass: number;
 
@@ -140,11 +154,12 @@ export class HourUnitMatsDataView {
   @Column({ name: 'assoc_stacks' })
   associatedStacks: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'sload',
     precision: 8,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   steamLoad: number;
 

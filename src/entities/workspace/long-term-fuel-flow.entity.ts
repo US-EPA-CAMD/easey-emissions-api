@@ -20,6 +20,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   reportingPeriodId: number;
@@ -36,6 +37,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'long_term_fuel_flow_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   longTermFuelFlowValue: number;
@@ -46,6 +48,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'gross_calorific_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   grossCalorificValue: number;
@@ -56,6 +59,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'total_heat_input',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   totalHeatInput: number;
@@ -63,6 +67,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'calc_total_heat_input',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcTotalHeatInput: number;
