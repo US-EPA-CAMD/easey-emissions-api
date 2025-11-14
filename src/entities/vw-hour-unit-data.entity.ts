@@ -14,6 +14,7 @@ export class HourUnitDataView {
   @Column({
     name: 'orispl_code',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   facilityId: number;
 
@@ -38,104 +39,115 @@ export class HourUnitDataView {
   @Column({
     name: 'op_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hour: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'op_time',
     precision: 4,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   opTime: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'gload',
     precision: 8,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   grossLoad: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'sload',
     precision: 8,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   steamLoad: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'so2_mass',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   so2Mass: number;
 
   @Column({ name: 'so2_mass_measure_flg' })
   so2MassMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'so2_rate',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   so2Rate: number;
 
   @Column({ name: 'so2_rate_measure_flg' })
   so2RateMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'co2_mass',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   co2Mass: number;
 
   @Column({ name: 'co2_mass_measure_flg' })
   co2MassMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'co2_rate',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   co2Rate: number;
 
   @Column({ name: 'co2_rate_measure_flg' })
   co2RateMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'nox_mass',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   noxMass: number;
 
   @Column({ name: 'nox_mass_measure_flg' })
   noxMassMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'nox_rate',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   noxRate: number;
 
   @Column({ name: 'nox_rate_measure_flg' })
   noxRateMeasureFlg: string;
 
-  @Column('numeric', {
+  @Column({
     name: 'heat_input',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   heatInput: number;
 

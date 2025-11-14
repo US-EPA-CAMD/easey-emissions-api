@@ -29,6 +29,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'fuel_usage_time',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   fuelUsageTime: number;
@@ -36,6 +37,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'volumetric_flow_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   volumetricFlowRate: number;
@@ -46,6 +48,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'mass_flow_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   massFlowRate: number;
@@ -53,6 +56,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'calc_mass_flow_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcMassFlowRate: number;
@@ -75,6 +79,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'calc_volumetric_flow_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcVolumetricFlowRate: number;
@@ -85,6 +90,7 @@ export class HrlyFuelFlow extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;

@@ -22,6 +22,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'begin_year',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   beginYear: number;
@@ -29,6 +30,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'begin_month',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   beginMonth: number;
@@ -36,6 +38,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'end_year',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   endYear: number;
@@ -43,6 +46,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'end_month',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   endMonth: number;
@@ -50,6 +54,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'avg_co2_emission_rate',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   averageCo2EmissionRate: number;
@@ -60,6 +65,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'pct_valid_op_hours',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   percentValidOpHours: number;
@@ -67,6 +73,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
   @Column({
     name: 'co2_violation_ind',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   violationOfCo2StandardIndicator: number;
@@ -81,6 +88,7 @@ export class Nsps4tCompliancePeriod extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 

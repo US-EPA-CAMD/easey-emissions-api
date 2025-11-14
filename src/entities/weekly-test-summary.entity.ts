@@ -23,6 +23,7 @@ export class WeeklyTestSummary extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
@@ -42,12 +43,14 @@ export class WeeklyTestSummary extends BaseEntity {
     nullable: false,
     name: 'test_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   hour: number;
 
   @Column({
     name: 'test_min',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   minute: number;

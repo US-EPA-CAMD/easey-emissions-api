@@ -24,6 +24,7 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({
     name: 'modus_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   modusValue: number;
@@ -37,6 +38,7 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({
     name: 'no_period_ended_ind',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   noCompliancePeriodEndedIndicator: number;
@@ -50,6 +52,7 @@ export class Nsps4tSummary extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;

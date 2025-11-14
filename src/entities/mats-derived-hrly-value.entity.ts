@@ -38,6 +38,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_pct_diluent',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcPctDiluent: number;
@@ -45,6 +46,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_pct_moisture',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcPctMoisture: number;
@@ -55,6 +57,7 @@ export class MatsDerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;

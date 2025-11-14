@@ -25,6 +25,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     nullable: false,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     name: 'rpt_period_id',
   })
   reportingPeriodId: number;
@@ -36,6 +37,7 @@ export class SorbentTrap extends BaseEntity {
     nullable: false,
     name: 'begin_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   beginHour: number;
 
@@ -46,6 +48,7 @@ export class SorbentTrap extends BaseEntity {
     nullable: false,
     name: 'end_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   endHour: number;
 
@@ -55,6 +58,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     name: 'paired_trap_agreement',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   pairedTrapAgreement: number;
@@ -62,6 +66,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     name: 'absolute_difference_ind',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   absoluteDifferenceIndicator: number;
@@ -75,6 +80,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     name: 'calc_paired_trap_agreement',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcPairedTrapAgreement: number;
@@ -100,6 +106,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     name: 'rata_ind',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   rataIndicator: number;
