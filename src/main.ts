@@ -14,6 +14,13 @@ let server: http.Server;
 async function gracefulShutdown(exitCode: number) {
   console.error('Initiating graceful shutdown...');
 
+  // Force shutdown if graceful shutdown hangs
+  const forceExitTimer = setTimeout(() => {
+    console.error('Forced shutdown after timeout');
+    process.exit(exitCode);
+  }, 10000);
+  forceExitTimer.unref();
+
   if (server) {
     await new Promise<void>((resolve) => {
       server.close(() => {
@@ -23,11 +30,8 @@ async function gracefulShutdown(exitCode: number) {
     });
   }
 
-  setTimeout(() => {
-    console.error('Forced shutdown after timeout');
-    process.exit(exitCode);
-  }, 10000).unref();
-
+  // If we get here, graceful shutdown completed
+  clearTimeout(forceExitTimer);
   process.exit(exitCode);
 }
 
