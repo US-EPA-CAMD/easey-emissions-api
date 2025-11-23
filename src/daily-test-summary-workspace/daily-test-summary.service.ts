@@ -174,7 +174,7 @@ export class DailyTestSummaryWorkspaceService {
       for (const dailyTestSummaryDatum of emissionsImport.dailyTestSummaryData) {
         buildPromises.push(
           this.dailyCalibrationService.buildObjectList(
-            dailyTestSummaryDatum.dailyCalibrationData,
+            dailyTestSummaryDatum.dailyCalibrationData ?? [],
             dailyTestSummaryDatum['id'],
             reportingPeriodId,
             identifiers,

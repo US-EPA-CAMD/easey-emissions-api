@@ -175,7 +175,7 @@ export class SorbentTrapWorkspaceService {
         const monitoringLocationId = matchingLocations[0].id;
         buildPromises.push(
           this.samplingTrainService.buildObjectList(
-            sorbentTrapDatum.samplingTrainData,
+            sorbentTrapDatum.samplingTrainData ?? [],
             sorbentTrapDatum['id'],
             reportingPeriodId,
             monitoringLocationId,
