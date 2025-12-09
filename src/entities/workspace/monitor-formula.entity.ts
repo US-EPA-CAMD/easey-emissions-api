@@ -42,6 +42,7 @@ export class MonitorFormula extends BaseEntity {
     nullable: true,
     name: 'begin_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   beginHour: number;
 
@@ -52,6 +53,7 @@ export class MonitorFormula extends BaseEntity {
     nullable: true,
     name: 'end_hour',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   endHour: number;
 
