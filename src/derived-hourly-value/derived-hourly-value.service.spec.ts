@@ -1,14 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { DerivedHourlyValueService } from './derived-hourly-value.service';
-import { DerivedHourlyValueRepository } from './derived-hourly-value.repository';
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { DerivedHourlyValueMap } from '../maps/derived-hourly-value.map';
 import { mockDerivedHourlyValueRepository } from '../../test/mocks/mock-derived-hourly-value-repository';
 import { DerivedHrlyValue } from '../entities/derived-hrly-value.entity';
 
+jest.mock('./derived-hourly-value.repository', () => ({
+  DerivedHourlyValueRepository: jest.fn().mockImplementation(() => mockDerivedHourlyValueRepository),
+}));
+
 describe('DerivedHourlyValueService', () => {
   let map: DerivedHourlyValueMap;
-  let repository: DerivedHourlyValueRepository;
+  let repository: any;
   let service: DerivedHourlyValueService;
 
   beforeEach(async () => {
@@ -17,14 +22,27 @@ describe('DerivedHourlyValueService', () => {
         DerivedHourlyValueMap,
         DerivedHourlyValueService,
         {
-          provide: DerivedHourlyValueRepository,
-          useValue: mockDerivedHourlyValueRepository,
-        },
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+              manager: {
+                connection: {},
+                queryRunner: {},
+              },
+            }),
+          },
+        }
       ],
     }).compile();
 
     map = module.get(DerivedHourlyValueMap);
-    repository = module.get(DerivedHourlyValueRepository);
+    repository = mockDerivedHourlyValueRepository
     service = module.get<DerivedHourlyValueService>(DerivedHourlyValueService);
   });
 
@@ -32,7 +50,7 @@ describe('DerivedHourlyValueService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should export derived hourly values from service', async function() {
+  it('should export derived hourly values from service', async function () {
     const mockedValues = genDerivedHrlyValues<DerivedHrlyValue>(3, {
       include: ['monitorSystem'],
     });

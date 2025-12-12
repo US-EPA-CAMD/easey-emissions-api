@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 import { WeeklyTestSummaryMap } from '../maps/weekly-test-summary.map';
@@ -10,21 +12,24 @@ import { WeeklySystemIntegrityService } from '../weekly-system-integrity/weekly-
 export class WeeklyTestSummaryService {
 
   constructor(
+    private readonly dataSource: DataSource,
     private readonly map: WeeklyTestSummaryMap,
-    private readonly repository: WeeklyTestSummaryRepository,
     private readonly weeklySystemIntegrityService: WeeklySystemIntegrityService,
-  ) {}
+  ) { }
+
   async getWeeklyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<WeeklyTestSummaryDTO[]> {
-    const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
-    );
-
-    return this.map.many(results);
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const weeklyTestSummaryRepository = new WeeklyTestSummaryRepository(replicaManager);
+      const results = await weeklyTestSummaryRepository.export(
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
+      );
+      return this.map.many(results);
+    });
   }
 
   async export(

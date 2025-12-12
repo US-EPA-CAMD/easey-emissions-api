@@ -1,3 +1,3 @@
 export const mockHourlyGasFlowMeterRepository = {
-  export: () => jest,
+  export: jest.fn(),
 };

@@ -1,17 +1,16 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { DataSource } from 'typeorm';
+import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { HourlyMatsApportionedEmissionsService } from './hourly-mats-apportioned-emissions.service';
-import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 import { HourUnitMatsDataView } from '../../../entities/vw-hour-unit-mats-data.entity';
 import { PaginatedHourlyMatsApportionedEmissionsParamsDTO } from '../../../dto/hourly-mats-apporitioned-emissions.params.dto';
 import { genHourUnitMatsDataView } from '../../../../test/object-generators/apportioned-emissions';
 
-const mockRepository = () => ({
+const mockRepository = {
   getEmissions: jest.fn(),
-});
+};
 
 const mockRequest = () => {
   return {
@@ -25,6 +24,10 @@ const mockRequest = () => {
   };
 };
 
+jest.mock('./hour-unit-mats-data.repository', () => ({
+  HourUnitMatsDataRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
+
 describe('-- Hourly MATS Apportioned Emissions Service --', () => {
   let service: HourlyMatsApportionedEmissionsService;
   let repository: any;
@@ -37,16 +40,37 @@ describe('-- Hourly MATS Apportioned Emissions Service --', () => {
         ConfigService,
         HourlyMatsApportionedEmissionsService,
         {
-          provide: HourUnitMatsDataRepository,
-          useFactory: mockRepository,
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+              manager: {},
+            }),
+          },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+            warn: jest.fn(),
+            debug: jest.fn(),
+            verbose: jest.fn(),
+            setContext: jest.fn(),
+          },
+        }
       ],
     }).compile();
 
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
     service = module.get(HourlyMatsApportionedEmissionsService);
-    repository = module.get(HourUnitMatsDataRepository);
+    repository = mockRepository;
   });
 
   describe('getEmissions', () => {

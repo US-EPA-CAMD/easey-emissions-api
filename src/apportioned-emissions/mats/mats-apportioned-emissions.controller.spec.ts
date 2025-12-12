@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { MatsApportionedEmissionsService } from './mats-apportioned-emissions.service';
@@ -34,6 +34,19 @@ describe('-- MATS Apportioned Emissions Controller --', () => {
         HourlyMatsApportionedEmissionsService,
         HourUnitMatsDataRepository,
         UnitFactRepository,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
