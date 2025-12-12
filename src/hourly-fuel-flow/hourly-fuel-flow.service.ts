@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
+
 import { HourlyFuelFlowRepository } from './hourly-fuel-flow.repository';
 import { HourlyFuelFlowDTO } from '../dto/hourly-fuel-flow.dto';
 import { HourlyFuelFlowMap } from '../maps/hourly-fuel-flow-map';
@@ -8,7 +11,7 @@ import { HourlyParamFuelFlowDTO } from 'src/dto/hourly-param-fuel-flow.dto';
 @Injectable()
 export class HourlyFuelFlowService {
   constructor(
-    private readonly repository: HourlyFuelFlowRepository,
+    private readonly dataSource: DataSource,
     private readonly map: HourlyFuelFlowMap,
     private readonly hourlyParameterFuelFlowService: HourlyParameterFuelFlowService,
   ) {}
@@ -17,28 +20,30 @@ export class HourlyFuelFlowService {
     rptPeriodId: number,
     monLocIds: string[],
   ): Promise<HourlyFuelFlowDTO[]> {
-    if (!rptPeriodId) return [];
-    if (!Array.isArray(monLocIds) || monLocIds.length < 1) {
-      return [];
-    }
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      if (!rptPeriodId) return [];
+      if (!Array.isArray(monLocIds) || monLocIds.length < 1) {
+        return [];
+      }
+      const hourlyFuelFlowRepository = new HourlyFuelFlowRepository(replicaManager);
+      const hourlyFuelFlow = await hourlyFuelFlowRepository.export(rptPeriodId, monLocIds);
 
-    const hourlyFuelFlow = await this.repository.export(rptPeriodId, monLocIds);
+      if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
+        return [];
+      }
 
-    if (!Array.isArray(hourlyFuelFlow) || hourlyFuelFlow.length < 1) {
-      return [];
-    }
+      const mapped = await this.map.many(hourlyFuelFlow);
 
-    const mapped = await this.map.many(hourlyFuelFlow);
+      if (mapped.length > 0) {
+        const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
+          rptPeriodId,
+          monLocIds,
+        );
 
-    if (mapped.length > 0) {
-      const hourlyParamFuelFlowData = await this.hourlyParameterFuelFlowService.export(
-        rptPeriodId,
-        monLocIds,
-      );
-
-      this.organizeData(mapped, hourlyParamFuelFlowData);
-    }
-    return mapped;
+        this.organizeData(mapped, hourlyParamFuelFlowData);
+      }
+      return mapped;
+    });
   }
 
   private organizeData(

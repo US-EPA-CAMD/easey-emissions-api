@@ -91,8 +91,8 @@ import { EmissionsWorkspaceService } from './emissions.service';
 import { ReviewSubmitService } from './ReviewSubmit.service';
 import { EaseyContentService } from '../emissions-easey-content/easey-content.service';
 import { SummaryValueDataCheckService } from '../summary-value-workspace/summary-value-data-check.service';
-import { CurrentUser }          from '@us-epa-camd/easey-common/interfaces';
-import { NotFoundException }    from '@nestjs/common';
+import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
+import { NotFoundException } from '@nestjs/common';
 import { EmissionsService } from '../emissions/emissions.service';
 
 describe('-- Emissions Controller --', () => {
@@ -213,6 +213,19 @@ describe('-- Emissions Controller --', () => {
             export: jest.fn(),
           },
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -230,8 +243,8 @@ describe('-- Emissions Controller --', () => {
     it('should call service.importFromHistoricalData and return a message', async () => {
       const params = new EmissionsParamsDTO();
       params.monitorPlanId = 'MP1';
-      params.year          = 2020;
-      params.quarter       = 2;
+      params.year = 2020;
+      params.quarter = 2;
       const user: CurrentUser = { userId: 'user1' } as any;
 
       const expected = { message: 'Imported historical data' };
