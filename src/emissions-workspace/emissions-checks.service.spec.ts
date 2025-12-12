@@ -4,7 +4,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
 import { genEmissionsImportDto } from '../../test/object-generators/emissions-dto';
@@ -128,6 +128,19 @@ describe('Emissions Checks Service Tests', () => {
             runChecks: jest.fn().mockResolvedValue([]),
           }),
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -163,14 +176,14 @@ describe('Emissions Checks Service Tests', () => {
   });
 
   describe('invalidDatesCheck', () => {
-    it('should return empty array for empty DTO', function() {
+    it('should return empty array for empty DTO', function () {
       const payload = new EmissionsImportDTO();
 
       const result = service.invalidDatesCheck(payload);
       expect(result).toEqual([]);
     });
 
-    it('should return empty array for valid dates', function() {
+    it('should return empty array for valid dates', function () {
       const payload = genEmissionsImportDto()[0];
       const weeklyTestSummaryData = [new WeeklyTestSummaryDTO()];
 
@@ -183,7 +196,7 @@ describe('Emissions Checks Service Tests', () => {
       expect(service.invalidDatesCheck(payload)).toEqual([]);
     });
 
-    it('should return error for invalid dates', function() {
+    it('should return error for invalid dates', function () {
       const payload = genEmissionsImportDto(1, {
         include: [
           'dailyEmissionData',
@@ -245,7 +258,7 @@ describe('Emissions Checks Service Tests', () => {
       })[0];
     });
 
-    it('should return an empty array for empty request', async function() {
+    it('should return an empty array for empty request', async function () {
       const payload = new EmissionsImportDTO();
       const moniotorLocation = new MonitorLocation();
       moniotorLocation.unit = new Unit();
@@ -257,7 +270,7 @@ describe('Emissions Checks Service Tests', () => {
       ).resolves.toEqual(undefined);
     });
   });
-
+  
   // Tests Location lookup with anyOf schema compliance
   describe('Location Lookup - anyOf Schema Compliance', () => {
     const mockLocations = [

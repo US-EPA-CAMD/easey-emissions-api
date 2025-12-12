@@ -3,6 +3,8 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
   excludableColumnHeader,
@@ -19,69 +21,75 @@ import { DayUnitDataRepository } from './day-unit-data.repository';
 @Injectable()
 export class DailyApportionedEmissionsService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: DayUnitDataRepository,
-  ) {}
+  ) { }
 
   async getEmissions(
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
-    let entities: DayUnitDataView[];
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let entities: DayUnitDataView[];
 
-    try {
-      entities = await this.repository.getEmissions(
-        req,
-        fieldMappings.emissions.daily.data.aggregation.unit,
-        params,
+      try {
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        entities = await dayUnitDataRepository.getEmissions(
+          req,
+          fieldMappings.emissions.daily.data.aggregation.unit,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.daily.data.aggregation.unit),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      req.res.setHeader(
+        excludableColumnHeader,
+        JSON.stringify(fieldMappings.emissions.daily.excludableColumns),
+      );
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.unit),
-    );
-    req.res.setHeader(
-      excludableColumnHeader,
-      JSON.stringify(fieldMappings.emissions.daily.excludableColumns),
-    );
-
-    return entities;
+      return entities;
+    });
   }
 
   async getEmissionsFacilityAggregation(
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsFacilityAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsFacilityAggregation(
-        req,
-        params,
+      try {
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsFacilityAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.daily.data.aggregation.facility),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.facility),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        DailyApportionedEmissionsFacilityAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+      return query.map(item => {
+        const dto = plainToClass(
+          DailyApportionedEmissionsFacilityAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 
@@ -89,30 +97,33 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsStateAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsStateAggregation(req, params);
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsStateAggregation(req, params);
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.state),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        DailyApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.daily.data.aggregation.state),
       );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+
+      return query.map(item => {
+        const dto = plainToClass(
+          DailyApportionedEmissionsStateAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 
@@ -120,33 +131,36 @@ export class DailyApportionedEmissionsService {
     req: Request,
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DailyApportionedEmissionsNationalAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsNationalAggregation(
-        req,
-        params,
+      try {
+        const dayUnitDataRepository = new DayUnitDataRepository(replicaManager);
+        query = await dayUnitDataRepository.getEmissionsNationalAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        'X-Field-Mappings',
+        JSON.stringify(fieldMappings.emissions.daily.data.aggregation.national),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      'X-Field-Mappings',
-      JSON.stringify(fieldMappings.emissions.daily.data.aggregation.national),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        DailyApportionedEmissionsNationalAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+      return query.map(item => {
+        const dto = plainToClass(
+          DailyApportionedEmissionsNationalAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 }

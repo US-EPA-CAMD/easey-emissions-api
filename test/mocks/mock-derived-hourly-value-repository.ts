@@ -1,3 +1,3 @@
 export const mockDerivedHourlyValueRepository = {
-  export: () => jest,
+  export: jest.fn(),
 };

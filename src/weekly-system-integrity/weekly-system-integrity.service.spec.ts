@@ -1,14 +1,19 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { WeeklySystemIntegrity } from '../entities/weekly-system-integrity.entity';
 import { WeeklySystemIntegrityMap } from '../maps/weekly-system-integrity.map';
-import { WeeklySystemIntegrityRepository } from './weekly-system-integrity.repository';
 import { WeeklySystemIntegrityService } from './weekly-system-integrity.service';
 import { mockWeeklySystemIntegrityRepository } from '../../test/mocks/mock-weekly-system-integrity-repository';
 import { genWeeklySystemIntegrity } from '../../test/object-generators/weekly-system-integrity';
 
+jest.mock('./weekly-system-integrity.repository', () => ({
+  WeeklySystemIntegrityRepository: jest.fn().mockImplementation(() => mockWeeklySystemIntegrityRepository),
+}));
+
 describe('--WeeklySystemIntegrityService--', () => {
   let map: WeeklySystemIntegrityMap;
-  let repository: WeeklySystemIntegrityRepository;
+  let repository: any;
   let service: WeeklySystemIntegrityService;
 
   beforeEach(async () => {
@@ -17,14 +22,23 @@ describe('--WeeklySystemIntegrityService--', () => {
         WeeklySystemIntegrityMap,
         WeeklySystemIntegrityService,
         {
-          provide: WeeklySystemIntegrityRepository,
-          useValue: mockWeeklySystemIntegrityRepository,
-        },
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
     map = module.get(WeeklySystemIntegrityMap);
-    repository = module.get(WeeklySystemIntegrityRepository);
+    repository = mockWeeklySystemIntegrityRepository;
     service = module.get(WeeklySystemIntegrityService);
   });
 

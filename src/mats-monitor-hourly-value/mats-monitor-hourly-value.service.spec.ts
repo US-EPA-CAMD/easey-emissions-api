@@ -1,15 +1,19 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
+
 import { MatsMonitorHourlyValueMap } from '../maps/mats-monitor-hourly-value.map';
-import { MatsMonitorHourlyValueRepository } from './mats-monitor-hourly-value.repository';
 import { MatsMonitorHourlyValueService } from './mats-monitor-hourly-value.service';
 
 const mockRepository = {
-  export: () => null,
-  find: () => null,
+  export: jest.fn(),
+  find: jest.fn(),
 };
 const mockMap = {
   many: () => null,
 };
+jest.mock('./mats-monitor-hourly-value.repository', () => ({
+  MatsMonitorHourlyValueRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 describe('MatsMonitorHourlyValueService', () => {
   let service: MatsMonitorHourlyValueService;
@@ -25,14 +29,23 @@ describe('MatsMonitorHourlyValueService', () => {
           useValue: mockMap,
         },
         {
-          provide: MatsMonitorHourlyValueRepository,
-          useValue: mockRepository,
-        },
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
     service = module.get(MatsMonitorHourlyValueService);
-    repository = module.get(MatsMonitorHourlyValueRepository);
+    repository = mockRepository;
     map = module.get(MatsMonitorHourlyValueMap);
   });
 
