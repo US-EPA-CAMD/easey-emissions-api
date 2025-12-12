@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Test } from '@nestjs/testing';
+import { BadRequestException } from '@nestjs/common';
 import { BulkLoadService } from '@us-epa-camd/easey-common/bulk-load';
 import { EntityManager } from 'typeorm';
 
@@ -64,11 +65,13 @@ const mockRepository = {
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue([]),
 };
 
 const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue([]),
 };
 
 const mockDerivedHourlyValueService = () => {
@@ -79,17 +82,26 @@ const mockDerivedHourlyValueService = () => {
   return {
     export: () => Promise.resolve(generatedDerivedHrlyValues),
     import: jest.fn().mockResolvedValue(true),
+    buildObjectList: jest.fn().mockResolvedValue([]),
   };
 };
 
 const mockMatsMonitorHourlyValueService = {
   export: () => Promise.resolve([new MatsMonitorHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue([]),
 };
 
 const mockMatsDerivedHourlyValueService = {
   export: () => Promise.resolve([new MatsDerivedHourlyValueDTO()]),
   import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue([]),
+};
+
+const mockHourlyFuelFlowService = {
+  export: jest.fn().mockResolvedValue([]),
+  import: jest.fn().mockResolvedValue(true),
+  buildObjectList: jest.fn().mockResolvedValue([]),
 };
 
 const writeObjectMock = jest.fn();
@@ -138,7 +150,8 @@ describe('HourlyOperatingWorskpaceService', () => {
             startBulkLoader: jest.fn().mockResolvedValue({
               writeObject: writeObjectMock,
               complete: jest.fn(),
-              finished: true,
+              finished: Promise.resolve(true),
+              status: 'Complete',
             }),
           }),
         },
@@ -161,6 +174,10 @@ describe('HourlyOperatingWorskpaceService', () => {
         {
           provide: HourlyGasFlowMeterWorkspaceService,
           useValue: mockHourlyGasFlowMeterService,
+        },
+        {
+          provide: HourlyFuelFlowWorkspaceService,
+          useValue: mockHourlyFuelFlowService,
         },
         {
           provide: HourlyOperatingWorkspaceRepository,
@@ -228,6 +245,12 @@ describe('HourlyOperatingWorskpaceService', () => {
         new HourlyOperatingImportDTO(),
       ];
 
+      // Valid unitId/stackPipeId to test data
+      dto.hourlyOperatingData[0].unitId = '3';
+      dto.hourlyOperatingData[0].stackPipeId = null;
+      dto.hourlyOperatingData[1].unitId = '4';
+      dto.hourlyOperatingData[1].stackPipeId = null;
+
       const identifiers = { locations: {}, userId: '' };
       const monitoringLocationId = faker.datatype.string();
       identifiers.locations[monitoringLocationId] = {
@@ -236,15 +259,177 @@ describe('HourlyOperatingWorskpaceService', () => {
         monitoringSystems: {},
       };
 
+      const mockLocations = [
+        {
+          id: 'LOC1',
+          unit: { name: '3' },
+          stackPipe: null,
+        },
+        {
+          id: 'LOC2',
+          unit: { name: '4' },
+          stackPipe: null,
+        },
+      ];
+
       await service.import(
         dto,
-        [MonitorLocation],
+        mockLocations as any,
         1,
         identifiers,
         new Date().toISOString(),
       );
 
       expect(writeObjectMock).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  // Location lookup with anyOf schema compliance
+  describe('Location Lookup - anyOf Schema Compliance', () => {
+    const mockLocations = [
+      {
+        id: 'LOC1',
+        unit: { name: '3' },
+        stackPipe: null
+      },
+      {
+        id: 'LOC2',
+        unit: null,
+        stackPipe: { name: 'CS1' }
+      },
+      {
+        id: 'LOC3',
+        unit: { name: '4' },
+        stackPipe: { name: 'CS2' }
+      },
+    ] as MonitorLocation[];
+
+    it('should find location with unitId only', async () => {
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        {
+          unitId: '3',
+          stackPipeId: null,
+          date: new Date(),
+          hour: 1,
+          derivedHourlyValueData: [],
+          matsMonitorHourlyValueData: [],
+          monitorHourlyValueData: [],
+          matsDerivedHourlyValueData: [],
+          hourlyFuelFlowData: [],
+          hourlyGFMData: [],
+        } as HourlyOperatingImportDTO,
+      ];
+
+      const identifiers = { locations: {}, userId: 'test-user' };
+
+      // Should not throw error for valid unitId-only location
+      await expect(
+        service.import(dto, mockLocations, 1, identifiers, new Date().toISOString())
+      ).resolves.not.toThrow();
+    });
+
+    it('should find location with stackPipeId only', async () => {
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        {
+          unitId: null,
+          stackPipeId: 'CS1',
+          date: new Date(),
+          hour: 1,
+          derivedHourlyValueData: [],
+          matsMonitorHourlyValueData: [],
+          monitorHourlyValueData: [],
+          matsDerivedHourlyValueData: [],
+          hourlyFuelFlowData: [],
+          hourlyGFMData: [],
+        } as HourlyOperatingImportDTO,
+      ];
+
+      const identifiers = { locations: {}, userId: 'test-user' };
+
+      // Should not throw error for valid stackPipeId-only location
+      await expect(
+        service.import(dto, mockLocations, 1, identifiers, new Date().toISOString())
+      ).resolves.not.toThrow();
+    });
+
+    it('should find location with both identifiers', async () => {
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        {
+          unitId: '4',
+          stackPipeId: 'CS2',
+          date: new Date(),
+          hour: 1,
+          derivedHourlyValueData: [],
+          matsMonitorHourlyValueData: [],
+          monitorHourlyValueData: [],
+          matsDerivedHourlyValueData: [],
+          hourlyFuelFlowData: [],
+          hourlyGFMData: [],
+        } as HourlyOperatingImportDTO,
+      ];
+
+      const identifiers = { locations: {}, userId: 'test-user' };
+
+      // Should not throw error for valid both identifiers location
+      await expect(
+        service.import(dto, mockLocations, 1, identifiers, new Date().toISOString())
+      ).resolves.not.toThrow();
+    });
+
+    it('should throw error when no location found', async () => {
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        {
+          unitId: '999',
+          stackPipeId: null,
+          date: new Date(),
+          hour: 1,
+          derivedHourlyValueData: [],
+          matsMonitorHourlyValueData: [],
+          monitorHourlyValueData: [],
+          matsDerivedHourlyValueData: [],
+          hourlyFuelFlowData: [],
+          hourlyGFMData: [],
+        } as HourlyOperatingImportDTO,
+      ];
+
+      const identifiers = { locations: {}, userId: 'test-user' };
+
+      await expect(
+        service.import(dto, mockLocations, 1, identifiers, new Date().toISOString())
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw error when multiple locations found', async () => {
+      const ambiguousLocations = [
+        { id: 'LOC1', unit: { name: '3' }, stackPipe: null },
+        { id: 'LOC2', unit: { name: '3' }, stackPipe: null }, // Duplicate unit
+      ] as MonitorLocation[];
+
+      const dto = new EmissionsImportDTO();
+      dto.hourlyOperatingData = [
+        {
+          unitId: '3',
+          stackPipeId: null,
+          date: new Date(),
+          hour: 1,
+          derivedHourlyValueData: [],
+          matsMonitorHourlyValueData: [],
+          monitorHourlyValueData: [],
+          matsDerivedHourlyValueData: [],
+          hourlyFuelFlowData: [],
+          hourlyGFMData: [],
+        } as HourlyOperatingImportDTO,
+      ];
+
+      const identifiers = { locations: {}, userId: 'test-user' };
+
+      await expect(
+        service.import(dto, ambiguousLocations, 1, identifiers, new Date().toISOString())
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

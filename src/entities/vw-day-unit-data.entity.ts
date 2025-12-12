@@ -14,6 +14,7 @@ export class DayUnitDataView {
   @Column({
     name: 'orispl_code',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   facilityId: number;
 
@@ -29,89 +30,100 @@ export class DayUnitDataView {
   })
   date: Date;
 
-  @Column('numeric', {
+  @Column({
     name: 'sum_op_time',
     precision: 10,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   sumOpTime: number;
 
   @Column({
     name: 'count_op_time',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   countOpTime: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'gload',
     precision: 12,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   grossLoad: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'sload',
     precision: 12,
     scale: 2,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   steamLoad: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'so2_mass',
     precision: 12,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   so2Mass: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'so2_rate',
     precision: 16,
     scale: 4,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   so2Rate: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'co2_mass',
     precision: 12,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   co2Mass: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'co2_rate',
     precision: 16,
     scale: 4,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   co2Rate: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'nox_mass',
     precision: 12,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   noxMass: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'nox_rate',
     precision: 16,
     scale: 4,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   noxRate: number;
 
-  @Column('numeric', {
+  @Column({
     name: 'heat_input',
     precision: 15,
     scale: 3,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   heatInput: number;
 

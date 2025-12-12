@@ -33,6 +33,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   unadjustedHrlyValue: number;
@@ -40,6 +41,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'applicable_bias_adj_factor',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   applicableBiasAdjFactor: number;
@@ -47,6 +49,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_unadjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcUnadjustedHrlyValue: number;
@@ -54,6 +57,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   adjustedHrlyValue: number;
@@ -61,6 +65,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_adjusted_hrly_value',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcAdjustedHrlyValue: number;
@@ -74,6 +79,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'pct_available',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   pctAvailable: number;
@@ -81,6 +87,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'diluent_cap_ind',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   diluentCapInd: number;
@@ -88,6 +95,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'segment_num',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   segmentNum: number;
@@ -119,6 +127,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   rptPeriodId: number;
@@ -129,6 +138,7 @@ export class DerivedHrlyValue extends BaseEntity {
   @Column({
     name: 'calc_fuel_flow_total',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcFuelFlowTotal: number;

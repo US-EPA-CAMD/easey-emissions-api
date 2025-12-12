@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 
@@ -117,12 +117,30 @@ export class EmissionsChecksService {
     const identifierMap = new Map<string, Set<string>>();
 
     payload?.hourlyOperatingData?.forEach(hourlyOp => {
-      const monitoringLocationId = monitoringLocations.filter(location => {
-        return (
-          location.unit?.name === hourlyOp.unitId ||
-          location.stackPipe?.name === hourlyOp.stackPipeId
+      // To handle anyOf schema - either unitId OR stackPipeId (or both)
+      const matchingLocations = monitoringLocations.filter(location => {
+        if (hourlyOp.unitId && hourlyOp.stackPipeId) {
+          return location.unit?.name === hourlyOp.unitId &&
+                 location.stackPipe?.name === hourlyOp.stackPipeId;
+        } else if (hourlyOp.unitId) {
+          return location.unit?.name === hourlyOp.unitId;
+        } else if (hourlyOp.stackPipeId) {
+          return location.stackPipe?.name === hourlyOp.stackPipeId;
+        }
+        return false;
+      });
+
+      if (matchingLocations.length === 0) {
+        throw new BadRequestException(
+          `No location found for unitId: ${hourlyOp.unitId}, stackPipeId: ${hourlyOp.stackPipeId}`
         );
-      })[0].id;
+      }
+      if (matchingLocations.length > 1) {
+        throw new BadRequestException(
+          'Multiple locations found - unable to determine unique location'
+        );
+      }
+      const monitoringLocationId = matchingLocations[0].id;
 
       if (!identifierMap.has(monitoringLocationId)) {
         identifierMap.set(monitoringLocationId, new Set());

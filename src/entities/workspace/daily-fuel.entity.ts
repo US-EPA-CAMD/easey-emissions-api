@@ -23,6 +23,7 @@ export class DailyFuel extends BaseEntity {
   @Column({
     name: 'daily_fuel_feed',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   dailyFuelFeed: number;
@@ -30,6 +31,7 @@ export class DailyFuel extends BaseEntity {
   @Column({
     name: 'carbon_content_used',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   carbonContentUsed: number;
@@ -37,6 +39,7 @@ export class DailyFuel extends BaseEntity {
   @Column({
     name: 'fuel_carbon_burned',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   fuelCarbonBurned: number;
@@ -44,6 +47,7 @@ export class DailyFuel extends BaseEntity {
   @Column({
     name: 'calc_fuel_carbon_burned',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: true,
   })
   calcFuelCarbonBurned: number;
@@ -60,6 +64,7 @@ export class DailyFuel extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;

@@ -27,6 +27,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
@@ -52,6 +53,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'total_sample_volume',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   totalSampleVolumeDscm: number;
 
@@ -59,6 +61,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'ref_flow_to_sampling_ratio',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   referenceSfsrRatio: number;
 
@@ -69,6 +72,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'percent_breakthrough',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   percentBreakthrough: number;
 
@@ -76,6 +80,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'percent_spike_recovery',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   percentSpikeRecovery: number;
 
@@ -98,6 +103,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'calc_percent_breakthrough',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   calcPercentBreakthrough: number;
 
@@ -105,6 +111,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'calc_percent_spike_recovery',
     nullable: true,
     transformer: new NumericColumnTransformer(),
+    type: 'numeric',
   })
   calcPercentSpikeRecovery: number;
 
