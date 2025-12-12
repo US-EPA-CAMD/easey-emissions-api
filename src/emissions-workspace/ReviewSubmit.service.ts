@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
-import { EntityManager, In, LessThanOrEqual } from 'typeorm';
+import { DataSource, EntityManager, In, LessThanOrEqual } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsReviewDTO } from '../dto/emissions-review.dto';
 import { EmissionsReviewEvaluate } from '../entities/workspace/emissions-review-evaluate.entity';
@@ -13,9 +14,10 @@ import { EmissionsReviewMap } from '../maps/emissions-review.map';
 @Injectable()
 export class ReviewSubmitService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly entityManager: EntityManager,
     private readonly map: EmissionsReviewMap,
-  ) {}
+  ) { }
 
   async getEmissionsRecords({
     orisCodes,
@@ -85,9 +87,16 @@ export class ReviewSubmitService {
     }
 
     try {
-      data = await this.map.many(
-        await this.entityManager.find(entity, { where: conditions }),
-      );
+      if (isWorkspace) {
+         data = await this.map.many(
+          await this.entityManager.find(entity, { where: conditions }),
+        );
+      } else {
+       data = await withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+          const results = await entityManager.find(entity, { where: conditions });
+          return this.map.many(results);
+        });
+      }
 
       return data;
     } catch (e) {

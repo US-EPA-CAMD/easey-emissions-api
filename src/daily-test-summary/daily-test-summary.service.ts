@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { DailyTestSummaryMap } from '../maps/daily-test-summary.map';
 import { DailyTestSummaryRepository } from './daily-test-summary.repository';
@@ -10,22 +12,25 @@ import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
 export class DailyTestSummaryService {
 
   constructor(
+    private readonly dataSource: DataSource,
     private readonly map: DailyTestSummaryMap,
-    private readonly repository: DailyTestSummaryRepository,
     private readonly dailyCalibrationService: DailyCalibrationService,
-  ) {}
+  ) { }
 
   async getDailyTestSummariesByLocationIds(
     monitoringLocationIds: string[],
     params: EmissionsParamsDTO,
   ): Promise<DailyTestSummaryDTO[]> {
-    const results = await this.repository.export(
-      monitoringLocationIds,
-      params.year,
-      params.quarter,
-    );
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      const dailyTestSummaryRepository = new DailyTestSummaryRepository(replicaManager);
+      const results = await dailyTestSummaryRepository.export(
+        monitoringLocationIds,
+        params.year,
+        params.quarter,
+      );
 
-    return this.map.many(results);
+      return this.map.many(results);
+    });
   }
 
   async export(

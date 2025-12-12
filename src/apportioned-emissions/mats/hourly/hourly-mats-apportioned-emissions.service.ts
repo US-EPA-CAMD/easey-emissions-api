@@ -2,6 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { Request } from 'express';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
   excludableColumnHeader,
@@ -15,34 +17,36 @@ import { HourUnitMatsDataRepository } from './hour-unit-mats-data.repository';
 @Injectable()
 export class HourlyMatsApportionedEmissionsService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: HourUnitMatsDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedHourlyMatsApportionedEmissionsParamsDTO,
   ): Promise<HourUnitMatsDataView[]> {
-    let entities: HourUnitMatsDataView[];
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let entities: HourUnitMatsDataView[];
 
-    try {
-      entities = await this.repository.getEmissions(req, params);
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        const hourUnitMatsDataRepository = new HourUnitMatsDataRepository(replicaManager);
+        entities = await hourUnitMatsDataRepository.getEmissions(req, params);
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.mats.hourly.data.aggregation.unit),
-    );
-    req.res.setHeader(
-      excludableColumnHeader,
-      JSON.stringify(fieldMappings.emissions.mats.hourly.excludableColumns),
-    );
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.mats.hourly.data.aggregation.unit),
+      );
+      req.res.setHeader(
+        excludableColumnHeader,
+        JSON.stringify(fieldMappings.emissions.mats.hourly.excludableColumns),
+      );
 
-    return entities;
+      return entities;
+    });
   }
-
   // async streamEmissions(
   //   req: Request,
   //   params: StreamHourlyMatsApportionedEmissionsParamsDTO,

@@ -2,7 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import {
   excludableColumnHeader,
@@ -19,66 +20,72 @@ import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 @Injectable()
 export class AnnualApportionedEmissionsService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: AnnualUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
-    let entities: AnnualUnitDataView[];
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let entities: AnnualUnitDataView[];
 
-    try {
-      entities = await this.repository.getEmissions(
-        req,
-        fieldMappings.emissions.annual.data.aggregation.unit,
-        params,
+      try {
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        entities = await annualUnitDataRepository.getEmissions(
+          req,
+          fieldMappings.emissions.annual.data.aggregation.unit,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.annual.data.aggregation.unit),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      req.res.setHeader(
+        excludableColumnHeader,
+        JSON.stringify(fieldMappings.emissions.annual.excludableColumns),
+      );
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.unit),
-    );
-    req.res.setHeader(
-      excludableColumnHeader,
-      JSON.stringify(fieldMappings.emissions.annual.excludableColumns),
-    );
-
-    return entities;
+      return entities;
+    });
   }
 
   async getEmissionsFacilityAggregation(
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsFacilityAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsFacilityAggregation(
-        req,
-        params,
+      try {
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsFacilityAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.annual.data.aggregation.facility),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.facility),
-    );
-
-    return query.map(item => {
-      return plainToClass(
-        AnnualApportionedEmissionsFacilityAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return query.map(item => {
+        return plainToClass(
+          AnnualApportionedEmissionsFacilityAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+      });
     });
   }
 
@@ -86,22 +93,25 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsStateAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsStateAggregation(req, params);
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsStateAggregation(req, params);
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.state),
-    );
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.annual.data.aggregation.state),
+      );
 
-    return query.map(item => {
-      return plainToClass(AnnualApportionedEmissionsStateAggregationDTO, item, {
-        enableImplicitConversion: true,
+      return query.map(item => {
+        return plainToClass(AnnualApportionedEmissionsStateAggregationDTO, item, {
+          enableImplicitConversion: true,
+        });
       });
     });
   }
@@ -110,25 +120,28 @@ export class AnnualApportionedEmissionsService {
     req: Request,
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualApportionedEmissionsAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsNationalAggregation(
-        req,
-        params,
+      try {
+        const annualUnitDataRepository = new AnnualUnitDataRepository(replicaManager);
+        query = await annualUnitDataRepository.getEmissionsNationalAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.annual.data.aggregation.national),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.annual.data.aggregation.national),
-    );
-
-    return query.map(item => {
-      return plainToClass(AnnualApportionedEmissionsAggregationDTO, item, {
-        enableImplicitConversion: true,
+      return query.map(item => {
+        return plainToClass(AnnualApportionedEmissionsAggregationDTO, item, {
+          enableImplicitConversion: true,
+        });
       });
     });
   }

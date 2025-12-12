@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 
 import { DailyCalibrationService } from './daily-calibration.service';
 import { DailyCalibrationMap } from '../maps/daily-calibration.map';
@@ -8,13 +9,15 @@ const mockRepository = {
   export: () => null,
   find: () => null,
 };
+
+jest.spyOn(DailyCalibrationRepository.prototype, 'find').mockImplementation(mockRepository.find);
+
 const mockMap = {
   many: () => null,
 };
 
 describe('DailyCalibrationService', () => {
   let service: DailyCalibrationService;
-  let repository: any;
   let map;
 
   beforeEach(async () => {
@@ -26,14 +29,23 @@ describe('DailyCalibrationService', () => {
           useValue: mockMap,
         },
         {
-          provide: DailyCalibrationRepository,
-          useValue: mockRepository,
-        },
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+              manager: {}
+            }),
+          },
+        }
       ],
     }).compile();
 
     service = module.get(DailyCalibrationService);
-    repository = module.get(DailyCalibrationRepository);
     map = module.get(DailyCalibrationMap);
   });
 

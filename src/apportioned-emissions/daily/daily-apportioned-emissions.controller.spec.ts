@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import {
   genDailyApportionedEmissionsFacilityDto,
@@ -36,6 +36,19 @@ describe('-- Daily Apportioned Emissions Controller --', () => {
         DayUnitDataRepository,
         DailyApportionedEmissionsService,
         EntityManager,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -82,7 +95,7 @@ describe('-- Daily Apportioned Emissions Controller --', () => {
   describe('* getEmissionsStateAggregation', () => {
     it('calls DailyApportionedEmissionsService.getEmissionsStateAggregation() and gets all emissions data', async () => {
       const byStateList = genDailyApportionedEmissionsStateDto();
-      const mockedValues ={
+      const mockedValues = {
         items: byStateList
       }
       const paramsDto = new PaginatedDailyApportionedEmissionsParamsDTO();

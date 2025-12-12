@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import {
   genQuarterlyApportionedEmissionsFacilityDto,
@@ -36,6 +36,19 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
         EntityManager,
         QuarterlyApportionedEmissionsService,
         QuarterUnitDataRepository,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -66,7 +79,7 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   describe('* getEmissionsFacilityAggregation', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissionsFacilityAggregation() and gets all emissions data', async () => {
       const byFacilityList = genQuarterlyApportionedEmissionsFacilityDto();
-      const expectedResult ={
+      const expectedResult = {
         items: byFacilityList
       }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();
@@ -98,7 +111,7 @@ describe('-- Quarterly Apportioned Emissions Controller --', () => {
   describe('* getEmissionsNationalAggregation', () => {
     it('calls QuarterlyApportionedEmissionsService.getEmissionsNationalAggregation() and gets all emissions data', async () => {
       const nationlityList = genQuarterlyApportionedEmissionsNationalDto();
-      const expectedResult ={
+      const expectedResult = {
         items: nationlityList
       }
       const paramsDto = new PaginatedQuarterlyApportionedEmissionsParamsDTO();

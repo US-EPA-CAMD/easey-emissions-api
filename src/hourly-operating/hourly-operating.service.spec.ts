@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genDerivedHrlyValues } from '../../test/object-generators/derived-hourly-value';
 import { genHourlyOpValues } from '../../test/object-generators/hourly-op-data-values';
@@ -46,11 +46,18 @@ const generatedHrlyOpValues = genHourlyOpValues<HrlyOpData>(1, {
 
 const mockEntityManager = {
   findOneBy: () => Promise.resolve({ id: 123, year: 2023, quarter: 1 }),
+  getRepository: jest.fn().mockReturnValue({
+    findOneBy: jest.fn().mockResolvedValue({ id: 123, year: 2023, quarter: 1 }),
+  }),
 };
 
 const mockRepository = {
-  export: () => Promise.resolve(generatedHrlyOpValues),
+  export: jest.fn().mockResolvedValue(generatedHrlyOpValues),
 };
+
+jest.mock('./hourly-operating.repository', () => ({
+  HourlyOperatingRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockMonitorHourlyValueService = {
   export: () => Promise.resolve([new MonitorHourlyValueDTO()]),
@@ -77,6 +84,16 @@ const mockMatsDerivedHourlyValueService = {
 const mockHourlyGasFlowMeterService = {
   export: () => Promise.resolve([new HourlyGasFlowMeterDTO()]),
 };
+
+const mockHourlyFuelFlowService = {
+  export: () => Promise.resolve([]),
+};
+
+jest.mock('@us-epa-camd/easey-common', () => ({
+  withSlaveConnection: jest.fn().mockImplementation((dataSource, callback) => {
+    return callback(mockEntityManager);
+  }),
+}));
 
 describe('HourlyOperatingService', () => {
   let service: HourlyOperatingService;
@@ -139,14 +156,30 @@ describe('HourlyOperatingService', () => {
           useValue: mockHourlyGasFlowMeterService,
         },
         {
-          provide: HourlyOperatingRepository,
-          useValue: mockRepository,
+          provide: HourlyFuelFlowService,
+          useValue: mockHourlyFuelFlowService,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+            getRepository: jest.fn().mockReturnValue({
+              findOneBy: jest.fn().mockResolvedValue({ id: 123, year: 2023, quarter: 1 }),
+            }),
+          },
+        }
       ],
     }).compile();
 
     service = module.get(HourlyOperatingService);
-    repository = module.get(HourlyOperatingRepository);
+    repository = mockRepository;
     map = module.get(HourlyOperatingMap);
 
     monitorHourlyValueRepository = module.get(MonitorHourlyValueRepository);
