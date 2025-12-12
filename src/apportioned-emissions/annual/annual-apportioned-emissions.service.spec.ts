@@ -1,10 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-
-import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { DataSource } from 'typeorm';
+import { Logger, LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { AnnualUnitDataView } from '../../entities/vw-annual-unit-data.entity';
-import { AnnualUnitDataRepository } from './annual-unit-data.repository';
 import { AnnualApportionedEmissionsService } from './annual-apportioned-emissions.service';
 import { PaginatedAnnualApportionedEmissionsParamsDTO } from '../../dto/annual-apportioned-emissions.params.dto';
 import {
@@ -14,12 +13,16 @@ import {
   genAnnualUnitData,
 } from '../../../test/object-generators/apportioned-emissions';
 
-const mockRepository = () => ({
+const mockRepository = {
   getEmissions: jest.fn(),
   getEmissionsFacilityAggregation: jest.fn(),
   getEmissionsStateAggregation: jest.fn(),
   getEmissionsNationalAggregation: jest.fn(),
-});
+};
+
+jest.mock('./annual-unit-data.repository', () => ({
+  AnnualUnitDataRepository: jest.fn().mockImplementation(() => mockRepository),
+}));
 
 const mockRequest = () => {
   return {
@@ -45,16 +48,37 @@ describe('-- Annual Apportioned Emissions Service --', () => {
         ConfigService,
         AnnualApportionedEmissionsService,
         {
-          provide: AnnualUnitDataRepository,
-          useFactory: mockRepository,
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+              manager: {}
+            }),
+          },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+            warn: jest.fn(),
+            debug: jest.fn(),
+            verbose: jest.fn(),
+            setContext: jest.fn(),
+          },
+        }
       ],
     }).compile();
 
     req = mockRequest();
     req.res.setHeader.mockReturnValue();
     service = module.get(AnnualApportionedEmissionsService);
-    repository = module.get(AnnualUnitDataRepository);
+    repository = mockRepository;
   });
 
   describe('getEmissions', () => {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { genNsps4tSummary } from '../../test/object-generators/nsps4t-summary';
 import { EmissionsParamsDTO } from '../dto/emissions.params.dto';
@@ -32,6 +32,19 @@ describe('Nsps4tSummaryService', () => {
         Nsps4tSummaryRepository,
         Nsps4tSummaryService,
         Nsps4tSummaryMap,
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
 
@@ -47,7 +60,7 @@ describe('Nsps4tSummaryService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should export mapped data', async function() {
+  it('should export mapped data', async function () {
     const nsps4tSummaryMock = genNsps4tSummary<Nsps4tSummary>();
     const mappedValues = await map.many(nsps4tSummaryMock);
 

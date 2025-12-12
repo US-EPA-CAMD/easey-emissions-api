@@ -3,6 +3,8 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
   excludableColumnHeader,
@@ -19,69 +21,75 @@ import { HourUnitDataRepository } from './hour-unit-data.repository';
 @Injectable()
 export class HourlyApportionedEmissionsService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: HourUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitDataView[]> {
-    let entities: HourUnitDataView[];
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let entities: HourUnitDataView[];
 
-    try {
-      entities = await this.repository.getEmissions(
-        req,
-        fieldMappings.emissions.hourly.data.aggregation.unit,
-        params,
+      try {
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        entities = await hourUnitDataRepository.getEmissions(
+          req,
+          fieldMappings.emissions.hourly.data.aggregation.unit,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.unit),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      req.res.setHeader(
+        excludableColumnHeader,
+        JSON.stringify(fieldMappings.emissions.hourly.excludableColumns),
+      );
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.unit),
-    );
-    req.res.setHeader(
-      excludableColumnHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.excludableColumns),
-    );
-
-    return entities;
+      return entities;
+    });
   }
 
   async getEmissionsFacilityAggregation(
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsFacilityAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsFacilityAggregation(
-        req,
-        params,
+      try {
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsFacilityAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.facility),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.facility),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        HourlyApportionedEmissionsFacilityAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+      return query.map(item => {
+        const dto = plainToClass(
+          HourlyApportionedEmissionsFacilityAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 
@@ -89,30 +97,33 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsStateAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsStateAggregation(req, params);
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsStateAggregation(req, params);
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.state),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        HourlyApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.state),
       );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+
+      return query.map(item => {
+        const dto = plainToClass(
+          HourlyApportionedEmissionsStateAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 
@@ -120,33 +131,36 @@ export class HourlyApportionedEmissionsService {
     req: Request,
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourlyApportionedEmissionsNationalAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsNationalAggregation(
-        req,
-        params,
+      try {
+        const hourUnitDataRepository = new HourUnitDataRepository(replicaManager);
+        query = await hourUnitDataRepository.getEmissionsNationalAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.national),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.hourly.data.aggregation.national),
-    );
-
-    return query.map(item => {
-      const dto = plainToClass(
-        HourlyApportionedEmissionsNationalAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
-      const date = new Date(dto.date);
-      dto.date = date.toISOString().split('T')[0];
-      return dto;
+      return query.map(item => {
+        const dto = plainToClass(
+          HourlyApportionedEmissionsNationalAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+        const date = new Date(dto.date);
+        dto.date = date.toISOString().split('T')[0];
+        return dto;
+      });
     });
   }
 }

@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -10,21 +11,25 @@ import { getSelectedView } from '../utils/selected-emission-view';
 @Injectable()
 export class EmissionsViewService {
   constructor(
-    private readonly entityManager: EntityManager,
+    private readonly dataSource: DataSource,
     private readonly repository: EmissionsViewRepository,
   ) {}
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
-    const results = await this.repository.find({
-      where: { groupCode: 'EMVIEW' },
-      order: { sortOrder: 'ASC' },
-    });
+    return withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+      const results = await entityManager
+        .getRepository(this.repository.target)
+        .find({
+          where: { groupCode: 'EMVIEW' },
+          order: { sortOrder: 'ASC' },
+        });
 
-    return results.map(e => {
-      return {
-        code: e.code,
-        name: e.displayName,
-      };
+      return results.map(e => {
+        return {
+          code: e.code,
+          name: e.displayName,
+        };
+      });
     });
   }
 
@@ -33,22 +38,25 @@ export class EmissionsViewService {
     req: Request,
     params: EmissionsViewParamsDTO,
   ) {
-    const rptPeriods = await this.repository.query(
-      `
-      SELECT rpt_period_id as id
-      FROM camdecmpsmd.reporting_period
-      WHERE period_abbreviation = ANY($1);`,
-      [params.reportingPeriod],
-    );
+    const { rptPeriods, counts } = await withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+      const rptPeriods = await entityManager.query(
+        `SELECT rpt_period_id as id
+         FROM camdecmpsmd.reporting_period
+         WHERE period_abbreviation = ANY($1);`,
+        [params.reportingPeriod],
+      );
 
-    const counts = await getSelectedView(
-      'COUNTS',
-      'camdecmps',
-      req,
-      params,
-      rptPeriods,
-      this.entityManager,
-    );
+      const counts = await getSelectedView(
+        'COUNTS',
+        'camdecmps',
+        req,
+        params,
+        rptPeriods,
+        entityManager,
+      );
+
+      return { rptPeriods, counts };
+    });
 
     if (viewCode === 'COUNTS') return counts;
 
@@ -60,11 +68,12 @@ export class EmissionsViewService {
 
       if (rpCounts && rpCounts.length === 0) {
         promises.push(
-          this.repository.query(
-            `
-            CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
-            [params.monitorPlanId, rp.id],
-          ),
+          withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+            await entityManager.query(
+              `CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
+              [params.monitorPlanId, rp.id],
+            );
+          })
         );
       }
     });
@@ -73,13 +82,15 @@ export class EmissionsViewService {
       await Promise.all(promises);
     }
 
-    return getSelectedView(
-      viewCode,
-      'camdecmps',
-      req,
-      params,
-      rptPeriods,
-      this.entityManager,
-    );
+    return withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+      return getSelectedView(
+        viewCode,
+        'camdecmps',
+        req,
+        params,
+        rptPeriods,
+        entityManager,
+      );
+    });
   }
 }

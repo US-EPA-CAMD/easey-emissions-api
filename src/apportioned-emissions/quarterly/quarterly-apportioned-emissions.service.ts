@@ -3,9 +3,8 @@ import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.excep
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
-import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from './../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
-import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto/quarterly-apportioned-emissions-national-aggregation.dto';
-import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
+import { DataSource, EntityManager } from 'typeorm';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import {
   excludableColumnHeader,
@@ -15,72 +14,81 @@ import {
 import { PaginatedQuarterlyApportionedEmissionsParamsDTO } from '../../dto/quarterly-apportioned-emissions.params.dto';
 import { QuarterUnitDataView } from '../../entities/vw-quarter-unit-data.entity';
 import { QuarterUnitDataRepository } from './quarter-unit-data.repository';
+import { QuarterlyApportionedEmissionsFacilityAggregationDTO } from './../../dto/quarterly-apportioned-emissions-facility-aggregation.dto';
+import { QuarterlyApportionedEmissionsNationalAggregationDTO } from './../../dto/quarterly-apportioned-emissions-national-aggregation.dto';
+import { QuarterlyApportionedEmissionsStateAggregationDTO } from './../../dto/quarterly-apportioned-emissions-state-aggregation.dto';
 
 @Injectable()
 export class QuarterlyApportionedEmissionsService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly logger: Logger,
-    private readonly repository: QuarterUnitDataRepository,
   ) {}
 
   async getEmissions(
     req: Request,
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterUnitDataView[]> {
-    let entities: QuarterUnitDataView[];
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let entities: QuarterUnitDataView[];
 
-    try {
-      entities = await this.repository.getEmissions(
-        req,
-        fieldMappings.emissions.quarterly.data.aggregation.unit,
-        params,
+      try {
+        const quarterUnitDataRepository = new QuarterUnitDataRepository(replicaManager);
+        entities = await quarterUnitDataRepository.getEmissions(
+          req,
+          fieldMappings.emissions.quarterly.data.aggregation.unit,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.unit),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      req.res.setHeader(
+        excludableColumnHeader,
+        JSON.stringify(fieldMappings.emissions.quarterly.excludableColumns),
+      );
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.unit),
-    );
-    req.res.setHeader(
-      excludableColumnHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly.excludableColumns),
-    );
-
-    return entities;
+      return entities;
+    });
   }
 
   async getEmissionsFacilityAggregation(
     req: Request,
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterlyApportionedEmissionsFacilityAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsFacilityAggregation(
-        req,
-        params,
+      try {
+        const quarterUnitDataRepository = new QuarterUnitDataRepository(replicaManager);
+        query = await quarterUnitDataRepository.getEmissionsFacilityAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(
+          fieldMappings.emissions.quarterly.data.aggregation.facility,
+        ),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(
-        fieldMappings.emissions.quarterly.data.aggregation.facility,
-      ),
-    );
-
-    return query.map(item => {
-      return plainToClass(
-        QuarterlyApportionedEmissionsFacilityAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return query.map(item => {
+        return plainToClass(
+          QuarterlyApportionedEmissionsFacilityAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+      });
     });
   }
 
@@ -88,27 +96,30 @@ export class QuarterlyApportionedEmissionsService {
     req: Request,
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterlyApportionedEmissionsStateAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsStateAggregation(req, params);
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        const quarterUnitDataRepository = new QuarterUnitDataRepository(replicaManager);
+        query = await quarterUnitDataRepository.getEmissionsStateAggregation(req, params);
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.state),
-    );
-
-    return query.map(item => {
-      return plainToClass(
-        QuarterlyApportionedEmissionsStateAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(fieldMappings.emissions.quarterly.data.aggregation.state),
       );
+
+      return query.map(item => {
+        return plainToClass(
+          QuarterlyApportionedEmissionsStateAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+      });
     });
   }
 
@@ -116,32 +127,35 @@ export class QuarterlyApportionedEmissionsService {
     req: Request,
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterlyApportionedEmissionsNationalAggregationDTO[]> {
-    let query;
+    return withSlaveConnection(this.dataSource, async (replicaManager: EntityManager) => {
+      let query;
 
-    try {
-      query = await this.repository.getEmissionsNationalAggregation(
-        req,
-        params,
+      try {
+        const quarterUnitDataRepository = new QuarterUnitDataRepository(replicaManager);
+        query = await quarterUnitDataRepository.getEmissionsNationalAggregation(
+          req,
+          params,
+        );
+      } catch (e) {
+        throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      req.res.setHeader(
+        fieldMappingHeader,
+        JSON.stringify(
+          fieldMappings.emissions.quarterly.data.aggregation.national,
+        ),
       );
-    } catch (e) {
-      throw new EaseyException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    req.res.setHeader(
-      fieldMappingHeader,
-      JSON.stringify(
-        fieldMappings.emissions.quarterly.data.aggregation.national,
-      ),
-    );
-
-    return query.map(item => {
-      return plainToClass(
-        QuarterlyApportionedEmissionsNationalAggregationDTO,
-        item,
-        {
-          enableImplicitConversion: true,
-        },
-      );
+      return query.map(item => {
+        return plainToClass(
+          QuarterlyApportionedEmissionsNationalAggregationDTO,
+          item,
+          {
+            enableImplicitConversion: true,
+          },
+        );
+      });
     });
   }
 }

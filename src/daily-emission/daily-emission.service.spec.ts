@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { DailyFuelRepository } from '../daily-fuel/daily-fuel.repository';
 import { DailyFuelService } from '../daily-fuel/daily-fuel.service';
@@ -29,6 +29,19 @@ describe('DailyEmissionDataService', () => {
           provide: DailyFuelService,
           useValue: mockDailyFuelService,
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              startTransaction: jest.fn(),
+              commitTransaction: jest.fn(),
+              rollbackTransaction: jest.fn(),
+              release: jest.fn(),
+              isReleased: false,
+            }),
+          },
+        }
       ],
     }).compile();
     service = module.get<DailyEmissionService>(DailyEmissionService);
