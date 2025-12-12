@@ -88,7 +88,7 @@ export class HourlyFuelFlowRecordDTO extends HourlyFuelFlowBaseDTO {
 export class HourlyFuelFlowImportDTO extends HourlyFuelFlowBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => HourlyParamFuelFlowImportDTO)
-  hourlyParameterFuelFlowData: HourlyParamFuelFlowImportDTO[];
+  hourlyParameterFuelFlowData?: HourlyParamFuelFlowImportDTO[];
 }
 
 export class HourlyFuelFlowDTO extends HourlyFuelFlowRecordDTO {

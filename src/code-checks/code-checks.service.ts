@@ -89,7 +89,7 @@ export class CodeChecksService {
     payload.forEach(dailyEm => {
       this.collectCode(dailyEm, 'parameterCode', codesMap);
 
-      dailyEm.dailyFuelData.forEach(dailyFuel => {
+      dailyEm.dailyFuelData?.forEach(dailyFuel => {
         this.collectCode(dailyFuel, 'fuelCode', codesMap);
       });
     });
