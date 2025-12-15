@@ -1,31 +1,34 @@
 import { IsIsoFormat, IsValidDate } from '@us-epa-camd/easey-common/pipes';
 import {
-IsString,
-IsNumber,
+  IsString,
+  IsNumber,
+  ValidateIf,
 } from 'class-validator';
 
 export class DailyBackstopBaseDTO {
     @IsString()
-    unitId?: string;
+    unitId: string;
     
     @IsIsoFormat()
     @IsValidDate()
     date: Date;
   
     @IsNumber()
-    dailyNoxEmissions?: number;
+    dailyNoxEmissions: number;
   
     @IsNumber()
-    dailyHeatInput?: number;
+    dailyHeatInput: number;
     
     @IsNumber()
-    dailyAverageNoxRate?: number;
+    @ValidateIf(o => o.dailyAverageNoxRate !== null)
+    dailyAverageNoxRate: number | null;
   
     @IsNumber()
-    dailyNoxExceedance?: number;
+    dailyNoxExceedance: number;
 
     @IsNumber()
-    cumulativeOsNoxExceedance?: number;
+    @ValidateIf(o => o.cumulativeNoxEmissions !== null)
+    cumulativeOsNoxExceedance: number | null;
   }
 
 export class DailyBackstopRecordDTO extends DailyBackstopBaseDTO{
