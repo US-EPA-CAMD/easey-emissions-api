@@ -177,7 +177,7 @@ export class Nsps4tSummaryWorkspaceService {
 
         buildPromises.push(
           this.nsps4tAnnualService.buildObjectList(
-            nsps4tSummaryDatum.nsps4tFourthQuarterData,
+            nsps4tSummaryDatum.nsps4tFourthQuarterData ?? [],
             nsps4tSummaryDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -189,7 +189,7 @@ export class Nsps4tSummaryWorkspaceService {
 
         buildPromises.push(
           this.nsps4tCompliancePeriodService.buildObjectList(
-            nsps4tSummaryDatum.nsps4tCompliancePeriodData,
+            nsps4tSummaryDatum.nsps4tCompliancePeriodData ?? [],
             nsps4tSummaryDatum['id'],
             monitoringLocationId,
             reportingPeriodId,

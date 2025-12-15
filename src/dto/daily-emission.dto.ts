@@ -74,7 +74,7 @@ export class DailyEmissionRecordDTO extends DailyEmissionBaseDTO {
 export class DailyEmissionImportDTO extends DailyEmissionBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => DailyFuelImportDTO)
-  dailyFuelData: DailyFuelImportDTO[];
+  dailyFuelData?: DailyFuelImportDTO[];
 }
 
 export class DailyEmissionDTO extends DailyEmissionRecordDTO {

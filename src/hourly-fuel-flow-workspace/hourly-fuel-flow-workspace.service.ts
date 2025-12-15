@@ -113,7 +113,7 @@ export class HourlyFuelFlowWorkspaceService {
       // Load children hourly param fuel flow records
       promises.push(
         this.hourlyParameterFuelFlow.buildObjectList(
-          dataChunk.hourlyParameterFuelFlowData,
+          dataChunk.hourlyParameterFuelFlowData ?? [],
           dataChunk['id'],
           monitorLocationId,
           reportingPeriodId,

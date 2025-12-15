@@ -161,7 +161,7 @@ export class DailyEmissionWorkspaceService {
       for (const dailyEmissionDatum of emissionsImport.dailyEmissionData) {
         buildPromises.push(
           this.dailyFuelWorkspaceService.buildObjectList(
-            dailyEmissionDatum.dailyFuelData,
+            dailyEmissionDatum.dailyFuelData ?? [],
             dailyEmissionDatum['id'],
             dailyEmissionDatum['locationId'],
             reportingPeriodId,

@@ -86,13 +86,13 @@ export class Nsps4tSummaryImportDTO extends Nsps4tSummaryBaseDTO {
   @Type(() => Nsps4tCompliancePeriodImportDTO)
   @ArrayMinSize(0)
   @ArrayMaxSize(3)
-  nsps4tCompliancePeriodData: Nsps4tCompliancePeriodImportDTO[];
+  nsps4tCompliancePeriodData?: Nsps4tCompliancePeriodImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => Nsps4tAnnualImportDTO)
   @ArrayMinSize(0)
   @ArrayMaxSize(1)
-  nsps4tFourthQuarterData: Nsps4tAnnualImportDTO[];
+  nsps4tFourthQuarterData?: Nsps4tAnnualImportDTO[];
 }
 
 export class Nsps4tSummaryDTO extends Nsps4tSummaryRecordDTO {
