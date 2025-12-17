@@ -27,7 +27,7 @@ export class DailyBackstopBaseDTO {
     dailyNoxExceedance: number;
 
     @IsNumber()
-    @ValidateIf(o => o.cumulativeNoxEmissions !== null)
+    @ValidateIf(o => o.cumulativeOsNoxExceedance !== null)
     cumulativeOsNoxExceedance: number | null;
   }
 
