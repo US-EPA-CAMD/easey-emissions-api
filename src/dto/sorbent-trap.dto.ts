@@ -103,6 +103,7 @@ export class SorbentTrapImportDTO extends SorbentTrapBaseDTO {
   @Type(() => SamplingTrainImportDTO)
   @ArrayMinSize(2)
   @ArrayMaxSize(2)
+  @IsOptional()
   samplingTrainData?: SamplingTrainImportDTO[];
 }
 
