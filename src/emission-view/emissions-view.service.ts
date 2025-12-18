@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityManager } from 'typeorm';
-import { withSlaveConnection } from '@us-epa-camd/easey-common';
+import { withSlaveConnection, withMasterConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
@@ -68,7 +68,7 @@ export class EmissionsViewService {
 
       if (rpCounts && rpCounts.length === 0) {
         promises.push(
-          withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
+          withMasterConnection(this.dataSource, async (entityManager: EntityManager) => {
             await entityManager.query(
               `CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
               [params.monitorPlanId, rp.id],
