@@ -50,9 +50,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     const replicaHost = this.configService.get<string>('database.replicaHost');
     const mainHost = this.configService.get<string>('database.host');
+
+    const replicaAccessEnabled = this.configService.get<boolean>('app.enableReplicaDbAccess');
     
     // If replica host is configured and different from main host, enable replication
-    if (replicaHost && replicaHost !== mainHost) {
+    if (replicaAccessEnabled && replicaHost && replicaHost !== mainHost) {
       console.log('Database replication enabled with replica host:', replicaHost);
       
       const commonConnectionSettings = {
