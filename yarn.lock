@@ -1381,13 +1381,13 @@
   resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-2.1.0.tgz#b9b536b7c3571567aa1d0223db8baa1a51505a19"
   integrity sha512-W+n+rM69XsFdwORF11UqJahn4J3xi4g/ZEOlJNL6KoW5ygWSmBB2p0S2BZ4FQeS/NDH72e6xIcu35SfJnE8bXw==
 
-"@nestjs/platform-express@^11.1.9":
-  version "11.1.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-11.1.9.tgz#f3a8c0e0aba6f90584812c9ec1e2025563187b50"
-  integrity sha512-GVd3+0lO0mJq2m1kl9hDDnVrX3Nd4oH3oDfklz0pZEVEVS0KVSp63ufHq2Lu9cyPdSBuelJr9iPm2QQ1yX+Kmw==
+"@nestjs/platform-express@^11.1.10":
+  version "11.1.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-11.1.10.tgz#c8f12b307d7245b595c28cc98b36290ca23974c3"
+  integrity sha512-B2kvhfY+pE41Y6MXuJs80T7yfYjXzqHkWVyZJ5CAa3nFN3X2OIca6RH+b+7l3wZ+4x1tgsv48Q2P8ZfrDqJWYQ==
   dependencies:
     cors "2.8.5"
-    express "5.1.0"
+    express "5.2.1"
     multer "2.0.2"
     path-to-regexp "8.3.0"
     tslib "2.8.1"
@@ -2563,7 +2563,7 @@ bl@^4.1.0:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-body-parser@^2.2.0, body-parser@^2.2.1:
+body-parser@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-2.2.1.tgz#6df606b0eb0a6e3f783dde91dde182c24c82438c"
   integrity sha512-nfDwkulwiZYQIGwxdy0RUmowMhKcFVcYXUU7m4QlKYim1rUtg83xm2yjZ40QjDuc291AJjjeSc9b++AWHSgSHw==
@@ -3777,40 +3777,7 @@ expect@30.2.0, expect@^30.0.0:
     jest-mock "30.2.0"
     jest-util "30.2.0"
 
-express@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/express/-/express-5.1.0.tgz#d31beaf715a0016f0d53f47d3b4d7acf28c75cc9"
-  integrity sha512-DT9ck5YIRU+8GYzzU5kT3eHGA5iL+1Zd0EutOmTE9Dtk+Tvuzd23VBU+ec7HPNSTxXYO55gPV/hq4pSBJDjFpA==
-  dependencies:
-    accepts "^2.0.0"
-    body-parser "^2.2.0"
-    content-disposition "^1.0.0"
-    content-type "^1.0.5"
-    cookie "^0.7.1"
-    cookie-signature "^1.2.1"
-    debug "^4.4.0"
-    encodeurl "^2.0.0"
-    escape-html "^1.0.3"
-    etag "^1.8.1"
-    finalhandler "^2.1.0"
-    fresh "^2.0.0"
-    http-errors "^2.0.0"
-    merge-descriptors "^2.0.0"
-    mime-types "^3.0.0"
-    on-finished "^2.4.1"
-    once "^1.4.0"
-    parseurl "^1.3.3"
-    proxy-addr "^2.0.7"
-    qs "^6.14.0"
-    range-parser "^1.2.1"
-    router "^2.2.0"
-    send "^1.1.0"
-    serve-static "^2.2.0"
-    statuses "^2.0.1"
-    type-is "^2.0.1"
-    vary "^1.1.2"
-
-express@^5.2.1:
+express@5.2.1, express@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/express/-/express-5.2.1.tgz#8f21d15b6d327f92b4794ecf8cb08a72f956ac04"
   integrity sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==
