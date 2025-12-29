@@ -319,26 +319,28 @@ export class EmissionsWorkspaceService {
           }),
         );
 
-        await repository.updateAllViews(
-          monitorPlanId,
-          params.quarter,
-          params.year,
-        );
 
         // Finally, perform the updates (reset needs eval flag, etc) for those records
         await this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId, trx);
 
         await queryRunner.commitTransaction();
 
-        return {
-          message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
-        };
       } catch (err) {
         await queryRunner.rollbackTransaction();
         throw err;
       } finally {
         await queryRunner.release();
       }
+
+      await this.repository.updateAllViews(
+          monitorPlanId,
+          params.quarter,
+          params.year,
+        );
+
+      return {
+          message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
+        };
     }
 
   async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number, trx?: EntityManager): Promise<void> {
