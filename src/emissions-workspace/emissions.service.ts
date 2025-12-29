@@ -332,15 +332,18 @@ export class EmissionsWorkspaceService {
         await queryRunner.release();
       }
 
+    try {
       await this.repository.updateAllViews(
           monitorPlanId,
           params.quarter,
           params.year,
         );
-
       return {
           message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
         };
+      } catch (err) {
+        throw err;
+      }
     }
 
   async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number, trx?: EntityManager): Promise<void> {
