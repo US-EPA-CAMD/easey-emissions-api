@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityManager } from 'typeorm';
-import { withSlaveConnection, withMasterConnection } from '@us-epa-camd/easey-common';
+import { withSlaveConnection } from '@us-epa-camd/easey-common';
 
 import { EmissionsViewDTO } from '../dto/emissions-view.dto';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
