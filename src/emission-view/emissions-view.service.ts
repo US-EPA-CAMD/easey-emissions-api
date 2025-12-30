@@ -13,7 +13,8 @@ export class EmissionsViewService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly repository: EmissionsViewRepository,
-  ) {}
+    private readonly entityManager: EntityManager,
+  ) { }
 
   async getAvailableViews(): Promise<EmissionsViewDTO[]> {
     return withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
@@ -68,12 +69,11 @@ export class EmissionsViewService {
 
       if (rpCounts && rpCounts.length === 0) {
         promises.push(
-          withMasterConnection(this.dataSource, async (entityManager: EntityManager) => {
-            await entityManager.query(
-              `CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
-              [params.monitorPlanId, rp.id],
-            );
-          })
+          this.repository.query(
+            `
+            CALL camdecmps.refresh_emission_view_${viewCode}($1, $2);`,
+            [params.monitorPlanId, rp.id],
+          ),
         );
       }
     });
@@ -82,15 +82,13 @@ export class EmissionsViewService {
       await Promise.all(promises);
     }
 
-    return withSlaveConnection(this.dataSource, async (entityManager: EntityManager) => {
-      return getSelectedView(
-        viewCode,
-        'camdecmps',
-        req,
-        params,
-        rptPeriods,
-        entityManager,
-      );
-    });
+    return getSelectedView(
+      viewCode,
+      'camdecmps',
+      req,
+      params,
+      rptPeriods,
+      this.entityManager,
+    );
   }
 }
