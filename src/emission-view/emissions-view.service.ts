@@ -64,7 +64,7 @@ export class EmissionsViewService {
     const promises = [];
     rptPeriods.forEach(async (rp: { id: number }) => {
       let rpCounts = counts.filter(c => {
-        return c.rptPeriodId === Number(rp.id) && c.dataSetCode == viewCode;
+        return Number(c.rptPeriodId) === Number(rp.id) && c.dataSetCode == viewCode;
       });
 
       if (rpCounts && rpCounts.length === 0) {
