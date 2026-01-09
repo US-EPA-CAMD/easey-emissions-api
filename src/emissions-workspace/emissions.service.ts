@@ -319,26 +319,24 @@ export class EmissionsWorkspaceService {
           }),
         );
 
-        await repository.updateAllViews(
-          monitorPlanId,
-          params.quarter,
-          params.year,
-        );
+        // Delete existing emission view counts for this monitor plan and reporting period
+        await trx.query('DELETE FROM camdecmpswks.emission_view_count where mon_plan_id = $1 and rpt_period_id = $2', 
+          [monitorPlanId, reportingPeriodId]);
 
         // Finally, perform the updates (reset needs eval flag, etc) for those records
         await this.updateCollaterallyAffectedRecords(monitorPlanId, reportingPeriodId, trx);
 
         await queryRunner.commitTransaction();
-
-        return {
-          message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
-        };
       } catch (err) {
         await queryRunner.rollbackTransaction();
         throw err;
       } finally {
         await queryRunner.release();
       }
+
+      return {
+        message: `Successfully Imported Emissions Data for Facility Id/Oris Code [${params.orisCode}]`,
+      };
     }
 
   async updateCollaterallyAffectedRecords(monitorPlanId: string, reportingPeriodId: number, trx?: EntityManager): Promise<void> {

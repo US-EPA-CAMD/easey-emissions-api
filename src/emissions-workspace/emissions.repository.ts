@@ -26,12 +26,4 @@ export class EmissionsWorkspaceRepository extends Repository<
       .andWhere('rp.quarter = :quarter', { quarter });
     return query.getOne();
   }
-
-  async updateAllViews(monitorPlanId: string, quarter: number, year: number) {
-    await this.query('CALL camdecmpswks.refresh_emissions_views($1,$2,$3)', [
-      monitorPlanId,
-      year,
-      quarter,
-    ]);
-  }
 }
