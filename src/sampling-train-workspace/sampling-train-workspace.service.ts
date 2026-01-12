@@ -87,7 +87,7 @@ export class SamplingTrainWorkspaceService {
           'add_date',
           'update_date',
         ],
-        ',',
+        '|',
         trx?.queryRunner,
       );
 
