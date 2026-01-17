@@ -59,37 +59,37 @@ export class MonitorLocationChecksService {
       }
 
       if ('monitorHourlyValueData' in i)
-        i.monitorHourlyValueData.forEach(d => {
+        i.monitorHourlyValueData?.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
           !d.monitoringSystemId ||
             location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('matsMonitorHourlyValueData' in i)
-        i.matsMonitorHourlyValueData.forEach(d => {
+        i.matsMonitorHourlyValueData?.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
           !d.monitoringSystemId ||
             location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('hourlyGFMData' in i)
-        i.hourlyGFMData.forEach(d => {
+        i.hourlyGFMData?.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
         });
 
       if ('samplingTrainData' in i)
-        i.samplingTrainData.forEach(d => {
+        i.samplingTrainData?.forEach(d => {
           !d.componentId || location.componentIds.add(d.componentId);
         });
 
       if ('derivedHourlyValueData' in i)
-        i.derivedHourlyValueData.forEach(d => {
+        i.derivedHourlyValueData?.forEach(d => {
           !d.monitoringSystemId ||
             location.monitoringSystemIds.add(d.monitoringSystemId);
         });
 
       if ('hourlyFuelFlowData' in i) {
-        i.hourlyFuelFlowData.forEach(d => {
+        i.hourlyFuelFlowData?.forEach(d => {
           !d.monitoringSystemId ||
             location.monitoringSystemIds.add(d.monitoringSystemId);
 

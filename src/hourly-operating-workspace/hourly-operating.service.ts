@@ -229,7 +229,7 @@ export class HourlyOperatingWorkspaceService {
         //Load children records in a bulk fashion as well
         buildPromises.push(
           this.derivedHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.derivedHourlyValueData,
+            hourlyOperatingDatum.derivedHourlyValueData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -241,7 +241,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.matsMonitorHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.matsMonitorHourlyValueData,
+            hourlyOperatingDatum.matsMonitorHourlyValueData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -253,7 +253,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.monitorHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.monitorHourlyValueData,
+            hourlyOperatingDatum.monitorHourlyValueData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -265,7 +265,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.matsDerivedHourlyValueService.buildObjectList(
-            hourlyOperatingDatum.matsDerivedHourlyValueData,
+            hourlyOperatingDatum.matsDerivedHourlyValueData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -277,7 +277,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.hourlyFuelFlowService.buildObjectList(
-            hourlyOperatingDatum.hourlyFuelFlowData,
+            hourlyOperatingDatum.hourlyFuelFlowData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,
@@ -290,7 +290,7 @@ export class HourlyOperatingWorkspaceService {
 
         buildPromises.push(
           this.hourlyGasFlowMeterService.buildObjectList(
-            hourlyOperatingDatum.hourlyGFMData,
+            hourlyOperatingDatum.hourlyGFMData ?? [],
             hourlyOperatingDatum['id'],
             monitoringLocationId,
             reportingPeriodId,

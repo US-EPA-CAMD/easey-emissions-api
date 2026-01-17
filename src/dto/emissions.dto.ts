@@ -112,39 +112,39 @@ export class EmissionsRecordDTO extends EmissionsBaseDTO {
 export class EmissionsImportDTO extends EmissionsBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => DailyEmissionImportDTO)
-  dailyEmissionData: DailyEmissionImportDTO[];
+  dailyEmissionData?: DailyEmissionImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => WeeklyTestSummaryImportDTO)
-  weeklyTestSummaryData: WeeklyTestSummaryImportDTO[];
+  weeklyTestSummaryData?: WeeklyTestSummaryImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => SummaryValueImportDTO)
-  summaryValueData: SummaryValueImportDTO[];
+  summaryValueData?: SummaryValueImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => DailyTestSummaryImportDTO)
-  dailyTestSummaryData: DailyTestSummaryImportDTO[];
+  dailyTestSummaryData?: DailyTestSummaryImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => HourlyOperatingImportDTO)
-  hourlyOperatingData: HourlyOperatingImportDTO[];
+  hourlyOperatingData?: HourlyOperatingImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => LongTermFuelFlowImportDTO)
-  longTermFuelFlowData: LongTermFuelFlowImportDTO[];
+  longTermFuelFlowData?: LongTermFuelFlowImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => SorbentTrapImportDTO)
-  sorbentTrapData: SorbentTrapImportDTO[];
+  sorbentTrapData?: SorbentTrapImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => Nsps4tSummaryImportDTO)
-  nsps4tSummaryData: Nsps4tSummaryImportDTO[];
+  nsps4tSummaryData?: Nsps4tSummaryImportDTO[];
 
   @ValidateNested({ each: true })
   @Type(() => DailyBackstopDTO)
-  dailyBackstopData: DailyBackstopImportDTO[];
+  dailyBackstopData?: DailyBackstopImportDTO[];
 
   @IsString()
   @IsNotEmpty()

@@ -33,7 +33,8 @@ export class DailyTestSummaryCheckService {
     summary: DailyTestSummaryImportDTO,
   ): string {
     return summary?.testTypeCode !== TestTypeCodes.DAYCAL &&
-      summary?.dailyCalibrationData?.length > 0
+      summary?.dailyCalibrationData &&
+      summary.dailyCalibrationData.length > 0
       ? CheckCatalogService.formatResultMessage('IMPORT-29-A')
       : null;
   }

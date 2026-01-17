@@ -88,7 +88,7 @@ export class DailyTestSummaryRecordDTO extends DailyTestSummaryBaseDTO {
 export class DailyTestSummaryImportDTO extends DailyTestSummaryBaseDTO {
   @ValidateNested({ each: true })
   @Type(() => DailyCalibrationImportDTO)
-  dailyCalibrationData: DailyCalibrationImportDTO[];
+  dailyCalibrationData?: DailyCalibrationImportDTO[];
 }
 
 export class DailyTestSummaryDTO extends DailyTestSummaryRecordDTO {

@@ -8,19 +8,24 @@ import * as selectedEmissionView from '../utils/selected-emission-view';
 
 describe('EmissionsViewService', () => {
   let service: EmissionsViewWorkspaceService;
+  let repository: EmissionsViewWorkspaceRepository;
   let req: any;
   let params = new EmissionsViewParamsDTO();
 
+  const mockEntityManager = {
+    query: jest.fn().mockResolvedValue([]),
+  };
+
   const mockRepository = {
     find: jest.fn(),
-    query: jest.fn(),
+    query: jest.fn().mockResolvedValue([]),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmissionsViewWorkspaceService,
-        EntityManager,
+        { provide: EntityManager, useValue: mockEntityManager },
         {
           provide: EmissionsViewWorkspaceRepository,
           useValue: mockRepository,
@@ -29,6 +34,7 @@ describe('EmissionsViewService', () => {
     }).compile();
 
     service = module.get(EmissionsViewWorkspaceService);
+    repository = module.get(EmissionsViewWorkspaceRepository);
   });
 
   it('should be defined', () => {
@@ -39,6 +45,7 @@ describe('EmissionsViewService', () => {
     const mockSelectedView = jest
       .spyOn(selectedEmissionView, 'getSelectedView')
       .mockResolvedValue(null);
+
     const result = await service.getView('dailyCal', req, params);
     expect(result).toEqual(null);
     expect(mockSelectedView).toHaveBeenCalled();
