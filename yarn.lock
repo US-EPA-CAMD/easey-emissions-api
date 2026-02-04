@@ -986,7 +986,7 @@
     webpack "5.104.1"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^11.1.12", "@nestjs/common@^11.1.13":
+"@nestjs/common@^11.1.13":
   version "11.1.13"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.13.tgz#3d4bcc2a593236546bc62f7801b0d4450b26a9ac"
   integrity sha512-ieqWtipT+VlyDWLz5Rvz0f3E5rXcVAnaAi+D53DEHLjc1kmFxCgZ62qVfTX2vwkywwqNkTNXvBgGR72hYqV//Q==
@@ -997,7 +997,7 @@
     load-esm "1.0.3"
     tslib "2.8.1"
 
-"@nestjs/config@^4.0.2", "@nestjs/config@^4.0.3":
+"@nestjs/config@^4.0.3":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@nestjs/config/-/config-4.0.3.tgz#bb24a5f64e4e3ccf6fbf9e02f63303d14d7f308e"
   integrity sha512-FQ3M3Ohqfl+nHAn5tp7++wUQw0f2nAk+SFKe8EpNRnIifPqvfJP6JQxPKtFLMOHbyer4X646prFG4zSRYEssQQ==
@@ -1006,7 +1006,7 @@
     dotenv-expand "12.0.3"
     lodash "4.17.23"
 
-"@nestjs/core@^11.1.12", "@nestjs/core@^11.1.13":
+"@nestjs/core@^11.1.13":
   version "11.1.13"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.1.13.tgz#4444e124d255759d545a631f63e9d84fe1a1e3e5"
   integrity sha512-Tq9EIKiC30EBL8hLK93tNqaToy0hzbuVGYt29V8NhkVJUsDzlmiVf6c3hSPtzx2krIUVbTgQ2KFeaxr72rEyzQ==
@@ -1045,7 +1045,7 @@
     jsonc-parser "3.3.1"
     pluralize "8.0.0"
 
-"@nestjs/swagger@^11.2.5", "@nestjs/swagger@^11.2.6":
+"@nestjs/swagger@^11.2.6":
   version "11.2.6"
   resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-11.2.6.tgz#c9f2689a932bd431f5e7f8c29e6a57309f4c92bc"
   integrity sha512-oiXOxMQqDFyv1AKAqFzSo6JPvMEs4uA36Eyz/s2aloZLxUjcLfUMELSLSNQunr61xCPTpwEOShfmO7NIufKXdA==
@@ -1639,29 +1639,29 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@us-epa-camd/easey-common@21.5.0":
-  version "21.5.0"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.0/a80e31c71794baa82f0ecd2a90d9b620c76dabb3#a80e31c71794baa82f0ecd2a90d9b620c76dabb3"
-  integrity sha512-V8C74MOGqDx7pp4XskoVOrsd08KIn/J+I+SKYtfn5ON1fu6OI4pvZoWSdkLCwPA2TMqwV7KmdiSydzihWlQXpA==
+"@us-epa-camd/easey-common@21.5.1":
+  version "21.5.1"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.1/9a0dca5c78662a6140e542d8a30e4fef38d5a3cb#9a0dca5c78662a6140e542d8a30e4fef38d5a3cb"
+  integrity sha512-aHMuKqmkCJ96S5Bfx9vsPBnMV8P6qBSk/ZeY9AUu+NjsR3r966xTEKV3GjNnM9dkmJqnYpHd6dn8APkSEMh+zg==
   dependencies:
     "@golevelup/ts-jest" "^0.7.0"
     "@nestjs/axios" "4.0.1"
-    "@nestjs/common" "^11.1.12"
-    "@nestjs/config" "^4.0.2"
-    "@nestjs/core" "^11.1.12"
-    "@nestjs/swagger" "^11.2.5"
+    "@nestjs/common" "^11.1.13"
+    "@nestjs/config" "^4.0.3"
+    "@nestjs/core" "^11.1.13"
+    "@nestjs/swagger" "^11.2.6"
     "@nestjs/terminus" "^11.0.0"
     "@nestjs/typeorm" "^11.0.0"
-    axios "^1.13.2"
+    axios "^1.13.4"
     class-validator "^0.14.3"
     dotenv "^16.5.0"
     express "^5.2.1"
     helmet "^8.1.0"
     json2csv "^5.0.7"
-    pg "^8.17.1"
+    pg "^8.18.0"
     pg-copy-streams "^6.0.6"
     pg-pool "^3.11.0"
-    pg-query-stream "^4.11.1"
+    pg-query-stream "^4.12.0"
     reflect-metadata "^0.2.2"
     rxjs "^7.8.2"
     tls "^0.0.1"
@@ -2062,7 +2062,7 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.13.2, axios@^1.13.4:
+axios@^1.13.4:
   version "1.13.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.4.tgz#15d109a4817fb82f73aea910d41a2c85606076bc"
   integrity sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==
@@ -5098,10 +5098,10 @@ pg-copy-streams@^6.0.6:
   dependencies:
     obuf "^1.1.2"
 
-pg-cursor@^2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.16.1.tgz#08c0f8288063ed6134e7e11f245686f33dcb0094"
-  integrity sha512-ixa4eoGi2nAc3ZHn0xknrN5M9W4LHmzx+h+6J35aaU/lFAtNNqeldCfWTlxJFo2AUVbw0Wtse9SGZZ2OUes0Bg==
+pg-cursor@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.17.0.tgz#df33dbd4fd4201b1f480103314c937d9f16aa94d"
+  integrity sha512-2Uio3Xfl5ldwJfls+RgGL+YbPcKQncWACWjYQFqlamvHZ4HJFjZhhZBbqd7jQ2LIkZYSvU90bm2dNW0rno+QFQ==
 
 pg-int8@1.0.1:
   version "1.0.1"
@@ -5118,12 +5118,12 @@ pg-protocol@*, pg-protocol@^1.11.0:
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.11.0.tgz#2502908893edaa1e8c0feeba262dd7b40b317b53"
   integrity sha512-pfsxk2M9M3BuGgDOfuy37VNRRX3jmKgMjcvAcWqNDpZSf4cUmv8HSOl5ViRQFsfARFn0KuUQTgLxVMbNq5NW3g==
 
-pg-query-stream@^4.11.1:
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.11.1.tgz#5c48ba19f30805d8e7ae6dcc6a681d392efaa6c0"
-  integrity sha512-JF8xvSq/F+0u39Axw7BwlpNiDLkAb26bkDI6t8lMRL1/q7QE6oHoi969hu4v6QAqNZnBKjb40038As5k7xhSMw==
+pg-query-stream@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.12.0.tgz#fd4496d75e5f7c7f233dee0c88e813e165b86b2f"
+  integrity sha512-H97oiVPQ0+eRqIFOeYMUnjDcv9od7vHHMjiVDAhg2SEzAUr3M/dT83UEV1B+fm+tcVnymI8j2LSp57/+yjF6Fg==
   dependencies:
-    pg-cursor "^2.16.1"
+    pg-cursor "^2.17.0"
 
 pg-types@2.2.0, pg-types@^2.2.0:
   version "2.2.0"
@@ -5136,7 +5136,7 @@ pg-types@2.2.0, pg-types@^2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.17.1, pg@^8.18.0:
+pg@^8.18.0:
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.18.0.tgz#e9ee214206f5d9231240f1b82f22d2fa9de5cb75"
   integrity sha512-xqrUDL1b9MbkydY/s+VZ6v+xiMUmOUk7SS9d/1kpyQxoJ6U9AO1oIJyUWVZojbfe5Cc/oluutcgFG4L9RDP1iQ==
