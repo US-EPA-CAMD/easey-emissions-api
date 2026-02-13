@@ -65,7 +65,7 @@ export default registerAs('app', () => ({
   published: getConfigValue('EASEY_EMISSIONS_API_PUBLISHED', 'local'),
   submissionDays: getConfigValueNumber(
     'EASEY_EMISSIONS_API_SUBMISSION_DAYS',
-    38,
+    33,
   ),
   reqSizeLimit: getConfigValue('EASEY_EMISSIONS_API_REQ_SIZE_LIMIT', '60mb'),
   // ENABLES DEBUG CONSOLE LOGS
