@@ -62,7 +62,7 @@
     "@nestjs/testing": "^11.1.14",
     "@types/express": "^5.0.6",
     "@types/jest": "30.0.0",
-    "@types/node": "20",
+    "@types/node": "22",
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^8.3.1",
