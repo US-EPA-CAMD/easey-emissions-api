@@ -17,3 +17,5 @@ updates:
       # Ignore all versions of the '@types/node' dependency that are 23 or greater - keep this updated with future node upgrades
       - dependency-name: "@types/node"
         versions: [">=23.0.0"]
+      - dependency-name: "eslint"
+        versions: [">=10.0.0"]
