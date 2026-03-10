@@ -1,8 +1,8 @@
-instances: 2
+instances: 3
 environment: performance
 host: api-easey-perf.app.cloud.gov
 apiHost: api.epa.gov/easey/perf
-maxConnectionPool: 60
+maxConnectionPool: 90
 idleTimeout: 30000
 connectionTimeout: 60000
 statementTimeout: 300000
