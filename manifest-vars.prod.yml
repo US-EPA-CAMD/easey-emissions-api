@@ -1,8 +1,8 @@
-instances: 2
+instances: 3
 environment: production
 host: api-easey.app.cloud.gov
 apiHost: api.epa.gov/easey
-maxConnectionPool: 60
+maxConnectionPool: 90
 idleTimeout: 30000
 connectionTimeout: 60000
 statementTimeout: 300000
@@ -13,4 +13,4 @@ maxQueryExecutionTime: 30000
 enableAuditLog: true
 healthCheckInterval: 30
 healthCheckInvocationTimeout: 60
-dbHealthTimeout: 5000
+dbHealthTimeout: 300000
