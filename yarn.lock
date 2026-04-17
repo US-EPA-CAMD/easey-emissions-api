@@ -424,10 +424,10 @@
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
   integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
 
-"@golevelup/ts-jest@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@golevelup/ts-jest/-/ts-jest-0.7.0.tgz#b16c6775a34fa424e5fb492bc45a20c6d8204e0b"
-  integrity sha512-b5Kf+NiEfWuMGUD5bl/Gm/RqojS4Sr/4Q0ySXN4xn3xlkhgPYG6nGLBeNjk3MiM2I3ztVVFfI7SB8ajqDy6Idw==
+"@golevelup/ts-jest@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@golevelup/ts-jest/-/ts-jest-3.0.0.tgz#3e25efad2cdd5b29f3ab10bbcb5f76d9cfc9f024"
+  integrity sha512-ei0cvUKrVv8cJBW6df54yeod8PyzR2LTYG6wJ1xm+213p7HnThw5ShQcRH0/hhhnXnJCLrpmJM7e6fkRjHUF1g==
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"
@@ -974,7 +974,7 @@
     webpack "5.106.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^11.1.13", "@nestjs/common@^11.1.19":
+"@nestjs/common@^11.1.19":
   version "11.1.19"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.19.tgz#50ba93ae45ebaeda6163554b8e2ecec545a25c92"
   integrity sha512-qeiTt2tv+e5QyDKqG8HlVZb2wx64FEaSGFJouqTSRs+kG44iTfl3xlz1XqVped+rihx4hmjWgL5gkhtdK3E6+Q==
@@ -985,7 +985,7 @@
     load-esm "1.0.3"
     tslib "2.8.1"
 
-"@nestjs/config@^4.0.3", "@nestjs/config@^4.0.4":
+"@nestjs/config@^4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@nestjs/config/-/config-4.0.4.tgz#311d806fdc32a8bf29cf9ced903b97cbdb7e064b"
   integrity sha512-CJPjNitr0bAufSEnRe2N+JbnVmMmDoo6hvKCPzXgZoGwJSmp/dZPk9f/RMbuD/+Q1ZJPjwsRpq0vxna++Knwow==
@@ -994,7 +994,7 @@
     dotenv-expand "12.0.3"
     lodash "4.18.1"
 
-"@nestjs/core@^11.1.13", "@nestjs/core@^11.1.19":
+"@nestjs/core@^11.1.19":
   version "11.1.19"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.1.19.tgz#d724f1afc0caac29e005464f0f659425fc80235b"
   integrity sha512-6nJkWa2efrYi+XlU686J9y5L7OvxpLVjT0T/sxRKE7Jvpffiihelup4WSvLvRhdHDjj/5SuoWEwqReXAaaeHmw==
@@ -1033,7 +1033,7 @@
     jsonc-parser "3.3.1"
     pluralize "8.0.0"
 
-"@nestjs/swagger@^11.2.6", "@nestjs/swagger@^11.3.0":
+"@nestjs/swagger@^11.2.7", "@nestjs/swagger@^11.3.0":
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-11.3.0.tgz#ed5574216a3aba9ee13bbe4b9a9d1aa37541ff41"
   integrity sha512-SCS8fG2DL/ZF+9l5in09FwPhpBo5i1Gdo8Se3GYlJ2cn+iNTzF7u13QjHo5XI92BN8DN+Gcug+QTcmWmGvZyNw==
@@ -1045,10 +1045,10 @@
     path-to-regexp "8.4.2"
     swagger-ui-dist "5.32.4"
 
-"@nestjs/terminus@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/terminus/-/terminus-11.0.0.tgz#18b030e4994ef3a8c63136df4c6fb4b6fbe70f59"
-  integrity sha512-c55LOo9YGovmQHtFUMa/vDaxGZ2cglMTZejqgHREaApt/GArTfgYYGwhRXPLq8ZwiQQlLuYB+79e9iA8mlDSLA==
+"@nestjs/terminus@^11.1.1":
+  version "11.1.1"
+  resolved "https://registry.npmjs.org/@nestjs/terminus/-/terminus-11.1.1.tgz#22da9e59597917630419331360e8cc662b071e35"
+  integrity sha512-Ssql79H+EQY/Wg108eJqN4NiNsO/tLrj+qbzOWSQUf2JE4vJQ2RG3WTqUOrYjfjWmVHD3+Ys0+azed7LSMKScw==
   dependencies:
     boxen "5.1.2"
     check-disk-space "3.4.0"
@@ -1060,7 +1060,7 @@
   dependencies:
     tslib "2.8.1"
 
-"@nestjs/typeorm@^11.0.0", "@nestjs/typeorm@^11.0.1":
+"@nestjs/typeorm@^11.0.1":
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-11.0.1.tgz#32e4b5c2bd35331e2fa414f87b9a15652c83469c"
   integrity sha512-8rw/nKT0S+L+MkzgE9F2/mox7mAgsPlwfzmW9gsESN1lmQtIrVEfiiBwC2O8+guS1jBfQehJIdcdUj2OAp4VUQ==
@@ -1600,29 +1600,29 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@us-epa-camd/easey-common@21.5.1":
-  version "21.5.1"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.1/9a0dca5c78662a6140e542d8a30e4fef38d5a3cb#9a0dca5c78662a6140e542d8a30e4fef38d5a3cb"
-  integrity sha512-aHMuKqmkCJ96S5Bfx9vsPBnMV8P6qBSk/ZeY9AUu+NjsR3r966xTEKV3GjNnM9dkmJqnYpHd6dn8APkSEMh+zg==
+"@us-epa-camd/easey-common@21.5.2":
+  version "21.5.2"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.2/a747053be3a389d938334ed91f8da8d5ddd7b123#a747053be3a389d938334ed91f8da8d5ddd7b123"
+  integrity sha512-MSCiZyIOHA0Fzdr+MvNRO63miD/0fW5Ff+gEAjeMd7WusV+4M42iN6ofOA9JSC3A28KXIKFxs5Vjk3lJPMMwvg==
   dependencies:
-    "@golevelup/ts-jest" "^0.7.0"
+    "@golevelup/ts-jest" "^3.0.0"
     "@nestjs/axios" "4.0.1"
-    "@nestjs/common" "^11.1.13"
-    "@nestjs/config" "^4.0.3"
-    "@nestjs/core" "^11.1.13"
-    "@nestjs/swagger" "^11.2.6"
-    "@nestjs/terminus" "^11.0.0"
-    "@nestjs/typeorm" "^11.0.0"
-    axios "^1.13.4"
-    class-validator "^0.14.3"
-    dotenv "^16.5.0"
+    "@nestjs/common" "^11.1.19"
+    "@nestjs/config" "^4.0.4"
+    "@nestjs/core" "^11.1.19"
+    "@nestjs/swagger" "^11.2.7"
+    "@nestjs/terminus" "^11.1.1"
+    "@nestjs/typeorm" "^11.0.1"
+    axios "^1.15.0"
+    class-validator "^0.15.1"
+    dotenv "^17.4.2"
     express "^5.2.1"
     helmet "^8.1.0"
     json2csv "^5.0.7"
-    pg "^8.18.0"
+    pg "^8.20.0"
     pg-copy-streams "^6.0.6"
-    pg-pool "^3.11.0"
-    pg-query-stream "^4.12.0"
+    pg-pool "^3.12.0"
+    pg-query-stream "^4.14.0"
     reflect-metadata "^0.2.2"
     rxjs "^7.8.2"
     tls "^0.0.1"
@@ -2031,7 +2031,7 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.13.4, axios@^1.15.0:
+axios@^1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.15.0.tgz#0fcee91ef03d386514474904b27863b2c683bf4f"
   integrity sha512-wWyJDlAatxk30ZJer+GeCWS209sA42X+N5jU2jy6oHTp7ufw8uzUTVFBX9+wTfAlhiJXGS0Bq7X6efruWjuK9Q==
@@ -2341,19 +2341,10 @@ class-transformer@0.5.1:
   resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.5.1.tgz#24147d5dffd2a6cea930a3250a677addf96ab336"
   integrity sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==
 
-class-validator@0.15.1:
+class-validator@0.15.1, class-validator@^0.15.1:
   version "0.15.1"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.15.1.tgz#002600c101bcebb16e7240870cb50535340c9600"
+  resolved "https://registry.npmjs.org/class-validator/-/class-validator-0.15.1.tgz#002600c101bcebb16e7240870cb50535340c9600"
   integrity sha512-LqoS80HBBSCVhz/3KloUly0ovokxpdOLR++Al3J3+dHXWt9sTKlKd4eYtoxhxyUjoe5+UcIM+5k9MIxyBWnRTw==
-  dependencies:
-    "@types/validator" "^13.15.3"
-    libphonenumber-js "^1.11.1"
-    validator "^13.15.22"
-
-class-validator@^0.14.3:
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.14.4.tgz#d0084ae847a96264ad5158451a4e66c1c544de96"
-  integrity sha512-AwNusCCam51q703dW82x95tOqQp6oC9HNUl724KxJJOfnKscI8dOloXFgyez7LbTTKWuRBA37FScqVbJEoq8Yw==
   dependencies:
     "@types/validator" "^13.15.3"
     libphonenumber-js "^1.11.1"
@@ -2703,7 +2694,7 @@ dotenv@17.4.1:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.4.1.tgz#d8e2179fe287365ef3aecb9459668454168eda88"
   integrity sha512-k8DaKGP6r1G30Lx8V4+pCsLzKr8vLmV2paqEj1Y55GdAgJuIqpRp5FfajGF8KtwMxCz9qJc6wUIJnm053d/WCw==
 
-dotenv@^16.4.5, dotenv@^16.5.0, dotenv@^16.6.1:
+dotenv@^16.4.5, dotenv@^16.6.1:
   version "16.6.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.6.1.tgz#773f0e69527a8315c7285d5ee73c4459d20a8020"
   integrity sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==
@@ -5054,17 +5045,17 @@ pg-copy-streams@^6.0.6:
   dependencies:
     obuf "^1.1.2"
 
-pg-cursor@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.17.0.tgz#df33dbd4fd4201b1f480103314c937d9f16aa94d"
-  integrity sha512-2Uio3Xfl5ldwJfls+RgGL+YbPcKQncWACWjYQFqlamvHZ4HJFjZhhZBbqd7jQ2LIkZYSvU90bm2dNW0rno+QFQ==
+pg-cursor@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.npmjs.org/pg-cursor/-/pg-cursor-2.19.0.tgz#6134403686b5f1c367f19edd34dfd630859844cc"
+  integrity sha512-J5cF1MUz7LRJ9emOqF/06QjabMHMZy587rSPF0UuA8rCwKeeYl2co8Pp+6k5UU9YrAYHMzWkLxilfZB0hqsWWw==
 
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
 
-pg-pool@^3.11.0, pg-pool@^3.12.0, pg-pool@^3.13.0:
+pg-pool@^3.12.0, pg-pool@^3.13.0:
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.13.0.tgz#416482e9700e8f80c685a6ae5681697a413c13a3"
   integrity sha512-gB+R+Xud1gLFuRD/QgOIgGOBE2KCQPaPwkzBBGC9oG69pHTkhQeIuejVIk3/cnDyX39av2AxomQiyPT13WKHQA==
@@ -5074,12 +5065,12 @@ pg-protocol@*, pg-protocol@^1.13.0:
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.13.0.tgz#fdaf6d020bca590d58bb991b4b16fc448efe0511"
   integrity sha512-zzdvXfS6v89r6v7OcFCHfHlyG/wvry1ALxZo4LqgUoy7W9xhBDMaqOuMiF3qEV45VqsN6rdlcehHrfDtlCPc8w==
 
-pg-query-stream@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.12.0.tgz#fd4496d75e5f7c7f233dee0c88e813e165b86b2f"
-  integrity sha512-H97oiVPQ0+eRqIFOeYMUnjDcv9od7vHHMjiVDAhg2SEzAUr3M/dT83UEV1B+fm+tcVnymI8j2LSp57/+yjF6Fg==
+pg-query-stream@^4.14.0:
+  version "4.14.0"
+  resolved "https://registry.npmjs.org/pg-query-stream/-/pg-query-stream-4.14.0.tgz#d232341b57b99d53ccf5f5cc5ab57ff23e38a7a8"
+  integrity sha512-B1LLxgqngAATPciOPYYKyaQfsw5wyP6BZq6nHqQOC5QaaEBsfW/0OBwWUga+knCAqENMeoow9I8Zgi2m3P9rWw==
   dependencies:
-    pg-cursor "^2.17.0"
+    pg-cursor "^2.19.0"
 
 pg-types@2.2.0, pg-types@^2.2.0:
   version "2.2.0"
@@ -5092,7 +5083,7 @@ pg-types@2.2.0, pg-types@^2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.18.0, pg@^8.20.0:
+pg@^8.20.0:
   version "8.20.0"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.20.0.tgz#1a274de944cb329fd6dd77a6d371a005ba6b136d"
   integrity sha512-ldhMxz2r8fl/6QkXnBD3CR9/xg694oT6DZQ2s6c/RI28OjtSOpxnPrUCGOBJ46RCUxcWdx3p6kw/xnDHjKvaRA==
