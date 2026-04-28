@@ -67,7 +67,6 @@ export class EmissionsBaseDTO {
   quarter: number;
   @IsOptional()
   @IsString()
-  @MaxLength(3500)
   submissionComment?: string;
 
   constructor(values: Object = {}) {

@@ -48,6 +48,9 @@ export class EmissionEvaluation extends BaseEntity {
   @Column({ name: 'submission_availability_cd', nullable: true })
   submissionAvailabilityCd: string;
 
+  @Column({ name: 'submission_comment', nullable: true })
+  submissionComment: string;
+
   @ManyToOne(
     () => ReportingPeriod,
     o => o.emissionEvaluations,
