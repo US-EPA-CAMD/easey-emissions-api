@@ -19,7 +19,7 @@ export class EmissionsMap extends BaseMap<
       reportingPeriodId: entity.reportingPeriodId,
       year: entity.reportingPeriod?.year,
       quarter: entity.reportingPeriod?.quarter,
-      submissionComment: null,
+      submissionComment: entity.submissionComment,
       lastUpdated: entity.lastUpdated?.toISOString() ?? null,
       updatedStatusFlg: entity.updatedStatusFlg,
       needsEvalFlag: entity.needsEvalFlag,

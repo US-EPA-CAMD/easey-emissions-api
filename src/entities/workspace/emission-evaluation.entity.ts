@@ -54,6 +54,9 @@ export class EmissionEvaluation extends BaseEntity {
   @Column({ name: 'pending_status_cd', nullable: true })
   pendingStatusCd: string;
 
+  @Column({ name: 'submission_comment', nullable: true })
+  submissionComment: string;
+
   @ManyToOne(
     () => ReportingPeriod,
     o => o.emissionEvaluations,

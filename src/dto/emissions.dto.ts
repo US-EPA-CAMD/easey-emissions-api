@@ -1,13 +1,11 @@
 import { FindOneOptions } from 'typeorm';
 import { Type } from 'class-transformer';
 import {
-  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Max,
-  MaxLength,
   Min,
   ValidateNested,
   ValidationArguments,
@@ -67,7 +65,6 @@ export class EmissionsBaseDTO {
   quarter: number;
   @IsOptional()
   @IsString()
-  @MaxLength(3500)
   submissionComment?: string;
 
   constructor(values: Object = {}) {
