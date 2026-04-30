@@ -145,6 +145,7 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     params: PaginatedQuarterlyApportionedEmissionsParamsDTO,
   ): Promise<QuarterUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: QuarterUnitDataView[];
     const { page, perPage } = params;
 
@@ -165,8 +166,14 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
     return results;
   }
@@ -180,7 +187,9 @@ export class QuarterUnitDataRepository extends Repository<QuarterUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('qud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('qud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT qud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('qud').select(
         selectColumns.map(col => {

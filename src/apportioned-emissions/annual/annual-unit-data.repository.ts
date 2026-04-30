@@ -142,6 +142,7 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     params: PaginatedAnnualApportionedEmissionsParamsDTO,
   ): Promise<AnnualUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: AnnualUnitDataView[];
     const { page, perPage } = params;
 
@@ -162,8 +163,15 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
     return results;
   }
@@ -177,7 +185,9 @@ export class AnnualUnitDataRepository extends Repository<AnnualUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('aud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('aud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT aud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('aud').select(
         selectColumns.map(col => {

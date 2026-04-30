@@ -142,6 +142,7 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     params: PaginatedOzoneApportionedEmissionsParamsDTO,
   ): Promise<OzoneUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: OzoneUnitDataView[];
     const { page, perPage } = params;
 
@@ -162,8 +163,15 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
     return results;
   }
@@ -177,7 +185,9 @@ export class OzoneUnitDataRepository extends Repository<OzoneUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('oud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('oud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT oud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('oud').select(
         selectColumns.map(col => {

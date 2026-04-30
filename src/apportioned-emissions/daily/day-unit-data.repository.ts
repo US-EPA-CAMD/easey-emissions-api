@@ -144,6 +144,7 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     params: PaginatedDailyApportionedEmissionsParamsDTO,
   ): Promise<DayUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: DayUnitDataView[];
     const { page, perPage } = params;
 
@@ -164,8 +165,15 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
 
     return results;
@@ -180,7 +188,9 @@ export class DayUnitDataRepository extends Repository<DayUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('dud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('dud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT dud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('dud').select(
         selectColumns.map(col => {

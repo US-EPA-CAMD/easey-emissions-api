@@ -146,6 +146,7 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     params: PaginatedHourlyApportionedEmissionsParamsDTO,
   ): Promise<HourUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: HourUnitDataView[];
     const { page, perPage } = params;
 
@@ -166,8 +167,15 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
 
     return results;
@@ -182,7 +190,9 @@ export class HourUnitDataRepository extends Repository<HourUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('hud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('hud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT hud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('hud').select(
         selectColumns.map(col => {

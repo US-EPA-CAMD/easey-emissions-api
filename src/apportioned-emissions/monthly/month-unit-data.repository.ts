@@ -145,6 +145,7 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     params: PaginatedMonthlyApportionedEmissionsParamsDTO,
   ): Promise<MonthUnitDataView[]> {
     let totalCount: number;
+    let facilityCount: number;
     let results: MonthUnitDataView[];
     const { page, perPage } = params;
 
@@ -165,8 +166,15 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
         orderByColumns,
         true,
       );
-      totalCount = (await countQuery.getRawOne()).count;
+      const countResult = await countQuery.getRawOne();
+      totalCount = countResult.recordCount;
+      facilityCount = countResult.facilityCount;
+
       ResponseHeaders.setPagination(req, page, perPage, totalCount);
+
+      if (facilityCount) {
+        req.res.setHeader('X-Facility-Count', facilityCount);
+      }
     }
 
     return results;
@@ -181,7 +189,9 @@ export class MonthUnitDataRepository extends Repository<MonthUnitDataView> {
     let query = null;
 
     if (countQuery) {
-      query = this.createQueryBuilder('mud').select('COUNT(*) OVER() as count');
+      query = this.createQueryBuilder('mud')
+        .select('COUNT(*) OVER()', 'recordCount')
+        .addSelect('COUNT(DISTINCT mud.facilityId) OVER()', 'facilityCount');
     } else {
       query = this.createQueryBuilder('mud').select(
         selectColumns.map(col => {
