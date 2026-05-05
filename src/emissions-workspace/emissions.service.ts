@@ -316,6 +316,7 @@ export class EmissionsWorkspaceService {
             needsEvalFlag: 'Y',
             submissionAvailabilityCd: 'GRANTED',
             lastUpdated: new Date(),
+            submissionComment: params.submissionComment,
           }),
         );
 
