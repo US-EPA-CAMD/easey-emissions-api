@@ -172,7 +172,7 @@ export class QueryBuilderHelper {
       let string = '(';
 
       for (let i = 0; i < cntrlTech.length; i++) {
-        const regex = Regex.commaDelimited(cntrlTech[i].toUpperCase());
+        const regex = Regex.pipeDelimited(cntrlTech[i].toUpperCase());
 
         if (i === 0) {
           string += `(UPPER(${alias}.so2ControlInfo) ~* ${regex}) `;
