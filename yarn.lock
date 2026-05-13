@@ -1002,10 +1002,10 @@
   resolved "https://registry.npmmirror.com/@nestjs/mapped-types/-/mapped-types-2.1.1.tgz#9530ac3250ab433ba6ef831e9dd5d483f5fc8144"
   integrity sha512-SCCoMEJ6jdeI5h/N+KCVF1+pmg/hmEkNA5nHTS8Gvww7T/LCl4o1gFLinw2iQ60w7slFkszHcGLKGdazVI4F8A==
 
-"@nestjs/platform-express@^11.1.19":
-  version "11.1.19"
-  resolved "https://registry.npmmirror.com/@nestjs/platform-express/-/platform-express-11.1.19.tgz#e55f5078396b2285344f95f2b530b648e844cd4c"
-  integrity sha512-Vpdv8jyCQdThfoTx+UTn+DRYr6H6X02YUqcpZ3qP6G3ZUwtVp7eS+hoQPGd4UuCnlnFG8Wqr2J9bGEzQdi1rIg==
+"@nestjs/platform-express@^11.1.20":
+  version "11.1.20"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-11.1.20.tgz#453dea56ba217b6184cc8ec78abd66698cbcb5f0"
+  integrity sha512-HFJ/bf189AGziCp7o9DPdPEgj7LXvCWswR3hBNiVCIo3SwOwTIss1BsQWCCJVAtVYTmwIHOI0i0k9dMGXh3Hew==
   dependencies:
     cors "2.8.6"
     express "5.2.1"
