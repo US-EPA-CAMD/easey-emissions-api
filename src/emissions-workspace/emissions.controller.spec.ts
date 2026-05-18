@@ -1,8 +1,11 @@
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { Reflector } from '@nestjs/core';
 import { BulkLoadModule } from '@us-epa-camd/easey-common/bulk-load';
+import { RolesGuard } from '@us-epa-camd/easey-common/guards';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { LoggingInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { DataSource, EntityManager } from 'typeorm';
 
 import { genEmissionsRecordDto } from '../../test/object-generators/emissions-dto';
@@ -106,6 +109,7 @@ describe('-- Emissions Controller --', () => {
       imports: [LoggerModule, HttpModule, BulkLoadModule],
       controllers: [EmissionsWorkspaceController],
       providers: [
+        Reflector,
         EaseyContentService,
         EntityManager,
         DailyEmissionWorkspaceService,
@@ -197,10 +201,10 @@ describe('-- Emissions Controller --', () => {
         LongTermFuelFlowWorkspaceRepository,
         LongTermFuelFlowWorkspaceService,
         LongTermFuelFlowMap,
-        {
-          provide: DataSource,
-          useValue: {},
-        },
+        //{
+          //provide: DataSource,
+          //useValue: {},
+        //},
         {
           provide: DailyBackstopWorkspaceService,
           useValue: jest.mock(
@@ -223,17 +227,26 @@ describe('-- Emissions Controller --', () => {
               rollbackTransaction: jest.fn(),
               release: jest.fn(),
               isReleased: false,
-            }),
+              }),
+            },
           },
-        }
-      ],
-    }).compile();
+        ],
+       })
+      .overrideGuard(RolesGuard)
+      .useValue({
+        canActivate: jest.fn(() => true),
+      })
+      .overrideInterceptor(LoggingInterceptor)
+      .useValue({
+        intercept:jest.fn((context, next)=> next.handle()),
+      })
+    .compile();
 
     controller = module.get(EmissionsWorkspaceController);
     service = module.get(EmissionsWorkspaceService);
     submissionService = module.get(ReviewSubmitService);
     emissionsChecksService = module.get(EmissionsChecksService);
-  });
+  })
 
   afterEach(() => {
     jest.resetAllMocks();

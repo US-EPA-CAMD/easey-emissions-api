@@ -1,10 +1,12 @@
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { Reflector } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { EntityManager } from 'typeorm';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
-
+import { RolesGuard } from '@us-epa-camd/easey-common/guards';
+import { LoggingInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import { EmissionsViewParamsDTO } from '../dto/emissions-view.params.dto';
 import { EmissionsViewWorkspaceController } from './emissions-view.controller';
 import { EmissionsViewWorkspaceRepository } from './emissions-view.repository';
@@ -18,6 +20,7 @@ describe('EmissionsViewWorkspaceController', () => {
     const module = await Test.createTestingModule({
       imports: [LoggerModule, HttpModule],
       providers: [
+        Reflector,
         EmissionsViewWorkspaceRepository,
         EmissionsViewWorkspaceController,
         EmissionsViewWorkspaceService,
@@ -28,7 +31,16 @@ describe('EmissionsViewWorkspaceController', () => {
           useValue: {},
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(RolesGuard)
+      .useValue({
+        canActivate: jest.fn(() => true),
+      })
+      .overrideInterceptor(LoggingInterceptor)
+      .useValue({
+        intercept:jest.fn((context, next)=> next.handle()),
+      })
+    .compile();
 
     emissionsViewController = module.get(EmissionsViewWorkspaceController);
     emissionsViewService = module.get(EmissionsViewWorkspaceService);

@@ -18,11 +18,20 @@ describe('QueryBuilderHelper.whereControlTech', () => {
       const idx = sql.indexOf('~*', i);
       if (idx === -1) break;
       let j = idx + 2;
+      // Skip whitespace after ~*
       while (j < sql.length && sql[j] === ' ') j++;
-      if (sql[j] !== '(') {
+
+      // NEW: Check for opening quote (added by the fix)
+      if (j < sql.length && sql[j] === "'") {
+        j++; // Skip the opening quote
+      }
+
+      // Now we should be at the opening parenthesis
+      if (j >= sql.length || sql[j] !== '(') {
         i = j;
         continue;
       }
+
       let depth = 0;
       let inClass = false;
       const start = j;
@@ -47,12 +56,18 @@ describe('QueryBuilderHelper.whereControlTech', () => {
       }
       if (end > 0) {
         try {
+          // Extract the pattern (just the regex part, without quotes
           out.push(new RegExp(sql.substring(start, end), 'i'));
         } catch {
           // Ignore patterns that fail to compile in JS (none expected with
           // the current pipeDelimited output, but be defensive).
         }
-        i = end;
+        // NEW: Skip the closing quote if present
+        if (end < sql.length && sql[end] === "'") {
+          i = end + 1;
+        } else {
+          i = end;
+        }
       } else {
         i = j;
       }
@@ -67,6 +82,8 @@ describe('QueryBuilderHelper.whereControlTech', () => {
     const query = makeQuery();
     QueryBuilderHelper.whereControlTech(query, [SNCR_STORED], params, alias);
     const sql = query.andWhere.mock.calls[0][0];
+    console.log('Generated SQL:', sql);
+    console.log('Extracted patterns:', extractPatterns(sql));
     expect(
       matchesAny(
         sql,
