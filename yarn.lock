@@ -1586,10 +1586,10 @@
   resolved "https://registry.npmmirror.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@us-epa-camd/easey-common@21.5.6":
-  version "21.5.6"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.6/065c9c355b3a0c4be2dac858cffbec0d49f44a0b#065c9c355b3a0c4be2dac858cffbec0d49f44a0b"
-  integrity sha512-g3FDbGj2TCWFgV1lBcIamBl1Q7dyEoaZW1k1L4da40d3HNagQ7095L7AoYXcltcRtqMVdq7LKENbOMf7QiIoPw==
+"@us-epa-camd/easey-common@21.5.7":
+  version "21.5.7"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.5.7/77dc85f5e694260a8f013452141052429cd1d3a8#77dc85f5e694260a8f013452141052429cd1d3a8"
+  integrity sha512-Ybe5PgJS3SvRkLuk8mJwvy8xwB0TqCg1vT/Ww0M4Ox2LSx9eXkA/kMgpfd5L4SlXMEZGU7LqjUZd59vuA2ZIGQ==
   dependencies:
     "@golevelup/ts-jest" "^3.0.0"
     "@nestjs/axios" "4.0.1"
@@ -1599,7 +1599,7 @@
     "@nestjs/swagger" "^11.4.4"
     "@nestjs/terminus" "^11.1.1"
     "@nestjs/typeorm" "^11.0.1"
-    axios "^1.16.1"
+    axios "^1.17.0"
     class-validator "^0.15.1"
     dotenv "^17.4.2"
     express "^5.2.1"
@@ -2024,9 +2024,9 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.16.1:
+axios@^1.16.1, axios@^1.17.0:
   version "1.17.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.17.0.tgz#ae5a1164a4f719942cd73c67e6a3f62d3ccb8f2b"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.17.0.tgz#ae5a1164a4f719942cd73c67e6a3f62d3ccb8f2b"
   integrity sha512-J8SwNxprqqpbfenehxWYXE7CW+wM1BB4w3+N+g+/Wx40xM4rsLrfPmHHxSWIxJLYDgSY/HqlFPIYb2/S3rxafw==
   dependencies:
     follow-redirects "^1.16.0"
