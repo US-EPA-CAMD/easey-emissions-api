@@ -34,7 +34,7 @@
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.25",
     "@nestjs/config": "^4.0.4",
-    "@nestjs/core": "^11.1.24",
+    "@nestjs/core": "^11.1.25",
     "@nestjs/platform-express": "^11.1.24",
     "@nestjs/swagger": "^11.4.4",
     "@nestjs/typeorm": "^11.0.1",
