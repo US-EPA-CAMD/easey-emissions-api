@@ -958,10 +958,10 @@
     webpack "5.106.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^11.1.24":
-  version "11.1.24"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.24.tgz#0665208a5e7658ddf2182dd248bdc04bb27277da"
-  integrity sha512-9zHxaDDM+oXW9As6UsP5yYB+UqczBmpeSCIFWdPEtEukMnZhxODG1BBjaUcdBB8Sc1uzojSJSJlp3yFp853t1g==
+"@nestjs/common@^11.1.24", "@nestjs/common@^11.1.25":
+  version "11.1.25"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.25.tgz#4cd111cfa69c43d098a586df41302835dd91e97d"
+  integrity sha512-eObNI89zpPEHQWr9BxD5yQe6hcDjzT6sj/jng1tWBL4GXEgZzrVYOnFA4pzk1ZvDNHa3z7GD2Yy0Z06Ihv9y6g==
   dependencies:
     uid "2.0.2"
     file-type "21.3.4"
