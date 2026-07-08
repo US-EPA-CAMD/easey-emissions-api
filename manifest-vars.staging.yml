@@ -1,4 +1,4 @@
-instances: 2
+instances: 1
 environment: staging
 host: api-easey-stg.app.cloud.gov
 apiHost: api.epa.gov/easey/staging
