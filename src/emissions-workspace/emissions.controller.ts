@@ -4,10 +4,12 @@ import {
   Post,
   Query,
   Controller,
+  UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
   NotFoundException,
 } from '@nestjs/common';
+import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 
 import {
   ApiTags,
@@ -158,6 +160,23 @@ export class EmissionsWorkspaceController {
   async import(@Body() payload: EmissionsImportDTO, @User() user: CurrentUser) {
     await this.checksService.runChecks(payload);
     return this.service.import(payload, user.userId);
+  }
+
+  @Post('import/bulk')
+  @ApiBearerAuth('ClientToken')
+  @ApiSecurity('ClientId')
+  @UseGuards(ClientTokenGuard)
+  @ApiOkResponse({
+    type: EmissionsDTO,
+    description:
+      'Imports Emissions data on behalf of a user for the bulk import job',
+  })
+  async importBulk(
+    @Body() payload: EmissionsImportDTO,
+    @Query('userId') userId: string,
+  ) {
+    await this.checksService.runChecks(payload);
+    return this.service.import(payload, userId);
   }
 
   @Get()
