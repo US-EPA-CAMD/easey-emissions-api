@@ -171,6 +171,10 @@ export class EmissionsWorkspaceController {
     description:
       'Imports Emissions data on behalf of a user for the bulk import job',
   })
+  @AuditLog({
+    label: 'Imported emissions data on behalf of a user for the bulk import job',
+    requestBodyOutFields: ['orisCode', 'year', 'quarter']
+  })
   async importBulk(
     @Body() payload: EmissionsImportDTO,
     @Query('userId') userId: string,
