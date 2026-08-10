@@ -1362,10 +1362,10 @@
   dependencies:
     undici-types "~6.21.0"
 
-"@types/pg@^8.20.3":
-  version "8.20.3"
-  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.20.3.tgz#c8d02d0e680ab881171da01cd605f88c6286edc0"
-  integrity sha512-4Tvg+HO6+oQaAkpT8GTYoSExzpGGZz532GXgbbCElWJQeQdMozBWxEKNBhJJpHFjWXsMxqPbyypvj/89FWNoSQ==
+"@types/pg@^8.20.4":
+  version "8.20.4"
+  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.20.4.tgz#b00123de804f6c07124e5c67010a818d2a35da73"
+  integrity sha512-Jz7UDOlIiFJuacC0TlBoLyNtmwlA/wpIyPDd3tvUqlRM+HzkWy2xUgpFpaXtbfTAFF6sIGq5lsCDBdJnhky1Xg==
   dependencies:
     "@types/node" "*"
     pg-protocol "*"
