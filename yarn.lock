@@ -1026,10 +1026,10 @@
     webpack "5.106.2"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^11.1.24", "@nestjs/common@^11.1.28":
-  version "11.1.28"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.28.tgz#5963f799dcf59aacb1c4db77108a538b6d893d66"
-  integrity sha512-bRImsxibie+AM7xjdwcrm/gr5YeacI65kSBNzTufa1Ib5iwziaY/lqMtRh9THq6pbV4e1HP9aI2ZxGUumnmaoQ==
+"@nestjs/common@^11.1.24", "@nestjs/common@^11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.2.0.tgz#132b03763045dbeb849456ceb5dd6b51621f3697"
+  integrity sha512-SOByoXWD3E+42+lXdEpgXK/zm0mAz7WZAdRRkCSxN0v3EXyMtGOqzB0hL0eeR17j0Qg4gDLoWoogYGmUUf0P7g==
   dependencies:
     uid "2.0.2"
     file-type "21.3.4"
