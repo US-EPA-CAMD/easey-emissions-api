@@ -47,12 +47,17 @@ export async function getSelectedView(
 
   let columnList = columns.map(i => `vw.${i.columnname} AS "${i.columnalias}"`);
 
+  const additionalColumns =
+  viewCodeUpperCase === 'DAILYCAL'
+    ? ', vw.test_sum_id AS "dailyTestSumId"'
+    : '';
+
   let viewData = await mgr
     .createQueryBuilder()
     .select(
       `${columnList.join(
         ',',
-      )}, rp.calendar_year as rptYear, rp.quarter as rptQuarter`,
+      )}, rp.calendar_year as rptYear, rp.quarter as rptQuarter${additionalColumns}`,
     )
     .from(`${schema}.emission_view_${viewCode.toLowerCase()}`, 'vw')
     .innerJoin(ReportingPeriod, 'rp', 'vw.rpt_period_id=rp.id')
