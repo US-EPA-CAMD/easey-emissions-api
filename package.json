@@ -28,7 +28,8 @@
     "repl": "nest start --watch --entryFile repl"
   },
   "resolutions": {
-    "xml2js": "^0.5.0"
+    "xml2js": "^0.5.0",
+	"multer": "^2.3.0"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
