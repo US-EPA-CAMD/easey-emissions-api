@@ -22,7 +22,7 @@ export class EarliestPartitionQuarter extends BaseEntity {
     @Column({
         name: 'rpt_period_id',
         transformer: new NumericColumnTransformer(),
-        type: 'numeric',
+        type: 'bigint',
         nullable: false,
     })
     reportingPeriodId: number;
