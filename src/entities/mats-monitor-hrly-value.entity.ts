@@ -28,7 +28,7 @@ export class MatsMonitorHrlyValue extends BaseEntity {
     nullable: false,
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   reportingPeriodId: number;
 
