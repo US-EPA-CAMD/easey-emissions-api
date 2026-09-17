@@ -16,7 +16,7 @@ export class Unit extends BaseEntity {
   @PrimaryColumn({
     name: 'unit_id',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   id: number;
 
@@ -45,14 +45,14 @@ export class Unit extends BaseEntity {
   @Column({
     name: 'non_load_based_ind',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   nonLoadBasedIndicator: number;
 
   @Column({
     name: 'fac_id',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   facId: number;
 
