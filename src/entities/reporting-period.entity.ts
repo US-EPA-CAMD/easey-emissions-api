@@ -31,7 +31,7 @@ export class ReportingPeriod extends BaseEntity {
   @PrimaryColumn({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   id: number;
 
