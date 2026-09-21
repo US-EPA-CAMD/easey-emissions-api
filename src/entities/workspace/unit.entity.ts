@@ -45,7 +45,7 @@ export class Unit extends BaseEntity {
   @Column({
     name: 'non_load_based_ind',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   nonLoadBasedIndicator: number;
 
