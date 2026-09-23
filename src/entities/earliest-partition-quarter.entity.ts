@@ -13,7 +13,12 @@ import { ReportingPeriod } from './reporting-period.entity';
 @Entity({ name: 'camdecmpsmd.earliest_partition_quarter' })
 export class EarliestPartitionQuarter extends BaseEntity {
 
-    @PrimaryColumn({ name: 'earliest_partition_quarter_id', nullable: false })
+    @PrimaryColumn({
+        name: 'earliest_partition_quarter_id',
+        transformer: new NumericColumnTransformer(),
+        type: 'bigint',
+        nullable: false,
+    })
     earliestPartitionQuarterId: number;
 
     @Column({ name: 'table_name', nullable: false })
@@ -22,7 +27,7 @@ export class EarliestPartitionQuarter extends BaseEntity {
     @Column({
         name: 'rpt_period_id',
         transformer: new NumericColumnTransformer(),
-        type: 'numeric',
+        type: 'bigint',
         nullable: false,
     })
     reportingPeriodId: number;
