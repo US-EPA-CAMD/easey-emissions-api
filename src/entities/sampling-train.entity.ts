@@ -27,7 +27,7 @@ export class SamplingTrain extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
   })
   reportingPeriodId: number;
 

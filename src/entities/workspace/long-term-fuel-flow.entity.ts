@@ -20,7 +20,7 @@ export class LongTermFuelFlow extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
-    type: 'numeric',
+    type: 'bigint',
     nullable: true,
   })
   reportingPeriodId: number;

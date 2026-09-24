@@ -17,8 +17,37 @@ updates:
       # Ignore typeorm major version bumps (>=1.0.0) so 0.3.x updates keep flowing
       - dependency-name: "typeorm"
         versions: [">=1.0.0"]
-      # Ignore all versions of the '@types/node' dependency that are 23 or greater - keep this updated with future node upgrades
+      # Ignore all versions of the '@types/node' dependency that are 25 or greater - keep this updated with future node upgrades
       - dependency-name: "@types/node"
-        versions: [">=23.0.0"]
+        versions: [">=25.0.0"]
       - dependency-name: "eslint"
         versions: [">=10.0.0"]
+      - dependency-name: "uuid"
+        versions: [">=12.0.0"]
+      # Ignore nestjs version 12 and later - this upgrade has breaking changes and is not necessary at this time
+      - dependency-name: "@nestjs/axios"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/cache-manager"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/cli"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/common"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/config"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/core"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/platform-express"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/platform-socket.io"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/schematics"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/swagger"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/testing"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/typeorm"
+        versions: [">=12.0.0"]
+      - dependency-name: "@nestjs/websockets"
+        versions: [">=12.0.0"]
