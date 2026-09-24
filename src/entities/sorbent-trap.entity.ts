@@ -25,7 +25,7 @@ export class SorbentTrap extends BaseEntity {
   @Column({
     nullable: false,
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
     name: 'rpt_period_id',
   })
   reportingPeriodId: number;
