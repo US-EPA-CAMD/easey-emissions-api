@@ -25,7 +25,7 @@ export class HrlyOpData extends BaseEntity {
   @Column({
     name: 'rpt_period_id',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
     nullable: false,
   })
   reportingPeriodId: number;

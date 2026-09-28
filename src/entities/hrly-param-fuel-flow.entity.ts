@@ -78,7 +78,7 @@ export class HrlyParamFuelFlow extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   reportingPeriodId: number;
 

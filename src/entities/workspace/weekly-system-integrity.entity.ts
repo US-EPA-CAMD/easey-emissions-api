@@ -84,7 +84,7 @@ export class WeeklySystemIntegrity extends BaseEntity {
     name: 'rpt_period_id',
     nullable: false,
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   reportingPeriodId: number;
 
