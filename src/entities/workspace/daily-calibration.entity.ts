@@ -251,7 +251,7 @@ export class DailyCalibration extends BaseEntity {
 
   @Column({
     name: 'rpt_period_id',
-    type: 'bigint',
+    type: 'numeric',
     nullable: true,
     transformer: new NumericColumnTransformer(),
   })
