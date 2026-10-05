@@ -40,7 +40,7 @@ export class EmissionEvaluation extends BaseEntity {
   @Column({
     name: 'submission_id',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
     nullable: true,
   })
   submissionId: number;

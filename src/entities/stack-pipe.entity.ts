@@ -38,7 +38,7 @@ export class StackPipe extends BaseEntity {
   @Column({
     name: 'fac_id',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   facId: number;
 
