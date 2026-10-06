@@ -383,15 +383,20 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@colors/colors@1.6.0", "@colors/colors@^1.6.0":
+"@colors/colors@1.6.0":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.6.0.tgz#ec6cd237440700bc23ca23087f513c75508958b0"
   integrity sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==
 
+"@colors/colors@^1.6.0":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.6.1.tgz#8e2827259ada76965b3a051c18a5927fbdac38c2"
+  integrity sha512-dTmUJzXSuayBK+hZydEaXd2mhx61qWQwkwaBBY6LyEOVx/L9aQU5ac8eFNEsd9nrD1+zb9zvDCphLSe8g1F4Qw==
+
 "@dabh/diagnostics@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@dabh/diagnostics/-/diagnostics-2.0.8.tgz#ead97e72ca312cf0e6dd7af0d300b58993a31a5e"
-  integrity sha512-R4MSXTVnuMzGD7bzHdW2ZhhdPC/igELENcq5IjEverBvq5hn1SXCWcsi6eSsdWP0/Ur+SItRRjAktmdoX/8R/Q==
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@dabh/diagnostics/-/diagnostics-2.0.9.tgz#0de9e8718e23ab60d1fb1ce0c004079f14f5ad36"
+  integrity sha512-R6siwR65Hm+3yfgP7o8DKhNvputQAwfoz9zTc3kyDudnomj2/BcLmD+uGQQPICjuFUp8ounPBU+jmKsocwVVAg==
   dependencies:
     "@so-ric/colorspace" "^1.1.6"
     enabled "2.0.x"
@@ -1800,10 +1805,10 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.12.2.tgz#72da0da48d72b1e87831b9c0308931d3f4669027"
   integrity sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA==
 
-"@us-epa-camd/easey-common@21.6.3":
-  version "21.6.3"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.6.3/e4126f744c832d80929e95cfd1f040dafc1c91a8#e4126f744c832d80929e95cfd1f040dafc1c91a8"
-  integrity sha512-5/KdyJUTEmLnCEgj4RaE/ICej+x44jGxnk4IQD5yBor4i/14UrjYJRkSAIDe45uInjJyg+n2zSdY5/IoI77o0w==
+"@us-epa-camd/easey-common@21.6.4":
+  version "21.6.4"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.6.4/cb8005f443859b68cf11b834948756607d05bea2#cb8005f443859b68cf11b834948756607d05bea2"
+  integrity sha512-LKgAItJXN9Xbb50HyiPhtsluts3gtCZg8RbYqAZnsTHSml3emfwnpTH1ti1YxatSYpTGviRjM53rQur9AY1puQ==
   dependencies:
     "@golevelup/ts-jest" "^3.0.0"
     "@nestjs/axios" "4.0.1"
@@ -2621,9 +2626,9 @@ color-convert@^3.1.3:
     color-name "^2.0.0"
 
 color-name@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/color-name/-/color-name-2.1.0.tgz#0b677385c1c4b4edfdeaf77e38fa338e3a40b693"
-  integrity sha512-1bPaDNFm0axzE4MEAzKPuqKWeRaT43U/hyxKPBdqTfmPF+d6n7FSoTFxLVULUJOmiLp01KjhIPPH+HrXZJN4Rg==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/color-name/-/color-name-2.1.1.tgz#86c00ec98db36705be5bd4428097f13af1175a6d"
+  integrity sha512-p2FdgwVx1a9yWBHP2wI0VgShkDpgN4kZISkxdNipGBJWpa5G6b04OINlVWCyJj0JmfvcPrgqt95E9k8yvaOJFg==
 
 color-name@~1.1.4:
   version "1.1.4"
@@ -5228,10 +5233,10 @@ pg-copy-streams@^7.0.0:
   resolved "https://registry.yarnpkg.com/pg-copy-streams/-/pg-copy-streams-7.0.0.tgz#4659bccad49eab0d7f4b25e6e33e36a80107bf82"
   integrity sha512-zBvnY6wtaBRE2ae2xXWOOGMaNVPkXh1vhypAkNSKgMdciJeTyIQAHZaEeRAxUjs/p1El5jgzYmwG5u871Zj3dQ==
 
-pg-cursor@^2.22.0:
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.22.0.tgz#2d739638e535025ff39d35f5b5f71e0354ab3305"
-  integrity sha512-knzXLKqarTjOvb3qDSW0JiGsazmxwEKXrqHfWRte7XUsOYccQRafn3BLnQobWwInkzFJSyOej8y8cQRh2z3kGw==
+pg-cursor@^2.22.1:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.22.1.tgz#e8831e6d9ccd0a7c1c4367ab37c4a33473c5fa87"
+  integrity sha512-X10ldv3wwBONQkOSwgWEbaEITMGLd92V2Zd+xsFPhDt3nhhU3hpAT08SERBChnIFmomczLax6lKXLJrHPPXfxA==
 
 pg-int8@1.0.1:
   version "1.0.1"
@@ -5249,11 +5254,11 @@ pg-protocol@*, pg-protocol@^1.16.1:
   integrity sha512-p9VOFMiHB/ZbJATetbg+99PxssTVSQRnyuPSQ67mN1+1KBOjZaZ83ZQzltnxPhJwSsC3nwVjJ10DVJlerbFzLg==
 
 pg-query-stream@^4.17.0:
-  version "4.17.0"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.17.0.tgz#6518c46d58b98d34c24b9225bdbf6a7f9db7bb4f"
-  integrity sha512-69bug2CH/AJi1BN8r08eZ8tAGdbZZVp9kB0FG9OC2VkJPHIyj7d3Nk9V8tmporO60wqeWvhn7qtQ5oNimwlFug==
+  version "4.17.1"
+  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.17.1.tgz#9e1bc1c4b0c4ce8f32d7657a45b1417e8dca47e7"
+  integrity sha512-XZ6wenflIOUiT1Qss+cNNXfrm1XGQfZt/GZKagUq7ia/sIfDHiYmPUK0EehPoFu/EakvyutK/z9eah+QZhPoQQ==
   dependencies:
-    pg-cursor "^2.22.0"
+    pg-cursor "^2.22.1"
 
 pg-types@2.2.0, pg-types@^2.2.0:
   version "2.2.0"

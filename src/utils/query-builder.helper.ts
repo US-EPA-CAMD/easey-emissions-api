@@ -1,4 +1,4 @@
-import { Regex } from '@us-epa-camd/easey-common/utilities';
+import { Regex, toRegexParameter } from '@us-epa-camd/easey-common/utilities';
 
 export class QueryBuilderHelper {
   public static whereBeginDate(
@@ -116,19 +116,23 @@ export class QueryBuilderHelper {
   ) {
     if (params.includes('unitType') && unitType) {
       let string = '(';
+      const parameters: Record<string, string> = {};
 
       for (let i = 0; i < unitType.length; i++) {
-        const regex = Regex.commaDelimited(unitType[i].toUpperCase());
+        const parameterName = `unitTypeRegex${i}`;
+        parameters[parameterName] = toRegexParameter(
+          Regex.commaDelimited(unitType[i].toUpperCase()),
+        );
 
         if (i === 0) {
-          string += `(UPPER(${alias}.unitType) ~* ${regex}) `;
+          string += `(UPPER(${alias}.unitType) ~* :${parameterName}) `;
         } else {
-          string += `OR (UPPER(${alias}.unitType) ~* ${regex}) `;
+          string += `OR (UPPER(${alias}.unitType) ~* :${parameterName}) `;
         }
       }
 
       string += ')';
-      query.andWhere(string);
+      query.andWhere(string, parameters);
     }
 
     return query;
@@ -142,21 +146,25 @@ export class QueryBuilderHelper {
   ) {
     if (params.includes('unitFuelType') && unitFuel) {
       let string = '(';
+      const parameters: Record<string, string> = {};
 
       for (let i = 0; i < unitFuel.length; i++) {
-        const regex = Regex.commaDelimited(unitFuel[i].toUpperCase());
+        const parameterName = `unitFuelRegex${i}`;
+        parameters[parameterName] = toRegexParameter(
+          Regex.commaDelimited(unitFuel[i].toUpperCase()),
+        );
 
         if (i === 0) {
-          string += `(UPPER(${alias}.primaryFuelInfo) ~* ${regex}) `;
+          string += `(UPPER(${alias}.primaryFuelInfo) ~* :${parameterName}) `;
         } else {
-          string += `OR (UPPER(${alias}.primaryFuelInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${alias}.primaryFuelInfo) ~* :${parameterName}) `;
         }
 
-        string += `OR (UPPER(${alias}.secondaryFuelInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${alias}.secondaryFuelInfo) ~* :${parameterName}) `;
       }
 
       string += ')';
-      query.andWhere(string);
+      query.andWhere(string, parameters);
     }
 
     return query;
@@ -170,23 +178,27 @@ export class QueryBuilderHelper {
   ) {
     if (params.includes('controlTechnologies') && cntrlTech) {
       let string = '(';
+      const parameters: Record<string, string> = {};
 
       for (let i = 0; i < cntrlTech.length; i++) {
-        const regex = Regex.pipeDelimited(cntrlTech[i].toUpperCase());
+        const parameterName = `controlTechnologyRegex${i}`;
+        parameters[parameterName] = toRegexParameter(
+          Regex.pipeDelimited(cntrlTech[i].toUpperCase()),
+        );
 
         if (i === 0) {
-          string += `(UPPER(${alias}.so2ControlInfo) ~* ${regex}) `;
+          string += `(UPPER(${alias}.so2ControlInfo) ~* :${parameterName}) `;
         } else {
-          string += `OR (UPPER(${alias}.so2ControlInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${alias}.so2ControlInfo) ~* :${parameterName}) `;
         }
 
-        string += `OR (UPPER(${alias}.noxControlInfo) ~* ${regex}) `;
-        string += `OR (UPPER(${alias}.pmControlInfo) ~* ${regex}) `;
-        string += `OR (UPPER(${alias}.hgControlInfo) ~* ${regex}) `;
+        string += `OR (UPPER(${alias}.noxControlInfo) ~* :${parameterName}) `;
+        string += `OR (UPPER(${alias}.pmControlInfo) ~* :${parameterName}) `;
+        string += `OR (UPPER(${alias}.hgControlInfo) ~* :${parameterName}) `;
       }
 
       string += ')';
-      query.andWhere(string);
+      query.andWhere(string, parameters);
     }
 
     return query;
@@ -200,19 +212,23 @@ export class QueryBuilderHelper {
   ) {
     if (params.includes('programCodeInfo') && prgCode) {
       let string = '(';
+      const parameters: Record<string, string> = {};
 
       for (let i = 0; i < prgCode.length; i++) {
-        const regex = Regex.commaDelimited(prgCode[i].toUpperCase());
+        const parameterName = `programCodeRegex${i}`;
+        parameters[parameterName] = toRegexParameter(
+          Regex.commaDelimited(prgCode[i].toUpperCase()),
+        );
 
         if (i === 0) {
-          string += `(UPPER(${alias}.programCodeInfo) ~* ${regex}) `;
+          string += `(UPPER(${alias}.programCodeInfo) ~* :${parameterName}) `;
         } else {
-          string += `OR (UPPER(${alias}.programCodeInfo) ~* ${regex}) `;
+          string += `OR (UPPER(${alias}.programCodeInfo) ~* :${parameterName}) `;
         }
       }
 
       string += ')';
-      query.andWhere(string);
+      query.andWhere(string, parameters);
     }
 
     return query;
@@ -241,11 +257,8 @@ export class QueryBuilderHelper {
   ) {
     if (locations) {
       query.andWhere(
-        `( ${alias}.associatedStacks IN (${locations
-          .map(l => `'${l}'`)
-          .join(',')}) OR ${alias}.unitId IN (${locations
-          .map(l => `'${l}'`)
-          .join(',')}))`,
+        `( ${alias}.associatedStacks IN (:...locationNames) OR ${alias}.unitId IN (:...locationNames))`,
+        { locationNames: locations },
       );
     }
     return query;

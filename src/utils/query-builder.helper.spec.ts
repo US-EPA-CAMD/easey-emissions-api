@@ -11,82 +11,22 @@ describe('QueryBuilderHelper.whereControlTech', () => {
     andWhere: jest.fn().mockReturnThis(),
   });
 
-  const extractPatterns = (sql: string): RegExp[] => {
-    const out: RegExp[] = [];
-    let i = 0;
-    while (i < sql.length) {
-      const idx = sql.indexOf('~*', i);
-      if (idx === -1) break;
-      let j = idx + 2;
-      // Skip whitespace after ~*
-      while (j < sql.length && sql[j] === ' ') j++;
+  const extractPatterns = (query: ReturnType<typeof makeQuery>): RegExp[] =>
+    Object.values(query.andWhere.mock.calls[0][1]).map(
+      (pattern) => new RegExp(pattern as string, 'i'),
+    );
 
-      // NEW: Check for opening quote (added by the fix)
-      if (j < sql.length && sql[j] === "'") {
-        j++; // Skip the opening quote
-      }
-
-      // Now we should be at the opening parenthesis
-      if (j >= sql.length || sql[j] !== '(') {
-        i = j;
-        continue;
-      }
-
-      let depth = 0;
-      let inClass = false;
-      const start = j;
-      let end = -1;
-      for (; j < sql.length; j++) {
-        const c = sql[j];
-        if (inClass) {
-          if (c === ']') inClass = false;
-          continue;
-        }
-        if (c === '[') {
-          inClass = true;
-        } else if (c === '(') {
-          depth++;
-        } else if (c === ')') {
-          depth--;
-          if (depth === 0) {
-            end = j + 1;
-            break;
-          }
-        }
-      }
-      if (end > 0) {
-        try {
-          // Extract the pattern (just the regex part, without quotes
-          out.push(new RegExp(sql.substring(start, end), 'i'));
-        } catch {
-          // Ignore patterns that fail to compile in JS (none expected with
-          // the current pipeDelimited output, but be defensive).
-        }
-        // NEW: Skip the closing quote if present
-        if (end < sql.length && sql[end] === "'") {
-          i = end + 1;
-        } else {
-          i = end;
-        }
-      } else {
-        i = j;
-      }
-    }
-    return out;
-  };
-
-  const matchesAny = (sql: string, data: string): boolean =>
-    extractPatterns(sql).some(r => r.test(data));
+  const matchesAny = (
+    query: ReturnType<typeof makeQuery>,
+    data: string,
+  ): boolean => extractPatterns(query).some((regex) => regex.test(data));
 
   it('matches SNCR in the end position of a pipe-delimited string (Barry case)', () => {
     const query = makeQuery();
     QueryBuilderHelper.whereControlTech(query, [SNCR_STORED], params, alias);
-    const sql = query.andWhere.mock.calls[0][0];
-    console.log('Generated SQL:', sql);
-    console.log('Extracted patterns:', extractPatterns(sql));
     expect(
       matchesAny(
-        sql,
+        query,
         'Low NOx Burner Technology w/ Closed-coupled OFA|Selective Non-catalytic Reduction',
       ),
     ).toBe(true);
@@ -95,10 +35,9 @@ describe('QueryBuilderHelper.whereControlTech', () => {
   it('matches SNCR in the start position of a pipe-delimited string', () => {
     const query = makeQuery();
     QueryBuilderHelper.whereControlTech(query, [SNCR_STORED], params, alias);
-    const sql = query.andWhere.mock.calls[0][0];
     expect(
       matchesAny(
-        sql,
+        query,
         'Selective Non-catalytic Reduction|Low NOx Burner Technology w/ Separated OFA',
       ),
     ).toBe(true);
@@ -107,16 +46,14 @@ describe('QueryBuilderHelper.whereControlTech', () => {
   it('matches SNCR when the column value contains only that single value', () => {
     const query = makeQuery();
     QueryBuilderHelper.whereControlTech(query, [SNCR_STORED], params, alias);
-    const sql = query.andWhere.mock.calls[0][0];
-    expect(matchesAny(sql, 'Selective Non-catalytic Reduction')).toBe(true);
+    expect(matchesAny(query, 'Selective Non-catalytic Reduction')).toBe(true);
   });
 
   it('does not match SNCR against an SCR-only pipe-delimited string', () => {
     const query = makeQuery();
     QueryBuilderHelper.whereControlTech(query, [SNCR_STORED], params, alias);
-    const sql = query.andWhere.mock.calls[0][0];
     expect(
-      matchesAny(sql, 'Dry Low NOx Burners|Selective Catalytic Reduction'),
+      matchesAny(query, 'Dry Low NOx Burners|Selective Catalytic Reduction'),
     ).toBe(false);
   });
 
@@ -128,10 +65,9 @@ describe('QueryBuilderHelper.whereControlTech', () => {
       params,
       alias,
     );
-    const sql = query.andWhere.mock.calls[0][0];
     expect(
       matchesAny(
-        sql,
+        query,
         'Low NOx Burner Technology w/ Closed-coupled OFA|Selective Non-catalytic Reduction',
       ),
     ).toBe(true);
@@ -152,5 +88,29 @@ describe('QueryBuilderHelper.whereControlTech', () => {
     expect(sql).toContain('noxControlInfo');
     expect(sql).toContain('pmControlInfo');
     expect(sql).toContain('hgControlInfo');
+  });
+
+  it('binds control-technology text instead of adding it to SQL', () => {
+    const query = makeQuery();
+    const payload = "' OR TRUE OR control_info LIKE '";
+
+    QueryBuilderHelper.whereControlTech(query, [payload], params, alias);
+
+    const [sql, parameters] = query.andWhere.mock.calls[0];
+    expect(sql).toContain(':controlTechnologyRegex0');
+    expect(sql).not.toContain(payload.toUpperCase());
+    expect(parameters.controlTechnologyRegex0).toContain(payload.toUpperCase());
+  });
+
+  it('binds location names instead of adding them to SQL', () => {
+    const query = makeQuery();
+    const payload = "' OR TRUE --";
+
+    QueryBuilderHelper.whereLocationName(query, [payload], alias);
+
+    const [sql, parameters] = query.andWhere.mock.calls[0];
+    expect(sql).toContain(':...locationNames');
+    expect(sql).not.toContain(payload);
+    expect(parameters).toEqual({ locationNames: [payload] });
   });
 });
