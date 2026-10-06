@@ -1,6 +1,4 @@
-import { Regex } from '@us-epa-camd/easey-common/utilities';
-
-import { toRegexParameter } from './regex-parameter';
+import { Regex, toRegexParameter } from '@us-epa-camd/easey-common/utilities';
 
 export class QueryBuilderHelper {
   public static whereBeginDate(
