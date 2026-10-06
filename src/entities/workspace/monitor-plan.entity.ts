@@ -27,7 +27,7 @@ export class MonitorPlan extends BaseEntity {
   @Column({
     name: 'fac_id',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   facilityId: number;
 
