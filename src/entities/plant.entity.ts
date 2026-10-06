@@ -9,7 +9,7 @@ export class Plant extends BaseEntity {
   @PrimaryColumn({
     name: 'fac_id',
     transformer: new NumericColumnTransformer(),
-    type: 'bigint',
+    type: 'numeric',
   })
   id: number;
 
