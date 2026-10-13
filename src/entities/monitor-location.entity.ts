@@ -40,9 +40,10 @@ export class MonitorLocation extends BaseEntity {
 
   @Column({
     name: 'unit_id',
+    type: 'integer',
     nullable: true,
   })
-  unitId: string;
+  unitId: number;
 
   @Column({
     name: 'stack_pipe_id',
