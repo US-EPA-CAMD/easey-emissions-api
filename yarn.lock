@@ -1805,10 +1805,10 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.12.2.tgz#72da0da48d72b1e87831b9c0308931d3f4669027"
   integrity sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA==
 
-"@us-epa-camd/easey-common@21.6.4":
-  version "21.6.4"
-  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.6.4/cb8005f443859b68cf11b834948756607d05bea2#cb8005f443859b68cf11b834948756607d05bea2"
-  integrity sha512-LKgAItJXN9Xbb50HyiPhtsluts3gtCZg8RbYqAZnsTHSml3emfwnpTH1ti1YxatSYpTGviRjM53rQur9AY1puQ==
+"@us-epa-camd/easey-common@21.6.5":
+  version "21.6.5"
+  resolved "https://npm.pkg.github.com/download/@US-EPA-CAMD/easey-common/21.6.5/97350a8ac90d2ba3dd8d4f61057e6797d9a22a9a#97350a8ac90d2ba3dd8d4f61057e6797d9a22a9a"
+  integrity sha512-mzncdcIz84dJ/OCMtb6VjW5iTHqtKoyRyx9OJeDdVMKyMMEQsgvBBjeMOo0itA2+/bem0OtQNpvzigvDDm45zQ==
   dependencies:
     "@golevelup/ts-jest" "^3.0.0"
     "@nestjs/axios" "4.0.1"
