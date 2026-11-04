@@ -24,7 +24,7 @@ describe('SamplingTrainMap', () => {
       })[0],
     ];
 
-    mocks[3].component.componentId = faker.datatype.string();
+    mocks[3].component.componentId = faker.string.sample();
 
     const expectOne = async (mock: SamplingTrain) => {
       await expect(map.one(mock)).resolves.toEqual({

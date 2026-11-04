@@ -6,17 +6,17 @@ export const genSummaryValueImportDto = (amount = 1) => {
 
   let unitId = null;
   let stackPipeId = null;
-  if (faker.datatype.boolean()) unitId = faker.datatype.string();
-  else stackPipeId = faker.datatype.string();
+  if (faker.datatype.boolean()) unitId = faker.string.sample();
+  else stackPipeId = faker.string.sample();
 
   for (let i = 0; i < amount; i++) {
     summaryValues.push({
       stackPipeId,
       unitId,
-      parameterCode: faker.datatype.string(),
-      currentReportingPeriodTotal: faker.datatype.number(),
-      ozoneSeasonToDateTotal: faker.datatype.number(),
-      yearToDateTotal: faker.datatype.number(),
+      parameterCode: faker.string.sample(),
+      currentReportingPeriodTotal: faker.number.int(),
+      ozoneSeasonToDateTotal: faker.number.int(),
+      yearToDateTotal: faker.number.int(),
     });
   }
 

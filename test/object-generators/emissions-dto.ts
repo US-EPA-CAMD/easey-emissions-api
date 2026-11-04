@@ -63,8 +63,8 @@ export const genEmissionsParamsDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      monitorPlanId: faker.datatype.string(),
-      quarter: faker.datatype.number({ min: 1, max: 4 }),
+      monitorPlanId: faker.string.sample(),
+      quarter: faker.number.int({ min: 1, max: 4 }),
       year: faker.date.soon().getFullYear(),
     });
   }
@@ -77,10 +77,10 @@ export const genEmissionBaseDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      orisCode: faker.datatype.number(),
+      orisCode: faker.number.int(),
       year: faker.date.soon().getFullYear(),
-      quarter: faker.datatype.number({ min: 1, max: 4 }),
-      submissionComment: optionalValue(faker.datatype.string()),
+      quarter: faker.number.int({ min: 1, max: 4 }),
+      submissionComment: optionalValue(faker.string.sample()),
     });
   }
 
@@ -96,7 +96,7 @@ export const genEmissionsImportDto = (
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
       ...genEmissionBaseDto()[0],
-      submissionComment: optionalValue(faker.datatype.string()),
+      submissionComment: optionalValue(faker.string.sample()),
       dailyEmissionData: config?.include?.includes('dailyEmissionData')
         ? [new DailyEmissionImportDTO()]
         : undefined,
@@ -127,7 +127,7 @@ export const genEmissionsImportDto = (
       dailyBackstopData: config?.include?.includes('dailyBackstopData')
         ? [new DailyBackstopImportDTO()]
         : undefined,
-      version: faker.datatype.string()
+      version: faker.string.sample()
     });
   }
 
@@ -143,14 +143,14 @@ export const genEmissionsRecordDto = (
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
       ...genEmissionBaseDto()[0],
-      monitorPlanId: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
+      monitorPlanId: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
       lastUpdated: optionalValue(faker.date.soon().toISOString()),
-      updatedStatusFlg: optionalValue(faker.datatype.string()),
-      needsEvalFlag: optionalValue(faker.datatype.string()),
-      chkSessionId: optionalValue(faker.datatype.string()),
-      submissionId: optionalValue(faker.datatype.number()),
-      submissionAvailabilityCd: optionalValue(faker.datatype.string()),
+      updatedStatusFlg: optionalValue(faker.string.sample()),
+      needsEvalFlag: optionalValue(faker.string.sample()),
+      chkSessionId: optionalValue(faker.string.sample()),
+      submissionId: optionalValue(faker.number.int()),
+      submissionAvailabilityCd: optionalValue(faker.string.sample()),
       dailyEmissionData: config?.include?.includes('dailyEmissionData')
         ? [new DailyEmissionDTO()]
         : undefined,

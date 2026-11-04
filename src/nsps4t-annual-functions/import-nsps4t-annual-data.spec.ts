@@ -26,7 +26,7 @@ describe('ImportNsps4tAnnualData', () => {
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await Promise.all(
@@ -35,9 +35,9 @@ describe('ImportNsps4tAnnualData', () => {
           importNsps4tAnnualModule.importNsps4tAnnualData({
             data: {
               ...data,
-              monitoringLocationId: faker.datatype.string(),
-              reportingPeriodId: faker.datatype.number(),
-              nsps4tSumId: faker.datatype.string(),
+              monitoringLocationId: faker.string.sample(),
+              reportingPeriodId: faker.number.int(),
+              nsps4tSumId: faker.string.sample(),
               identifiers,
             },
             repository,

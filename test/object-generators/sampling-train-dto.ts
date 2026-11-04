@@ -7,21 +7,21 @@ export const genSamplingTrainImportDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      componentId: faker.datatype.string(),
-      sorbentTrapSN: faker.datatype.string(),
-      mainTrapHg: optionalValue(faker.datatype.string()),
-      btTrapHg: optionalValue(faker.datatype.string()),
-      spikeTrapHg: optionalValue(faker.datatype.string()),
-      spikeReferenceValue: optionalValue(faker.datatype.string()),
-      totalSampleVolumeDSCM: optionalValue(faker.datatype.number()),
-      referenceSFSRRatio: optionalValue(faker.datatype.number()),
-      hgConcentration: optionalValue(faker.datatype.string()),
-      percentBreakthrough: optionalValue(faker.datatype.number()),
-      percentSpikeRecovery: optionalValue(faker.datatype.number()),
-      samplingRatioCheckResultCode: optionalValue(faker.datatype.string()),
-      postLeakCheckResultCode: optionalValue(faker.datatype.string()),
-      trainQAStatusCode: optionalValue(faker.datatype.string()),
-      sampleDamageExplanation: optionalValue(faker.datatype.string()),
+      componentId: faker.string.sample(),
+      sorbentTrapSN: faker.string.sample(),
+      mainTrapHg: optionalValue(faker.string.sample()),
+      btTrapHg: optionalValue(faker.string.sample()),
+      spikeTrapHg: optionalValue(faker.string.sample()),
+      spikeReferenceValue: optionalValue(faker.string.sample()),
+      totalSampleVolumeDSCM: optionalValue(faker.number.int()),
+      referenceSFSRRatio: optionalValue(faker.number.int()),
+      hgConcentration: optionalValue(faker.string.sample()),
+      percentBreakthrough: optionalValue(faker.number.int()),
+      percentSpikeRecovery: optionalValue(faker.number.int()),
+      samplingRatioCheckResultCode: optionalValue(faker.string.sample()),
+      postLeakCheckResultCode: optionalValue(faker.string.sample()),
+      trainQAStatusCode: optionalValue(faker.string.sample()),
+      sampleDamageExplanation: optionalValue(faker.string.sample()),
     });
   }
 

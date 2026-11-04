@@ -52,12 +52,12 @@ export const genMonitorLocation = <RepoType>(
   const locations: RepoType[] = [];
   for (let location = 0; location < amount; location++) {
     locations.push(({
-      id: faker.datatype.string(),
-      unitId: optionalValue(faker.datatype.string()),
-      stackPipeId: optionalValue(faker.datatype.string()),
-      userId: optionalValue(faker.datatype.string()),
-      addDate: optionalValue(faker.datatype.datetime()),
-      updateDate: optionalValue(faker.datatype.datetime()),
+      id: faker.string.sample(),
+      unitId: optionalValue(faker.string.sample()),
+      stackPipeId: optionalValue(faker.string.sample()),
+      userId: optionalValue(faker.string.sample()),
+      addDate: optionalValue(faker.date.anytime()),
+      updateDate: optionalValue(faker.date.anytime()),
       stackPipe:
         config?.include?.includes('stackPipe') === true
           ? new StackPipe()

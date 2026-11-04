@@ -18,12 +18,12 @@ export const genPlant = <RepoType>(
 
   for (let plant = 0; plant < amount; plant++) {
     plants.push(({
-      id: faker.datatype.number(),
-      orisCode: optionalValue(faker.datatype.number()),
-      name: faker.datatype.string(),
-      state: faker.address.stateAbbr(),
-      countyCode: optionalValue(faker.datatype.string()),
-      region: optionalValue(faker.datatype.number()),
+      id: faker.number.int(),
+      orisCode: optionalValue(faker.number.int()),
+      name: faker.string.sample(),
+      state: faker.location.state({ abbreviated: true }),
+      countyCode: optionalValue(faker.string.sample()),
+      region: optionalValue(faker.number.int()),
       units: config?.include?.includes('units') ? [new Unit()] : undefined,
       stackPipes: config?.include?.includes('stackPipes')
         ? [new StackPipe()]

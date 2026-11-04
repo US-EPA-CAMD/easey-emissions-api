@@ -14,17 +14,17 @@ export const genDailyBackstop = <RepoType>(
 
     for (let i = 0; i < amount; i++) {
         dailyBackstopData.push(({
-            id: faker.datatype.string(),
-            reportingPeriodId: faker.datatype.string(),
-            monitoringLocationId: faker.datatype.string(),
-            date: faker.datatype.datetime(),
-            dailyNoxEmissions: faker.datatype.number(),
-            dailyHeatInput: faker.datatype.number(),
-            dailyAverageNoxRate: faker.datatype.number(),
-            dailyNoxExceedance: faker.datatype.number(),
-            cumulativeOsNoxExceedance: faker.datatype.number(),
-            userId: faker.datatype.string(),
-            updateDate: faker.datatype.datetime(),
+            id: faker.string.sample(),
+            reportingPeriodId: faker.string.sample(),
+            monitoringLocationId: faker.string.sample(),
+            date: faker.date.anytime(),
+            dailyNoxEmissions: faker.number.int(),
+            dailyHeatInput: faker.number.int(),
+            dailyAverageNoxRate: faker.number.int(),
+            dailyNoxExceedance: faker.number.int(),
+            cumulativeOsNoxExceedance: faker.number.int(),
+            userId: faker.string.sample(),
+            updateDate: faker.date.anytime(),
             monitorLocation: config?.include?.includes('monitorLocation')
                 ? genMonitorLocation()[0]
                 : undefined,

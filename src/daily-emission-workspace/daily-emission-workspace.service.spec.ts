@@ -86,7 +86,7 @@ describe('DailyEmissionWorkspaceService', () => {
       const locations = [{ unit: { name: 'a' }, id: 1 }];
       importData[0].unitId = 'a';
       const identifiers = { locations: {}, userId: '' };
-      const monitoringLocationId = faker.datatype.string();
+      const monitoringLocationId = faker.string.sample();
       identifiers.locations[monitoringLocationId] = {
         components: {},
         monitorFormulas: {},
@@ -99,8 +99,8 @@ describe('DailyEmissionWorkspaceService', () => {
       //   await expect(
       //     service.import({
       //       ...dailyEmission,
-      //       reportingPeriodId: faker.datatype.number(),
-      //       monitoringLocationId: faker.datatype.string(),
+      //       reportingPeriodId: faker.number.int(),
+      //       monitoringLocationId: faker.string.sample(),
       //       identifiers: {
       //         components: {},
       //         monitorFormulas: {},

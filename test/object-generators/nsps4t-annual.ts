@@ -16,14 +16,14 @@ export const genNsps4tAnnual = <RepoType>(
 
   for (let nsps4tAnnual = 0; nsps4tAnnual < amount; nsps4tAnnual++) {
     nsps4tAnnuals.push({
-      id: faker.datatype.string(),
-      nsps4tSumId: faker.datatype.string(),
-      annualEnergySold: optionalValue(faker.datatype.number()),
-      annualEnergySoldTypeCode: optionalValue(faker.datatype.string()),
-      annualPotentialElectricOutput: optionalValue(faker.datatype.number()),
-      monitoringLocationId: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      userId: faker.datatype.string(),
+      id: faker.string.sample(),
+      nsps4tSumId: faker.string.sample(),
+      annualEnergySold: optionalValue(faker.number.int()),
+      annualEnergySoldTypeCode: optionalValue(faker.string.sample()),
+      annualPotentialElectricOutput: optionalValue(faker.number.int()),
+      monitoringLocationId: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      userId: faker.string.sample(),
       addDate: faker.date.soon(),
       updateDate: optionalValue(faker.date.soon()),
       monitorLocation: config?.include.includes('monitorLocation')

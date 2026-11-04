@@ -22,7 +22,7 @@ describe('ExportNsps4tAnnualData', () => {
 
   it('should export records', async function() {
     const nsps4tSummaryIds = faker.helpers.uniqueArray(
-      faker.datatype.string,
+      faker.string.sample,
       3,
     );
     const nsps4tAnnualMocks = genNsps4tAnnual<Nsps4tAnnual>(3);

@@ -7,17 +7,17 @@ export const genEmissionsSubmissionsProgress = <RepoType>(
 
   for (let emission = 0; emission < amount; emission++) {
     emissions.push(({
-      beginDate: faker.datatype.datetime(),
-      endDate: faker.datatype.datetime(),
+      beginDate: faker.date.anytime(),
+      endDate: faker.date.anytime(),
       calendarYear: faker.date.soon().getFullYear(),
-      quarter: faker.datatype.number({ min: 1, max: 4 }),
-      submittedPercentage: faker.datatype.number(),
-      submittedCount: faker.datatype.number(),
-      remainingCount: faker.datatype.number(),
-      totalExpectedCount: faker.datatype.number(),
-      gdmUsedPercentage: faker.datatype.number(),
-      gdmUsedCount: faker.datatype.number(),
-      gdmRemainingCount: faker.datatype.number(),
+      quarter: faker.number.int({ min: 1, max: 4 }),
+      submittedPercentage: faker.number.int(),
+      submittedCount: faker.number.int(),
+      remainingCount: faker.number.int(),
+      totalExpectedCount: faker.number.int(),
+      gdmUsedPercentage: faker.number.int(),
+      gdmUsedCount: faker.number.int(),
+      gdmRemainingCount: faker.number.int(),
     } as unknown) as RepoType);
   }
 

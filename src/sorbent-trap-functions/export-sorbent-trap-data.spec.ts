@@ -31,7 +31,7 @@ describe('ExportSorbentTrapData', () => {
     await expect(
       exportSorbentTrapModule.exportSorbentTrapData({
         monitoringLocationIds: faker.helpers.uniqueArray(
-          faker.datatype.string,
+          faker.string.sample,
           2,
         ),
         year: faker.date.soon().getFullYear(),

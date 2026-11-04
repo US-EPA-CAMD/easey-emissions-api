@@ -16,14 +16,14 @@ export const genHourlyFuelFlowImportDto = (
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      fuelCode: faker.datatype.string(),
-      fuelUsageTime: optionalValue(faker.datatype.number()),
-      volumetricFlowRate: optionalValue(faker.datatype.number()),
-      volumetricUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
-      sourceOfDataVolumetricCode: optionalValue(faker.datatype.string()),
-      massFlowRate: optionalValue(faker.datatype.number()),
-      sourceOfDataMassCode: optionalValue(faker.datatype.string()),
-      monitoringSystemId: optionalValue(faker.datatype.string()),
+      fuelCode: faker.string.sample(),
+      fuelUsageTime: optionalValue(faker.number.int()),
+      volumetricFlowRate: optionalValue(faker.number.int()),
+      volumetricUnitsOfMeasureCode: optionalValue(faker.string.sample()),
+      sourceOfDataVolumetricCode: optionalValue(faker.string.sample()),
+      massFlowRate: optionalValue(faker.number.int()),
+      sourceOfDataMassCode: optionalValue(faker.string.sample()),
+      monitoringSystemId: optionalValue(faker.string.sample()),
       hourlyParameterFuelFlowData: config?.include.includes(
         'hourlyParameterFuelFlowData',
       )

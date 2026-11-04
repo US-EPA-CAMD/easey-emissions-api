@@ -19,14 +19,14 @@ export const genNsps4tSummaryImportDto = (
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      stackPipeId: optionalValue(faker.datatype.string()),
-      unitId: optionalValue(faker.datatype.string()),
-      co2EmissionStandardCode: optionalValue(faker.datatype.string()),
-      modusValue: optionalValue(faker.datatype.number()),
-      modusUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
-      electricalLoadCode: optionalValue(faker.datatype.string()),
-      noCompliancePeriodEndedIndicator: optionalValue(faker.datatype.number()),
-      noCompliancePeriodEndedComment: optionalValue(faker.datatype.string()),
+      stackPipeId: optionalValue(faker.string.sample()),
+      unitId: optionalValue(faker.string.sample()),
+      co2EmissionStandardCode: optionalValue(faker.string.sample()),
+      modusValue: optionalValue(faker.number.int()),
+      modusUnitsOfMeasureCode: optionalValue(faker.string.sample()),
+      electricalLoadCode: optionalValue(faker.string.sample()),
+      noCompliancePeriodEndedIndicator: optionalValue(faker.number.int()),
+      noCompliancePeriodEndedComment: optionalValue(faker.string.sample()),
       nsps4tCompliancePeriodData: config?.include.includes(
         'nsps4tCompliancePeriodData',
       )

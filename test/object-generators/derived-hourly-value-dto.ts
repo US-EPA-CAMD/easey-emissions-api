@@ -6,16 +6,16 @@ export const genDerivedHourlyValueImportDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      parameterCode: faker.datatype.string(),
-      unadjustedHourlyValue: faker.datatype.number(),
-      adjustedHourlyValue: faker.datatype.number(),
-      modcCode: faker.datatype.string(),
-      monitoringSystemId: faker.datatype.string(),
-      formulaId: faker.datatype.string(),
-      percentAvailable: faker.datatype.number(),
-      operatingConditionCode: faker.datatype.string(),
-      segmentNumber: faker.datatype.number(),
-      fuelCode: faker.datatype.string(),
+      parameterCode: faker.string.sample(),
+      unadjustedHourlyValue: faker.number.int(),
+      adjustedHourlyValue: faker.number.int(),
+      modcCode: faker.string.sample(),
+      monitoringSystemId: faker.string.sample(),
+      formulaId: faker.string.sample(),
+      percentAvailable: faker.number.int(),
+      operatingConditionCode: faker.string.sample(),
+      segmentNumber: faker.number.int(),
+      fuelCode: faker.string.sample(),
     });
   }
 

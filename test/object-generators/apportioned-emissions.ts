@@ -17,17 +17,17 @@ import { QuarterlyApportionedEmissionsNationalAggregationDTO } from '../../src/d
 import { ApplicableApportionedEmissionsAttributesDTO } from 'src/dto/applicable-apportioned-emissions-attributes.dto';
 
 const apportionedEmissionsAggregationDTO = {
-  grossLoad: faker.datatype.number(),
-  steamLoad: faker.datatype.number(),
-  so2Mass: faker.datatype.number(),
-  co2Mass: faker.datatype.number(),
-  noxMass: faker.datatype.number(),
-  heatInput: faker.datatype.number(),
+  grossLoad: faker.number.int(),
+  steamLoad: faker.number.int(),
+  so2Mass: faker.number.int(),
+  co2Mass: faker.number.int(),
+  noxMass: faker.number.int(),
+  heatInput: faker.number.int(),
 };
 
 const annualApportionedEmissionsAggregationDTO = {
   ...apportionedEmissionsAggregationDTO,
-  year: faker.datatype.number(),
+  year: faker.number.int(),
 };
 
 const dailyApportionedEmissionsAggregationDTO = {
@@ -38,56 +38,56 @@ const dailyApportionedEmissionsAggregationDTO = {
 const hourlyApportionedEmissionsAggregationDTO = {
   ...apportionedEmissionsAggregationDTO,
   date: '2019-01-01',
-  hour: faker.datatype.number(),
+  hour: faker.number.int(),
 };
 
 const monthlyApportionedEmissionsAggregationDTO = {
   ...apportionedEmissionsAggregationDTO,
-  year: faker.datatype.number(),
-  month: faker.datatype.number(),
+  year: faker.number.int(),
+  month: faker.number.int(),
 };
 
 const quarterApportionedEmissionsAggregationDTO = {
   ...apportionedEmissionsAggregationDTO,
-  year: faker.datatype.number(),
-  quarter: faker.datatype.number(),
+  year: faker.number.int(),
+  quarter: faker.number.int(),
 };
 
 const facilityAggregation = {
-  facilityId: faker.datatype.number(),
-  facilityName: faker.datatype.string(),
-  stateCode: faker.datatype.string(),
+  facilityId: faker.number.int(),
+  facilityName: faker.string.sample(),
+  stateCode: faker.string.sample(),
 };
 
 const stateAggregation = {
-  stateCode: faker.datatype.string(),
+  stateCode: faker.string.sample(),
 };
 
 const viewData = {
-  stateCode: faker.datatype.string(),
-  facilityName: faker.datatype.string(),
-  facilityId: faker.datatype.number(),
-  unitId: faker.datatype.number(),
-  associatedStacks: faker.datatype.string(),
-  sumOpTime: faker.datatype.number(),
-  countOpTime: faker.datatype.number(),
-  grossLoad: faker.datatype.number(),
-  steamLoad: faker.datatype.number(),
-  so2Mass: faker.datatype.number(),
-  so2Rate: faker.datatype.number(),
-  co2Mass: faker.datatype.number(),
-  co2Rate: faker.datatype.number(),
-  noxMass: faker.datatype.number(),
-  noxRate: faker.datatype.number(),
-  heatInput: faker.datatype.number(),
-  primaryFuelInfo: faker.datatype.string(),
-  secondaryFuelInfo: faker.datatype.string(),
-  unitType: faker.datatype.string(),
-  so2ControlInfo: faker.datatype.string(),
-  noxControlInfo: faker.datatype.string(),
-  pmControlInfo: faker.datatype.string(),
-  hgControlInfo: faker.datatype.string(),
-  programCodeInfo: faker.datatype.string(),
+  stateCode: faker.string.sample(),
+  facilityName: faker.string.sample(),
+  facilityId: faker.number.int(),
+  unitId: faker.number.int(),
+  associatedStacks: faker.string.sample(),
+  sumOpTime: faker.number.int(),
+  countOpTime: faker.number.int(),
+  grossLoad: faker.number.int(),
+  steamLoad: faker.number.int(),
+  so2Mass: faker.number.int(),
+  so2Rate: faker.number.int(),
+  co2Mass: faker.number.int(),
+  co2Rate: faker.number.int(),
+  noxMass: faker.number.int(),
+  noxRate: faker.number.int(),
+  heatInput: faker.number.int(),
+  primaryFuelInfo: faker.string.sample(),
+  secondaryFuelInfo: faker.string.sample(),
+  unitType: faker.string.sample(),
+  so2ControlInfo: faker.string.sample(),
+  noxControlInfo: faker.string.sample(),
+  pmControlInfo: faker.string.sample(),
+  hgControlInfo: faker.string.sample(),
+  programCodeInfo: faker.string.sample(),
 };
 
 export const genAnnualApportionedEmissionsFacilityDto = (amount = 1) => {
@@ -133,7 +133,7 @@ export const genAnnualUnitData = <RepoType>(amount = 1): RepoType[] => {
   for (let annualValue = 0; annualValue < amount; annualValue++) {
     annualUnitData.push(({
       ...viewData,
-      year: faker.datatype.number(),
+      year: faker.number.int(),
     } as unknown) as RepoType);
   }
   return annualUnitData;
@@ -182,7 +182,7 @@ export const genDayUnitData = <RepoType>(amount = 1): RepoType[] => {
   for (let dayValue = 0; dayValue < amount; dayValue++) {
     dayUnitData.push(({
       ...viewData,
-      date: faker.datatype.datetime(),
+      date: faker.date.anytime(),
     } as unknown) as RepoType);
   }
   return dayUnitData;
@@ -231,7 +231,7 @@ export const genHourUnitData = <RepoType>(amount = 1): RepoType[] => {
   for (let hourValue = 0; hourValue < amount; hourValue++) {
     hourUnitData.push(({
       ...viewData,
-      date: faker.datatype.datetime(),
+      date: faker.date.anytime(),
     } as unknown) as RepoType);
   }
   return hourUnitData;
@@ -280,7 +280,7 @@ export const genMonthUnitData = <RepoType>(amount = 1): RepoType[] => {
   for (let monthValue = 0; monthValue < amount; monthValue++) {
     monthUnitData.push(({
       ...viewData,
-      date: faker.datatype.datetime(),
+      date: faker.date.anytime(),
     } as unknown) as RepoType);
   }
   return monthUnitData;
@@ -329,7 +329,7 @@ export const genQuarterUnitData = <RepoType>(amount = 1): RepoType[] => {
   for (let quarterValue = 0; quarterValue < amount; quarterValue++) {
     quarterUnitData.push(({
       ...viewData,
-      date: faker.datatype.datetime(),
+      date: faker.date.anytime(),
     } as unknown) as RepoType);
   }
   return quarterUnitData;
@@ -340,13 +340,13 @@ export const genApplicableApportionedEmissionsAttributesDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      year: faker.datatype.number(),
-      programCode: faker.datatype.string(),
-      facilityId: faker.datatype.number(),
-      stateCode: faker.datatype.string(),
-      unitTypeCode: faker.datatype.string(),
-      fuelTypeCode: faker.datatype.string(),
-      controlCode: faker.datatype.string(),
+      year: faker.number.int(),
+      programCode: faker.string.sample(),
+      facilityId: faker.number.int(),
+      stateCode: faker.string.sample(),
+      unitTypeCode: faker.string.sample(),
+      fuelTypeCode: faker.string.sample(),
+      controlCode: faker.string.sample(),
     });
   }
 
@@ -357,36 +357,36 @@ export const genHourUnitMatsDataView = <RepoType>(amount = 1): RepoType[] => {
   const hourUnitMatsData: RepoType[] = [];
   for (let hourlyMatsValue = 0; hourlyMatsValue < amount; hourlyMatsValue++) {
     hourUnitMatsData.push(({
-      stateCode: faker.datatype.string(),
-      facilityName: faker.datatype.string(),
-      facilityId: faker.datatype.number(),
-      unitId: faker.datatype.string(),
-      date: faker.datatype.datetime(),
-      hour: faker.datatype.number(),
-      opTime: faker.datatype.number(),
-      matsGrossLoad: faker.datatype.number(),
-      matsHeatInput: faker.datatype.number(),
-      hgOutputRate: faker.datatype.number(),
-      hgInputRate: faker.datatype.number(),
-      hgMass: faker.datatype.number(),
-      hgMassMeasureFlg: faker.datatype.string(),
-      hclOutputRate: faker.datatype.number(),
-      hclInputRate: faker.datatype.number(),
-      hclMass: faker.datatype.number(),
-      hclMassMeasureFlg: faker.datatype.string(),
-      hfOutputRate: faker.datatype.number(),
-      hfInputRate: faker.datatype.number(),
-      hfMass: faker.datatype.number(),
-      hfMassMeasureFlg: faker.datatype.string(),
-      associatedStacks: faker.datatype.string(),
-      steamLoad: faker.datatype.number(),
-      primaryFuelInfo: faker.datatype.string(),
-      secondaryFuelInfo: faker.datatype.string(),
-      unitType: faker.datatype.string(),
-      so2ControlInfo: faker.datatype.string(),
-      noxControlInfo: faker.datatype.string(),
-      pmControlInfo: faker.datatype.string(),
-      hgControlInfo: faker.datatype.string(),
+      stateCode: faker.string.sample(),
+      facilityName: faker.string.sample(),
+      facilityId: faker.number.int(),
+      unitId: faker.string.sample(),
+      date: faker.date.anytime(),
+      hour: faker.number.int(),
+      opTime: faker.number.int(),
+      matsGrossLoad: faker.number.int(),
+      matsHeatInput: faker.number.int(),
+      hgOutputRate: faker.number.int(),
+      hgInputRate: faker.number.int(),
+      hgMass: faker.number.int(),
+      hgMassMeasureFlg: faker.string.sample(),
+      hclOutputRate: faker.number.int(),
+      hclInputRate: faker.number.int(),
+      hclMass: faker.number.int(),
+      hclMassMeasureFlg: faker.string.sample(),
+      hfOutputRate: faker.number.int(),
+      hfInputRate: faker.number.int(),
+      hfMass: faker.number.int(),
+      hfMassMeasureFlg: faker.string.sample(),
+      associatedStacks: faker.string.sample(),
+      steamLoad: faker.number.int(),
+      primaryFuelInfo: faker.string.sample(),
+      secondaryFuelInfo: faker.string.sample(),
+      unitType: faker.string.sample(),
+      so2ControlInfo: faker.string.sample(),
+      noxControlInfo: faker.string.sample(),
+      pmControlInfo: faker.string.sample(),
+      hgControlInfo: faker.string.sample(),
     } as unknown) as RepoType);
   }
   return hourUnitMatsData;

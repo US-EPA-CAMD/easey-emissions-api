@@ -25,21 +25,21 @@ export const genDailyTestSummary = <RepoType>(
   const testSummaries: RepoType[] = [];
   for (let testSummary = 0; testSummary < amount; testSummary++) {
     testSummaries.push(({
-      id: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      monitoringLocationId: faker.datatype.string(),
-      componentId: faker.datatype.string(),
-      date: faker.datatype.datetime(),
-      hour: faker.datatype.number(),
-      minute: optionalValue(faker.datatype.number()),
-      testTypeCode: faker.datatype.string(),
-      testResultCode: faker.datatype.string(),
-      calcTestResultCode: optionalValue(faker.datatype.string()),
-      userId: faker.datatype.string(),
-      addDate: faker.datatype.datetime(),
-      updateDate: faker.datatype.datetime(),
-      spanScaleCode: faker.datatype.string(),
-      monitoringSystemId: faker.datatype.string(),
+      id: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      monitoringLocationId: faker.string.sample(),
+      componentId: faker.string.sample(),
+      date: faker.date.anytime(),
+      hour: faker.number.int(),
+      minute: optionalValue(faker.number.int()),
+      testTypeCode: faker.string.sample(),
+      testResultCode: faker.string.sample(),
+      calcTestResultCode: optionalValue(faker.string.sample()),
+      userId: faker.string.sample(),
+      addDate: faker.date.anytime(),
+      updateDate: faker.date.anytime(),
+      spanScaleCode: faker.string.sample(),
+      monitoringSystemId: faker.string.sample(),
       // Replace new Model() with genModel() as created/needed
       monitorLocation:
         config?.include?.includes('monitorLocation') === true

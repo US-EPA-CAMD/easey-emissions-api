@@ -9,14 +9,14 @@ export const genMonitorHourlyValueImportDto = (
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      parameterCode: faker.datatype.string(),
-      unadjustedHourlyValue: optionalValue(faker.datatype.number()),
-      adjustedHourlyValue: optionalValue(faker.datatype.number()),
-      modcCode: optionalValue(faker.datatype.string()),
-      monitoringSystemId: optionalValue(faker.datatype.string()),
-      componentId: optionalValue(faker.datatype.string()),
-      percentAvailable: optionalValue(faker.datatype.number()),
-      moistureBasis: optionalValue(faker.datatype.string()),
+      parameterCode: faker.string.sample(),
+      unadjustedHourlyValue: optionalValue(faker.number.int()),
+      adjustedHourlyValue: optionalValue(faker.number.int()),
+      modcCode: optionalValue(faker.string.sample()),
+      monitoringSystemId: optionalValue(faker.string.sample()),
+      componentId: optionalValue(faker.string.sample()),
+      percentAvailable: optionalValue(faker.number.int()),
+      moistureBasis: optionalValue(faker.string.sample()),
     });
   }
 

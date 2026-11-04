@@ -16,14 +16,14 @@ export const genEmissionEvaluation = <RepoType>(
 
   for (let emission = 0; emission < amount; emission++) {
     emissions.push(({
-      monitorPlanId: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      lastUpdated: optionalValue(faker.datatype.datetime()),
-      updatedStatusFlg: optionalValue(faker.datatype.string()),
-      needsEvalFlag: optionalValue(faker.datatype.string()),
-      chkSessionId: optionalValue(faker.datatype.string()),
-      submissionId: optionalValue(faker.datatype.number()),
-      submissionAvailabilityCd: optionalValue(faker.datatype.string()),
+      monitorPlanId: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      lastUpdated: optionalValue(faker.date.anytime()),
+      updatedStatusFlg: optionalValue(faker.string.sample()),
+      needsEvalFlag: optionalValue(faker.string.sample()),
+      chkSessionId: optionalValue(faker.string.sample()),
+      submissionId: optionalValue(faker.number.int()),
+      submissionAvailabilityCd: optionalValue(faker.string.sample()),
       reportingPeriod:
         config?.include?.includes('reportingPeriod') === true
           ? new ReportingPeriod()
