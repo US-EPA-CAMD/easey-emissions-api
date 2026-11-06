@@ -35,7 +35,7 @@ describe('ExportNSPS4TSummary', () => {
         quarter: faker.helpers.arrayElement([1, 2, 3, 4]),
         year: faker.date.soon().getFullYear(),
         monitoringLocationIds: faker.helpers.uniqueArray(
-          faker.datatype.string,
+          faker.string.sample,
           3,
         ),
         repository: nsps4tRepository,

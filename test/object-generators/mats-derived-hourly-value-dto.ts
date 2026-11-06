@@ -14,11 +14,11 @@ export const genMatsDerivedHourlyValueImportDto = (amount = 1) => {
         'GHR',
         'MHHI',
       ]),
-      unadjustedHourlyValue: optionalValue(faker.datatype.string()),
+      unadjustedHourlyValue: optionalValue(faker.string.sample()),
       modcCode: optionalValue(
-        faker.datatype.number({ min: 10, max: 46 }).toString(),
+        faker.number.int({ min: 10, max: 46 }).toString(),
       ),
-      formulaId: optionalValue(faker.datatype.string()),
+      formulaId: optionalValue(faker.string.sample()),
     });
   }
 

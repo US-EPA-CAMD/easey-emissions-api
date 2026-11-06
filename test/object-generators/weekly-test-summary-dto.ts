@@ -16,20 +16,20 @@ export const genWeeklyTestSummaryDto = (
 
   let unitId = null;
   let stackPipeId = null;
-  if (faker.datatype.boolean()) unitId = faker.datatype.string();
-  else stackPipeId = faker.datatype.string();
+  if (faker.datatype.boolean()) unitId = faker.string.sample();
+  else stackPipeId = faker.string.sample();
 
   for (let i = 0; i < amount; i++) {
     weeklyTestSummary.push({
       stackPipeId,
       unitId,
-      date: faker.datatype.datetime(),
-      hour: faker.datatype.number(),
-      minute: faker.datatype.number(),
-      componentId: faker.datatype.string(),
-      testTypeCode: faker.datatype.string(),
-      testResultCode: faker.datatype.string(),
-      spanScaleCode: faker.datatype.string(),
+      date: faker.date.anytime(),
+      hour: faker.number.int(),
+      minute: faker.number.int(),
+      componentId: faker.string.sample(),
+      testTypeCode: faker.string.sample(),
+      testResultCode: faker.string.sample(),
+      spanScaleCode: faker.string.sample(),
       weeklySystemIntegrityData: config?.include.includes(
         'weeklySystemIntegrity',
       )

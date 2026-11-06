@@ -16,19 +16,19 @@ export const genSorbentTrapImportDto = (
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      stackPipeId: optionalValue(faker.datatype.string()),
-      unitId: optionalValue(faker.datatype.string()),
+      stackPipeId: optionalValue(faker.string.sample()),
+      unitId: optionalValue(faker.string.sample()),
       beginDate: faker.date.soon(),
-      beginHour: faker.datatype.number(),
+      beginHour: faker.number.int(),
       endDate: faker.date.soon(),
-      endHour: faker.datatype.number(),
-      monitoringSystemId: faker.datatype.string(),
-      pairedTrapAgreement: faker.datatype.number(),
-      absoluteDifferenceIndicator: faker.datatype.number(),
-      modcCode: optionalValue(faker.datatype.string()),
-      hgSystemConcentration: optionalValue(faker.datatype.string()),
-      apsCode: optionalValue(faker.datatype.string()),
-      rataIndicator: faker.datatype.number(),
+      endHour: faker.number.int(),
+      monitoringSystemId: faker.string.sample(),
+      pairedTrapAgreement: faker.number.int(),
+      absoluteDifferenceIndicator: faker.number.int(),
+      modcCode: optionalValue(faker.string.sample()),
+      hgSystemConcentration: optionalValue(faker.string.sample()),
+      apsCode: optionalValue(faker.string.sample()),
+      rataIndicator: faker.number.int(),
       samplingTrainData: config?.include.includes('samplingTrainData')
         ? genSamplingTrainImportDto(config?.samplingTrainDataAmount)
         : undefined,

@@ -21,8 +21,8 @@ export const genMonitorPlan = (amount = 1, config?: GenMonitorPlanConfig) => {
 
   for (let plan = 0; plan < amount; plan++) {
     plans.push({
-      id: faker.datatype.string(),
-      facilityId: faker.datatype.number(),
+      id: faker.string.sample(),
+      facilityId: faker.number.int(),
       beginRptPeriod: config?.include?.includes('beginRptPeriod')
         ? genReportingPeriod()
         : undefined,

@@ -252,7 +252,7 @@ describe('HourlyOperatingWorskpaceService', () => {
       dto.hourlyOperatingData[1].stackPipeId = null;
 
       const identifiers = { locations: {}, userId: '' };
-      const monitoringLocationId = faker.datatype.string();
+      const monitoringLocationId = faker.string.sample();
       identifiers.locations[monitoringLocationId] = {
         components: {},
         monitorFormulas: {},

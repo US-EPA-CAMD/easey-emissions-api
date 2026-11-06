@@ -31,13 +31,13 @@ describe('ImportSorbentTrapData', () => {
     await Promise.all(
       importReturn.map(data => {
         const identifiers = { locations: {}, userId: '' };
-        const monitoringLocationId = faker.datatype.string();
+        const monitoringLocationId = faker.string.sample();
         identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
         expect(
           importSorbentTrapModule.importSorbentTrapData({
             data: {
               ...data,
-              reportingPeriodId: faker.datatype.number(),
+              reportingPeriodId: faker.number.int(),
               monitoringLocationId: monitoringLocationId,
               identifiers,
             },

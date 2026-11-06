@@ -130,7 +130,7 @@ describe('Daily Summary Workspace Service', () => {
       { id: 'LOC2', unit: null, stackPipe: { name: 'CS1' } },
       { id: 'LOC3', unit: { name: '4' }, stackPipe: { name: 'CS2' } },
     ];
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await dailyTestSummaryService.import(

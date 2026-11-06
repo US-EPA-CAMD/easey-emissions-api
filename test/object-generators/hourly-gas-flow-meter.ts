@@ -20,22 +20,22 @@ export const genHourlyGasFlowMeter = <RepoType>(
     hourlyGasFlowMeterCount++
   ) {
     hourlyGasFlowMeter.push(({
-      id: faker.datatype.string(45),
-      hourId: faker.datatype.string(45),
-      componentId: faker.datatype.string(3),
-      componentRecordId: faker.datatype.string(45),
-      monitoringLocationId: faker.datatype.string(45),
-      reportingPeriodId: faker.datatype.number(38),
-      beginEndHourFlag: faker.datatype.string(7),
-      hourlyGFMReading: faker.datatype.number(13),
-      averageHourlySamplingRate: faker.datatype.number(13),
-      samplingRateUnitsOfMeasureCode: faker.datatype.string(7),
-      hourlySFSRRatio: faker.datatype.number(4),
-      calcFlowToSamplingRatio: faker.datatype.number(4),
-      calcFlowToSamplingMult: faker.datatype.number(4),
-      userId: faker.datatype.string(25),
-      addDate: faker.datatype.datetime(),
-      updateDate: faker.datatype.datetime(),
+      id: faker.string.sample(45),
+      hourId: faker.string.sample(45),
+      componentId: faker.string.sample(3),
+      componentRecordId: faker.string.sample(45),
+      monitoringLocationId: faker.string.sample(45),
+      reportingPeriodId: faker.number.int(38),
+      beginEndHourFlag: faker.string.sample(7),
+      hourlyGFMReading: faker.number.int(13),
+      averageHourlySamplingRate: faker.number.int(13),
+      samplingRateUnitsOfMeasureCode: faker.string.sample(7),
+      hourlySFSRRatio: faker.number.int(4),
+      calcFlowToSamplingRatio: faker.number.int(4),
+      calcFlowToSamplingMult: faker.number.int(4),
+      userId: faker.string.sample(25),
+      addDate: faker.date.anytime(),
+      updateDate: faker.date.anytime(),
       hrlyOpData:
         config?.include.includes('hrlyOpData') === true
           ? new HrlyOpData()

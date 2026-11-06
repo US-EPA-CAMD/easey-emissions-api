@@ -70,7 +70,7 @@ describe('--LongTermFuelFlowWorkspaceService--', () => {
     longTermFuelFlow[0].unitId = '1';
     longTermFuelFlow[0].stackPipeId = null;
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await expect(

@@ -24,16 +24,16 @@ export const genNsps4tSummary = <RepoType>(
 
   for (let nsps4tSummary = 0; nsps4tSummary < amount; nsps4tSummary++) {
     nsps4tSummaryRecords.push({
-      id: faker.datatype.string(),
-      co2EmissionStandardCode: optionalValue(faker.datatype.string()),
-      modusValue: optionalValue(faker.datatype.number()),
-      modusUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
-      electricalLoadCode: optionalValue(faker.datatype.string()),
-      noCompliancePeriodEndedIndicator: optionalValue(faker.datatype.number()),
-      noCompliancePeriodEndedComment: faker.datatype.string(),
-      monitoringLocationId: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      userId: faker.datatype.string(),
+      id: faker.string.sample(),
+      co2EmissionStandardCode: optionalValue(faker.string.sample()),
+      modusValue: optionalValue(faker.number.int()),
+      modusUnitsOfMeasureCode: optionalValue(faker.string.sample()),
+      electricalLoadCode: optionalValue(faker.string.sample()),
+      noCompliancePeriodEndedIndicator: optionalValue(faker.number.int()),
+      noCompliancePeriodEndedComment: faker.string.sample(),
+      monitoringLocationId: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      userId: faker.string.sample(),
       addDate: faker.date.soon(),
       updateDate: optionalValue(faker.date.soon()),
       monitorLocation: config?.include.includes('monitorLocation')

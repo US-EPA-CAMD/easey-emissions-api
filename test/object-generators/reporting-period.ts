@@ -45,14 +45,14 @@ export const genReportingPeriod = (
 
   for (let period = 0; period < amount; period++) {
     periods.push({
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       year: faker.date.soon().getFullYear(),
-      quarter: faker.datatype.number({ min: 1, max: 4 }),
-      beginDate: faker.datatype.datetime(),
-      endDate: faker.datatype.datetime(),
-      periodDescription: faker.datatype.string(),
-      periodAbbreviation: faker.datatype.string(),
-      archiveInd: faker.datatype.number(),
+      quarter: faker.number.int({ min: 1, max: 4 }),
+      beginDate: faker.date.anytime(),
+      endDate: faker.date.anytime(),
+      periodDescription: faker.string.sample(),
+      periodAbbreviation: faker.string.sample(),
+      archiveInd: faker.number.int(),
       dailyEmissions: config?.include?.includes('dailyEmissions')
         ? [new DailyEmission()]
         : undefined,

@@ -14,16 +14,16 @@ export const genDailyFuel = <RepoType>(
 
   for (let dailyFuel = 0; dailyFuel < amount; dailyFuel++) {
     dailyFuelData.push({
-      id: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      monitoringLocationId: faker.datatype.string(),
-      dailyEmissionId: faker.datatype.string(),
-      fuelCode: faker.datatype.string(),
-      dailyFuelFeed: optionalValue(faker.datatype.number()),
-      carbonContentUsed: optionalValue(faker.datatype.number()),
-      fuelCarbonBurned: optionalValue(faker.datatype.number()),
-      calcFuelCarbonBurned: optionalValue(faker.datatype.number()),
-      userId: faker.datatype.string(),
+      id: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      monitoringLocationId: faker.string.sample(),
+      dailyEmissionId: faker.string.sample(),
+      fuelCode: faker.string.sample(),
+      dailyFuelFeed: optionalValue(faker.number.int()),
+      carbonContentUsed: optionalValue(faker.number.int()),
+      fuelCarbonBurned: optionalValue(faker.number.int()),
+      calcFuelCarbonBurned: optionalValue(faker.number.int()),
+      userId: faker.string.sample(),
       addDate: faker.date.soon(),
       updateDate: optionalValue(faker.date.soon()),
       dailyEmission: config?.include.includes('dailyEmission')

@@ -16,7 +16,7 @@ describe('Utils', () => {
   });
 
   describe('arrayPushCreate', () => {
-    const newArray = faker.helpers.uniqueArray(faker.datatype.string, 3);
+    const newArray = faker.helpers.uniqueArray(faker.string.sample, 3);
     it('should new array if source is undefined or empty', function() {
       expect(arrayPushCreate(undefined, newArray)).toEqual(newArray);
       expect(arrayPushCreate([], newArray)).toEqual(newArray);

@@ -22,7 +22,7 @@ describe('ExportDailyFuelData', () => {
 
   it('should export records', async function() {
     const dailyEmissionIds = faker.helpers.uniqueArray(
-      faker.datatype.string,
+      faker.string.sample,
       3,
     );
     const dailyFuelMocks = genDailyFuel<DailyFuel>(3);

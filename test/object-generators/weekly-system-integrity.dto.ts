@@ -7,11 +7,11 @@ export const genWeeklySystemIntegrityDto = (amount = 1) => {
 
   for (let i = 0; i < amount; i++) {
     weeklySystemIntegrity.push({
-      gasLevelCode: faker.datatype.string(),
-      referenceValue: faker.datatype.number(),
-      measuredValue: faker.datatype.number(),
-      apsIndicator: faker.datatype.number(),
-      systemIntegrityError: faker.datatype.number(),
+      gasLevelCode: faker.string.sample(),
+      referenceValue: faker.number.int(),
+      measuredValue: faker.number.int(),
+      apsIndicator: faker.number.int(),
+      systemIntegrityError: faker.number.int(),
     });
   }
 

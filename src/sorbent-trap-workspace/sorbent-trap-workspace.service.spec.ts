@@ -115,7 +115,7 @@ describe('SorbentTrapWorkspaceService', () => {
 
     sorbentTrapData[0].unitId = '1';
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = {
       components: {},
       monitorFormulas: {},

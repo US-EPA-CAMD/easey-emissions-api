@@ -26,7 +26,7 @@ describe('ImportSamplingTrainData', () => {
     jest.spyOn(repository, 'save').mockResolvedValue(undefined);
 
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = { components: {}, monitorFormulas: {}, monitoringSystems: {} };
 
     await Promise.all(
@@ -35,9 +35,9 @@ describe('ImportSamplingTrainData', () => {
           importSamplingTrainModule.importSamplingTrainData({
             data: {
               ...data,
-              sorbentTrapId: faker.datatype.string(),
-              reportingPeriodId: faker.datatype.number(),
-              monitoringLocationId: faker.datatype.string(),
+              sorbentTrapId: faker.string.sample(),
+              reportingPeriodId: faker.number.int(),
+              monitoringLocationId: faker.string.sample(),
               identifiers,
             },
             repository,

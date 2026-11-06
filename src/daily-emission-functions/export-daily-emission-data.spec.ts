@@ -36,7 +36,7 @@ describe('ExportDailyEmissionData', () => {
         year: faker.date.soon().getFullYear(),
         repository: dailyEmissionRepository,
         monitoringLocationIds: faker.helpers.uniqueArray(
-          faker.datatype.string,
+          faker.string.sample,
           3,
         ),
       }),

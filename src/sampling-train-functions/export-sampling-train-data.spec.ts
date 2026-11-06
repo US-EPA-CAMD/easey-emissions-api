@@ -33,7 +33,7 @@ describe('ExportSamplingTrainData', () => {
     await expect(
       exportSamplingTrainModule.exportSamplingTrainData({
         repository: samplingTrainRepository,
-        sorbentTrapId: faker.datatype.string(),
+        sorbentTrapId: faker.string.sample(),
       }),
     ).resolves.toEqual(mappedSamplingTrain);
   });

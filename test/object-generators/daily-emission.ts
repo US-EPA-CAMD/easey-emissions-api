@@ -17,21 +17,21 @@ export const genDailyEmission = <RepoType>(
 
   for (let dailyEmission = 0; dailyEmission < amount; dailyEmission++) {
     dailyEmissions.push(({
-      id: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      monitoringLocationId: faker.datatype.string(),
-      parameterCode: faker.datatype.string(),
+      id: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      monitoringLocationId: faker.string.sample(),
+      parameterCode: faker.string.sample(),
       date: faker.date.soon(),
-      totalDailyEmissions: optionalValue(faker.datatype.number()),
-      adjustedDailyEmissions: optionalValue(faker.datatype.number()),
-      sorbentRelatedMassEmissions: optionalValue(faker.datatype.number()),
-      userId: optionalValue(faker.datatype.string()),
+      totalDailyEmissions: optionalValue(faker.number.int()),
+      adjustedDailyEmissions: optionalValue(faker.number.int()),
+      sorbentRelatedMassEmissions: optionalValue(faker.number.int()),
+      userId: optionalValue(faker.string.sample()),
       addDate: optionalValue(faker.date.soon()),
       updateDate: optionalValue(faker.date.soon()),
-      unadjustedDailyEmissions: optionalValue(faker.datatype.number()),
-      totalCarbonBurned: optionalValue(faker.datatype.number()),
-      calcTotalDailyEmissions: optionalValue(faker.datatype.number()),
-      calcTotalOpTime: optionalValue(faker.datatype.number()),
+      unadjustedDailyEmissions: optionalValue(faker.number.int()),
+      totalCarbonBurned: optionalValue(faker.number.int()),
+      calcTotalDailyEmissions: optionalValue(faker.number.int()),
+      calcTotalOpTime: optionalValue(faker.number.int()),
       reportingPeriod:
         config?.include?.includes('reportingPeriod') === true
           ? genReportingPeriod()[0]

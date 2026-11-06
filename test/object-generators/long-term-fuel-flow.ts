@@ -6,8 +6,8 @@ export const genLongTermFuelFlow = <RepoType>(amount = 1): RepoType[] => {
 
   let unitId = null;
   let stackPipeId = null;
-  if (faker.datatype.boolean()) unitId = faker.datatype.string();
-  else stackPipeId = faker.datatype.string();
+  if (faker.datatype.boolean()) unitId = faker.string.sample();
+  else stackPipeId = faker.string.sample();
 
   for (
     let longTermFuelFlowCount = 0;
@@ -17,20 +17,20 @@ export const genLongTermFuelFlow = <RepoType>(amount = 1): RepoType[] => {
     longTermFuelFlow.push(({
       stackPipeId,
       unitId,
-      monitoringSystemId: faker.datatype.string(),
-      fuelFlowPeriodCode: optionalValue(faker.datatype.string()),
-      longTermFuelFlowValue: faker.datatype.number(),
-      longTermFuelFlowUomCode: faker.datatype.string(),
-      grossCalorificValue: optionalValue(faker.datatype.number()),
-      gcvUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
-      totalHeatInput: optionalValue(faker.datatype.number()),
-      id: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.number(),
-      monitoringLocationId: faker.datatype.string(),
-      calcTotalHeatInput: faker.datatype.number(),
-      userId: faker.datatype.string(),
-      addDate: faker.datatype.datetime(),
-      updateDate: faker.datatype.datetime(),
+      monitoringSystemId: faker.string.sample(),
+      fuelFlowPeriodCode: optionalValue(faker.string.sample()),
+      longTermFuelFlowValue: faker.number.int(),
+      longTermFuelFlowUomCode: faker.string.sample(),
+      grossCalorificValue: optionalValue(faker.number.int()),
+      gcvUnitsOfMeasureCode: optionalValue(faker.string.sample()),
+      totalHeatInput: optionalValue(faker.number.int()),
+      id: faker.string.sample(),
+      reportingPeriodId: faker.number.int(),
+      monitoringLocationId: faker.string.sample(),
+      calcTotalHeatInput: faker.number.int(),
+      userId: faker.string.sample(),
+      addDate: faker.date.anytime(),
+      updateDate: faker.date.anytime(),
     } as unknown) as RepoType);
   }
   return longTermFuelFlow;

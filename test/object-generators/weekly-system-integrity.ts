@@ -9,20 +9,20 @@ export const genWeeklySystemIntegrity = <RepoType>(amount = 1): RepoType[] => {
     weeklySystemIntegrityCount++
   ) {
     weeklyTestSumValues.push(({
-      id: faker.datatype.string(),
-      weeklyTestSumId: faker.datatype.string(),
-      calcSystemIntegrityError: optionalValue(faker.datatype.number()),
-      calcApsInd: optionalValue(faker.datatype.number()),
-      userId: optionalValue(faker.datatype.string()),
-      addDate: optionalValue(faker.datatype.datetime()),
-      updateDate: optionalValue(faker.datatype.datetime()),
-      reportingPeriodId: faker.datatype.number({ min: 1, max: 38 }),
-      monitoringLocationId: faker.datatype.string(45),
-      gasLevelCode: optionalValue(faker.datatype.string()),
-      referenceValue: optionalValue(faker.datatype.number()),
-      measuredValue: optionalValue(faker.datatype.number()),
-      apsIndicator: optionalValue(faker.datatype.number()),
-      systemIntegrityError: optionalValue(faker.datatype.number()),
+      id: faker.string.sample(),
+      weeklyTestSumId: faker.string.sample(),
+      calcSystemIntegrityError: optionalValue(faker.number.int()),
+      calcApsInd: optionalValue(faker.number.int()),
+      userId: optionalValue(faker.string.sample()),
+      addDate: optionalValue(faker.date.anytime()),
+      updateDate: optionalValue(faker.date.anytime()),
+      reportingPeriodId: faker.number.int({ min: 1, max: 38 }),
+      monitoringLocationId: faker.string.sample(45),
+      gasLevelCode: optionalValue(faker.string.sample()),
+      referenceValue: optionalValue(faker.number.int()),
+      measuredValue: optionalValue(faker.number.int()),
+      apsIndicator: optionalValue(faker.number.int()),
+      systemIntegrityError: optionalValue(faker.number.int()),
     } as unknown) as RepoType);
   }
 

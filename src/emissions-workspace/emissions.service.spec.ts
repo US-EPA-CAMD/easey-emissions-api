@@ -544,7 +544,7 @@ describe('Emissions Workspace Service', () => {
 
     const monitoringLocation = new MonitorLocation();
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = {
       components: {},
       monitorFormulas: {},
@@ -554,7 +554,7 @@ describe('Emissions Workspace Service', () => {
       emissionsService.importDailyTestSummaries(
         emissionsDtoMock[0],
         [monitoringLocation],
-        faker.datatype.number(),
+        faker.number.int(),
         identifiers,
         new Date().toISOString(),
       ),
@@ -564,7 +564,7 @@ describe('Emissions Workspace Service', () => {
       emissionsService.importDailyTestSummaries(
         dtoMockWithDailyTest[0],
         [monitoringLocation],
-        faker.datatype.number(),
+        faker.number.int(),
         identifiers,
         new Date().toISOString(),
       ),

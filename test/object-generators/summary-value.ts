@@ -14,19 +14,19 @@ export const genSummaryValue = <RepoType>(
 
   for (let i = 0; i < amount; i++) {
     summaryValues.push(({
-      id: faker.datatype.string(),
-      reportingPeriodId: faker.datatype.string(),
-      monitoringLocationId: faker.datatype.string(),
-      parameterCode: faker.datatype.string(),
-      currentReportingPeriodTotal: faker.datatype.number(),
-      calcCurrentRptPeriodTotal: faker.datatype.number(),
-      ozoneSeasonToDateTotal: faker.datatype.number(),
-      calcOsTotal: faker.datatype.number(),
-      yearToDateTotal: faker.datatype.number(),
-      calcYearTotal: faker.datatype.number(),
-      userId: faker.datatype.string(),
-      addDate: faker.datatype.datetime(),
-      updateDate: faker.datatype.datetime(),
+      id: faker.string.sample(),
+      reportingPeriodId: faker.string.sample(),
+      monitoringLocationId: faker.string.sample(),
+      parameterCode: faker.string.sample(),
+      currentReportingPeriodTotal: faker.number.int(),
+      calcCurrentRptPeriodTotal: faker.number.int(),
+      ozoneSeasonToDateTotal: faker.number.int(),
+      calcOsTotal: faker.number.int(),
+      yearToDateTotal: faker.number.int(),
+      calcYearTotal: faker.number.int(),
+      userId: faker.string.sample(),
+      addDate: faker.date.anytime(),
+      updateDate: faker.date.anytime(),
       monitorLocation: config?.include?.includes('monitorLocation')
         ? genMonitorLocation()[0]
         : undefined,

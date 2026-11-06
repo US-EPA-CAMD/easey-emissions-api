@@ -121,7 +121,7 @@ describe('Nsps4tSummaryWorkspaceNewService', () => {
     nsps4tSummaryData[0].unitId = '1';
     nsps4tSummaryData[0].stackPipeId = null;
     const identifiers = { locations: {}, userId: '' };
-    const monitoringLocationId = faker.datatype.string();
+    const monitoringLocationId = faker.string.sample();
     identifiers.locations[monitoringLocationId] = {
       components: {},
       monitorFormulas: {},

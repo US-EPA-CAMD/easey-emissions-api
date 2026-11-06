@@ -9,9 +9,9 @@ export const genNsps4tAnnualImportDto = (
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      annualEnergySold: optionalValue(faker.datatype.number()),
-      annualEnergySoldTypeCode: optionalValue(faker.datatype.string()),
-      annualPotentialElectricOutput: optionalValue(faker.datatype.number()),
+      annualEnergySold: optionalValue(faker.number.int()),
+      annualEnergySoldTypeCode: optionalValue(faker.string.sample()),
+      annualPotentialElectricOutput: optionalValue(faker.number.int()),
     });
   }
 

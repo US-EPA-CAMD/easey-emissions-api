@@ -7,14 +7,14 @@ export const genHourlyParamFuelFlowImportDto = (amount = 1) => {
 
   for (let dto = 0; dto < amount; dto++) {
     dtos.push({
-      parameterCode: faker.datatype.string(),
-      parameterValueForFuel: optionalValue(faker.datatype.number()),
-      formulaId: optionalValue(faker.datatype.string()),
-      sampleTypeCode: optionalValue(faker.datatype.string()),
-      monitoringSystemId: optionalValue(faker.datatype.string()),
-      operatingConditionCode: optionalValue(faker.datatype.string()),
-      segmentNumber: optionalValue(faker.datatype.number()),
-      parameterUnitsOfMeasureCode: optionalValue(faker.datatype.string()),
+      parameterCode: faker.string.sample(),
+      parameterValueForFuel: optionalValue(faker.number.int()),
+      formulaId: optionalValue(faker.string.sample()),
+      sampleTypeCode: optionalValue(faker.string.sample()),
+      monitoringSystemId: optionalValue(faker.string.sample()),
+      operatingConditionCode: optionalValue(faker.string.sample()),
+      segmentNumber: optionalValue(faker.number.int()),
+      parameterUnitsOfMeasureCode: optionalValue(faker.string.sample()),
     });
   }
 
