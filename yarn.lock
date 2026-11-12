@@ -996,10 +996,10 @@
     dotenv-expand "12.0.3"
     lodash "4.18.1"
 
-"@nestjs/core@^11.2.3", "@nestjs/core@^11.2.8":
-  version "11.2.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.2.8.tgz#971b71928379f5bb98d49b0d1301fd1afe60b589"
-  integrity sha512-XzD1okTrM160+8M9mWWorEUlFPK6ZMjTy6pVxVOOdxSdqu+QWKKx9kI2Y0yVrvEmi/0HPFUErqi9PCKFZYYZfg==
+"@nestjs/core@^11.2.3", "@nestjs/core@^11.2.9":
+  version "11.2.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.2.9.tgz#d3afed1ee37bb055828663aef2606dcf9f15d66e"
+  integrity sha512-R75IDoUSoseaKrSR1kXYNhhrrVtR4Ms17nyyGHkY5PIav8IAimBWMKeeqhI2vjyhi0usoP6F3/9h0C/qeri13g==
   dependencies:
     uid "2.0.2"
     fast-safe-stringify "2.1.1"
