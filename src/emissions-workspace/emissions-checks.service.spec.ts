@@ -4,6 +4,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CheckCatalogService } from '@us-epa-camd/easey-common/check-catalog';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions/easey.exception';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+import { plainToInstance } from 'class-transformer';
 import { DataSource, EntityManager } from 'typeorm';
 
 import { mockLongTermFuelFlowWorkspaceRepository } from '../../test/mocks/mock-long-term-fuel-flow-workspace-repository';
@@ -166,6 +167,27 @@ describe('Emissions Checks Service Tests', () => {
       );
     });
 
+    it('should prevent import when any hourly operating date is outside the reporting period', async () => {
+      const payload = plainToInstance(EmissionsImportDTO, {
+        year: 2026,
+        quarter: 2,
+        hourlyOperatingData: [
+          { date: '2026-04-01', hour: 0 },
+          { date: '2026-03-31', hour: 23 },
+        ],
+      });
+
+      const message =
+        '[IMPORT-23] You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
+      CheckCatalogService.formatResultMessage = () => message;
+
+      await expect(service.runChecks(payload)).rejects.toMatchObject({
+        response: {
+          message: `${message} Hourly Operating Data record at date 2026-03-31, hour 23 falls outside the emission report's declared reporting period 2026 Q2 (2026-04-01 through 2026-06-30).`,
+        },
+      });
+    });
+
     it('should throw errors as array of strings', () => {
       try {
         service.throwIfErrors(['test']);
@@ -201,7 +223,6 @@ describe('Emissions Checks Service Tests', () => {
         include: [
           'dailyEmissionData',
           'dailyTestSummaryData',
-          'hourlyOperatingData',
           'sorbentTrapData',
           'weeklyTestSummaryData',
         ],
@@ -215,7 +236,6 @@ describe('Emissions Checks Service Tests', () => {
       payload.weeklyTestSummaryData = weeklyTestSummaryData;
       payload.dailyEmissionData[0].date = new Date();
       payload.dailyTestSummaryData[0].date = new Date();
-      payload.hourlyOperatingData[0].date = new Date();
       payload.sorbentTrapData[0].beginDate = new Date();
       payload.sorbentTrapData[0].endDate = new Date();
       payload.weeklyTestSummaryData[0].date = new Date();
@@ -231,6 +251,35 @@ describe('Emissions Checks Service Tests', () => {
       expect(service.invalidDatesCheck(payload)).toEqual([message]);
 
       payload.year;
+    });
+
+    it('should return empty array when hourly operating dates are within the reporting period', function () {
+      const payload = plainToInstance(EmissionsImportDTO, {
+        year: 2026,
+        quarter: 2,
+        hourlyOperatingData: [
+          { date: '2026-04-01', hour: 0 },
+          { date: '2026-06-30', hour: 23 },
+        ],
+      });
+
+      expect(service.invalidDatesCheck(payload)).toEqual([]);
+    });
+
+    it('should identify the invalid hourly operating date and hour', function () {
+      const payload = plainToInstance(EmissionsImportDTO, {
+        year: 2026,
+        quarter: 2,
+        hourlyOperatingData: [{ date: '2026-01-01', hour: 7 }],
+      });
+
+      const message =
+        '[IMPORT-23] You have reported a date in a Daily Summary, DailyTest Summary or Hourly Operating record that does not fall within the reporting period. The emissions file will not be imported.';
+      CheckCatalogService.formatResultMessage = () => message;
+
+      expect(service.invalidDatesCheck(payload)).toEqual([
+        `${message} Hourly Operating Data record at date 2026-01-01, hour 7 falls outside the emission report's declared reporting period 2026 Q2 (2026-04-01 through 2026-06-30).`,
+      ]);
     });
   });
 

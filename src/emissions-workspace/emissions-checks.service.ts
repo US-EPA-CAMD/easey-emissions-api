@@ -231,9 +231,35 @@ export class EmissionsChecksService {
       dateCheck(datum.date);
     });
 
-    payload.hourlyOperatingData?.forEach(datum => {
-      dateCheck(datum.date);
-    });
+    const invalidHourlyOperatingDatum = payload.hourlyOperatingData?.find(
+      datum => {
+        if (isUndefinedOrNull(datum.date)) {
+          return false;
+        }
+
+        const date = moment(datum.date);
+        return (
+          date.year() !== payload.year || date.quarter() !== payload.quarter
+        );
+      },
+    );
+
+    if (invalidHourlyOperatingDatum) {
+      const message = CheckCatalogService.formatResultMessage('IMPORT-23-A');
+      const date = moment(invalidHourlyOperatingDatum.date).format(
+        'YYYY-MM-DD',
+      );
+      const reportingPeriodStart = moment({
+        year: payload.year,
+        month: (payload.quarter - 1) * 3,
+        date: 1,
+      });
+      const reportingPeriodEnd = moment(reportingPeriodStart).endOf('quarter');
+
+      return [
+        `${message} Hourly Operating Data record at date ${date}, hour ${invalidHourlyOperatingDatum.hour} falls outside the emission report's declared reporting period ${payload.year} Q${payload.quarter} (${reportingPeriodStart.format('YYYY-MM-DD')} through ${reportingPeriodEnd.format('YYYY-MM-DD')}).`,
+      ];
+    }
 
     payload.sorbentTrapData?.forEach(datum => {
       dateCheck(datum.beginDate);
