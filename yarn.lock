@@ -1054,10 +1054,10 @@
     boxen "5.1.2"
     check-disk-space "3.4.0"
 
-"@nestjs/testing@^11.2.10":
-  version "11.2.10"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-11.2.10.tgz#4ea03673fe46b8be91c493874475f5e3a1958713"
-  integrity sha512-7rp2Zs+T5pP55yGDXDBcIP+IBYxI4CglnTi5TXfzfrp1Qr9a15rwov6VVog6OtuP8BYcGvCgvEzb1kqtHoXjfg==
+"@nestjs/testing@^11.2.11":
+  version "11.2.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-11.2.11.tgz#96043968f4b24fd349739e2e73c2d66192fca43e"
+  integrity sha512-Fog9XBk8JGHdv0kHU7mIe6XIgdGQh9+6+oh4kIVEW4PphnIAILtWurymyTq8O18XnNoYfN7X7liRjIUKbpF5KQ==
   dependencies:
     tslib "2.8.1"
 
