@@ -1012,10 +1012,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-2.1.1.tgz#9530ac3250ab433ba6ef831e9dd5d483f5fc8144"
   integrity sha512-SCCoMEJ6jdeI5h/N+KCVF1+pmg/hmEkNA5nHTS8Gvww7T/LCl4o1gFLinw2iQ60w7slFkszHcGLKGdazVI4F8A==
 
-"@nestjs/platform-express@^11.2.10":
-  version "11.2.10"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-11.2.10.tgz#21f3e57c41a24a22558c1ae396f1efdedc845e02"
-  integrity sha512-piXubUA2wyq/iEj4yN4rRF13uZcyzKVq6D/Z5RoBFdgvn0MB0qRfqF2ZXvPj4aepyDDykGXL45m0kRnxZyx2lQ==
+"@nestjs/platform-express@^11.2.11":
+  version "11.2.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-11.2.11.tgz#69c27ed951ef9978dc47d00c90e5fec04630fe73"
+  integrity sha512-5tOLH9Cy1atxTMRZgipbQUvqa1VkMopAxglwbCmkK29fJLgpdGOd+ywSwzh7i0bZoy4oWURgvZs+goz+hA+dfg==
   dependencies:
     cors "2.8.6"
     express "5.2.1"
